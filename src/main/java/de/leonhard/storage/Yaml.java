@@ -34,6 +34,13 @@ public class Yaml extends StorageCreator implements StorageBase {
         }
     }
 
+    /**
+     * Sets a value to the yaml if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
+     *
+     * @param key   Key to set the value
+     * @param value Value to set
+     */
+
     @Override
     public void setDefault(String key, Object value) {
         if (contains(key)) {
@@ -55,6 +62,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a String from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to String in YAML-File
      * @return Returns the value
@@ -69,9 +77,10 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Gets a long from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to long in YAML-FILE
-     * @return String from YAML
+     * @return long from YAML
      */
     @Override
     public long getLong(String key) {
@@ -86,6 +95,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Gets a int from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to int in YAML-File
      * @return Int from YAML
@@ -102,6 +112,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a byte from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to byte in YAML-File
      * @return Byte from YAML
@@ -118,6 +129,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a boolean from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to boolean in YAML-File
      * @return Boolean from YAML
@@ -137,6 +149,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a float from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to float in YAML-File
      * @return Float from YAML
@@ -153,6 +166,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a double from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to double in YAML-File
      * @return Double from YAML
@@ -168,10 +182,11 @@ public class Yaml extends StorageCreator implements StorageBase {
     }
 
     /**
-     * Get a StringList from a YAML-File
+     * Get a List from a YAML-File
+     * Uses {@link YamlObject}
      *
-     * @param key Path to StringList in YAML-File
-     * @return String-List
+     * @param key Path to List in YAML-File
+     * @return List
      */
     @Override
     public List<?> getList(String key) {
@@ -189,8 +204,9 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get String List
+     * Uses {@link YamlObject}
      *
-     * @param key Path to String List in YAML-FIle
+     * @param key Path to String List in YAML-File
      * @return List
      */
     @Override
@@ -206,6 +222,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a IntegerList from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to Integer-List in YAML-File
      * @return Integer-List
@@ -223,6 +240,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a Byte-List from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to Byte-List from YAML-File
      * @return Byte-List
@@ -239,6 +257,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     /**
      * Get a Long-List from a YAML-File
+     * Uses {@link YamlObject}
      *
      * @param key Path to Long-List to YAML-File
      * @return Long-List
@@ -252,6 +271,15 @@ public class Yaml extends StorageCreator implements StorageBase {
 
         return (List<Long>) yamlObject.get(key);
     }
+
+
+    /**
+     * Gets a Map by key
+     * Although used to get nested objects {@link Yaml}
+     *
+     * @param key Path to Map-List in JSON
+     * @return Map
+     */
 
 
     @Override//TODO Nested Maps

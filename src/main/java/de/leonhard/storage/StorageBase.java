@@ -69,10 +69,10 @@ public interface StorageBase {
     double getDouble(final String key);
 
     /**
-     * Get a StringList from a file
+     * Get a List from a file
      *
      * @param key Path to StringList in file
-     * @return String-List
+     * @return List
      */
 
     List<?> getList(final String key);
