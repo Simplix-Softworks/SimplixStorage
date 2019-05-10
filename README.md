@@ -11,7 +11,7 @@ Then this libary is just right for you.
 LightningStorage is extremely fast & good at storing data reliably!
 
 LightningStorage is licensed under the MIT license, which means that
-you can also see him in 
+you can also use it in private project that are not open source
 
 At the moment LightningStorage supports two file types:
 
