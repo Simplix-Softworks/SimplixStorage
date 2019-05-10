@@ -3,11 +3,11 @@ lightningstorage - A Library to store data a better way.
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
 Want to do more than just use simple .yml files to back up data?<br>
-Are you looking for a powerful "bukkitlike" (Very similar to bukkit config) library to store data in files?<br>
+Are you looking for a powerful "bukkitlike" (Very similar to Bukkit config) library to store data in files?<br>
 
 **Then this library is just right for you.**
 
-I was looking for a library that I could use to store data with bukkit like methods 
+I was looking for a library that I could use to store data with Bukkit like methods 
 without being depended on Bukkit/BungeeCord. But there was nothing out there so I decided to write my own library.
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
 ThunderBolt-2 for example only supports Json files and does not support nested objects for example.
@@ -115,9 +115,9 @@ The relocation is optional but heavily recommended.
 
 
 
-**Libary's used**
+**Library's used**
 
-LightningStorage uses a powerful combination of libraries: 
+LightningStorage uses a powerful combination of libraries to provide best usability: 
 
 >MIT-org.json Copyright (c) 2002 JSON.org <br>
 >YAMLBEANS - Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini <br>
