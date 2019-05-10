@@ -438,8 +438,7 @@ public class Json extends StorageCreator implements StorageBase {
         if (map instanceof Map) {
             return (Map<?, ?>) object.get(key);
         } else if (map instanceof JSONObject) {
-            Map<String, Object> hash = JsonUtil.jsonToMap((JSONObject) map);
-            return hash;
+            return JsonUtil.jsonToMap((JSONObject) map);
         }
         throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
     }
