@@ -55,7 +55,7 @@ public class Yaml extends StorageCreator implements StorageBase {
             YamlReader reader = new YamlReader(new FileReader(file));
             yamlObject = new YamlObject(reader.read());
         } catch (IOException e) {
-            System.out.print("Exception while reloading yaml");
+            System.err.println("Exception while reloading yaml");
             e.printStackTrace();
         }
     }
@@ -216,7 +216,7 @@ public class Yaml extends StorageCreator implements StorageBase {
         if (!contains(key))
             return new ArrayList<>();
 
-        return (List<String>) yamlObject.get(key);
+        return (List<String>) yamlObject.get(key);//TODO converter? Check if converter is needed
 
     }
 
@@ -285,7 +285,7 @@ public class Yaml extends StorageCreator implements StorageBase {
     @Override//TODO Nested Maps
     public Map getMap(String key) {
         reload();
-        return (Map) yamlObject.toHashMap().get(key);
+        return (Map) yamlObject.get(key);
     }
 
     @Override

@@ -1,20 +1,39 @@
 # lightningstorage
-lightningstorage - A Libary to store data a better way.
+lightningstorage - A Library to store data a better way.
 
-Do you want to save your Config files easily and independently from Bukkit or BungeeCord?
-Want to do more than just use simple .yml files to back up data?
-Are you looking for a powerful "bukkitlike" (Very similar to bukkit config) libary to store data in files?
+Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
+Want to do more than just use simple .yml files to back up data?<br>
+Are you looking for a powerful "bukkitlike" (Very similar to bukkit config) library to store data in files?<br>
+
+**Then this library is just right for you.**
+
+I was looking for a library that I could use to store data with bukkit like methods 
+without being depended on Bukkit/BungeeCord. But there was nothing out there so I decided to write my own library.
+Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
+ThunderBolt-2 for example only supports Json files and does not support nested objects for example.
+Now it is here: **LightningStorage**!
+
+<br>
+Content:
+<br>
+-A few information
+-Supported file types:
+-How to setup
+-Yaml-Usage[WIKI]
+-Json-Usage[WIKI]
+-Real world examples[Wiki]
 
 
-Then this libary is just right for you.
-
-LightningStorage is extremely fast & good at storing data reliably!
-
+LightningStorage is extremely fast & good at **storing data reliably**! <br>
+It also supports **nested objects**!<br>
+Like bukkit it has a contains check - for both json and yaml.
 LightningStorage is licensed under the MIT license, which means that
-you can also use it in private project that are not open source
+you can also **use it in private projects** that are not open source.
 
+If you have any ideas to add or issues just open a issue page. I will do my best to help.
+
+<br>
 At the moment LightningStorage supports two file types:
-
 
 #### Json:
 A very fast and slim file format.
@@ -25,8 +44,10 @@ It is much faster than yaml files and is therefore better suited for storing
 
 #### Yaml:
 Yaml files are not as fast as json files, but they are easier 
-to read and are therefore more suitable than configurations files, 
+to read and are therefore more suitable than configuration files, 
 as you often find them in bukkit plugins in the form of "config.yml".
+
+More file formats will be supported soon
 
 
 
@@ -95,6 +116,8 @@ The relocation is optional but heavily recommended.
 
 
 **Libary's used**
+
+LightningStorage uses a powerful combination of libraries: 
 
 >MIT-org.json Copyright (c) 2002 JSON.org <br>
 >YAMLBEANS - Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini <br>

@@ -79,6 +79,7 @@ public class Json extends StorageCreator implements StorageBase {
         try {
             fis = new FileInputStream(file);
         } catch (FileNotFoundException | NullPointerException e) {
+            System.err.println("Exception while reading Json");
             e.printStackTrace();
         }
         JSONTokener tokener = new JSONTokener(fis);
@@ -298,7 +299,7 @@ public class Json extends StorageCreator implements StorageBase {
      */
 
     @Override
-    public List<String> getStringList(final String key) { //TODO Wenn nur ein Element in der Liste ist, keine ClassCast Exception!
+    public List<String> getStringList(final String key) {
         reload();
 
         if (!contains(key))

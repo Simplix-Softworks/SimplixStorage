@@ -32,7 +32,7 @@ public abstract class StorageCreator {
                 datafolder.append(part + "/");
             }
             File folders = new File(datafolder.toString());
-            if (!folders.exists()) {//TODO .mkdirs
+            if (!folders.exists()) {
                 folders.mkdirs();
             }
 
