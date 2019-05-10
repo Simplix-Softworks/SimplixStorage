@@ -14,14 +14,15 @@ ThunderBolt-2 for example only supports Json files and does not support nested o
 Now it is here: **LightningStorage**!
 
 <br>
-Content:
+### Table of contents:
 <br>
--A few information
--Supported file types:
--How to setup
--Yaml-Usage[WIKI]
--Json-Usage[WIKI]
--Real world examples[Wiki]
+-1. [A few information] <br>
+-2. [Supported file types] <br>
+-3. [How to setup] <br>
+-4. [Yaml-Usage] [WIKI] <br>
+-5. [Json-Usage] [WIKI] <br>
+-6. [Real world examples][Wiki] <br>
+
 
 
 LightningStorage is extremely fast & good at **storing data reliably**! <br>
