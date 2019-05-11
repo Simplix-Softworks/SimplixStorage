@@ -18,20 +18,24 @@ public class Yaml extends StorageCreator implements StorageBase {
         return file;
     }
 
-    private final File file;
+    private File file;
     private YamlObject yamlObject;
 
     //TODO Header
 
     public Yaml(String name, String path) {
-        file = new File(path + File.separator + name + ".yml");
+        File newFile = new File(path + File.separator + name + ".yml");
 
         try {
-            if (!file.exists())
+            if (!newFile.exists()) {
                 create(path, name, FileType.YAML);
+                this.file = super.file;
+                return;
+            }
         } catch (final IOException e) {
             e.printStackTrace();
         }
+        this.file = newFile;
     }
 
     /**

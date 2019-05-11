@@ -14,7 +14,6 @@ import java.util.Map;
 
 
 public class Json extends StorageCreator implements StorageBase {
-    private final String path, name;
     private JSONObject object;
     private File file;
 
@@ -27,21 +26,22 @@ public class Json extends StorageCreator implements StorageBase {
      */
 
     public Json(final String name, final String path) {
-        file = new File(path + File.separator + name + ".json");
+        File newFile = new File(path + File.separator + name + ".json");
 
-        this.name = name;
-        this.path = path;
-        if (!file.exists()) {
+        if (!newFile.exists()) {
             try {
                 create(path, name, FileType.JSON);
+                this.file = super.file;
                 object = new JSONObject();
-                Writer writer = new PrintWriter(new FileWriter(path + File.separator + name + ".json"));
+                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                 writer.write(object.toString(2));
                 writer.close();
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        this.file = newFile;
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
@@ -135,7 +135,7 @@ public class Json extends StorageCreator implements StorageBase {
             return (getNestedObject(key) instanceof Integer) ? (double) (int) getNestedObject(key) : getNestedObject(key);//TrobleShooting: Integer not castable to Double
             // -> Wrapper class
         }
-        return object.getDouble(key);
+        return (object.get(key) instanceof Integer) ? (double) (int) object.get(key) : (double) object.get(key);
 
     }
 
@@ -159,13 +159,14 @@ public class Json extends StorageCreator implements StorageBase {
             if (getNestedObject(key) instanceof Double) {
                 return (float) (double) getNestedObject(key);
             }
-            return (getNestedObject(key) instanceof Integer) ? (float) (int) getNestedObject(key) : getNestedObject(key);//TrobleShooting: Integer not castable to Double
-            // -> Wrapper class
+            return (getNestedObject(key) instanceof Integer) ? (float) (int) getNestedObject(key) : getNestedObject(key);//TrobleShooting: Integer not castable to Double -> Wrapper class
+            //
         }
-        return (float) object.get(key);
+        return (object.get(key) instanceof Integer) ? (float) (int) object.get(key) : (float) object.get(key);
 
     }
 
+    //TODO getter Method -> With NestedObject
 
     /**
      * Gets a int from a JSON-File
@@ -280,11 +281,11 @@ public class Json extends StorageCreator implements StorageBase {
             return getNestedObject(key);
         }
 
-        Object object = this.object.get(key);
-        JSONArray ja = new JSONArray(object.toString());
+        final Object object = this.object.get(key);
+        final JSONArray ja = new JSONArray(object.toString());
         List<Object> list = new ArrayList<>();
-        for (int i = 0; i < ja.length(); i++) {
-            list.add(ja.get(i));
+        for (Object a : ja) {
+            list.add(a);
         }
         return list;
 
@@ -309,14 +310,8 @@ public class Json extends StorageCreator implements StorageBase {
             return getNestedObject(key);
         }
 
-        List<?> temp = getList(key);
-        List<String> list = new ArrayList<>();
-        for (Object o : temp) {
-            if (o instanceof String) {
-                list.add((String) o);
-            }
-        }
-        return list;
+
+        return (List<String>) getList(key);
 
     }
 
@@ -337,16 +332,8 @@ public class Json extends StorageCreator implements StorageBase {
             return getNestedObject(key);
         }
 
-        List<?> temp = getList(key);
-        List<Integer> list = new ArrayList<>();
-        for (Object o : temp) {
-            if (o instanceof Integer) {
-                list.add((Integer) o);
-            } else if (o instanceof String) {
-                list.add(Integer.valueOf((String) o));
-            }
-        }
-        return list;
+
+        return (List<Integer>) getList(key);
     }
 
     /**
@@ -369,16 +356,7 @@ public class Json extends StorageCreator implements StorageBase {
             return getNestedObject(key);
         }
 
-        List<?> temp = getList(key);
-        List<Byte> list = new ArrayList<>();
-        for (Object o : temp) {
-            if (o instanceof Byte) {
-                list.add((Byte) o);
-            } else if (o instanceof String) {
-                list.add(Byte.valueOf((String) o));
-            }
-        }
-        return list;
+        return (List<Byte>) getList(key);
     }
 
 
@@ -397,26 +375,16 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return new ArrayList<>();
 
-        if (key.contains(".")) {
+        if (key.contains("."))
             return getNestedObject(key);
-        }
 
-        List<?> temp = getList(key);
-        List<Long> list = new ArrayList<>();
-        for (Object o : temp) {
-            if (o instanceof Long) {
-                list.add((Long) o);
-            } else if (o instanceof String) {
-                list.add(Long.valueOf((String) o));
-            }
-        }
-        return list;
+        return (List<Long>) getList(key);
 
     }
 
     /**
      * Gets a Map by key
-     *Although used to get nested objects {@link Json}
+     * Although used to get nested objects {@link Json}
      *
      * @param key Path to Map-List in JSON
      * @return Map
@@ -455,7 +423,7 @@ public class Json extends StorageCreator implements StorageBase {
                 }
                 object.put(parts[0], map);
                 try {
-                    Writer writer = new PrintWriter(new FileWriter(path + File.separator + name + ".json"));
+                    Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                     writer.write(object.toString(2));
                     writer.close();
                 } catch (IOException e) {
@@ -465,11 +433,12 @@ public class Json extends StorageCreator implements StorageBase {
             }
             object.put(key, value);
             try {
-                Writer writer = new PrintWriter(new FileWriter(path + File.separator + name + ".json"));
+                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                 writer.write(object.toString(2));
                 writer.close();
             } catch (IOException e) {
-                System.err.println("Couldn' t set " + key + " " + value + e.getMessage());
+                System.err.println("Couldn' t set " + key + " " + value);
+                e.printStackTrace();
             }
         }
     }

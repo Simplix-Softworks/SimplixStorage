@@ -11,6 +11,7 @@ I was looking for a library that I could use to store data with Bukkit like meth
 without being depended on Bukkit/BungeeCord. But there was nothing out there so I decided to write my own library.
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
 ThunderBolt-2 for example only supports Json files and does not support nested objects for example.
+Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
 Now it is here: **LightningStorage**!
 
 <br>
@@ -19,9 +20,8 @@ Now it is here: **LightningStorage**!
 -1. [A few information] <br>
 -2. [Supported file types] <br>
 -3. [How to setup] <br>
--4. [Yaml-Usage] [WIKI] <br>
--5. [Json-Usage] [WIKI] <br>
--6. [Real world examples][Wiki] <br>
+-4. [Usage]
+-5. [Real world examples][Wiki] <br>
 
 
 
@@ -110,10 +110,6 @@ The relocation is optional but heavily recommended.
 	</configuration>
 </plugin>
 ```       
-        
-
-
-
 
 
 **Library's used**

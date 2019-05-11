@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class StorageCreator {
-    private File file;
+    protected File file;
     private FileType fileType;
 
     /**
