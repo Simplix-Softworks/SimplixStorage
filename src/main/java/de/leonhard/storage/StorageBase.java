@@ -154,11 +154,14 @@ public interface StorageBase {
 
     /**
      * Sets a value to the file if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
-     * @param key Key to set the value
+     *
+     * @param key   Key to set the value
      * @param value Value to set
      */
 
     void setDefault(String key, Object value);
+
+    <T> T getOrSetDefault(String path, T def);
 
 
 }

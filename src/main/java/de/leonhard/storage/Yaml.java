@@ -298,6 +298,8 @@ public class Yaml extends StorageCreator implements StorageBase {
     }
 
 
+
+
     @Override
     public void set(String key, Object value) {
         YamlReader reader;
@@ -312,6 +314,16 @@ public class Yaml extends StorageCreator implements StorageBase {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public <T> T getOrSetDefault(final String path, T def) {
+        if (!contains(path)) {
+            set(path, def);
+            return def;
+        } else {
+            return (T) yamlObject.get(path);
         }
     }
 

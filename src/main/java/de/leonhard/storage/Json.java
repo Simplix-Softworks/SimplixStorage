@@ -444,6 +444,16 @@ public class Json extends StorageCreator implements StorageBase {
     }
 
     @Override
+    public <T> T getOrSetDefault(final String path, T def) {
+        if (!contains(path)) {
+            set(path, def);
+            return def;
+        } else {
+            return (T) object.get(path);
+        }
+    }
+
+    @Override
     public boolean contains(String key) {
         reload();
         if (key.contains(".")) {
