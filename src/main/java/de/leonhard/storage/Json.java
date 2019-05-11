@@ -443,6 +443,7 @@ public class Json extends StorageCreator implements StorageBase {
         }
     }
 
+
     @Override
     public <T> T getOrSetDefault(final String path, T def) {
         if (!contains(path)) {
