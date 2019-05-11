@@ -15,17 +15,15 @@ Now I'am publishing this library because I think libraries of high quality shoul
 Now it is here: **LightningStorage**!
 
 <br>
-
 ### Table of contents:
-
 <br>
 -1. [A few information] <br>
 -2. [Supported file types] <br>
--3. [How to setup](https://github.com/JavaFactoryDev/LightningStorage/wiki/How-to-setup) <br>
--4. [Usage](https://github.com/JavaFactoryDev/LightningStorage/wiki/Usage) <br>
--5. [Real world examples][Comming soon] <br>
+-3. [How to setup] <br>
+-4. [Usage]
+-5. [Real world examples][Wiki] <br>
 
-<br>
+
 
 LightningStorage is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
@@ -57,6 +55,8 @@ More file formats will be supported soon
 
 
 ### How to setup
+
+#### Maven
 
 1. Place this in your repository-section: 
 >Example Pom: https://pastebin.com/eiyRZYyi 
