@@ -2,7 +2,7 @@
 lightningstorage - A Library to store data a better way.
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
-Want to do more than just use simple .yml files to back up data?<br>
+Want to do more than just use simple .yml files store data?<br>
 Are you looking for a powerful "bukkitlike" (Very similar to Bukkit config) library to store data in files?<br>
 
 **Then this library is just right for you.**
