@@ -82,7 +82,7 @@ More file formats will be supported soon
 ```       
     
 
-3. Important! Use a shade plugin to make shure that the libary is shaded into your final .jar file when your
+3. Important! Use a shade plugin to make sure that the libary is shaded into your final .jar file when your
 plugin is compiled. 
 The relocation is optional but heavily recommended.
 
