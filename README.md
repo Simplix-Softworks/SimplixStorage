@@ -20,7 +20,7 @@ Now it is here: **LightningStorage**!
 -1. [A few information] <br>
 -2. [Supported file types] <br>
 -3. [How to setup] <br>
--4. [Usage]
+-4. [Usage](https://github.com/JavaFactoryDev/LightningStorage/wiki/Usage) <br>
 -5. [Real world examples][Wiki] <br>
 
 
