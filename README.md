@@ -2,7 +2,7 @@
 lightningstorage - A Library to store data a better way.
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
-Want to do more than just use simple .yml files to back up data?<br>
+Want to do more than just use simple .yml files store data?<br>
 Are you looking for a powerful "bukkitlike" (Very similar to Bukkit config) library to store data in files?<br>
 
 **Then this library is just right for you.**
@@ -10,7 +10,7 @@ Are you looking for a powerful "bukkitlike" (Very similar to Bukkit config) libr
 I was looking for a library that I could use to store data with Bukkit like methods 
 without being depended on Bukkit/BungeeCord. But there was nothing out there so I decided to write my own library.
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
-ThunderBolt-2 for example only supports Json files and does not support nested objects for example.
+ThunderBolt-2 for example only supports Json files but does not support nested objects.
 Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
 Now it is here: **LightningStorage**!
 
@@ -20,7 +20,7 @@ Now it is here: **LightningStorage**!
 -1. [A few information] <br>
 -2. [Supported file types] <br>
 -3. [How to setup] <br>
--4. [Usage]
+-4. [Usage](https://github.com/JavaFactoryDev/LightningStorage/wiki/Usage) <br>
 -5. [Real world examples][Wiki] <br>
 
 
@@ -82,7 +82,7 @@ More file formats will be supported soon
 ```       
     
 
-3. Important! Use a shade plugin to make shure that the libary is shaded into your final .jar file when your
+3. Important! Use a shade plugin to make sure that the libary is shaded into your final .jar file when your
 plugin is compiled. 
 The relocation is optional but heavily recommended.
 
