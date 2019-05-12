@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class Json extends StorageCreator implements StorageBase {
     private JSONObject object;
     private File file;
@@ -53,7 +52,6 @@ public class Json extends StorageCreator implements StorageBase {
     }
 
     //TODO IMMER auf TODOS überprüfen.
-    //TODO In plugin Beschreibung kommentieren -> Verhältnis zu Bukkit-Methode!
 
 
     /**
@@ -390,8 +388,8 @@ public class Json extends StorageCreator implements StorageBase {
      * @return Map
      */
 
-    @Override
-    public Map getMap(final String key) {//TODO Check
+    @Override//GetMap
+    public Map getMap(final String key) {
         reload();
 
         if (!contains(key))

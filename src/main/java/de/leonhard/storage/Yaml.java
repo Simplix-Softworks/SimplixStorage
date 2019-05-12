@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Yaml extends StorageCreator implements StorageBase {
     @Override
@@ -220,7 +217,7 @@ public class Yaml extends StorageCreator implements StorageBase {
         if (!contains(key))
             return new ArrayList<>();
 
-        return (List<String>) yamlObject.get(key);//TODO converter? Check if converter is needed
+        return (List<String>) yamlObject.get(key);
 
     }
 
@@ -286,9 +283,12 @@ public class Yaml extends StorageCreator implements StorageBase {
      */
 
 
-    @Override//TODO Nested Maps
+    @Override
     public Map getMap(String key) {
         reload();
+        if (!contains(key))
+            return new HashMap();
+
         return (Map) yamlObject.get(key);
     }
 
@@ -296,8 +296,6 @@ public class Yaml extends StorageCreator implements StorageBase {
     public String getFilePath() {
         return file.getAbsolutePath();
     }
-
-
 
 
     @Override
