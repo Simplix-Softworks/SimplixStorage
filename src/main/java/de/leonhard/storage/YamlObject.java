@@ -23,8 +23,12 @@ public class YamlObject {
     public Object get(String key) {
         if (key.contains(".")) {
             String[] parts = key.split("\\.");
-            HashMap result = (HashMap) get(parts[0]);
-            return result.containsKey(parts[1]) ? result.get(parts[1]) : null;
+            Map preResult = (get(parts[0]) == null) ? new HashMap() : (HashMap) get(parts[0]);
+            for (int i = 0; i < parts.length - 1; i++) {
+                if (!(preResult.get(parts[i]) instanceof HashMap))
+                    return preResult.get(parts[i]);
+                preResult = (HashMap) preResult.get(parts[i]);
+            }
         }
         return hashMap.containsKey(key) ? toHashMap().get(key) : null;
     }
@@ -72,10 +76,6 @@ public class YamlObject {
     }
 
     public List<?> getList(String key) {
-//
-//        if (get(key) instanceof String)
-//            return new ArrayList<>(Arrays.asList(((String) get(key)).split("-")));
-
         return (List) get(key);
     }
 
@@ -110,18 +110,25 @@ public class YamlObject {
         if (key.contains(".")) {
             String[] parts = key.split("\\.");
 
-            HashMap map = (get(parts[0]) == null) ? new HashMap() : (HashMap) get(parts[0]);
+            HashMap preResult = new HashMap();
 
-            if (parts.length == 2) {
-                map.put(parts[1], value);
+            for (int i = parts.length; i > 0; i--) {
+                preResult.put(parts[i-1], preResult.clone());
+                System.out.println(preResult);
             }
-            hashMap.put(parts[0], map);
-            object = hashMap;
+
+
             return;
             //
         }
         hashMap.put(key, value);
         object = hashMap;
+    }
+
+    public static void main(String[] args) {
+        YamlObject yamlObject = new YamlObject(new HashMap<>());
+        yamlObject.put("test.test.test.test.test", "test");
+        System.out.println(yamlObject.toHashMap());
     }
 
 
@@ -154,4 +161,24 @@ public class YamlObject {
     }
 
 
+
+    /*
+    public void put(String key, Object value) {
+        if (key.contains(".")) {
+            String[] parts = key.split("\\.");
+
+            HashMap map = (get(parts[0]) == null) ? new HashMap() : (HashMap) get(parts[0]);
+
+            if (parts.length == 2) {
+                map.put(parts[1], value);
+            }
+            hashMap.put(parts[0], map);
+            object = hashMap;
+            return;
+            //
+        }
+        hashMap.put(key, value);
+        object = hashMap;
+    }
+     */
 }
