@@ -10,7 +10,7 @@ public class JsonUtil {
     public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
         Map<String, Object> retMap = new HashMap<String, Object>();
 
-        if(json != JSONObject.NULL) {
+        if (json != JSONObject.NULL) {
             retMap = toMap(json);
         }
         return retMap;
@@ -20,15 +20,13 @@ public class JsonUtil {
         Map<String, Object> map = new HashMap<String, Object>();
 
         Iterator<String> keysItr = object.keys();
-        while(keysItr.hasNext()) {
+        while (keysItr.hasNext()) {
             String key = keysItr.next();
             Object value = object.get(key);
 
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             map.put(key, value);
@@ -38,12 +36,11 @@ public class JsonUtil {
 
     public static List<Object> toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             Object value = array.get(i);
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             list.add(value);
@@ -51,5 +48,28 @@ public class JsonUtil {
         return list;
     }
 
+    public static String getFirst(final String string, int offset) {
+        final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
+        final StringBuilder sb = new StringBuilder();
+
+        final int max = strings.size() - offset;
+        int i = 0;
+        for (final String str : strings) {
+            if (i < max) {
+                i++;
+                if(i != 1){
+                    sb.append(".");
+                }
+                sb.append(str);
+            }
+        }
+
+
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getFirst("test.ficken.caro.lixfel", 1));
+    }
 
 }

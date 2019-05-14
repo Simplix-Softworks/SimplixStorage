@@ -1,23 +1,35 @@
 package de.leonhard.storage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Main {
 
 
     public static void main(String[] args) {
         Yaml yaml = new Yaml("test", "");
-        yaml.set("test.test.test.test", "o3k3");
-        yaml.set("playdata.fucked", true);
-
         Json json = new Json("test", "");
 
-        json.set("gayerdata.gay.reallygay", "fck");
-        System.out.println("Resultat: " + json.get("gayerdata.gay.reallygay"));
+
+        ArrayList test = new ArrayList(Arrays.asList("test", "test", "test", "Test"));
 
 
-        yaml.set("gayerdata.gay.reallygay", false);
+//
+//
+//        json.set("linkskeinemitte.rank", "admin");
+//        json.set("linkskeinemitte.name", "linkskeinemitte");
+//        json.set("linkskeinemitte.lastjoin", "jetzt");
+//        json.set("linkskeinemitte.join.lastjoin", "jetzt");
+//        json.set("linskeinemitte.join.firstjoin", "jetzt");
 
-        System.out.println(json.contains("gayerdata.gay.reallygay"));
 
+        json.set("test.test.test.test", true);
 
+        yaml.set("a.b.c", test);
+
+//        yaml.set("linkskeinemitte.rank", "admin");
+//        yaml.set("linkskeinemitte.name", "linkskeinemitte");
+//        yaml.set("linkskeinemitte.lastjoin", "jetzt");
+//        yaml.set("test.test", "a");
     }
 }

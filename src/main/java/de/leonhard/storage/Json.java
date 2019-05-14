@@ -83,14 +83,6 @@ public class Json extends StorageCreator implements StorageBase {
     }
 
 
-    private <T> T getNestedObject(String key) throws JSONException, NullPointerException {
-        String[] parts = key.split("\\.");
-        Map<?, ?> map = getMap(parts[0]);
-
-        return (T) map.get(parts[1]);
-    }
-
-
     /**
      * Gets a long from a JSON-File
      * Uses {@link JSONObject}
@@ -104,10 +96,8 @@ public class Json extends StorageCreator implements StorageBase {
         reload();
         if (!contains(key))
             return 0;
-        if (key.contains(".")) {
-            return (Long) getNestedObject(key);
-        }
-        return object.getLong(key);
+
+        return (long) get(key);
 
     }
 
@@ -126,11 +116,8 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return 0;
 
-        if (key.contains(".")) {
-            return (getNestedObject(key) instanceof Integer) ? (double) (int) getNestedObject(key) : getNestedObject(key);//TrobleShooting: Integer not castable to Double
-            // -> Wrapper class
-        }
-        return (object.get(key) instanceof Integer) ? (double) (int) object.get(key) : (double) object.get(key);
+        return (get(key) instanceof Integer) ? (double) (int) get(key) : (double) get(key);//TrobleShooting: Integer not castable to Double
+        // -> Wrapper class
 
     }
 
@@ -151,10 +138,10 @@ public class Json extends StorageCreator implements StorageBase {
             return 0;
 
         if (key.contains(".")) {
-            if (getNestedObject(key) instanceof Double) {
-                return (float) (double) getNestedObject(key);
+            if (get(key) instanceof Double) {
+                return (float) (double) get(key);
             }
-            return (getNestedObject(key) instanceof Integer) ? (float) (int) getNestedObject(key) : getNestedObject(key);//TrobleShooting: Integer not castable to Double -> Wrapper class
+            return (get(key) instanceof Integer) ? (float) (int) get(key) : (int) get(key);//TrobleShooting: Integer not castable to Double -> Wrapper class
             //
         }
         return (object.get(key) instanceof Integer) ? (float) (int) object.get(key) : (float) object.get(key);
@@ -178,11 +165,7 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return 0;
 
-        if (key.contains(".")) {
-            return (int) getNestedObject(key);
-        }
-        return object.getInt(key);
-
+        return (int) get(key);
 
     }
 
@@ -201,11 +184,8 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return 0;
 
-        if (key.contains(".")) {
-            return getNestedObject(key);
-        }
 
-        return (byte) object.get(key);
+        return (byte) get(key);
 
     }
 
@@ -224,10 +204,8 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return false;
 
-        if (key.contains(".")) {
-            return (boolean) getNestedObject(key);
-        }
-        return object.getBoolean(key);
+
+        return getBoolean(key);
 
     }
 
@@ -248,12 +226,7 @@ public class Json extends StorageCreator implements StorageBase {
             return null;
 
 
-        if (key.contains(".")) {
-            return (String) getNestedObject(key);
-        }
-
-
-        return object.getString(key);
+        return (String) get(key);
 
     }
 
@@ -272,11 +245,8 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return new ArrayList<>();
 
-        if (key.contains(".")) {
-            return getNestedObject(key);
-        }
 
-        final Object object = this.object.get(key);
+        final Object object = get(key);
         final JSONArray ja = new JSONArray(object.toString());
         List<Object> list = new ArrayList<>();
         for (Object a : ja) {
@@ -301,10 +271,6 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return new ArrayList<>();
 
-        if (key.contains(".")) {
-            return getNestedObject(key);
-        }
-
 
         return (List<String>) getList(key);
 
@@ -323,10 +289,6 @@ public class Json extends StorageCreator implements StorageBase {
         reload();
         if (!contains(key))
             return new ArrayList<>();
-        if (key.contains(".")) {
-            return getNestedObject(key);
-        }
-
 
         return (List<Integer>) getList(key);
     }
@@ -345,11 +307,6 @@ public class Json extends StorageCreator implements StorageBase {
 
         if (!contains(key))
             return new ArrayList<>();
-
-
-        if (key.contains(".")) {
-            return getNestedObject(key);
-        }
 
         return (List<Byte>) getList(key);
     }
@@ -370,11 +327,7 @@ public class Json extends StorageCreator implements StorageBase {
         if (!contains(key))
             return new ArrayList<>();
 
-        if (key.contains("."))
-            return getNestedObject(key);
-
         return (List<Long>) getList(key);
-
     }
 
     /**
@@ -394,7 +347,7 @@ public class Json extends StorageCreator implements StorageBase {
 
         Object map;
         try {
-            map = object.get(key);
+            map = get(key);
         } catch (JSONException e) {
             return new HashMap<>();
         }
@@ -414,7 +367,13 @@ public class Json extends StorageCreator implements StorageBase {
                 String[] parts = key.split("\\.");
                 HashMap keyMap = new HashMap();
 
+                int j = 0;
                 for (int i = parts.length - 1; i > 0; i--) {
+
+                    final String part = JsonUtil.getFirst(key, j + 1);
+
+                    keyMap = (get(part) == null) ? new HashMap() : (HashMap) JsonUtil.jsonToMap((JSONObject) get(part)); //NICHT IN DER SCHLEIFE
+
                     if (i == parts.length - 1) {
                         keyMap.put(parts[parts.length - 1], value);
                     } else {
@@ -422,6 +381,9 @@ public class Json extends StorageCreator implements StorageBase {
                         preResult.put(parts[i], keyMap);
                         keyMap = preResult;
                     }
+                    System.out.println(keyMap);
+
+                    j++;
                 }
                 object.put(parts[0], keyMap);
                 try {
