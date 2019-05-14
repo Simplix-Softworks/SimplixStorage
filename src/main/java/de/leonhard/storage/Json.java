@@ -7,10 +7,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Json extends StorageCreator implements StorageBase {
     private JSONObject object;
@@ -415,11 +412,18 @@ public class Json extends StorageCreator implements StorageBase {
         synchronized (this) {
             if (key.contains(".")) {
                 String[] parts = key.split("\\.");
-                HashMap<String, Object> map = (HashMap<String, Object>) getMap(parts[0]);
-                if (parts.length == 2) {
-                    map.put(parts[1], value);
+                HashMap keyMap = new HashMap();
+
+                for (int i = parts.length - 1; i > 0; i--) {
+                    if (i == parts.length - 1) {
+                        keyMap.put(parts[parts.length - 1], value);
+                    } else {
+                        HashMap preResult = new HashMap();
+                        preResult.put(parts[i], keyMap);
+                        keyMap = preResult;
+                    }
                 }
-                object.put(parts[0], map);
+                object.put(parts[0], keyMap);
                 try {
                     Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                     writer.write(object.toString(2));
@@ -452,12 +456,34 @@ public class Json extends StorageCreator implements StorageBase {
         }
     }
 
+    public Object get(final String key) {
+
+        if (key.contains(".")) {
+            String[] parts = key.split("\\.");
+            Map preResult = (get(parts[0]) == null) ? new HashMap() : (HashMap) JsonUtil.jsonToMap((JSONObject) get(parts[0]));
+            for (int i = 1; i < parts.length; i++) {
+                if (!(preResult.get(parts[i]) instanceof HashMap))
+                    return preResult.get(parts[i]);
+                preResult = (HashMap) preResult.get(parts[i]);
+            }
+        }
+        return object.has(key) ? object.get(key) : null;
+    }
+
     @Override
     public boolean contains(String key) {
         reload();
         if (key.contains(".")) {
             String[] parts = key.split("\\.");
-            return object.has(parts[0]) && getMap(parts[0]).containsKey(parts[1]);
+            Map preResult = (get(parts[0]) == null) ? new HashMap() : (HashMap) JsonUtil.jsonToMap((JSONObject) get(parts[0]));
+            for (int i = 1; i < parts.length - 1; i++) {
+                if (!preResult.containsKey(parts[i]))
+                    return false;
+                if (!(get(parts[i]) instanceof HashMap))
+                    return false;
+                preResult = (HashMap) preResult.get(parts[i]);
+            }
+            return true;
         }
         return object.has(key);
     }
