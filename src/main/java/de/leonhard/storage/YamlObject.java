@@ -116,7 +116,7 @@ public class YamlObject {
                 preResult.put(parts[i-1], preResult.clone());
                 System.out.println(preResult);
             }
-
+//
 
             return;
             //
