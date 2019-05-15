@@ -68,8 +68,5 @@ public class JsonUtil {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(getFirst("test.ficken.caro.lixfel", 1));
-    }
 
 }
