@@ -1,4 +1,4 @@
-package de.leonhard.util;
+package de.leonhard.storage.util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,6 +7,12 @@ import org.json.JSONObject;
 import java.util.*;
 
 public class JsonUtil {
+
+
+    private JsonUtil() {
+
+    }
+
     public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
         Map<String, Object> retMap = new HashMap<String, Object>();
 
@@ -15,7 +21,6 @@ public class JsonUtil {
         }
         return retMap;
     }
-
 
 
     public static Map<String, Object> toMap(JSONObject object) throws JSONException {
@@ -49,26 +54,4 @@ public class JsonUtil {
         }
         return list;
     }
-
-    public static String getFirst(final String string, int offset) {
-        final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
-        final StringBuilder sb = new StringBuilder();
-
-        final int max = strings.size() - offset;
-        int i = 0;
-        for (final String str : strings) {
-            if (i < max) {
-                i++;
-                if(i != 1){
-                    sb.append(".");
-                }
-                sb.append(str);
-            }
-        }
-
-
-        return sb.toString();
-    }
-
-
 }

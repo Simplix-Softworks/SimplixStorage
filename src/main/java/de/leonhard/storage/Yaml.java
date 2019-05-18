@@ -58,6 +58,8 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     private Object get(String key) {
 
+//        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
         if (key.contains(".")) {
             String[] parts = key.split("\\.");
             HashMap result = (HashMap) get(parts[0]);
@@ -88,11 +90,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public String getString(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
 
         if (!contains(key))
-            return null;
-        return yamlObject.getString(key);
+            return "";
+
+        return yamlObject.getString(finalKey);
     }
 
     /**
@@ -106,13 +110,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public long getLong(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
         if (!contains(key))
             return 0;
 
-        return yamlObject.getLong(key);
+        return yamlObject.getLong(finalKey);
     }
 
 
@@ -127,13 +131,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public int getInt(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
         if (!contains(key))
             return 0;
 
-        return yamlObject.getInt(key);
+        return yamlObject.getInt(finalKey);
     }
 
     /**
@@ -147,13 +151,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public byte getByte(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
         if (!contains(key))
             return 0;
 
-        return yamlObject.getByte(key);
+        return yamlObject.getByte(finalKey);
     }
 
     /**
@@ -167,17 +171,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public boolean getBoolean(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-        if (!has(key)) {
+        if (!contains(key))
             return false;
-        }
 
-        if (yamlObject.get(key) instanceof String) {
-            return yamlObject.get(key).equals("true");
-        }
-        return (boolean) yamlObject.get(key);
+        return yamlObject.getBoolean(finalKey);
     }
 
 
@@ -214,12 +214,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public float getFloat(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        if (!has(key))
+
+        if (!contains(key))
             return 0;
 
-        return yamlObject.getFloat(key);
+        return yamlObject.getFloat(finalKey);
     }
 
     /**
@@ -233,12 +234,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public double getDouble(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        if (!has(key))
+
+        if (!contains(key))
             return 0;
 
-        return yamlObject.getDouble(key);
+        return yamlObject.getDouble(finalKey);
     }
 
     /**
@@ -252,14 +254,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public List<?> getList(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-
-        if (!has(key))
+        if (!contains(key))
             return new ArrayList<>();
 
-        if (yamlObject.get(key) instanceof String)
-            return new ArrayList<>(Arrays.asList(((String) yamlObject.get(key)).split("-")));
+        if (yamlObject.get(finalKey) instanceof String)
+            return new ArrayList<>(Arrays.asList(((String) yamlObject.get(finalKey)).split("-")));
 
 
         return (List) yamlObject.get(key);
@@ -276,13 +277,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public List<String> getStringList(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-        if (!has(key))
+        if (!contains(key))
             return new ArrayList<>();
 
-        return (List<String>) yamlObject.get(key);
+        return (List<String>) yamlObject.get(finalKey);
 
     }
 
@@ -297,12 +298,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public List<Integer> getIntegerList(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        if (!has(key))
+
+        if (!contains(key))
             return new ArrayList<>();
 
-        return (List<Integer>) yamlObject.get(key);
+        return (List<Integer>) yamlObject.get(finalKey);
 
     }
 
@@ -317,12 +319,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public List<Byte> getByteList(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        if (!has(key))
+
+        if (!contains(key))
             return new ArrayList<>();
 
-        return (List<Byte>) yamlObject.get(key);
+        return (List<Byte>) yamlObject.get(finalKey);
     }
 
     /**
@@ -336,12 +339,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public List<Long> getLongList(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        if (!has(key))
+
+        if (!contains(key))
             return new ArrayList<>();
 
-        return (List<Long>) yamlObject.get(key);
+        return (List<Long>) yamlObject.get(finalKey);
     }
 
 
@@ -358,13 +362,13 @@ public class Yaml extends StorageCreator implements StorageBase {
     public Map getMap(String key) {
         reload();
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-        if (!has(key))
+        if (!contains(key))
             return new HashMap();
 
-        return (Map) yamlObject.get(key);
+        return (Map) yamlObject.get(finalKey);
     }
 
     @Override
@@ -403,10 +407,6 @@ public class Yaml extends StorageCreator implements StorageBase {
             return (T) yamlObject.get(path);
         }
     }
-
-
-//    public Object get
-
 
     public String getPathPrefix() {
         return pathPrefix;

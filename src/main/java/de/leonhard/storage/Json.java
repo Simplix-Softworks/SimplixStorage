@@ -1,13 +1,16 @@
 package de.leonhard.storage;
 
-import de.leonhard.util.JsonUtil;
+import de.leonhard.storage.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Json extends StorageCreator implements StorageBase {
     private JSONObject object;
@@ -87,11 +90,11 @@ public class Json extends StorageCreator implements StorageBase {
     }
 
 
-    public Object get(String key) {
+    public Object get(final String key) {
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        return getObject(key);
+        return getObject(finalKey);
     }
 
     private Object getObject(String key) {
@@ -117,13 +120,11 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public long getLong(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
-        if (!has(key))
+        if (!contains(key))
             return 0;
 
-        return (long) get(key);
+        return (get(key) instanceof Integer) ? (long) (int) get(key) : (long) get(key);//TrobleShooting: Integer not castable to Long
 
     }
 
@@ -137,13 +138,10 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public double getDouble(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
         reload();
-
-        if (!has(key))
+        if (!contains(key))
             return 0;
+
 
         return (get(key) instanceof Integer) ? (double) (int) get(key) : (double) get(key);//TrobleShooting: Integer not castable to Double
         // -> Wrapper class
@@ -161,11 +159,10 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public float getFloat(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return 0;
 
         if (key.contains(".")) {
@@ -191,11 +188,9 @@ public class Json extends StorageCreator implements StorageBase {
      */
     @Override
     public int getInt(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return 0;
 
         return (int) get(key);
@@ -212,11 +207,9 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public byte getByte(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return 0;
 
 
@@ -234,13 +227,10 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public boolean getBoolean(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return false;
-
 
         return (boolean) get(key);
 
@@ -257,11 +247,9 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public String getString(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return null;
 
 
@@ -279,11 +267,9 @@ public class Json extends StorageCreator implements StorageBase {
      */
 
     @Override
-    public List<?> getList(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
+    public List<?> getList(final String key) {
         reload();
-        if (!has(key))
+        if (!contains(key))
             return new ArrayList<>();
 
 
@@ -307,12 +293,9 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public List<String> getStringList(String key) {
-
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return new ArrayList<>();
 
 
@@ -330,11 +313,8 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public List<Integer> getIntegerList(String key) {
-
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
-        if (!has(key))
+        if (!contains(key))
             return new ArrayList<>();
 
         return (List<Integer>) getList(key);
@@ -350,12 +330,9 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public List<Byte> getByteList(String key) {
-
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return new ArrayList<>();
 
         return (List<Byte>) getList(key);
@@ -372,12 +349,9 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public List<Long> getLongList(String key) {
-
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         reload();
 
-        if (!has(key))
+        if (!contains(key))
             return new ArrayList<>();
 
         return (List<Long>) getList(key);
