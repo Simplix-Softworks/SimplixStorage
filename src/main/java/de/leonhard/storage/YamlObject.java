@@ -1,5 +1,7 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.util.HashMapUtil;
+
 import java.util.*;
 
 public class YamlObject {
@@ -20,13 +22,9 @@ public class YamlObject {
     }
 
 
-
-
     public Object get(String key) {
         if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-            HashMap result = (HashMap) get(parts[0]);
-            return result.containsKey(parts[1]) ? result.get(parts[1]) : null;
+            return HashMapUtil.contains(key, hashMap) ? HashMapUtil.get(key, hashMap) : null;
         }
         return hashMap.containsKey(key) ? toHashMap().get(key) : null;
     }
@@ -106,18 +104,12 @@ public class YamlObject {
 
     public void put(String key, Object value) {
         if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-
-            HashMap map = (get(parts[0]) == null) ? new HashMap() : (HashMap) get(parts[0]);
-
-            if (parts.length == 2) {
-                map.put(parts[1], value);
-            }
-            hashMap.put(parts[0], map);
+            hashMap = (HashMap) HashMapUtil.stringToMap(key, value, hashMap);
             object = hashMap;
             return;
             //
         }
+
         hashMap.put(key, value);
         object = hashMap;
     }

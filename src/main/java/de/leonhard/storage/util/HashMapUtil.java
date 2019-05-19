@@ -24,37 +24,47 @@ public class HashMapUtil {
                 final String key = getFirst(string, j);
 
                 if (contains(key, object)) {
-                    System.out.println("true");
                     final Object obj = get(key, object);
                     if (obj instanceof Map) {
                         if (i == parts.length - 2) {
-                            keyMap = (HashMap) obj;
+                            keyMap = (HashMap) deepMerge((Map) keyMap.clone(), (Map) obj);
                         } else {
-                            keyMap.putAll((Map) obj);
+                            keyMap = (HashMap) deepMerge((Map) keyMap.clone(), (Map) obj);
                         }
                     } else {
-                        keyMap.put(parts[i + 1], obj);
+                        keyMap.put(parts[i - 1], obj);
                     }
                 }
                 if (i == parts.length - 1) {
+//                    System.out.println(i + " " + (parts.length - 1) + " " + "FIRST " + keyMap + " key " + key);
                     keyMap.put(parts[parts.length - 1], value);
                 } else {
+//                    System.out.println(i + " " + (parts.length - 1) + " " + "SECOND " + keyMap + " key " + key);
+
+                    if (keyMap.containsKey(parts[i])) {
+                        keyMap.remove(parts[i]);
+                        keyMap.put(parts[i+1], value);
+                    }
+
+
                     HashMap preResult = new HashMap();
                     preResult.put(parts[i], keyMap);
                     keyMap = preResult;
                 }
                 j++;
             }
-            object.put(parts[0], keyMap);
-            return object;
+            //Merging
+            final Map result = new HashMap();
+
+
+            result.put(parts[0], keyMap);
+
+
+            return deepMerge(object, result);
         }
         return new HashMap();
     }
 
-
-    /*
-
-     */
     public static boolean contains(String string, final Map object) {
         if (string.contains(".")) {
             boolean result = true;
@@ -95,7 +105,7 @@ public class HashMapUtil {
         return object.containsKey(key) ? object.get(key) : null;
     }
 
-    public static String getFirst(final String string, int offset) {
+    private static String getFirst(final String string, int offset) {
         final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
         final StringBuilder sb = new StringBuilder();
 
@@ -114,4 +124,18 @@ public class HashMapUtil {
 
         return sb.toString();
     }
+
+    private static Map deepMerge(Map original, Map newMap) {
+        for (Object key : newMap.keySet()) {
+            if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
+                Map originalChild = (Map) original.get(key);
+                Map newChild = (Map) newMap.get(key);
+                original.put(key, deepMerge(originalChild, newChild));
+            } else {
+                original.put(key, newMap.get(key));
+            }
+        }
+        return original;
+    }
+
 }

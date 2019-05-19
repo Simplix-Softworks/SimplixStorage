@@ -24,7 +24,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
 
     public Yaml(String name, String path) {
-        File newFile = new File(path + File.separator + name + ".yml");
+        File newFile = (path == null || path.isEmpty()) ? new File(name + ".yml") : new File(path + File.separator + name + ".yml");
 
         try {
             if (!newFile.exists()) {
@@ -53,6 +53,40 @@ public class Yaml extends StorageCreator implements StorageBase {
             return;
         }
         set(key, value);
+    }
+
+
+    @Override
+    public void set(String key, Object value) {
+        reload();
+
+        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+        YamlReader reader;
+        synchronized (this) {
+            try {
+                reader = new YamlReader(new FileReader(file));
+                yamlObject = new YamlObject(reader.read());
+                yamlObject.put(key, value);
+                YamlWriter writer = new YamlWriter(new FileWriter(file));
+
+                writer.write(yamlObject.toHashMap());
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public <T> T getOrSetDefault(final String path, T def) {
+        reload();
+        if (!contains(path)) {
+            set(path, def);
+            return def;
+        } else {
+            return (T) get(path);
+        }
     }
 
 
@@ -376,37 +410,6 @@ public class Yaml extends StorageCreator implements StorageBase {
         return file.getAbsolutePath();
     }
 
-
-    @Override
-    public void set(String key, Object value) {
-        reload();
-
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-        YamlReader reader;
-        synchronized (this) {
-            try {
-                reader = new YamlReader(new FileReader(file));
-                yamlObject = new YamlObject(reader.read());
-                yamlObject.put(key, value);
-                YamlWriter writer = new YamlWriter(new FileWriter(file));
-                writer.write(yamlObject.toHashMap());
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public <T> T getOrSetDefault(final String path, T def) {
-        if (!has(path)) {
-            set(path, def);
-            return def;
-        } else {
-            return (T) yamlObject.get(path);
-        }
-    }
 
     public String getPathPrefix() {
         return pathPrefix;

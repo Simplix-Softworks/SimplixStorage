@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.util.HashMapUtil;
 import de.leonhard.storage.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,8 +16,6 @@ import java.util.Map;
 public class Json extends StorageCreator implements StorageBase {
     private JSONObject object;
     private File file;
-
-
     private String pathPrefix;
 
 
@@ -28,7 +27,7 @@ public class Json extends StorageCreator implements StorageBase {
      */
 
     public Json(final String name, final String path) {
-        File newFile = new File(path + File.separator + name + ".json");
+        File newFile = (path == null || path.isEmpty()) ? new File(name + ".json") : new File(path + File.separator + name + ".yml");
 
         if (!newFile.exists()) {
             try {
@@ -67,7 +66,7 @@ public class Json extends StorageCreator implements StorageBase {
 
     @Override
     public void setDefault(String key, Object value) {
-        if (has(key)) {
+        if (contains(key)) {
             return;
         }
         set(key, value);
@@ -83,10 +82,8 @@ public class Json extends StorageCreator implements StorageBase {
             System.err.println("Exception while reading Json");
             e.printStackTrace();
         }
-        JSONTokener tokener = new JSONTokener(fis);
+        final JSONTokener tokener = new JSONTokener(fis);
         object = new JSONObject(tokener);
-
-
     }
 
 
@@ -97,14 +94,12 @@ public class Json extends StorageCreator implements StorageBase {
         return getObject(finalKey);
     }
 
-    private Object getObject(String key) {
+    private Object getObject(final String key) {
         if (!has(key))
             return null;
 
         if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-            HashMap result = (HashMap) JsonUtil.jsonToMap((JSONObject) getObject(parts[0]));
-            return result.containsKey(parts[1]) ? result.get(parts[1]) : null;
+            return HashMapUtil.contains(key, object.toMap()) ? HashMapUtil.get(key, object.toMap()) : null;
         }
         return object.has(key) ? object.get(key) : null;
     }
@@ -398,16 +393,21 @@ public class Json extends StorageCreator implements StorageBase {
         key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
         synchronized (this) {
+            reload();
+
             if (key.contains(".")) {
-                String[] parts = key.split("\\.");
-                HashMap<String, Object> map = (HashMap<String, Object>) getMapWithoutPath(parts[0]);
-                if (parts.length == 2) {
-                    map.put(parts[1], value);
-                }
-                object.put(parts[0], map);
+
+                final Map map = HashMapUtil.stringToMap(key, value, object.toMap());
+
+//                System.out.println(map);
+
+                object = new JSONObject(map);
+
+//                System.out.println(object);
+
                 try {
                     Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
-                    writer.write(object.toString(2));
+                    writer.write(object.toString(3));
                     writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -433,18 +433,15 @@ public class Json extends StorageCreator implements StorageBase {
             set(path, def);
             return def;
         } else {
-            return (T) object.get(path);
+            return (T) get(path);
         }
     }
 
 
     private boolean has(final String key) {
         reload();
-        if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-
-            return object.has(parts[0]) && getMapWithoutPath(parts[0]).containsKey(parts[1]);
-        }
+        if (key.contains("."))
+            return HashMapUtil.contains(key, object.toMap());
         return object.has(key);
     }
 
