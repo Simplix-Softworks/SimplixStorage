@@ -27,30 +27,38 @@ public class Json extends StorageCreator implements StorageBase {
      */
 
     public Json(final String name, final String path) {
-        File newFile = (path == null || path.isEmpty()) ? new File(name + ".json") : new File(path + File.separator + name + ".yml");
 
-        if (!newFile.exists()) {
+        try {
+            create(path, name, FileType.JSON);
+
+            this.file = super.file;
+
+
+            FileInputStream fis = null;
             try {
-                create(path, name, FileType.JSON);
-                this.file = super.file;
+                fis = new FileInputStream(file);
+            } catch (FileNotFoundException |
+                    NullPointerException e) {
+                e.printStackTrace();
+            }
+
+            if (file.length() == 0) {
                 object = new JSONObject();
                 Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                 writer.write(object.toString(2));
                 writer.close();
-                return;
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        this.file = newFile;
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException | NullPointerException e) {
+
+            JSONTokener tokener = new JSONTokener(fis);
+            object = new JSONObject(tokener);
+
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println("Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+            ex.printStackTrace();
         }
-        JSONTokener tokener = new JSONTokener(fis);
-        object = new JSONObject(tokener);
+
     }
 
     //TODO IMMER auf TODOS überprüfen.
