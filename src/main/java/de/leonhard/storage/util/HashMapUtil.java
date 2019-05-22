@@ -32,18 +32,21 @@ public class HashMapUtil {
                             keyMap = (HashMap) deepMerge((Map) keyMap.clone(), (Map) obj);
                         }
                     } else {
-                        keyMap.put(parts[i - 1], obj);
+//                        System.out.println("PRE" + keyMap);
+                        keyMap.put(parts[i], obj);//NOW BUGFREE
+//                        System.out.println("AFTER" +  keyMap);
                     }
                 }
                 if (i == parts.length - 1) {
-//                    System.out.println(i + " " + (parts.length - 1) + " " + "FIRST " + keyMap + " key " + key);
-                    keyMap.put(parts[parts.length - 1], value);
+                    keyMap.put(parts[parts.length - 1], value); //ADDED DIE VALUE -> BUGGFREI
                 } else {
 //                    System.out.println(i + " " + (parts.length - 1) + " " + "SECOND " + keyMap + " key " + key);
 
                     if (keyMap.containsKey(parts[i])) {
+                        System.out.println("REMOVED: " + parts[i]);
                         keyMap.remove(parts[i]);
-                        keyMap.put(parts[i+1], value);
+                        keyMap.put(parts[i + 1], value);
+                        System.out.println("GEPUTETT: " + parts[i + 1] + " " + value + " KEY " + key);
                     }
 
 

@@ -6,7 +6,7 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>LightningStorage</artifactId>
-    <version>1.0</version>
+    <version>1.6</version>
     <name>LightninStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/lightningstorage</url>

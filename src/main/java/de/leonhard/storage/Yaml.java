@@ -84,7 +84,7 @@ public class Yaml extends StorageCreator implements StorageBase {
     }
 
 
-    private Object get(String key) {
+    public Object get(String key) {
 
 //        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
@@ -202,8 +202,11 @@ public class Yaml extends StorageCreator implements StorageBase {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-        if (!contains(key))
+        if (!contains(key)){
+            System.out.println("CONTAINT NICHT");
             return false;
+
+        }
 
         return yamlObject.getBoolean(finalKey);
     }

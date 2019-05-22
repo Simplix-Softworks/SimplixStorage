@@ -6,7 +6,7 @@ import java.util.*;
 
 public class YamlObject {
     private Object object;
-    private HashMap hashMap;
+    private HashMap<String, Object> hashMap;
 
 
     public YamlObject(Object object) {
@@ -30,8 +30,10 @@ public class YamlObject {
     }
 
     public boolean getBoolean(final String key) {
-        if (get(key) instanceof String)
-            return Boolean.parseBoolean(key);
+        System.out.println(get(key));
+        if (get(key) instanceof String) {
+            return (((String) get(key)).equalsIgnoreCase("true"));
+        }
         return (boolean) get(key);
     }
 

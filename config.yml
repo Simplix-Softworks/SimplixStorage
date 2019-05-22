@@ -1,0 +1,33 @@
+Maintance: 
+   use: true
+   permission: 
+MOTD: 
+   Slots: 250
+   1: Welcome
+   2: Willkommen
+   3: HUIII
+   use: true
+   Protocol-Version: 404
+ServerName: changeme.net
+Tablist: 
+   use: true
+Prefix: 
+   server: "\u00a77[\u00a73XCORE\u00a77] \u00bb "
+   console: "\u00a77[\u00a75X\u00a7dCore\u00a77] "
+BanSystem: 
+   use: true
+ChatSystem: 
+   MuteSystem: 
+      use: true
+   use: true
+   JoinMessages: 
+      use: true
+      messageForUsers: false
+CurrencyName: coins
+CommandRemover: 
+   use: true
+   CommandsToRemove: 
+   - ver
+   - bukkit:ver#Bukkit command
+   - bukkit:pl
+   - bukkit:plugins
