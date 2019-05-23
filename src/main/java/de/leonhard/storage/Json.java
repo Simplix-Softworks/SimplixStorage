@@ -400,6 +400,7 @@ public class Json extends StorageCreator implements StorageBase {
 
         key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
+
         synchronized (this) {
             reload();
 
@@ -407,12 +408,8 @@ public class Json extends StorageCreator implements StorageBase {
 
                 final Map map = HashMapUtil.stringToMap(key, value, object.toMap());
 
-//                System.out.println(map);
-
                 object = new JSONObject(map);
-
-//                System.out.println(object);
-
+//                System.out.println("PREWRITE: " + object);
                 try {
                     Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                     writer.write(object.toString(3));
