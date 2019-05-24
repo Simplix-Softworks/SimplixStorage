@@ -2,6 +2,8 @@
 # lightningstorage
 lightningstorage - A Library to store data a better way.
 
+![The worlds in right place](https://i.ibb.co/bRb4Y9L/worldtypes.png) 
+
 ! [LightningStorage] (https://i.ibb.co/Tt6VHFh/Lightning-Storage-New.png)
 
 
