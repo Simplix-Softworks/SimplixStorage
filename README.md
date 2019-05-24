@@ -1,11 +1,10 @@
 
-https://i.ibb.co/Tt6VHFh/Lightning-Storage-New.png
-
-
-
-
 # lightningstorage
 lightningstorage - A Library to store data a better way.
+
+! [LightningStorage] (https://i.ibb.co/Tt6VHFh/Lightning-Storage-New.png)
+
+
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
 Want to do more than just use simple .yml files store data?<br>
