@@ -1,3 +1,9 @@
+
+https://i.ibb.co/Tt6VHFh/Lightning-Storage-New.png
+
+
+
+
 # lightningstorage
 lightningstorage - A Library to store data a better way.
 
@@ -76,7 +82,7 @@ More file formats will be supported soon
     <dependency>
             <groupId>de.leonhard</groupId>
             <artifactId>LightningStorage</artifactId>
-            <version>1.0</version>
+            <version>1.9</version>
             <scope>compile</scope>
     </dependency>
 ```       
