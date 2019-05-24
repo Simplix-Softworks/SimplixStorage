@@ -27,30 +27,23 @@ public class HashMapUtil {
                     final Object obj = get(key, object);
                     if (obj instanceof Map) {
                         if (i == parts.length - 2) {
-//                            System.out.println(i + " key: " + " part " + parts[i+1] + " '" + key + " KEYMAP PRE " + keyMap);
                             keyMap = (HashMap) deepMerge((Map) keyMap.clone(), (Map) obj);
-                            if (keyMap.containsKey(parts[i + 1])){
-                                keyMap.remove(parts[i+1]);
-                                keyMap.put(parts[i+1], value); //PUTTING THE VALUE
+                            if (keyMap.containsKey(parts[i + 1])) {
+                                keyMap.remove(parts[i + 1]);
+                                keyMap.put(parts[i + 1], value); //PUTTING THE VALUE
                             }
 
-//                            System.out.println(i + " key: " + key + " KEYMAP AFTER " + keyMap);
 
                         } else {
-//                            System.out.println(i + " key: " + key + " KEYMAP PRE " + keyMap);
                             keyMap = (HashMap) deepMerge((Map) keyMap.clone(), (Map) obj);
-//                            System.out.println(i + " key: " + key + " KEYMAP AFTER " + keyMap);
                         }
                     } else {
-//                        System.out.println("PRE" + keyMap);
                         keyMap.put(parts[i], obj);//NOW BUGFREE
-//                        System.out.println("AFTER" + keyMap);
                     }
                 }
                 if (i == parts.length - 1) {
                     keyMap.put(parts[parts.length - 1], value); //ADDED DIE VALUE -> BUGGFREI
                 } else {
-//                    System.out.println(i + " " + (parts.length - 1) + " " + "SECOND " + keyMap + " key " + key);
 
                     if (keyMap.containsKey(parts[i])) {
                         keyMap.remove(parts[i]);
@@ -83,11 +76,9 @@ public class HashMapUtil {
             Map preResult = object;
             for (int i = 0; i < parts.length; i++) {
                 if (!preResult.containsKey(parts[i])) {
-//                    System.out.println("HASHMAP CONTAINT NICHT! " + preResult + " PARTS: " + Arrays.toString(parts) + " PART " + parts[i]);
                     return false;
                 }
                 if (!(preResult.get(parts[i]) instanceof HashMap) && i != parts.length - 1) {
-//                    System.out.println("KEINE HASHMAP " + preResult + "  PARTS: " + Arrays.toString(parts) + " PART " + parts[i]);
                     result = false;
                     return false;
                 }
