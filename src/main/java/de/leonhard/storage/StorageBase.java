@@ -164,4 +164,8 @@ public interface StorageBase {
     <T> T getOrSetDefault(String path, T def);
 
 
+    void update();
+
+
+
 }

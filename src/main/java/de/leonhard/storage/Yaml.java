@@ -19,11 +19,44 @@ public class Yaml extends StorageCreator implements StorageBase {
     private YamlObject yamlObject;
     private String pathPrefix;
 
+    private boolean autoReload = true;
+
 
     //TODO Header
 
 
+    private void reload() {
+
+        if (!autoReload)
+            return;
+
+        update();
+    }
+
+    @Override
+    public void update() {
+        try {
+            YamlReader reader = new YamlReader(new FileReader(file));
+            yamlObject = new YamlObject(reader.read());
+        } catch (IOException e) {
+            System.err.println("Exception while reloading yaml");
+            e.printStackTrace();
+        }
+    }
+
+
     public Yaml(String name, String path) {
+
+        try {
+            create(path, name, FileType.YAML);
+            this.file = super.file;
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+        update();
+    }
+
+    public Yaml(String name, String path, boolean autoReload) {
 
         try {
             create(path, name, FileType.YAML);
@@ -32,7 +65,11 @@ public class Yaml extends StorageCreator implements StorageBase {
                 final IOException e) {
             e.printStackTrace();
         }
+        update();
+        this.autoReload = autoReload;
+
     }
+
 
     /**
      * Sets a value to the yaml if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
@@ -54,9 +91,12 @@ public class Yaml extends StorageCreator implements StorageBase {
     public void set(String key, Object value) {
         reload();
 
+        if (!isAutoReload())
+            update();
+
         key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        YamlReader reader;
+        final YamlReader reader;
         synchronized (this) {
             try {
                 reader = new YamlReader(new FileReader(file));
@@ -84,7 +124,8 @@ public class Yaml extends StorageCreator implements StorageBase {
     }
 
 
-    public Object get(String key) {
+    private Object get(String key) {
+
 
 //        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
@@ -96,16 +137,6 @@ public class Yaml extends StorageCreator implements StorageBase {
         return yamlObject.toHashMap().containsKey(key) ? yamlObject.toHashMap().get(key) : null;
     }
 
-
-    private void reload() {
-        try {
-            YamlReader reader = new YamlReader(new FileReader(file));
-            yamlObject = new YamlObject(reader.read());
-        } catch (IOException e) {
-            System.err.println("Exception while reloading yaml");
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Get a String from a YAML-File
@@ -202,7 +233,7 @@ public class Yaml extends StorageCreator implements StorageBase {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-        if (!contains(key)){
+        if (!contains(key)) {
             System.out.println("CONTAINT NICHT");
             return false;
 
@@ -415,6 +446,14 @@ public class Yaml extends StorageCreator implements StorageBase {
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
         reload();
+    }
+
+    public boolean isAutoReload() {
+        return autoReload;
+    }
+
+    public void setAutoReload(boolean autoReload) {
+        this.autoReload = autoReload;
     }
 }
 

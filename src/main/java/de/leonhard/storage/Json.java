@@ -19,6 +19,8 @@ public class Json extends StorageCreator implements StorageBase {
     private String pathPrefix;
 
 
+    private boolean autoReload = true;
+
     /**
      * Creates a .json file where you can put your data in.+
      *
@@ -61,6 +63,43 @@ public class Json extends StorageCreator implements StorageBase {
 
     }
 
+    public Json(final String name, final String path, boolean autoReload) {
+
+        try {
+            create(path, name, FileType.JSON);
+
+            this.file = super.file;
+
+
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(file);
+            } catch (FileNotFoundException |
+                    NullPointerException e) {
+                e.printStackTrace();
+            }
+
+            if (file.length() == 0) {
+                object = new JSONObject();
+                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+                writer.write(object.toString(2));
+                writer.close();
+            }
+
+            JSONTokener tokener = new JSONTokener(fis);
+            object = new JSONObject(tokener);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println("Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+            ex.printStackTrace();
+        }
+
+        this.autoReload = autoReload;
+
+    }
+
     //TODO IMMER auf TODOS überprüfen.
 
 
@@ -83,15 +122,10 @@ public class Json extends StorageCreator implements StorageBase {
 
     private void reload() {
 
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException | NullPointerException e) {
-            System.err.println("Exception while reading Json");
-            e.printStackTrace();
-        }
-        final JSONTokener tokener = new JSONTokener(fis);
-        object = new JSONObject(tokener);
+        if (!autoReload)
+            return;
+
+        update();
     }
 
 
@@ -400,9 +434,12 @@ public class Json extends StorageCreator implements StorageBase {
 
         key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-
         synchronized (this) {
+
             reload();
+
+            if (!isAutoReload())
+                update();
 
             if (key.contains(".")) {
 
@@ -442,6 +479,19 @@ public class Json extends StorageCreator implements StorageBase {
         }
     }
 
+    @Override
+    public void update() {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException | NullPointerException e) {
+            System.err.println("Exception while reading Json");
+            e.printStackTrace();
+        }
+        final JSONTokener tokener = new JSONTokener(fis);
+        object = new JSONObject(tokener);
+    }
+
 
     private boolean has(final String key) {
         reload();
@@ -472,4 +522,14 @@ public class Json extends StorageCreator implements StorageBase {
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
     }
+
+
+    public boolean isAutoReload() {
+        return autoReload;
+    }
+
+    public void setAutoReload(boolean autoReload) {
+        this.autoReload = autoReload;
+    }
+
 }
