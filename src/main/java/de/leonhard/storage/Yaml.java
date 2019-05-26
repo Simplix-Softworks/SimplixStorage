@@ -10,40 +10,24 @@ import java.io.IOException;
 import java.util.*;
 
 public class Yaml extends StorageCreator implements StorageBase {
-    @Override
-    public File getFile() {
-        return file;
-    }
 
     private File file;
     private YamlObject yamlObject;
     private String pathPrefix;
-
     private boolean autoReload = true;
 
 
-    //TODO Header
+    /*
+    Structure:
+    -Constructors:
+    -Setters
+    -Getters
+    -private Methods (Reloaders etc.)
+    -
 
 
-    private void reload() {
 
-        if (!autoReload)
-            return;
-
-        update();
-    }
-
-    @Override
-    public void update() {
-        try {
-            YamlReader reader = new YamlReader(new FileReader(file));
-            yamlObject = new YamlObject(reader.read());
-        } catch (IOException e) {
-            System.err.println("Exception while reloading yaml");
-            e.printStackTrace();
-        }
-    }
-
+     */
 
     public Yaml(String name, String path) {
 
@@ -68,22 +52,6 @@ public class Yaml extends StorageCreator implements StorageBase {
         update();
         this.autoReload = autoReload;
 
-    }
-
-
-    /**
-     * Sets a value to the yaml if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
-     *
-     * @param key   Key to set the value
-     * @param value Value to set
-     */
-
-    @Override
-    public void setDefault(String key, Object value) {
-        if (contains(key)) {
-            return;
-        }
-        set(key, value);
     }
 
 
@@ -112,6 +80,22 @@ public class Yaml extends StorageCreator implements StorageBase {
         }
     }
 
+    /**
+     * Sets a value to the yaml if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
+     *
+     * @param key   Key to set the value
+     * @param value Value to set
+     */
+
+    @Override
+    public void setDefault(String key, Object value) {
+        if (contains(key)) {
+            return;
+        }
+        set(key, value);
+    }
+
+
     @Override
     public <T> T getOrSetDefault(final String path, T def) {
         reload();
@@ -121,20 +105,6 @@ public class Yaml extends StorageCreator implements StorageBase {
         } else {
             return (T) get(path);
         }
-    }
-
-
-    private Object get(String key) {
-
-
-//        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-        if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-            HashMap result = (HashMap) get(parts[0]);
-            return result.containsKey(parts[1]) ? result.get(parts[1]) : null;
-        }
-        return yamlObject.toHashMap().containsKey(key) ? yamlObject.toHashMap().get(key) : null;
     }
 
 
@@ -433,20 +403,30 @@ public class Yaml extends StorageCreator implements StorageBase {
         return (Map) yamlObject.get(finalKey);
     }
 
-    @Override
-    public String getFilePath() {
-        return file.getAbsolutePath();
+
+    private void reload() {
+
+        if (!autoReload)
+            return;
+
+        update();
     }
 
+    @Override
+    public void update() {
+        try {
+            YamlReader reader = new YamlReader(new FileReader(file));
+            yamlObject = new YamlObject(reader.read());
+        } catch (IOException e) {
+            System.err.println("Exception while reloading yaml");
+            e.printStackTrace();
+        }
+    }
 
     public String getPathPrefix() {
         return pathPrefix;
     }
 
-    public void setPathPrefix(String pathPrefix) {
-        this.pathPrefix = pathPrefix;
-        reload();
-    }
 
     public boolean isAutoReload() {
         return autoReload;
@@ -454,6 +434,20 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     public void setAutoReload(boolean autoReload) {
         this.autoReload = autoReload;
+    }
+
+    public void setPathPrefix(String pathPrefix) {
+        this.pathPrefix = pathPrefix;
+        reload();
+    }
+
+    private Object get(String key) {
+        if (key.contains(".")) {
+            String[] parts = key.split("\\.");
+            HashMap result = (HashMap) get(parts[0]);
+            return result.containsKey(parts[1]) ? result.get(parts[1]) : null;
+        }
+        return yamlObject.toHashMap().containsKey(key) ? yamlObject.toHashMap().get(key) : null;
     }
 }
 

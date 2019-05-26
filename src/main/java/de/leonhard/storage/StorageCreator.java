@@ -48,6 +48,10 @@ public abstract class StorageCreator {
         return file;
     }
 
+    public String getFilePath() {
+        return file.getAbsolutePath();
+    }
+
     public FileType getFileType() {
         return fileType;
     }

@@ -506,15 +506,6 @@ public class Json extends StorageCreator implements StorageBase {
         return has(finalKey);
     }
 
-    public File getFile() {
-        return file;
-    }
-
-    @Override
-    public String getFilePath() {
-        return file.getAbsolutePath();
-    }
-
     public String getPathPrefix() {
         return pathPrefix;
     }

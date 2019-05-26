@@ -7,7 +7,7 @@
     <groupId>de.leonhard</groupId>
     <artifactId>LightningStorage</artifactId>
     <version>1.9</version>
-    <name>LightninStorage</name>
+    <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/lightningstorage</url>
 
@@ -30,10 +30,6 @@
         <developerConnection>scm:git:ssh://github.com/JavaFactoryDev/lightningstorage.git</developerConnection>
         <url>//github.com/JavaFactoryDev/lightningstorage</url>
     </scm>
-
-    <properties>
-        <kotlin.version>1.3.31</kotlin.version>
-    </properties>
 
     <build>
         <pluginManagement>
