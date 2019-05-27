@@ -6,8 +6,6 @@ public class FileUtils {
 
 
     public static boolean hasChanged(final File file, final long timeStamp) {
-        if (file.lastModified() == timeStamp)
-            return false;
-        return true;
+        return file.lastModified() > timeStamp;
     }
 }

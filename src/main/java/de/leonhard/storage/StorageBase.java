@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface StorageBase {
 
+    Object get(String key);
+
     /**
      * Get a String from a file
      *
@@ -165,7 +167,6 @@ public interface StorageBase {
 
 
     void update();
-
 
 
 }

@@ -14,7 +14,7 @@ public class HashMapUtil {
 
     public static Map stringToMap(final String string, final Object value, final Map object) {
         if (string.contains(".")) {
-            String[] parts = string.split("\\.");
+            final String[] parts = string.split("\\.");
 
             HashMap keyMap = new HashMap();
 

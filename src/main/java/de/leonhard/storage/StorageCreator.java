@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class StorageCreator {
-    protected File file;
+    File file;
     private FileType fileType;
+    long lastModified;
 
     /**
-     * Creates an empty .yml or .file file.
+     * Creates an empty .yml or .json file.
      *
      * @param path     Absolute path where the file should be created
      * @param name     Name of the file
@@ -19,7 +20,7 @@ public abstract class StorageCreator {
      * @throws IOException Exception thrown if file could not be created.
      */
 
-    protected synchronized void create(final String path, final String name, final FileType fileType) throws IOException {
+    synchronized void create(final String path, final String name, final FileType fileType) throws IOException {
         this.fileType = fileType;
         if (path == null || path.equals("")) {
             file = new File(name + fileType.getExtension());
@@ -42,6 +43,10 @@ public abstract class StorageCreator {
         if (!file.exists()) {
             file.createNewFile();
         }
+    }
+
+    synchronized void load(final File file) {
+        this.file = file;
     }
 
     public File getFile() {

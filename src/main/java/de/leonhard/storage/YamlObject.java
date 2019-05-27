@@ -9,7 +9,7 @@ public class YamlObject {
     private HashMap<String, Object> hashMap;
 
 
-    public YamlObject(Object object) {
+    YamlObject(Object object) {
         this.object = object;
         this.hashMap = toHashMap();
     }
@@ -17,59 +17,58 @@ public class YamlObject {
 
     //SINGLETONs?
 
-    public HashMap toHashMap() {
+    HashMap toHashMap() {
         return (object == null) ? new HashMap<>() : (HashMap) object;
     }
 
 
-    public Object get(String key) {
+    Object get(String key) {
         if (key.contains(".")) {
             return HashMapUtil.contains(key, hashMap) ? HashMapUtil.get(key, hashMap) : null;
         }
         return hashMap.containsKey(key) ? toHashMap().get(key) : null;
     }
 
-    public boolean getBoolean(final String key) {
-        System.out.println(get(key));
+    boolean getBoolean(final String key) {
         if (get(key) instanceof String) {
             return (((String) get(key)).equalsIgnoreCase("true"));
         }
         return (boolean) get(key);
     }
 
-    public byte getByte(final String key) {
+    byte getByte(final String key) {
         if (get(key) instanceof String)
             return Byte.parseByte(get(key).toString());
         return (byte) get(key);
     }
 
-    public int getInt(final String key) {
+    int getInt(final String key) {
         if (get(key) instanceof String)
             return Integer.parseInt(get(key).toString());
         return (int) get(key);
     }
 
-    public float getFloat(final String key) {
+    float getFloat(final String key) {
         if (get(key) instanceof String) {
             return Float.parseFloat(get(key).toString());
         }
         return (float) get(key);
     }
 
-    public double getDouble(final String key) {
+    double getDouble(final String key) {
         if (get(key) instanceof String)
             return Double.parseDouble(get(key).toString());
         return (double) get(key);
     }
 
-    public long getLong(final String key) {
+    long getLong(final String key) {
         if (get(key) instanceof String)
             return Long.parseLong(get(key).toString());
         return (long) get(key);
     }
 
 
-    public String getString(final String key) {
+    String getString(final String key) {
         return (String) get(key);
     }
 
@@ -83,19 +82,19 @@ public class YamlObject {
      * @param key Path to String List in YAML-FIle
      * @return List
      */
-    public List<String> getStringList(String key) {
+    List<String> getStringList(String key) {
         return (List<String>) get(key);
     }
 
-    public List<Integer> getIntegerList(String key) {
+    List<Integer> getIntegerList(String key) {
         return (List<Integer>) get(key);
     }
 
-    public List<Byte> getByteList(String key) {
+    List<Byte> getByteList(String key) {
         return (List<Byte>) get(key);
     }
 
-    public List<Long> getLongList(String key) {
+    List<Long> getLongList(String key) {
         return (List<Long>) get(key);
     }
 
@@ -104,7 +103,7 @@ public class YamlObject {
     }
 
 
-    public void put(String key, Object value) {
+    void put(String key, Object value) {
         if (key.contains(".")) {
             hashMap = (HashMap) HashMapUtil.stringToMap(key, value, hashMap);
             object = hashMap;
@@ -135,6 +134,7 @@ public class YamlObject {
 
         return object.toString().equals(obj.toString());
     }
+
 
     public boolean contains(String key) {
         if (key.contains(".")) {

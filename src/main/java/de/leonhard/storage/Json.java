@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.HashMapUtil;
 import de.leonhard.storage.util.JsonUtil;
 import org.json.JSONArray;
@@ -17,9 +18,7 @@ public class Json extends StorageCreator implements StorageBase {
     private JSONObject object;
     private File file;
     private String pathPrefix;
-
-
-    private boolean autoReload = true;
+    private ReloadSettings reloadSettings;
 
     /**
      * Creates a .json file where you can put your data in.+
@@ -61,14 +60,53 @@ public class Json extends StorageCreator implements StorageBase {
             ex.printStackTrace();
         }
 
+        this.reloadSettings = ReloadSettings.intelligent;
     }
 
-    public Json(final String name, final String path, boolean autoReload) {
+    public Json(final String name, final String path, ReloadSettings reloadSettings) {
 
         try {
             create(path, name, FileType.JSON);
 
             this.file = super.file;
+
+
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(file);
+            } catch (FileNotFoundException |
+                    NullPointerException e) {
+                e.printStackTrace();
+            }
+
+            if (file.length() == 0) {
+                object = new JSONObject();
+                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+                writer.write(object.toString(3));
+                writer.close();
+            }
+
+            final JSONTokener tokener = new JSONTokener(fis);
+            object = new JSONObject(tokener);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println("Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+            ex.printStackTrace();
+        }
+
+        this.reloadSettings = reloadSettings;
+
+    }
+
+    Json(final File file) {
+
+        try {
+
+            load(file);
+
+            this.file = file;
 
 
             FileInputStream fis = null;
@@ -96,7 +134,6 @@ public class Json extends StorageCreator implements StorageBase {
             ex.printStackTrace();
         }
 
-        this.autoReload = autoReload;
 
     }
 
@@ -122,10 +159,15 @@ public class Json extends StorageCreator implements StorageBase {
 
     private void reload() {
 
-        if (!autoReload)
+        if (reloadSettings.equals(ReloadSettings.manually))
             return;
 
+        if (reloadSettings.equals(ReloadSettings.intelligent))
+            if (!FileUtils.hasChanged(file, lastModified))
+                return;
+
         update();
+
     }
 
 
@@ -213,7 +255,6 @@ public class Json extends StorageCreator implements StorageBase {
 
     }
 
-    //TODO getter Method -> With NestedObject
 
     /**
      * Gets a int from a JSON-File
@@ -430,23 +471,19 @@ public class Json extends StorageCreator implements StorageBase {
 
 
     @Override
-    public void set(String key, final Object value) {
+    public void set(final String key, final Object value) {
 
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
         synchronized (this) {
 
             reload();
 
-            if (!isAutoReload())
-                update();
+            if (finalKey.contains(".")) {
 
-            if (key.contains(".")) {
-
-                final Map map = HashMapUtil.stringToMap(key, value, object.toMap());
+                final Map map = HashMapUtil.stringToMap(finalKey, value, object.toMap());
 
                 object = new JSONObject(map);
-//                System.out.println("PREWRITE: " + object);
                 try {
                     Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                     writer.write(object.toString(3));
@@ -456,13 +493,13 @@ public class Json extends StorageCreator implements StorageBase {
                 }
                 return;
             }
-            object.put(key, value);
+            object.put(finalKey, value);
             try {
                 Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                 writer.write(object.toString(2));
                 writer.close();
             } catch (IOException e) {
-                System.err.println("Couldn' t set " + key + " " + value);
+                System.err.println("Couldn' t set " + finalKey + " " + value);
                 e.printStackTrace();
             }
         }
@@ -514,13 +551,5 @@ public class Json extends StorageCreator implements StorageBase {
         this.pathPrefix = pathPrefix;
     }
 
-
-    public boolean isAutoReload() {
-        return autoReload;
-    }
-
-    public void setAutoReload(boolean autoReload) {
-        this.autoReload = autoReload;
-    }
 
 }
