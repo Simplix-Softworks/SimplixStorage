@@ -10,6 +10,8 @@ buildNumber.properties
 BetaCore-TestServer
 BungeeCord
 
+
+
 # Eclipse
 bin/
 .settings
@@ -23,3 +25,4 @@ out/
 
 # Misc
 .DS_Store
+#/src/main/java/de/leonhard/storage/Main.java

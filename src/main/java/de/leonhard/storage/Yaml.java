@@ -39,6 +39,8 @@ public class Yaml extends StorageCreator implements StorageBase {
         } catch (final IOException e) {
             e.printStackTrace();
         }
+
+        this.reloadSettings = ReloadSettings.intelligent;
 //        System.out.println("UPDATING BECAUSE OF instanzing");
         update();
     }
