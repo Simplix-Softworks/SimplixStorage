@@ -2,27 +2,37 @@ package de.leonhard.storage;
 
 import java.util.Scanner;
 
-public class Main {
+public class Benchmark {
 
     public static void main(String[] args) {
-        Yaml yaml = new Yaml("test", "");
-        Json json = new Json("test", "");
+        final Yaml yaml = new Yaml("test", "");
+        final Json json = new Json("test", "");
 
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("-----BENCHMARKER-----");
-        System.out.println(" ");
+//        System.out.println(" ");
         System.out.println("Type: 'true' to run the benchmark");
 
-        if(scanner.nextBoolean()){
-            System.out.println("");
+        if (scanner.nextBoolean()) {
         }
+                /*
+        Results:
+
+          Instancing&Parsing.:
+            YAML: 1) 51 2) 52
+            JSON: 1) 5 2) 21
+
+         */
 
         final long ms = System.currentTimeMillis();
 
-        System.out.println("");
+        Json test = new Json("bench", "");
 
-        System.out.println(yaml.get("linkskeinemitte"));
+        test.get("a");
+
+
+//        test.set("a.b.c.d.e.f.g.h.i.k.l.l.m.n.o.p.q.r", true);
 
         final long timeNeeded = System.currentTimeMillis() - ms;
 

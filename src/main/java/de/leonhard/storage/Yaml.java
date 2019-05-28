@@ -74,18 +74,21 @@ public class Yaml extends StorageCreator implements StorageBase {
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        final YamlReader reader;
         synchronized (this) {
-            try {
-                reader = new YamlReader(new FileReader(file));
-                yamlObject = new YamlObject(reader.read());
-                yamlObject.put(finalKey, value);
-                YamlWriter writer = new YamlWriter(new FileWriter(file));
+            YamlObject old = yamlObject;
+            yamlObject.put(finalKey, value);
 
+            if (old.toString().equals(yamlObject.toString()))
+                return;
+
+            try {
+                YamlWriter writer = new YamlWriter(new FileWriter(file));
                 writer.write(yamlObject.toHashMap());
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                old = null;
             }
         }
     }

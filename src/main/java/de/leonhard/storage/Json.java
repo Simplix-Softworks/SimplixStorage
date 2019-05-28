@@ -481,15 +481,22 @@ public class Json extends StorageCreator implements StorageBase {
 
             if (finalKey.contains(".")) {
 
+                JSONObject old = this.object;
+
                 final Map map = HashMapUtil.stringToMap(finalKey, value, object.toMap());
 
                 object = new JSONObject(map);
                 try {
+                    if (old.toString().equals(object.toString()))
+                        return;
+
                     Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
                     writer.write(object.toString(3));
                     writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    old = null;
                 }
                 return;
             }
