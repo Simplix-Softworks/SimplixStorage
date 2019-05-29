@@ -3,8 +3,12 @@ package de.leonhard.storage;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.util.FileUtils;
+import org.yaml.snakeyaml.DumperOptions;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Yaml extends StorageCreator implements StorageBase {
@@ -13,6 +17,8 @@ public class Yaml extends StorageCreator implements StorageBase {
     private YamlObject yamlObject;
     private String pathPrefix;
     private ReloadSettings reloadSettings;
+    private org.yaml.snakeyaml.Yaml yaml;
+    private DumperOptions dumperOptions;
 
 
     /*
@@ -41,7 +47,8 @@ public class Yaml extends StorageCreator implements StorageBase {
         }
 
         this.reloadSettings = ReloadSettings.intelligent;
-//        System.out.println("UPDATING BECAUSE OF instanzing");
+        this.yaml = new org.yaml.snakeyaml.Yaml();
+        this.dumperOptions = new DumperOptions();
         update();
     }
 
@@ -55,6 +62,8 @@ public class Yaml extends StorageCreator implements StorageBase {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
+        this.yaml = new org.yaml.snakeyaml.Yaml();
+        this.dumperOptions = new DumperOptions();
         update();
     }
 
@@ -63,6 +72,8 @@ public class Yaml extends StorageCreator implements StorageBase {
         load(file);
 
         this.reloadSettings = ReloadSettings.intelligent;
+        this.yaml = new org.yaml.snakeyaml.Yaml();
+        this.dumperOptions = new DumperOptions();
 
         update();
     }
