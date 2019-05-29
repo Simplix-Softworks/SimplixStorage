@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class Yaml extends StorageCreator implements StorageBase {
+public class Yaml extends StorageCreator implements YamlBase {
 
     private File file;
     private YamlObject yamlObject;
@@ -49,6 +49,7 @@ public class Yaml extends StorageCreator implements StorageBase {
         this.reloadSettings = ReloadSettings.intelligent;
         this.yaml = new org.yaml.snakeyaml.Yaml();
         this.dumperOptions = new DumperOptions();
+        dumperOptions.setPrettyFlow(true);
         update();
     }
 
@@ -64,6 +65,8 @@ public class Yaml extends StorageCreator implements StorageBase {
         this.reloadSettings = reloadSettings;
         this.yaml = new org.yaml.snakeyaml.Yaml();
         this.dumperOptions = new DumperOptions();
+        dumperOptions.setPrettyFlow(true);
+
         update();
     }
 
@@ -74,11 +77,10 @@ public class Yaml extends StorageCreator implements StorageBase {
         this.reloadSettings = ReloadSettings.intelligent;
         this.yaml = new org.yaml.snakeyaml.Yaml();
         this.dumperOptions = new DumperOptions();
+        dumperOptions.setPrettyFlow(true);
 
         update();
     }
-
-
     @Override
     public void set(String key, Object value) {
         reload();

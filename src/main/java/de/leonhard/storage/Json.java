@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Json extends StorageCreator implements StorageBase {
+public class Json extends StorageCreator implements JsonBase {
     private JSONObject object;
     private File file;
     private String pathPrefix;
