@@ -1,21 +1,19 @@
 package de.leonhard.storage;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Benchmark {
 
     public static void main(String[] args) {
-        final Yaml yaml = new Yaml("test", "");
-        final Json json = new Json("test", "");
 
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("-----BENCHMARKER-----");
-//        System.out.println(" ");
-        System.out.println("Type: 'true' to run the benchmark");
+        System.out.println("How many times should the benchmark run?");
 
-        if (scanner.nextBoolean()) {
-        }
+        final byte runs = scanner.nextByte();
+        long result = 0;
                 /*
         Results:
 
@@ -25,20 +23,40 @@ public class Benchmark {
 
          */
 
-        final long ms = System.currentTimeMillis();
+                /*
+                Instanzing:
 
-        Json test = new Json("bench", "");
+                Setting:
 
-        test.get("a");
+                Getting:
 
+                Getting Nested:
+                 */
 
-//        test.set("a.b.c.d.e.f.g.h.i.k.l.l.m.n.o.p.q.r", true);
+        int i = 0;
+        final long start = System.currentTimeMillis();
+//        test.set("a.b.c.d.e.f.g.h.i.k.l.m.n.o.p.q.r.t.u.v.w.x.y.z", true);
+        while (i < runs) {
+            final long ms = System.currentTimeMillis();
+            //
 
-        final long timeNeeded = System.currentTimeMillis() - ms;
+            Json test = new Json("bench", "");
+            test.get("a.b.c.d.e.f.g.h.i.k.l.m.n.o.p.q.r.t.u.v.w.x.y.z");
+
+            //
+            final long timeNeeded = System.currentTimeMillis() - ms;
+
+            System.out.println("RUN " + i + " needed " + timeNeeded + " ms.");
+            result += timeNeeded;
+            i++;
+        }
+
+        System.out.println("Loops: " + runs);
+        System.out.println("Average per loop: " + ((System.currentTimeMillis() - start) / (double) runs) + " ms.");
+        System.out.println("Time: " + (System.currentTimeMillis() - start) + " ms");
+
 
         System.out.println("  ");
-
-        System.out.println("Benchmark took " + timeNeeded + " ms");
 
 
 //        yaml.setPathPrefix("linkskeinemitte.a.b");
