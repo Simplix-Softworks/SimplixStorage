@@ -6,7 +6,6 @@ import de.leonhard.storage.base.YamlBase;
 import de.leonhard.storage.util.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.yaml.snakeyaml.DumperOptions;
 
 import java.io.*;
 import java.util.*;
@@ -15,12 +14,11 @@ import java.util.*;
 @Setter
 public class Yaml extends StorageCreator implements YamlBase {
 
-    private File file;
-    private YamlObject yamlObject;
-    private String pathPrefix;
-    private ReloadSettings reloadSettings;
-    private org.yaml.snakeyaml.Yaml yaml;
-    private DumperOptions dumperOptions;
+
+    protected File file;
+    protected YamlObject yamlObject;
+    protected String pathPrefix;
+    protected ReloadSettings reloadSettings;
 
 
     /*
@@ -49,10 +47,6 @@ public class Yaml extends StorageCreator implements YamlBase {
         }
 
         this.reloadSettings = ReloadSettings.intelligent;
-        this.yaml = new org.yaml.snakeyaml.Yaml();
-        yaml.setSkipComments(false);
-        this.dumperOptions = new DumperOptions();
-        dumperOptions.setPrettyFlow(true);
         update();
     }
 
@@ -66,23 +60,12 @@ public class Yaml extends StorageCreator implements YamlBase {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
-        this.yaml = new org.yaml.snakeyaml.Yaml();
-        yaml.setSkipComments(false);
-        this.dumperOptions = new DumperOptions();
-        dumperOptions.setPrettyFlow(true);
-
         update();
     }
 
     Yaml(final File file) {
         this.file = file;
         load(file);
-
-        this.reloadSettings = ReloadSettings.intelligent;
-        this.yaml = new org.yaml.snakeyaml.Yaml();
-        yaml.setSkipComments(false);
-        this.dumperOptions = new DumperOptions();
-        dumperOptions.setPrettyFlow(true);
 
         update();
     }
@@ -342,7 +325,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         return (Map) yamlObject.get(finalKey);
     }
 
-    private void reload() {
+    protected void reload() {
 
         if (reloadSettings.equals(ReloadSettings.manually))
             return;
@@ -366,7 +349,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         this.lastModified = System.currentTimeMillis();
     }
 
-    private Object getNotNested(String key) {
+    protected Object getNotNested(String key) {
         if (key.contains(".")) {
             String[] parts = key.split("\\.");
             HashMap result = (HashMap) getNotNested(parts[0]);

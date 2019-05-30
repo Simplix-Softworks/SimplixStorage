@@ -6,7 +6,7 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>LightningStorage</artifactId>
-    <version>1.9</version>
+    <version>2.0-Development</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/lightningstorage</url>
@@ -113,11 +113,6 @@
             <artifactId>yamlbeans</artifactId>
             <version>1.08</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.leonhard</groupId>
-            <artifactId>SnakeYaml</artifactId>
-            <version>1.0</version>
         </dependency>
 
         <dependency>
