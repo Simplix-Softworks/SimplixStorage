@@ -2,15 +2,17 @@ package de.leonhard.storage;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
+import de.leonhard.storage.base.YamlBase;
 import de.leonhard.storage.util.FileUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.yaml.snakeyaml.DumperOptions;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
+@Getter
+@Setter
 public class Yaml extends StorageCreator implements YamlBase {
 
     private File file;
@@ -48,6 +50,7 @@ public class Yaml extends StorageCreator implements YamlBase {
 
         this.reloadSettings = ReloadSettings.intelligent;
         this.yaml = new org.yaml.snakeyaml.Yaml();
+        yaml.setSkipComments(false);
         this.dumperOptions = new DumperOptions();
         dumperOptions.setPrettyFlow(true);
         update();
@@ -64,6 +67,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         }
         this.reloadSettings = reloadSettings;
         this.yaml = new org.yaml.snakeyaml.Yaml();
+        yaml.setSkipComments(false);
         this.dumperOptions = new DumperOptions();
         dumperOptions.setPrettyFlow(true);
 
@@ -76,11 +80,13 @@ public class Yaml extends StorageCreator implements YamlBase {
 
         this.reloadSettings = ReloadSettings.intelligent;
         this.yaml = new org.yaml.snakeyaml.Yaml();
+        yaml.setSkipComments(false);
         this.dumperOptions = new DumperOptions();
         dumperOptions.setPrettyFlow(true);
 
         update();
     }
+
     @Override
     public void set(String key, Object value) {
         reload();
@@ -88,12 +94,12 @@ public class Yaml extends StorageCreator implements YamlBase {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
         synchronized (this) {
-            YamlObject old = yamlObject;
+
+            String old = yamlObject.toString();
             yamlObject.put(finalKey, value);
 
-            if (old.toString().equals(yamlObject.toString()))
+            if (old.equals(yamlObject.toString()) && yamlObject != null)
                 return;
-
             try {
                 YamlWriter writer = new YamlWriter(new FileWriter(file));
                 writer.write(yamlObject.toHashMap());
@@ -154,32 +160,6 @@ public class Yaml extends StorageCreator implements YamlBase {
     }
 
     @Override
-    public long getLong(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return 0;
-
-        return yamlObject.getLong(finalKey);
-    }
-
-    @Override
-    public int getInt(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return 0;
-
-        return yamlObject.getInt(finalKey);
-    }
-
-    @Override
     public byte getByte(String key) {
         reload();
 
@@ -193,40 +173,16 @@ public class Yaml extends StorageCreator implements YamlBase {
     }
 
     @Override
-    public boolean getBoolean(String key) {
+    public int getInt(String key) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-        if (!contains(key)) {
-            return false;
+        if (!contains(key))
+            return 0;
 
-        }
-
-        return yamlObject.getBoolean(finalKey);
-    }
-
-
-    @Override
-    public boolean contains(String key) {
-
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-        return has(key);
-    }
-
-    private boolean has(String key) {
-        reload();
-
-        if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-            Map map = (Map) getNotNested(parts[0]);
-
-            return yamlObject.toHashMap().containsKey(parts[0]) && map.containsKey(parts[1]);
-        }
-
-        return yamlObject.toHashMap().containsKey(key);
+        return yamlObject.getInt(finalKey);
     }
 
     @Override
@@ -255,6 +211,53 @@ public class Yaml extends StorageCreator implements YamlBase {
         return yamlObject.getDouble(finalKey);
     }
 
+    @Override
+    public long getLong(String key) {
+        reload();
+
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+        if (!contains(key))
+            return 0;
+
+        return yamlObject.getLong(finalKey);
+    }
+
+    @Override
+    public boolean getBoolean(String key) {
+        reload();
+
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+
+        if (!contains(key)) {
+            return false;
+
+        }
+
+        return yamlObject.getBoolean(finalKey);
+    }
+
+    @Override
+    public boolean contains(String key) {
+
+        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+        return has(key);
+    }
+
+    private boolean has(String key) {
+        reload();
+
+        if (key.contains(".")) {
+            String[] parts = key.split("\\.");
+            Map map = (Map) getNotNested(parts[0]);
+
+            return yamlObject.toHashMap().containsKey(parts[0]) && map.containsKey(parts[1]);
+        }
+
+        return yamlObject.toHashMap().containsKey(key);
+    }
 
     @Override
     public List<?> getList(String key) {
@@ -326,7 +329,6 @@ public class Yaml extends StorageCreator implements YamlBase {
         return (List<Long>) yamlObject.get(finalKey);
     }
 
-
     @Override
     public Map getMap(String key) {
         reload();
@@ -339,7 +341,6 @@ public class Yaml extends StorageCreator implements YamlBase {
 
         return (Map) yamlObject.get(finalKey);
     }
-
 
     private void reload() {
 
@@ -362,18 +363,7 @@ public class Yaml extends StorageCreator implements YamlBase {
             System.err.println("Exception while reloading yaml");
             e.printStackTrace();
         }
-//        System.out.println("UPDATED");
         this.lastModified = System.currentTimeMillis();
-    }
-
-    public String getPathPrefix() {
-        return pathPrefix;
-    }
-
-
-    public void setPathPrefix(String pathPrefix) {
-        this.pathPrefix = pathPrefix;
-        reload();
     }
 
     private Object getNotNested(String key) {
@@ -385,12 +375,10 @@ public class Yaml extends StorageCreator implements YamlBase {
         return yamlObject.toHashMap().containsKey(key) ? yamlObject.toHashMap().get(key) : null;
     }
 
-    public ReloadSettings getReloadSettings() {
-        return reloadSettings;
-    }
 
-    public void setReloadSettings(ReloadSettings reloadSettings) {
-        this.reloadSettings = reloadSettings;
+    public void setPathPrefix(String pathPrefix) {
+        this.pathPrefix = pathPrefix;
+        reload();
     }
 }
 

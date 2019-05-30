@@ -1,4 +1,4 @@
-package de.leonhard.storage;
+package de.leonhard.storage.base;
 
 import java.util.List;
 import java.util.Map;

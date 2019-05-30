@@ -1,4 +1,7 @@
-package de.leonhard.storage;
+package de.leonhard.storage.base;
 
 public interface YamlBase extends StorageBase {
+
+
+
 }

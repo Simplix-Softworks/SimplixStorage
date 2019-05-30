@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.base.JsonBase;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.HashMapUtil;
 import de.leonhard.storage.util.JsonUtil;
@@ -103,11 +104,8 @@ public class Json extends StorageCreator implements JsonBase {
     Json(final File file) {
 
         try {
-
             load(file);
-
             this.file = file;
-
 
             FileInputStream fis = null;
             try {
@@ -289,7 +287,6 @@ public class Json extends StorageCreator implements JsonBase {
 
         if (!contains(key))
             return 0;
-
 
         return (byte) get(key);
 
@@ -487,7 +484,7 @@ public class Json extends StorageCreator implements JsonBase {
 
                 object = new JSONObject(map);
                 try {
-                    if (old.toString().equals(object.toString()))
+                    if (old.toString().equals(object.toString()) && file.length() != 0)
                         return;
 
                     Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));

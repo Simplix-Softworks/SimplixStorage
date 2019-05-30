@@ -101,6 +101,10 @@
             <id>org.json</id>
             <url>https://mvnrepository.com/artifact/org.json/json</url>
         </repository>
+        <repository>
+            <id>Storage</id>
+            <url>http://thewarking.de:8081/repository/Storage/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -115,10 +119,19 @@
             <artifactId>SnakeYaml</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20180813</version>
+        </dependency>
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.16</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
