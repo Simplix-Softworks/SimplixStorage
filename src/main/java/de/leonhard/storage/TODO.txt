@@ -8,6 +8,13 @@ Find a parser and read how to use it!
 Look for deeper explanation of the parser linked in the main class: https://github.com/TheElectronWill/TOML-javalib
 Use it in the Toml class
 
+->Easy just implement the methods and maybe create a TomlObject.
+
+Create a RoadMap to make others understand the sourcecode better.
+
+Inheritance
+-->More packages?
+
 
 ->Get Header
 -->Reader.read()
@@ -23,4 +30,8 @@ Use it in the Toml class
 ------->wird sie List 2 hinzugefügt)
 
 
-
+Presentation:
+->SpigotMC: Neue Section: FileTypes/How to use (Nach Benefits)
+-->Benefits -> SpigotPage umschreiben, genauer anschauen, wie.
+-->GitHub -> Wiki -> How to work most efficient with LightningStorage
+-->
