@@ -5,7 +5,7 @@ import de.leonhard.storage.base.CSVBase;
 import java.util.List;
 import java.util.Map;
 
-public class CSV extends StorageCreator implements CSVBase {
+ class CSV extends StorageCreator implements CSVBase {
     @Override
     public Object get(String key) {
         return null;

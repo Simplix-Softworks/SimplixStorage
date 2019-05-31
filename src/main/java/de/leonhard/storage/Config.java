@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption;
 
 @Getter
 @Setter
-public class Config extends Yaml {
+class Config extends Yaml {
 
     private String[] header;
     private ConfigSettings configSettings;
@@ -35,8 +35,6 @@ public class Config extends Yaml {
     public void set(final String key, final Object value) {
         reload();
 
-
-        
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 

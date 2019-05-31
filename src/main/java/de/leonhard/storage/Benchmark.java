@@ -2,7 +2,7 @@ package de.leonhard.storage;
 
 import java.util.Scanner;
 
-public class Benchmark {
+class Benchmark {
 
 
     /*
@@ -10,7 +10,7 @@ public class Benchmark {
     https://www.spigotmc.org/threads/keep-config-comments-when-reload.375125/
      */
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
