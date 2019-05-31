@@ -1,18 +1,21 @@
 package de.leonhard.storage;
 
+import java.io.*;
+
 public class Main {
+    /*
+    https://www.google.com/search?client=ubuntu&channel=fs&q=java+merge+two+files&ie=utf-8&oe=utf-8
+     */
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Yaml yaml = new Yaml("test", "");
+        final File file = new File("test.yml");
 
-        String [] test = {"a", "b", "c", "d", "e"};
-        yaml.set("test", test);
+        YamlReader reader = new YamlReader(file);
 
-        yaml.getStringList("test").toArray();
+//        reader.read().forEach(System.out::println);
 
-        System.out.println(yaml.getStringList("test"));
-
+        reader.getHeader().forEach(System.out::println);
     }
 
 }

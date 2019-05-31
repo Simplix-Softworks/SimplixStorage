@@ -41,11 +41,12 @@ public class Benchmark {
         int i = 0;
         final long start = System.currentTimeMillis();
 //        test.set("a.b.c.d.e.f.g.h.i.k.l.m.n.o.p.q.r.t.u.v.w.x.y.z", true);
+        Yaml test = new Yaml("bench", "");
+
         while (i < runs) {
             final long ms = System.currentTimeMillis();
             //
 
-            Json test = new Json("bench", "");
             test.get("a.b.c.d.e.f.g.h.i.k.l.m.n.o.p.q.r.t.u.v.w.x.y.z");
 
             //
