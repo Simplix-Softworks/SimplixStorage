@@ -1,0 +1,26 @@
+TODO
+
+
+-CSV
+Find a parser and read how to use it!
+
+-TOML
+Look for deeper explanation of the parser linked in the main class: https://github.com/TheElectronWill/TOML-javalib
+Use it in the Toml class
+
+
+->Get Header
+-->Reader.read()
+->Preserver Comments
+-->Merge files.
+--->Matej?
+--->Get the whole yaml as line document
+----->Write the whole yaml as usual
+----->Read the whole yaml again.
+----->Merge the old version with comments with the new version without
+------>Compare List1(with comments) List2 (without) Every line of List 1 that starts with a #
+------->should be added to List2 (Google: Merge Lists) (Nur wenn eine Line von List1 mit einem # started,
+------->wird sie List 2 hinzugefügt)
+
+
+
