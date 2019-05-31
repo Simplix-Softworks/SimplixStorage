@@ -35,9 +35,12 @@ public class Config extends Yaml {
     public void set(final String key, final Object value) {
         reload();
 
+
+        
+
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        final File backup = new File(file.getAbsolutePath(), file.getName() + "-backups" + ".yml");
+        final File backup = new File(file.getAbsolutePath().replace(".yml", "-changed.yml"));
         synchronized (this) {
 
             String old = yamlObject.toString();
@@ -49,12 +52,14 @@ public class Config extends Yaml {
                 YamlWriter writer = new YamlWriter(new FileWriter(backup));
                 writer.write(yamlObject.toHashMap());
                 writer.close();
+                //TODO MERGE
+//                Files.copy(backup.toPath(), file.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 old = null;
             }
-//            Files.copy(backup.getAbsolutePath(), file.getAbsolutePath(), StandardCopyOption.COPY_ATTRIBUTES);
 
         }
 

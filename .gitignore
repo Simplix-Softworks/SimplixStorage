@@ -7,10 +7,6 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-BetaCore-TestServer
-BungeeCord
-
-
 
 # Eclipse
 bin/
