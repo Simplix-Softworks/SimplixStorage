@@ -7,12 +7,14 @@ import lombok.Setter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 class Config extends Yaml {
 
-    private String[] header;
+    private List<String> header;
     private ConfigSettings configSettings;
 
 
@@ -27,6 +29,7 @@ class Config extends Yaml {
     Config(File file) {
         super(file);
     }
+
 
     @Override
     public void set(final String key, final Object value) {

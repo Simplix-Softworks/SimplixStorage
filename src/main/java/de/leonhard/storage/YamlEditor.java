@@ -4,16 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@AllArgsConstructor
 @Getter
-public class YamlReader {
-    private File file;
+public class YamlEditor {
+    private final File file;
+
+    public YamlEditor(final File file) {
+        this.file = file;
+    }
 
 
     public List<String> read() throws IOException {
@@ -33,6 +37,18 @@ public class YamlReader {
             result.add(line);
         }
         return result;
+    }
+
+    public void write(final List<String> lines) throws IOException {
+        final FileWriter writer = new FileWriter(file);
+        System.out.println(lines);
+        for (final String str : lines){
+            writer.write(str + "\n");
+            System.out.println("LINE  " +  str);
+        }
+        writer.close();
+
+
     }
 
 }

@@ -1,17 +1,13 @@
 package de.leonhard.storage.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class HashMapUtil {
+public class Utils {
 
-
-    private HashMapUtil() {
-
+    private Utils() {
     }
 
+    //Method to create nested objects from String keys
     public static Map stringToMap(final String string, final Object value, final Map object) {
         if (string.contains(".")) {
             final String[] parts = string.split("\\.");
@@ -127,6 +123,7 @@ public class HashMapUtil {
         return sb.toString();
     }
 
+    //Method to merge Maps
     private static Map deepMerge(Map original, Map newMap) {
         for (Object key : newMap.keySet()) {
             if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
@@ -138,6 +135,28 @@ public class HashMapUtil {
             }
         }
         return original;
+    }
+
+    /**
+     * This is the main method to preserve comments in YAML files.
+     * It merges to Lists of String together: First the original List with the List with updated values
+     * It checks if the original contains lines that starts with # and adds them to the updated
+     * List at their current index
+     *
+     * @param original All lines from a file with comments
+     * @param updated  All lines from a file without comments but updated values
+     * @return Merges List of lines with comments and updated values
+     */
+
+    public static List<String> mergeLines(final List<String> original, final List<String> updated) {
+        List<String> result = new ArrayList<>(updated);
+
+        for (final String line : original) { //NUR WENN DIE LINE mit # started
+            if (line.startsWith("#"))
+                result.add(original.indexOf(line), line);
+        }
+
+        return result;
     }
 
 }

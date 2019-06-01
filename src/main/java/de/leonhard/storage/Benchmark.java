@@ -10,7 +10,7 @@ class Benchmark {
     https://www.spigotmc.org/threads/keep-config-comments-when-reload.375125/
      */
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -41,18 +41,18 @@ class Benchmark {
         int i = 0;
         final long start = System.currentTimeMillis();
 //        test.set("a.b.c.d.e.f.g.h.i.k.l.m.n.o.p.q.r.t.u.v.w.x.y.z", true);
-        Yaml test = new Yaml("bench", "");
 
         while (i < runs) {
             final long ms = System.currentTimeMillis();
             //
-
-            test.get("a.b.c.d.e.f.g.h.i.k.l.m.n.o.p.q.r.t.u.v.w.x.y.z");
+            Yaml yaml = new Yaml("test", "");
+//            yaml.setConfigSettings(ConfigSettings.preserveComments);
+//            yaml.set("ich bin der geilste", "leonhard");
 
             //
             final long timeNeeded = System.currentTimeMillis() - ms;
 
-            System.out.println("RUN " + i + " needed " + timeNeeded + " ms.");
+            System.out.println("RUN " + (i+1) + " needed " + timeNeeded + " ms.");
             result += timeNeeded;
             i++;
         }

@@ -2,6 +2,7 @@ package de.leonhard.storage;
 
 public enum ConfigSettings {
 
-    preserveComments
+    preserveComments,
+    skipComments
 
 }

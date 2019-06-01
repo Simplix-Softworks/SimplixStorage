@@ -4,6 +4,8 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.YamlBase;
 import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.util.Utils;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,11 +16,13 @@ import java.util.*;
 @Setter
 public class Yaml extends StorageCreator implements YamlBase {
 
-
     protected File file;
+    @Setter(AccessLevel.PRIVATE)
     protected YamlObject yamlObject;
     protected String pathPrefix;
     protected ReloadSettings reloadSettings;
+    protected ConfigSettings configSettings;
+    protected final YamlEditor yamlEditor;
 
 
     /*
@@ -38,7 +42,6 @@ public class Yaml extends StorageCreator implements YamlBase {
      */
 
     public Yaml(String name, String path) {
-
         try {
             create(path, name, FileType.YAML);
             this.file = super.file;
@@ -47,6 +50,8 @@ public class Yaml extends StorageCreator implements YamlBase {
         }
 
         this.reloadSettings = ReloadSettings.intelligent;
+        this.configSettings = ConfigSettings.skipComments;
+        yamlEditor = new YamlEditor(file);
         update();
     }
 
@@ -60,6 +65,9 @@ public class Yaml extends StorageCreator implements YamlBase {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
+        this.configSettings = ConfigSettings.skipComments;
+        yamlEditor = new YamlEditor(file);
+
         update();
     }
 
@@ -68,6 +76,9 @@ public class Yaml extends StorageCreator implements YamlBase {
         load(file);
 
         update();
+        this.reloadSettings = ReloadSettings.intelligent;
+        this.configSettings = ConfigSettings.skipComments;
+        yamlEditor = new YamlEditor(file);
     }
 
     @Override
@@ -83,16 +94,29 @@ public class Yaml extends StorageCreator implements YamlBase {
 
             if (old.equals(yamlObject.toString()) && yamlObject != null)
                 return;
+
             try {
-                YamlWriter writer = new YamlWriter(new FileWriter(file));
-                writer.write(yamlObject.toHashMap());
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                old = null;
+                if (configSettings.equals(ConfigSettings.preserveComments)) {
+                    List<String> orginal = yamlEditor.read();
+                    write(yamlObject.toHashMap());
+                    List<String> updated = yamlEditor.read();
+                    yamlEditor.write(Utils.mergeLines(orginal, updated));
+                    return;
+                }
+                write(yamlObject.toHashMap());
+
+            } catch (final IOException e) {
+                System.err.println("Error while writing '" + file.getName() + "'");
             }
+            old = null;
         }
+    }
+
+    @Override
+    public void write(Map data) throws IOException {
+        YamlWriter writer = new YamlWriter(new FileWriter(file));
+        writer.write(data);
+        writer.close();
     }
 
     /**
@@ -362,6 +386,22 @@ public class Yaml extends StorageCreator implements YamlBase {
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
         reload();
+    }
+
+
+    @Override
+    public List<String> getHeader() {
+        try {
+            return yamlEditor.getHeader();
+        } catch (IOException e) {
+            System.err.println("Error while getting header of '" + file.getName() + "'");
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public void setConfigSettings(final ConfigSettings configSettings) {
+        this.configSettings = configSettings;
     }
 }
 

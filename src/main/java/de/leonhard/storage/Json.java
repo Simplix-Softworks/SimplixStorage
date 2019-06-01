@@ -2,7 +2,7 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.base.JsonBase;
 import de.leonhard.storage.util.FileUtils;
-import de.leonhard.storage.util.HashMapUtil;
+import de.leonhard.storage.util.Utils;
 import de.leonhard.storage.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -181,7 +181,7 @@ public class Json extends StorageCreator implements JsonBase {
             return null;
 
         if (key.contains(".")) {
-            return HashMapUtil.contains(key, object.toMap()) ? HashMapUtil.get(key, object.toMap()) : null;
+            return Utils.contains(key, object.toMap()) ? Utils.get(key, object.toMap()) : null;
         }
         return object.has(key) ? object.get(key) : null;
     }
@@ -480,7 +480,7 @@ public class Json extends StorageCreator implements JsonBase {
 
                 JSONObject old = this.object;
 
-                final Map map = HashMapUtil.stringToMap(finalKey, value, object.toMap());
+                final Map map = Utils.stringToMap(finalKey, value, object.toMap());
 
                 object = new JSONObject(map);
                 try {
@@ -537,7 +537,7 @@ public class Json extends StorageCreator implements JsonBase {
     private boolean has(final String key) {
         reload();
         if (key.contains("."))
-            return HashMapUtil.contains(key, object.toMap());
+            return Utils.contains(key, object.toMap());
         return object.has(key);
     }
 
