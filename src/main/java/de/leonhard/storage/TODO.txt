@@ -18,6 +18,7 @@ Inheritance
 
 ->Get Header
 -->Reader.read()
+->Edit Header (s. Preserve Comments -> Just edit the List<1>)
 ->Preserver Comments
 -->Merge files.
 --->Matej?
@@ -28,6 +29,11 @@ Inheritance
 ------>Compare List1(with comments) List2 (without) Every line of List 1 that starts with a #
 ------->should be added to List2 (Google: Merge Lists) (Nur wenn eine Line von List1 mit einem # started,
 ------->wird sie List 2 hinzugefügt)
+
+What if the file only ends with a comment?
+->No real contains check -> Couldn't be changed if would be in Map
+->How to get if it just contains or is a comment?
+test: true #This is just for testing
 
 
 Presentation:
