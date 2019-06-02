@@ -1,10 +1,10 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.util.Utils;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 class Main {
     /*
@@ -18,31 +18,66 @@ class Main {
 
     public static void main(String[] args) throws IOException {
 
-        final File file = new File("test.yml");
-        final YamlEditor editor = new YamlEditor(file);
 
-        Yaml yaml = new Yaml("test", "");
-        yaml.setConfigSettings(ConfigSettings.preserveComments);
-        yaml.set("ich bin der geilste", "leonhard");
+//        Yaml yaml = new Yaml("test", "");
+//        yaml.setConfigSettings(ConfigSettings.preserveComments);
+//        yaml.set("network", "k3");
 
 
-//        List<String> orginal = Arrays.asList("#eaaazeee");
-//        List<String> updated = Arrays.asList("der Geilste: Leonhard");
-//        List<String> merged = Utils.mergeLines(orginal, updated);
+        Config cfg = new Config("test", "");
+        cfg.set("network", "hjh");
+//        cfg.getHeader().forEach(System.out::println);
+        cfg.setHeader(Arrays.asList("#ejkjekejkejkjekej", "#aklkalkalkalkalkalkal", "#akalkalkalkakalkalaklaklaklaklak"));
+
+//        final File file = new File("test.yml");
+//        final YamlEditor editor = new YamlEditor(file);
+//        final List<String> lines = editor.read();
+//        final List<String> comments = editor.getPureComments();
+//        lines.removeAll(comments);
+
+//        editor.getPureComments().forEach(System.out::println);
+
+//        YamlParser parser = new YamlParser(editor);
+
+//        final Map<String, List<String>> parsed = parser.assignCommentsToKey();
 
 
-//        System.out.println("GEMERGED: " +  merged + " " + merged.size());
+//        for(final String key : parsed.keySet()){
+//            System.out.println(lines.contains(key));
+//        }
+
+
+
+
+//        for (final String key : parsed.keySet()) {
+//            int i = 0;
+//            for (final String line : parsed.get(key)) {
+//                if (line.isEmpty())
+//                    continue;
+////                System.out.println("LINE" + key);
+//                if (lines.contains(key))
+//                    lines.add(lines.indexOf(key) + i, line);
+//            }
+//        }
+
+
+
+//        lines.forEach(System.out::println);
 //
-//        editor.write(merged);
-
-//        reader.getHeader().forEach(System.out::println);
-
-
-        ArrayList<String> a = new ArrayList<>(Arrays.asList("#ajjakajkaak", "#k2ok2l2", "working:false"));
-        ArrayList<String> b = new ArrayList<>(Arrays.asList("working:true", "teamintern:true"));
+//        for(final String key : parser.assignCommentsToKey().keySet()){
+//
+//        }
 
 
-//        System.out.println(Utils.mergeLines(a, b));
+//        final List<String> lines = editor.read();
+
+
+//        YamlEditor.getFooterFromLines(lines).forEach(System.out::println);
+//
+//        Yaml yaml = new Yaml("test", "");
+//        yaml.setConfigSettings(ConfigSettings.preserveComments);
+//        yaml.set("network", "kl");
+
 
     }
 

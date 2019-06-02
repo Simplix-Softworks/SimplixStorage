@@ -22,3 +22,4 @@ out/
 # Misc
 .DS_Store
 #/src/main/java/de/leonhard/storage/Benchmark.java
+/.vscode/

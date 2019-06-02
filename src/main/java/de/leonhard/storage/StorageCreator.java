@@ -1,5 +1,7 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.util.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,10 +44,21 @@ public abstract class StorageCreator {
         if (!file.exists()) {
             file.createNewFile();
         }
+        lastModified = System.currentTimeMillis();
     }
 
     synchronized void load(final File file) {
         this.file = file;
+    }
+
+    boolean shouldReload(ReloadSettings reloadSettings) {
+        if (reloadSettings.equals(ReloadSettings.manually))
+            return true;
+
+        if (reloadSettings.equals(ReloadSettings.intelligent))
+            if (!FileUtils.hasChanged(file, lastModified))
+                return true;
+        return false;
     }
 
     public File getFile() {

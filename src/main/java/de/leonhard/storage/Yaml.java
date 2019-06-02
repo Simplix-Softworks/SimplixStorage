@@ -23,6 +23,7 @@ public class Yaml extends StorageCreator implements YamlBase {
     protected ReloadSettings reloadSettings;
     protected ConfigSettings configSettings;
     protected final YamlEditor yamlEditor;
+    protected final YamlParser parser;
 
 
     /*
@@ -36,9 +37,6 @@ public class Yaml extends StorageCreator implements YamlBase {
     -Getters
     -private Methods (Reloaders etc.)
     -
-
-
-
      */
 
     public Yaml(String name, String path) {
@@ -52,6 +50,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         this.reloadSettings = ReloadSettings.intelligent;
         this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
+        parser = new YamlParser(yamlEditor);
         update();
     }
 
@@ -67,6 +66,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         this.reloadSettings = reloadSettings;
         this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
+        parser = new YamlParser(yamlEditor);
 
         update();
     }
@@ -76,9 +76,12 @@ public class Yaml extends StorageCreator implements YamlBase {
         load(file);
 
         update();
+
+        yamlEditor = new YamlEditor(file);
+        parser = new YamlParser(yamlEditor);
+
         this.reloadSettings = ReloadSettings.intelligent;
         this.configSettings = ConfigSettings.skipComments;
-        yamlEditor = new YamlEditor(file);
     }
 
     @Override
@@ -97,10 +100,15 @@ public class Yaml extends StorageCreator implements YamlBase {
 
             try {
                 if (configSettings.equals(ConfigSettings.preserveComments)) {
-                    List<String> orginal = yamlEditor.read();
+
+                    final List<String> lines = yamlEditor.read();
+                    final List<String> comments = yamlEditor.getComments();
+                    final List<String> header = yamlEditor.getHeader();
+                    final List<String> footer = yamlEditor.getFooter();
+                    Map<String, List<String>> parsed = YamlParser.assignCommentsToKey(lines);
                     write(yamlObject.toHashMap());
                     List<String> updated = yamlEditor.read();
-                    yamlEditor.write(Utils.mergeLines(orginal, updated));
+                    yamlEditor.write(updateWithComments(updated, footer, header, comments, parsed));
                     return;
                 }
                 write(yamlObject.toHashMap());
@@ -373,7 +381,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         this.lastModified = System.currentTimeMillis();
     }
 
-    protected Object getNotNested(String key) {
+    private Object getNotNested(String key) {
         if (key.contains(".")) {
             String[] parts = key.split("\\.");
             HashMap result = (HashMap) getNotNested(parts[0]);
@@ -387,7 +395,6 @@ public class Yaml extends StorageCreator implements YamlBase {
         this.pathPrefix = pathPrefix;
         reload();
     }
-
 
     @Override
     public List<String> getHeader() {
