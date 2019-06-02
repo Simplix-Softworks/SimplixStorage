@@ -105,16 +105,27 @@
             <id>Storage</id>
             <url>http://thewarking.de:8081/repository/Storage/</url>
         </repository>
+        <repository>
+            <id>TheWarKing-Public</id>
+            <url>http://thewarking.de:8081/repository/Storage/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>de.leonhard</groupId>
+            <artifactId>toml</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.esotericsoftware.yamlbeans</groupId>
             <artifactId>yamlbeans</artifactId>
             <version>1.08</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -128,5 +139,7 @@
             <version>1.16.16</version>
             <scope>provided</scope>
         </dependency>
+
+
     </dependencies>
 </project>
