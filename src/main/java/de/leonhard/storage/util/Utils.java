@@ -137,7 +137,14 @@ public class Utils {
         return original;
     }
 
+    public static boolean contains(final List<String> toCheck, final String toSearch, final boolean javaHasShortKock) {
+        for (final String part : toCheck) {
+            if (part.equals(toSearch))
+                return true;
+        }
+        return false;
 
+    }
 
 
 }

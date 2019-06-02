@@ -60,7 +60,7 @@ class Config extends Yaml {
                     write(yamlObject.toHashMap());
                     List<String> updated = yamlEditor.read();
 
-                    yamlEditor.write(updateWithComments(updated, footer, header, comments, parsed));
+                    yamlEditor.write(updateWithComments((ArrayList<String>) updated, footer, header, comments, parsed));
                     return;
                 }
                 write(yamlObject.toHashMap());
