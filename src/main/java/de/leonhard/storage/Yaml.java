@@ -4,7 +4,6 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.YamlBase;
 import de.leonhard.storage.util.FileUtils;
-import de.leonhard.storage.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -102,13 +101,13 @@ public class Yaml extends StorageCreator implements YamlBase {
                 if (configSettings.equals(ConfigSettings.preserveComments)) {
 
                     final List<String> lines = yamlEditor.read();
-                    final List<String> comments = yamlEditor.getComments();
-                    final List<String> header = yamlEditor.getHeader();
-                    final List<String> footer = yamlEditor.getFooter();
-                    Map<String, List<String>> parsed = YamlParser.assignCommentsToKey(lines);
+                    final List<String> comments = yamlEditor.readComments();
+                    final List<String> header = yamlEditor.readHeader();
+                    final List<String> footer = yamlEditor.readFooter();
+//                    Map<String, List<String>> parsed = YamlParser.assignCommentsToKey(lines);
                     write(yamlObject.toHashMap());
                     List<String> updated = yamlEditor.read();
-                    yamlEditor.write(updateWithComments((ArrayList<String>) updated, footer, header, comments, parsed));
+//                    yamlEditor.write(updateWithComments((ArrayList<String>) updated, footer, header, comments, parsed));
                     return;
                 }
                 write(yamlObject.toHashMap());
@@ -399,7 +398,7 @@ public class Yaml extends StorageCreator implements YamlBase {
     @Override
     public List<String> getHeader() {
         try {
-            return yamlEditor.getHeader();
+            return yamlEditor.readHeader();
         } catch (IOException e) {
             System.err.println("Error while getting header of '" + file.getName() + "'");
             e.printStackTrace();

@@ -31,12 +31,11 @@ public interface YamlBase extends StorageBase {
                     continue;
                 if (updated.contains(key)) {
                     result.add(result.indexOf(key) + i, line);
-                    continue;
+
                 }
             }
         }
 
-        result.forEach(System.out::println);
         return result;
 
     }

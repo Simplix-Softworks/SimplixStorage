@@ -113,12 +113,14 @@
 
     <dependencies>
 
+        <!-- TODO Bring to work!
         <dependency>
             <groupId>de.leonhard</groupId>
             <artifactId>toml</artifactId>
-            <version>1.0</version>
+            <version>LATEST</version>
             <scope>compile</scope>
         </dependency>
+        -->
 
         <dependency>
             <groupId>com.esotericsoftware.yamlbeans</groupId>

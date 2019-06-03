@@ -51,16 +51,15 @@ class Config extends Yaml {
                 if (configSettings.equals(ConfigSettings.preserveComments)) {
 
                     final List<String> lines = yamlEditor.read();
-                    final List<String> comments = yamlEditor.getComments();
-                    final List<String> header = yamlEditor.getHeader();
-                    final List<String> footer = yamlEditor.getFooter();
+                    final List<String> comments = yamlEditor.readComments();
+                    final List<String> header = yamlEditor.readHeader();
+                    final List<String> footer = yamlEditor.readFooter();
 
-                    Map<String, List<String>> parsed = YamlParser.assignCommentsToKey(lines);
+//                    Map<String, List<String>> parsed = YamlParser.assignCommentsToKey(lines);
 
                     write(yamlObject.toHashMap());
                     List<String> updated = yamlEditor.read();
 
-                    yamlEditor.write(updateWithComments((ArrayList<String>) updated, footer, header, comments, parsed));
                     return;
                 }
                 write(yamlObject.toHashMap());
@@ -83,7 +82,7 @@ class Config extends Yaml {
         if (!shouldReload(reloadSettings))
             return header;
         try {
-            return yamlEditor.getHeader();
+            return yamlEditor.readHeader();
         } catch (IOException e) {
             System.err.println("Couldn't get header of '" + file.getName() + "'.");
             e.printStackTrace();

@@ -22,11 +22,38 @@ public class YamlParser {
      * @return
      */
 
-    public Map<String, List<String>> assignCommentsToKey() throws IOException {
+    private Map<String, List<String>> assignCommentsToKey() throws IOException {
         return assignCommentsToKey(yamlEditor.read());
     }
 
-    public static Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
+    public List<String> getLinesWithComments(final List<String> updated) {
+        final List<String> keys;
+        final Map<String, List<String>> parsed;
+        try {
+            keys = yamlEditor.readKeys();
+            parsed = assignCommentsToKey();
+        } catch (final IOException e) {
+            System.err.println("Exception while reading keys from '" + file.getName() + "'");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+
+        for (final String key : parsed.keySet()) {
+            int i = 0;
+            for (final String line : parsed.get(key)) {
+                if (line.isEmpty())
+                    continue;
+                if (updated.contains(key)) {
+                    updated.add(updated.indexOf(key) + i, line);
+
+                }
+            }
+        }
+        return keys;
+    }
+
+
+    private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
 
         List<String> storage = new ArrayList<>();
         final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);

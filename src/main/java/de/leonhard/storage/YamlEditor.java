@@ -25,19 +25,23 @@ public class YamlEditor {
         return new ArrayList<>(Arrays.asList(asString.split("\n")));
     }
 
-    public List<String> getComments() throws IOException {
+    public List<String> readKeys() throws IOException {
+        return getKeys(read());
+    }
+
+    public List<String> readComments() throws IOException {
         return getCommentsFromLines(read());
     }
 
-    public List<String> getHeader() throws IOException {
+    public List<String> readHeader() throws IOException {
         return getHeaderFromLines(read());
     }
 
-    public List<String> getFooter() throws IOException {
+    public List<String> readFooter() throws IOException {
         return getFooterFromLines(read());
     }
 
-    public List<String> getPureComments() throws IOException {
+    public List<String> readPureComments() throws IOException {
         return getPureCommentsFromLines(read());
     }
 
@@ -112,6 +116,19 @@ public class YamlEditor {
 
         return lines;
     }
+
+    public static List<String> getKeys(final List<String> lines) {
+        final List<String> result = new ArrayList<>();
+
+        for (final String line : lines) {
+            if (!line.replaceAll("\\s+", "").startsWith("#"))
+                result.add(line);
+        }
+
+        return result;
+    }
+
+
 }
 
 
