@@ -1,6 +1,7 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.JsonBase;
+import de.leonhard.storage.objects.YamlObject;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Utils;
 import de.leonhard.storage.util.JsonUtil;

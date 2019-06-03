@@ -166,7 +166,13 @@ public interface StorageBase {
     <T> T getOrSetDefault(String path, T def);
 
 
+    /**
+     * Reloads the file
+     */
     void update();
+
+
+
 
 
 }

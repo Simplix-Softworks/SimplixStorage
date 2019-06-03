@@ -10,6 +10,7 @@ public class Toml implements TomlBase {
 
     private Map data;
 
+
     @Override
     public Object get(String key) {
         return null;
@@ -208,6 +209,15 @@ public class Toml implements TomlBase {
 
     @Override
     public void update() {
+
+    }
+
+    /**
+     * Reloads the file when needed see {@link ReloadSettings}
+     * for deeper information
+     */
+    @Override
+    public void reload() {
 
     }
 }

@@ -1,7 +1,5 @@
 package de.leonhard.storage;
 
-import lombok.Getter;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,8 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Getter
 public class YamlEditor {
+
     private final File file;
 
     public YamlEditor(final File file) {
@@ -128,6 +126,9 @@ public class YamlEditor {
         return result;
     }
 
+    public File getFile() {
+        return file;
+    }
 
 }
 

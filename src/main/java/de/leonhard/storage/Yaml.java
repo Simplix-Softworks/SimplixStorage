@@ -3,6 +3,7 @@ package de.leonhard.storage;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.YamlBase;
+import de.leonhard.storage.objects.YamlObject;
 import de.leonhard.storage.util.FileUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -100,14 +101,15 @@ public class Yaml extends StorageCreator implements YamlBase {
             try {
                 if (configSettings.equals(ConfigSettings.preserveComments)) {
 
-                    final List<String> lines = yamlEditor.read();
-                    final List<String> comments = yamlEditor.readComments();
+                    final List<String> unEdited = yamlEditor.read();
                     final List<String> header = yamlEditor.readHeader();
                     final List<String> footer = yamlEditor.readFooter();
-//                    Map<String, List<String>> parsed = YamlParser.assignCommentsToKey(lines);
                     write(yamlObject.toHashMap());
-                    List<String> updated = yamlEditor.read();
-//                    yamlEditor.write(updateWithComments((ArrayList<String>) updated, footer, header, comments, parsed));
+                    final List<String> lines = header;
+                    lines.addAll(yamlEditor.read());
+                    lines.addAll(footer);
+
+                    yamlEditor.write(parser.parseComments(unEdited, lines));
                     return;
                 }
                 write(yamlObject.toHashMap());
@@ -118,6 +120,7 @@ public class Yaml extends StorageCreator implements YamlBase {
             old = null;
         }
     }
+
 
     @Override
     public void write(Map data) throws IOException {
@@ -356,7 +359,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         return (Map) yamlObject.get(finalKey);
     }
 
-    protected void reload() {
+    private void reload() {
 
         if (reloadSettings.equals(ReloadSettings.manually))
             return;

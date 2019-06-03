@@ -33,43 +33,6 @@ class Config extends Yaml {
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    @Override
-    public void set(String key, Object value) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-        synchronized (this) {
-
-            String old = yamlObject.toString();
-            yamlObject.put(finalKey, value);
-
-            if (old.equals(yamlObject.toString()) && yamlObject != null)
-                return;
-
-            try {
-                if (configSettings.equals(ConfigSettings.preserveComments)) {
-
-                    final List<String> lines = yamlEditor.read();
-                    final List<String> comments = yamlEditor.readComments();
-                    final List<String> header = yamlEditor.readHeader();
-                    final List<String> footer = yamlEditor.readFooter();
-
-//                    Map<String, List<String>> parsed = YamlParser.assignCommentsToKey(lines);
-
-                    write(yamlObject.toHashMap());
-                    List<String> updated = yamlEditor.read();
-
-                    return;
-                }
-                write(yamlObject.toHashMap());
-
-            } catch (final IOException e) {
-                System.err.println("Error while writing '" + file.getName() + "'");
-            }
-            old = null;
-        }
-    }
 
     @Override
 

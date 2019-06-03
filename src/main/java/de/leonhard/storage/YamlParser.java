@@ -26,12 +26,12 @@ public class YamlParser {
         return assignCommentsToKey(yamlEditor.read());
     }
 
-    public List<String> getLinesWithComments(final List<String> updated) {
+    public List<String> parseComments(final List<String> comments, final List<String> updated) {
         final List<String> keys;
         final Map<String, List<String>> parsed;
         try {
             keys = yamlEditor.readKeys();
-            parsed = assignCommentsToKey();
+            parsed = assignCommentsToKey(comments);
         } catch (final IOException e) {
             System.err.println("Exception while reading keys from '" + file.getName() + "'");
             e.printStackTrace();
@@ -43,15 +43,33 @@ public class YamlParser {
             for (final String line : parsed.get(key)) {
                 if (line.isEmpty())
                     continue;
-                if (updated.contains(key)) {
-                    updated.add(updated.indexOf(key) + i, line);
-
+                if (updated.contains(key + " ")) {
+                    updated.add(updated.indexOf(key + " ") + i, line);
+                    continue;
                 }
+                if (updated.contains(" " + key)) {
+                    updated.add(updated.indexOf(" " + key) + i, line);
+                }
+
             }
         }
-        return keys;
+        return updated;
     }
 
+
+    private boolean contains(final List<String> list, final String toFind) {
+        for (final String toCheck : list) {
+            if (toCheck.startsWith("#"))
+                continue;
+            if (toCheck.equals(toFind)) {
+                System.out.println("The value '" + toCheck + "' is equal to '" + toFind + "'.");
+                return true;
+            } else {
+                System.out.println("The value '" + toCheck + "' is not equal to '" + toFind + "'.");
+            }
+        }
+        return false;
+    }
 
     private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
 
