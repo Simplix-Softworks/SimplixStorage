@@ -1,11 +1,12 @@
 package de.leonhard.storage.base;
 
-import de.leonhard.storage.ConfigSettings;
+import java.util.List;
 
 public interface ConfigBase extends YamlBase {
 
 
-    void set(final String key, final Object value, final ConfigSettings configSettings);
+    List<String> getHeader();
 
+    void setHeader(final List<String> header);
 
 }

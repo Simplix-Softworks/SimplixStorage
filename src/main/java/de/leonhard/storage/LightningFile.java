@@ -5,6 +5,17 @@ import java.io.File;
 public interface LightningFile {
 
 
+    /*
+    Make files more readable
+
+    ->
+    Base class:
+    YamlFile -> private only basic methods
+    ->Advanceda in new classes
+    ->
+     */
+
+
 
     /*
     Inheritance

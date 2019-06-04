@@ -85,6 +85,16 @@ public class Yaml extends StorageCreator implements YamlBase {
 
     @Override
     public void set(String key, Object value) {
+        insert(key, value);
+    }
+
+
+    @Override
+    public void set(String key, Object value, ConfigSettings configSettings) {
+        insert(key, value);
+    }
+
+    private void insert(String key, Object value) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -119,7 +129,6 @@ public class Yaml extends StorageCreator implements YamlBase {
             old = null;
         }
     }
-
 
     @Override
     public void write(Map data) throws IOException {

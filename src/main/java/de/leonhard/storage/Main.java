@@ -17,9 +17,13 @@ class Main {
     public static void main(String[] args) throws IOException {
 
 
-        Yaml yaml = new Yaml("test", "");
-        yaml.setConfigSettings(ConfigSettings.preserveComments);
-        yaml.set("network", "k3");
+//        Yaml yaml = new Yaml("test", "");
+//        yaml.setConfigSettings(ConfigSettings.preserveComments);
+//        yaml.set("network", "k3");
+
+        Toml toml = new Toml("aöalöa", "");
+
+
 //        final File file = new File("test.yml");
 //        final YamlEditor editor = new YamlEditor(file);
 //        final List<String> lines = editor.read();

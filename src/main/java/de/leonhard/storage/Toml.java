@@ -11,12 +11,12 @@ import java.util.Map;
 public class Toml extends StorageCreator implements TomlBase {
     private Map<String, Object> data;
     private File file;
+    private String pathPrefix;
     private final ReloadSettings reloadSettings;
-
 
     public Toml(final String name, final String path) {
         try {
-            create(name, path, FileType.YAML);
+            create(name, path, FileType.TOML);
             this.file = super.file;
         } catch (IOException e) {
             e.printStackTrace();
@@ -32,7 +32,6 @@ public class Toml extends StorageCreator implements TomlBase {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
-
     }
 
     Toml(final File file) {
@@ -40,7 +39,6 @@ public class Toml extends StorageCreator implements TomlBase {
         this.file = file;
         this.reloadSettings = ReloadSettings.intelligent;
     }
-
 
     /**
      * Set a object to your file
@@ -62,7 +60,8 @@ public class Toml extends StorageCreator implements TomlBase {
 
     @Override
     public Object get(String key) {
-        return null;
+        reload();
+        return Utils.get(key, data);
     }
 
     /**
@@ -73,7 +72,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public String getString(String key) {
-        return null;
+        return (contains(key)) ? (String) get(key) : "";
     }
 
     /**
@@ -84,7 +83,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public long getLong(String key) {
-        return 0;
+        return (contains(key)) ? (long) get(key) : 0;
     }
 
     /**
@@ -95,7 +94,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public int getInt(String key) {
-        return 0;
+        return (contains(key)) ? (int) get(key) : 0;
     }
 
     /**
@@ -106,7 +105,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public byte getByte(String key) {
-        return 0;
+        return (contains(key)) ? (byte) get(key) : 0;
     }
 
     /**
@@ -117,7 +116,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public boolean getBoolean(String key) {
-        return false;
+        return (contains(key)) ? (boolean) get(key) : false;
     }
 
     /**
@@ -128,6 +127,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public float getFloat(String key) {
+
         return 0;
     }
 
@@ -225,8 +225,9 @@ public class Toml extends StorageCreator implements TomlBase {
      * @return Returned value
      */
     @Override
-    public boolean contains(String key) {
-        return false;
+    public boolean contains(final String key) {
+        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        return Utils.contains(finalKey, data);
     }
 
     /**
@@ -263,5 +264,13 @@ public class Toml extends StorageCreator implements TomlBase {
         if (!shouldReload(reloadSettings))
             return;
         update();
+    }
+
+    public String getPathPrefix() {
+        return pathPrefix;
+    }
+
+    public void setPathPrefix(String pathPrefix) {
+        this.pathPrefix = pathPrefix;
     }
 }

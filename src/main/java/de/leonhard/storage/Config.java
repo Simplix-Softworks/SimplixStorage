@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.base.ConfigBase;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,11 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Setter
 @Getter
-class Config extends Yaml {
+class Config extends Yaml implements ConfigBase {
 
 
     private List<String> header;
@@ -33,10 +33,12 @@ class Config extends Yaml {
         this.configSettings = ConfigSettings.preserveComments;
     }
 
+    @Override
+    public void set(String key, Object value) {
+        super.set(key, value, configSettings);
+    }
 
     @Override
-
-
     public List<String> getHeader() {
 
         if (configSettings.equals(ConfigSettings.skipComments))
@@ -53,17 +55,14 @@ class Config extends Yaml {
         return new ArrayList<>();
     }
 
+    @Override
     public void setHeader(List<String> header) {
-
         if (configSettings.equals(ConfigSettings.skipComments))
             return;
 
         final List<String> oldHeader = getHeader();
         try {
             final List<String> lines = yamlEditor.read();
-
-//            lines.removeAll(oldHeader);
-
             for (final String head : oldHeader) {
                 lines.add(oldHeader.indexOf(head), head);
             }
@@ -84,9 +83,6 @@ class Config extends Yaml {
             System.err.println("Couldn't set header of '" + file.getName() + "'");
             e.printStackTrace();
         }
-
         this.header = header;
-
-
     }
 }

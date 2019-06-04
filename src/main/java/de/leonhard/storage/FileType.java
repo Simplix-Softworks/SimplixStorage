@@ -2,12 +2,14 @@ package de.leonhard.storage;
 
 public enum FileType {
     JSON(".json"),
-    YAML(".yml");
+    YAML(".yml"),
+    TOML(".toml"),
+    CSV(".csv");
 
 
     private String extension;
 
-    private FileType(String extension){
+    private FileType(String extension) {
         this.extension = extension;
     }
 
