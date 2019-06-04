@@ -8,11 +8,11 @@ public class Utils {
     }
 
     //Method to create nested objects from String keys
-    public static Map stringToMap(final String string, final Object value, final Map object) {
+    public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
         if (string.contains(".")) {
             final String[] parts = string.split("\\.");
 
-            HashMap keyMap = new HashMap();
+            HashMap<String, Object> keyMap = new HashMap<>();
 
             int j = 0;
             for (int i = parts.length - 1; i > 0; i--) {
@@ -23,15 +23,13 @@ public class Utils {
                     final Object obj = get(key, object);
                     if (obj instanceof Map) {
                         if (i == parts.length - 2) {
-                            keyMap = (HashMap) deepMerge((Map) keyMap.clone(), (Map) obj);
+                            keyMap = (HashMap<String, Object>) deepMerge((Map) keyMap.clone(), (Map) obj);
                             if (keyMap.containsKey(parts[i + 1])) {
                                 keyMap.remove(parts[i + 1]);
                                 keyMap.put(parts[i + 1], value); //PUTTING THE VALUE
                             }
-
-
                         } else {
-                            keyMap = (HashMap) deepMerge((Map) keyMap.clone(), (Map) obj);
+                            keyMap = (HashMap<String, Object>) deepMerge((Map) keyMap.clone(), (Map) obj);
                         }
                     } else {
                         keyMap.put(parts[i], obj);//NOW BUGFREE
@@ -47,7 +45,7 @@ public class Utils {
                     }
 
 
-                    HashMap preResult = new HashMap();
+                    HashMap<String, Object> preResult = new HashMap<>();
                     preResult.put(parts[i], keyMap);
                     keyMap = preResult;
                 }
@@ -62,7 +60,7 @@ public class Utils {
 
             return deepMerge(object, result);
         }
-        return new HashMap();
+        return new HashMap<>();
     }
 
     public static boolean contains(String string, final Map object) {
@@ -124,7 +122,7 @@ public class Utils {
     }
 
     //Method to merge Maps
-    private static Map deepMerge(Map original, Map newMap) {
+    private static Map<String, Object> deepMerge(Map original, Map newMap) {
         for (Object key : newMap.keySet()) {
             if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
                 Map originalChild = (Map) original.get(key);
@@ -136,15 +134,4 @@ public class Utils {
         }
         return original;
     }
-
-    public static boolean contains(final List<String> toCheck, final String toSearch, final boolean javaHasShortKock) {
-        for (final String part : toCheck) {
-            if (part.equals(toSearch))
-                return true;
-        }
-        return false;
-
-    }
-
-
 }

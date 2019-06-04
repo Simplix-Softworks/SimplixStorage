@@ -59,8 +59,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         try {
             create(path, name, FileType.YAML);
             this.file = super.file;
-        } catch (
-                final IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;

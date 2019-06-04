@@ -1,15 +1,64 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.TomlBase;
+import de.leonhard.storage.util.Utils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class Toml implements TomlBase {
+public class Toml extends StorageCreator implements TomlBase {
+    private Map<String, Object> data;
+    private File file;
+    private final ReloadSettings reloadSettings;
 
 
-    private Map data;
+    public Toml(final String name, final String path) {
+        try {
+            create(name, path, FileType.YAML);
+            this.file = super.file;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.reloadSettings = ReloadSettings.intelligent;
+    }
 
+    public Toml(final String name, final String path, final ReloadSettings reloadSettings) {
+        try {
+            create(name, path, FileType.YAML);
+            this.file = super.file;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.reloadSettings = reloadSettings;
+
+    }
+
+    Toml(final File file) {
+
+        this.file = file;
+        this.reloadSettings = ReloadSettings.intelligent;
+    }
+
+
+    /**
+     * Set a object to your file
+     *
+     * @param key   The key your value should be associated with
+     * @param value The value you want to set in your file
+     */
+    @Override
+    public void set(String key, Object value) {
+        reload();
+        data = Utils.stringToMap(key, value, data);
+        try {
+            com.electronwill.toml.Toml.write(data, file);
+        } catch (IOException e) {
+            System.err.println("Exception while writing to Toml file '" + file.getName() + "'");
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public Object get(String key) {
@@ -170,17 +219,6 @@ public class Toml implements TomlBase {
     }
 
     /**
-     * Set a object to your file
-     *
-     * @param key   The key your value should be associated with
-     * @param value The value you want to set in your file
-     */
-    @Override
-    public void set(String key, Object value) {
-
-    }
-
-    /**
      * Checks wheter a key exists in the file
      *
      * @param key Key to check
@@ -209,15 +247,21 @@ public class Toml implements TomlBase {
 
     @Override
     public void update() {
-
+        try {
+            data = com.electronwill.toml.Toml.read(file);
+        } catch (IOException e) {
+            System.err.println("Exception while reading '" + file.getName() + "'");
+            e.printStackTrace();
+        }
     }
 
     /**
      * Reloads the file when needed see {@link ReloadSettings}
      * for deeper information
      */
-    @Override
-    public void reload() {
-
+    private void reload() {
+        if (!shouldReload(reloadSettings))
+            return;
+        update();
     }
 }
