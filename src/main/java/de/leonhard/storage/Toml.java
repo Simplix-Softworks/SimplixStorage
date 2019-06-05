@@ -24,6 +24,7 @@ public class Toml extends StorageCreator implements TomlBase {
             e.printStackTrace();
         }
         this.reloadSettings = ReloadSettings.intelligent;
+        update();
     }
 
     public Toml(final String name, final String path, final ReloadSettings reloadSettings) {
@@ -34,12 +35,14 @@ public class Toml extends StorageCreator implements TomlBase {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
+        update();
     }
 
     Toml(final File file) {
 
         this.file = file;
         this.reloadSettings = ReloadSettings.intelligent;
+        update();
     }
 
     /**

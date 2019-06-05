@@ -5,6 +5,7 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.YamlBase;
 import de.leonhard.storage.objects.YamlObject;
 import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -275,10 +276,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         reload();
 
         if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-            Map map = (Map) getNotNested(parts[0]);
-
-            return yamlObject.toHashMap().containsKey(parts[0]) && map.containsKey(parts[1]);
+            return Utils.contains(key, yamlObject.toHashMap());
         }
 
         return yamlObject.toHashMap().containsKey(key);

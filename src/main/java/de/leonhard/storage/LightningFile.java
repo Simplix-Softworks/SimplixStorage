@@ -2,25 +2,38 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.base.LightningBase;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class LightningFile implements LightningBase {
-    @Override
-    public void write(Map data) throws IOException {
+class LightningFile extends StorageCreator implements LightningBase {
 
+
+    private Map<String, Object> data;
+    private final ReloadSettings reloadSettings;
+    private File file;
+
+    public LightningFile(final String name, final String path) {
+        try {
+            create(path, name, FileType.LS);
+        } catch (IOException e) {
+            System.err.println("Exception while creating '" + file.getName() + "'");
+            e.printStackTrace();
+        }
+        this.reloadSettings = ReloadSettings.intelligent;
     }
 
-    @Override
-    public List<String> getHeader() {
-        return null;
+    public LightningFile(final String name, final String path, final ReloadSettings reloadSettings) {
+
+        this.reloadSettings = reloadSettings;
     }
 
-    @Override
-    public void set(String key, Object value, ConfigSettings configSettings) {
-
+    LightningFile(final File file) {
+        this.file = file;
+        this.reloadSettings = ReloadSettings.intelligent;
     }
+
 
     @Override
     public Object get(String key) {
