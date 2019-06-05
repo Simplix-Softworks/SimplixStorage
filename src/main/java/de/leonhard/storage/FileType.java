@@ -4,12 +4,13 @@ public enum FileType {
     JSON(".json"),
     YAML(".yml"),
     TOML(".toml"),
-    CSV(".csv");
+    CSV(".csv"),
+    LS(".ls");
 
 
     private String extension;
 
-    private FileType(String extension) {
+    FileType(String extension) {
         this.extension = extension;
     }
 

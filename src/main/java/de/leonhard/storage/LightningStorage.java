@@ -2,26 +2,10 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.base.LightningBase;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class LightningFile implements LightningBase {
-    @Override
-    public void write(Map data) throws IOException {
-
-    }
-
-    @Override
-    public List<String> getHeader() {
-        return null;
-    }
-
-    @Override
-    public void set(String key, Object value, ConfigSettings configSettings) {
-
-    }
-
+public class LightningStorage implements LightningBase {
     @Override
     public Object get(String key) {
         return null;

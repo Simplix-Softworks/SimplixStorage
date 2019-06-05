@@ -1,28 +1,12 @@
 TODO
-
-
 -CSV
 Find a parser and read how to use it!
 
--TOML
-Look for deeper explanation of the parser linked in the main class: https://github.com/TheElectronWill/TOML-javalib
-Use it in the Toml class
-
-->Easy just implement the methods and maybe create a TomlObject.
 
 Create a RoadMap to make others understand the sourcecode better.
 
 Inheritance
 -->More packages?
-
-
-->Get Header
-
-What if the file only ends with a comment?
-->No real contains check -> Couldn't be changed if would be in Map
-->How to get if it just contains or is a comment?
-test: true #This is just for testing
-
 
 Presentation:
 ->SpigotMC: Neue Section: FileTypes/How to use (Nach Benefits)
