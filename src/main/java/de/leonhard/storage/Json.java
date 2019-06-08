@@ -36,12 +36,10 @@ public class Json extends StorageCreator implements JsonBase {
 
             this.file = super.file;
 
-
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(file);
-            } catch (FileNotFoundException |
-                    NullPointerException e) {
+            } catch (FileNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -58,7 +56,8 @@ public class Json extends StorageCreator implements JsonBase {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception ex) {
-            System.err.println("Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+            System.err.println(
+                    "Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
             ex.printStackTrace();
         }
 
@@ -72,12 +71,10 @@ public class Json extends StorageCreator implements JsonBase {
 
             this.file = super.file;
 
-
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(file);
-            } catch (FileNotFoundException |
-                    NullPointerException e) {
+            } catch (FileNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -94,7 +91,8 @@ public class Json extends StorageCreator implements JsonBase {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception ex) {
-            System.err.println("Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+            System.err.println(
+                    "Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
             ex.printStackTrace();
         }
 
@@ -111,8 +109,7 @@ public class Json extends StorageCreator implements JsonBase {
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(file);
-            } catch (FileNotFoundException |
-                    NullPointerException e) {
+            } catch (FileNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
 
@@ -129,19 +126,18 @@ public class Json extends StorageCreator implements JsonBase {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception ex) {
-            System.err.println("Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+            System.err.println(
+                    "Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
             ex.printStackTrace();
         }
 
-
     }
 
-    //TODO IMMER auf TODOS überprüfen.
-
+    // TODO IMMER auf TODOS überprüfen.
 
     /**
-     * Sets a value to the json if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
-     * Uses {@link JSONObject}
+     * Sets a value to the json if the file doesn't already contain the value (Not
+     * mix up with Bukkit addDefault) Uses {@link JSONObject}
      *
      * @param key   Key to set the value
      * @param value Value to set
@@ -155,7 +151,6 @@ public class Json extends StorageCreator implements JsonBase {
         set(key, value);
     }
 
-
     private void reload() {
 
         if (reloadSettings.equals(ReloadSettings.manually))
@@ -168,7 +163,6 @@ public class Json extends StorageCreator implements JsonBase {
         update();
 
     }
-
 
     public Object get(final String key) {
 
@@ -187,10 +181,8 @@ public class Json extends StorageCreator implements JsonBase {
         return object.has(key) ? object.get(key) : null;
     }
 
-
     /**
-     * Gets a long from a JSON-File
-     * Uses {@link JSONObject}
+     * Gets a long from a JSON-File Uses {@link JSONObject}
      *
      * @param key Path to long in JSON-FILE
      * @return long from JSON
@@ -202,13 +194,13 @@ public class Json extends StorageCreator implements JsonBase {
         if (!contains(key))
             return 0;
 
-        return (get(key) instanceof Integer) ? (long) (int) get(key) : (long) get(key);//TrobleShooting: Integer not castable to Long
+        return (get(key) instanceof Integer) ? (long) (int) get(key) : (long) get(key);// TrobleShooting: Integer not
+                                                                                       // castable to Long
 
     }
 
     /**
-     * Get a double from a JSON-File
-     * Uses {@link JSONObject}
+     * Get a double from a JSON-File Uses {@link JSONObject}
      *
      * @param key Path to double in JSON-File
      * @return Double from JSON
@@ -220,20 +212,18 @@ public class Json extends StorageCreator implements JsonBase {
         if (!contains(key))
             return 0;
 
-
-        return (get(key) instanceof Integer) ? (double) (int) get(key) : (double) get(key);//TrobleShooting: Integer not castable to Double
+        return (get(key) instanceof Integer) ? (double) (int) get(key) : (double) get(key);// TrobleShooting: Integer
+                                                                                           // not castable to Double
         // -> Wrapper class
 
     }
 
     /**
-     * Get a float from a JSON-File
-     * Uses {@link JSONObject}
+     * Get a float from a JSON-File Uses {@link JSONObject}
      *
      * @param key Path to float in JSON-File
      * @return Float from JSON
      */
-
 
     @Override
     public float getFloat(String key) {
@@ -247,13 +237,14 @@ public class Json extends StorageCreator implements JsonBase {
             if (get(key) instanceof Double) {
                 return (float) (double) get(key);
             }
-            return (get(key) instanceof Integer) ? (float) (int) get(key) : (int) get(key);//TrobleShooting: Integer not castable to Double -> Wrapper class
+            return (get(key) instanceof Integer) ? (float) (int) get(key) : (int) get(key);// TrobleShooting: Integer
+                                                                                           // not castable to Double ->
+                                                                                           // Wrapper class
             //
         }
         return (object.get(key) instanceof Integer) ? (float) (int) object.get(key) : (float) object.get(key);
 
     }
-
 
     /**
      * Gets a int from a JSON-File
@@ -275,8 +266,7 @@ public class Json extends StorageCreator implements JsonBase {
     }
 
     /**
-     * Get a byte from a JSON-File
-     * Uses {@link JSONObject}
+     * Get a byte from a JSON-File Uses {@link JSONObject}
      *
      * @param key Path to byte in JSON-File
      * @return Byte from JSON
@@ -294,8 +284,7 @@ public class Json extends StorageCreator implements JsonBase {
     }
 
     /**
-     * Get a boolean from a JSON-File
-     * Uses {@link JSONObject}
+     * Get a boolean from a JSON-File Uses {@link JSONObject}
      *
      * @param key Path to boolean in JSON-File
      * @return Boolean from JSON
@@ -312,12 +301,10 @@ public class Json extends StorageCreator implements JsonBase {
 
     }
 
-
     /**
-     * Get String List
-     * Uses {@link JSONObject}
+     * Get String List Uses {@link JSONObject}
      *
-     * @param key Path to String  in Json-File
+     * @param key Path to String in Json-File
      * @return String from Json
      */
 
@@ -328,15 +315,12 @@ public class Json extends StorageCreator implements JsonBase {
         if (!contains(key))
             return null;
 
-
         return (String) get(key);
 
     }
 
-
     /**
-     * Get a List from a JSON-File by key
-     * Uses {@link YamlObject}
+     * Get a List from a JSON-File by key Uses {@link YamlObject}
      *
      * @param key Path to StringList in JSON-File
      * @return String-List
@@ -347,7 +331,6 @@ public class Json extends StorageCreator implements JsonBase {
         reload();
         if (!contains(key))
             return new ArrayList<>();
-
 
         final Object object = get(key);
         final JSONArray ja = new JSONArray(object.toString());
@@ -360,8 +343,7 @@ public class Json extends StorageCreator implements JsonBase {
     }
 
     /**
-     * Get a String-List from a JSON-File by key
-     * Uses {@link JSONObject}
+     * Get a String-List from a JSON-File by key Uses {@link JSONObject}
      *
      * @param key Path to String List in YAML-File
      * @return String-List
@@ -374,14 +356,12 @@ public class Json extends StorageCreator implements JsonBase {
         if (!contains(key))
             return new ArrayList<>();
 
-
         return (List<String>) getList(key);
 
     }
 
     /**
-     * Get a Integer-List from a JSON-File by key
-     * Uses {@link JSONObject}
+     * Get a Integer-List from a JSON-File by key Uses {@link JSONObject}
      *
      * @param key Path to Integer List in JSON-File
      * @return Integer-List
@@ -397,8 +377,7 @@ public class Json extends StorageCreator implements JsonBase {
     }
 
     /**
-     * Get a Byte-List from a JSON-File by key
-     * Uses {@link JSONObject}
+     * Get a Byte-List from a JSON-File by key Uses {@link JSONObject}
      *
      * @param key Path to Byte List in JSON-File
      * @return Byte-List
@@ -414,10 +393,8 @@ public class Json extends StorageCreator implements JsonBase {
         return (List<Byte>) getList(key);
     }
 
-
     /**
-     * Get a Long-List from a JSON-File by key
-     * Uses {@link JSONObject}
+     * Get a Long-List from a JSON-File by key Uses {@link JSONObject}
      *
      * @param key Path to Long List in JSON-File
      * @return Long-List
@@ -434,8 +411,7 @@ public class Json extends StorageCreator implements JsonBase {
     }
 
     /**
-     * Gets a Map by key
-     * Although used to get nested objects {@link Json}
+     * Gets a Map by key Although used to get nested objects {@link Json}
      *
      * @param key Path to Map-List in JSON
      * @return Map
@@ -451,7 +427,7 @@ public class Json extends StorageCreator implements JsonBase {
         reload();
 
         if (!has(key))
-            return new HashMap();
+            return new HashMap<>();
 
         Object map;
         try {
@@ -466,7 +442,6 @@ public class Json extends StorageCreator implements JsonBase {
         }
         throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
     }
-
 
     @Override
     public void set(final String key, final Object value) {
@@ -510,7 +485,6 @@ public class Json extends StorageCreator implements JsonBase {
         }
     }
 
-
     @Override
     public <T> T getOrSetDefault(final String path, T def) {
         if (!contains(path)) {
@@ -534,7 +508,6 @@ public class Json extends StorageCreator implements JsonBase {
         object = new JSONObject(tokener);
     }
 
-
     private boolean has(final String key) {
         reload();
         if (key.contains("."))
@@ -555,6 +528,5 @@ public class Json extends StorageCreator implements JsonBase {
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
     }
-
 
 }

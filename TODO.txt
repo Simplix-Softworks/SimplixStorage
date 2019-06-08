@@ -1,4 +1,0 @@
-Presentation:
-
--> Social Proof
--> GitHub -> How to use LightningStorage most efficiently
