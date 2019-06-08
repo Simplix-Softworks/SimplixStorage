@@ -4,7 +4,7 @@ lightningstorage - A Library to store data a better way.
 
 
 
-![LightingStorage](https://i.ibb.co/Tt6VHFh/Lightning-Storage-New.png) 
+![LightingStorage](https://i.ibb.co/xMBdn6Y/Exceptionflug.png) 
 
 
 
