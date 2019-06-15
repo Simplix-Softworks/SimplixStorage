@@ -379,14 +379,21 @@ public class Yaml extends StorageCreator implements YamlBase {
 
     @Override
     public void update() {
+        YamlReader reader = null;
         try {
-            YamlReader reader = new YamlReader(new FileReader(file));
+            reader = new YamlReader(new FileReader(file));
             yamlObject = new YamlObject(reader.read());
         } catch (IOException e) {
             System.err.println("Exception while reloading yaml");
             e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) reader.close();
+            } catch (IOException e) {
+                System.err.println("Exception while closing file");
+                e.printStackTrace();
+            }
         }
-        this.lastModified = System.currentTimeMillis();
     }
 
     private Object getNotNested(String key) {
