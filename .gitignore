@@ -1,12 +1,5 @@
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
 dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
 
 # Eclipse
 bin/
@@ -21,7 +14,6 @@ out/
 
 # Misc
 .DS_Store
-#/src/main/java/de/leonhard/storage/Benchmark.java
 /.vscode/
 TODO.txt
 Würde .factorypath löschen
@@ -29,4 +21,5 @@ Würde .factorypath löschen
 LightningStorageWallpaper.png
 LICENSE
 README.md
-
+#
+!/src/
