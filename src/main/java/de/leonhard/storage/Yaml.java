@@ -4,7 +4,10 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.util.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Yaml extends StorageCreator implements StorageBase {
@@ -342,12 +345,20 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     @Override
     public void update() {
+        YamlReader reader = null;
         try {
-            YamlReader reader = new YamlReader(new FileReader(file));
+            reader = new YamlReader(new FileReader(file));
             yamlObject = new YamlObject(reader.read());
         } catch (IOException e) {
             System.err.println("Exception while reloading yaml");
             e.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) reader.close();
+            } catch (IOException e) {
+                System.err.println("Exception while closing file");
+                e.printStackTrace();
+            }
         }
 //        System.out.println("UPDATED");
         this.lastModified = System.currentTimeMillis();
