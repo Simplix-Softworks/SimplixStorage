@@ -4,7 +4,7 @@ lightningstorage - A Library to store data a better way.
 
 
 
-![LightingStorage](https://i.ibb.co/M1DpKcr/Lightning-Storage-Wallpaper.png) 
+![LightingStorage](https://proxy.spigotmc.org/fe4eabc0f5de21c5ab0ca87a0003528e1b4ddf54?url=https%3A%2F%2Fi.ibb.co%2F3FyWVp2%2FLightning-Storage-Wallpaper.png)
 
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
