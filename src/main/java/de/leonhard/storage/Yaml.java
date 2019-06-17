@@ -95,6 +95,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         insert(key, value);
     }
 
+
     private void insert(String key, Object value) {
         reload();
 
@@ -165,15 +166,15 @@ public class Yaml extends StorageCreator implements YamlBase {
         }
     }
 
-    @Override
-    public void remove(String key) {
-        String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-        try {
-            write(Utils.remove(yamlObject.toHashMap(), finalKey));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void remove(String key) {
+//        String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+//        try {
+//            write(Utils.remove(yamlObject.toHashMap(), finalKey));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public Object get(final String key) {
@@ -430,6 +431,12 @@ public class Yaml extends StorageCreator implements YamlBase {
         }
         return new ArrayList<>();
     }
+
+    @Override
+    public Set<String> getKeySet() {
+        return yamlObject.toHashMap().keySet();
+    }
+
 
     public void setConfigSettings(final ConfigSettings configSettings) {
         this.configSettings = configSettings;

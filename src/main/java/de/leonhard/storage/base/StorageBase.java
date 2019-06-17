@@ -165,7 +165,7 @@ public interface StorageBase {
 
     <T> T getOrSetDefault(String path, T def);
 
-    void remove(final String key);
+//    void remove(final String key);
 
     /**
      * Reloads the file

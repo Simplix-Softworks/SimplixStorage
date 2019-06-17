@@ -493,14 +493,14 @@ public class Json extends StorageCreator implements JsonBase {
             return (T) get(path);
         }
     }
-
-    @Override
-    public void remove(String key) {
-        reload();
-        final String[] parts = key.split("\\.");
-        final String last = parts[parts.length - 1];
-
-    }
+//
+//    @Override
+//    public void remove(String key) {
+//        reload();
+//        final String[] parts = key.split("\\.");
+//        final String last = parts[parts.length - 1];
+//
+//    }
 
     @Override
     public void update() {
