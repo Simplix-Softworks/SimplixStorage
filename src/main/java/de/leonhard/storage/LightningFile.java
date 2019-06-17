@@ -231,6 +231,11 @@ class LightningFile extends StorageCreator implements LightningBase {
         return null;
     }
 
+    @Override
+    public void remove(String key) {
+
+    }
+
     /**
      * Reloads the file
      */

@@ -283,6 +283,11 @@ public class Toml extends StorageCreator implements TomlBase {
     }
 
     @Override
+    public void remove(String key) {
+
+    }
+
+    @Override
     public void update() {
         try {
             data = com.electronwill.toml.Toml.read(file);

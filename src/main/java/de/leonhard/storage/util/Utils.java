@@ -1,5 +1,6 @@
 package de.leonhard.storage.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -103,6 +104,25 @@ public class Utils {
             }
         }
         return object.containsKey(key) ? object.get(key) : null;
+    }
+
+    public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
+        final String[] parts = key.split("\\.");
+        final String last = parts[parts.length - 1];
+        final String path = Utils.getFirst(key, 1);
+
+        //TODO
+        /*
+        Get ->Via method
+        ->Remove key
+        ->Add as new Map via put
+         */
+
+        System.out.println(path);
+        Map<String, Object> result = (Map) get(path, map);
+        result.remove(last);
+        System.out.println(result);
+        return new HashMap<>();
     }
 
     private static String getFirst(final String string, int offset) {

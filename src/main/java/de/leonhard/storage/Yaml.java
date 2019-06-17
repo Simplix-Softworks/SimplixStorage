@@ -165,11 +165,20 @@ public class Yaml extends StorageCreator implements YamlBase {
         }
     }
 
+    @Override
+    public void remove(String key) {
+        String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+        try {
+            write(Utils.remove(yamlObject.toHashMap(), finalKey));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public Object get(final String key) {
         reload();
-        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
         return yamlObject.get(finalKey);
     }
 

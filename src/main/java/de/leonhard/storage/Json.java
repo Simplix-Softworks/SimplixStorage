@@ -445,7 +445,6 @@ public class Json extends StorageCreator implements JsonBase {
 
     @Override
     public void set(final String key, final Object value) {
-
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
         synchronized (this) {
@@ -493,6 +492,14 @@ public class Json extends StorageCreator implements JsonBase {
         } else {
             return (T) get(path);
         }
+    }
+
+    @Override
+    public void remove(String key) {
+        reload();
+        final String[] parts = key.split("\\.");
+        final String last = parts[parts.length - 1];
+
     }
 
     @Override
