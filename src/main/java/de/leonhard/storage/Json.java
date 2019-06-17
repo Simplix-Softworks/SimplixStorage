@@ -11,10 +11,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Json extends StorageCreator implements JsonBase {
     private JSONObject object;
@@ -195,7 +192,7 @@ public class Json extends StorageCreator implements JsonBase {
             return 0;
 
         return (get(key) instanceof Integer) ? (long) (int) get(key) : (long) get(key);// TrobleShooting: Integer not
-                                                                                       // castable to Long
+        // castable to Long
 
     }
 
@@ -213,7 +210,7 @@ public class Json extends StorageCreator implements JsonBase {
             return 0;
 
         return (get(key) instanceof Integer) ? (double) (int) get(key) : (double) get(key);// TrobleShooting: Integer
-                                                                                           // not castable to Double
+        // not castable to Double
         // -> Wrapper class
 
     }
@@ -238,8 +235,8 @@ public class Json extends StorageCreator implements JsonBase {
                 return (float) (double) get(key);
             }
             return (get(key) instanceof Integer) ? (float) (int) get(key) : (int) get(key);// TrobleShooting: Integer
-                                                                                           // not castable to Double ->
-                                                                                           // Wrapper class
+            // not castable to Double ->
+            // Wrapper class
             //
         }
         return (object.get(key) instanceof Integer) ? (float) (int) object.get(key) : (float) object.get(key);
@@ -493,6 +490,7 @@ public class Json extends StorageCreator implements JsonBase {
             return (T) get(path);
         }
     }
+
 //
 //    @Override
 //    public void remove(String key) {
@@ -513,6 +511,11 @@ public class Json extends StorageCreator implements JsonBase {
         }
         final JSONTokener tokener = new JSONTokener(fis);
         object = new JSONObject(tokener);
+    }
+
+    @Override
+    public Set<String> getKeySet() {
+        return object.toMap().keySet();
     }
 
     private boolean has(final String key) {

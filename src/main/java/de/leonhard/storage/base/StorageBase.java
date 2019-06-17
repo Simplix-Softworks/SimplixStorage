@@ -2,6 +2,7 @@ package de.leonhard.storage.base;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface StorageBase {
 
@@ -171,6 +172,9 @@ public interface StorageBase {
      * Reloads the file
      */
     void update();
+
+    Set<String> getKeySet();
+
 
 
 }

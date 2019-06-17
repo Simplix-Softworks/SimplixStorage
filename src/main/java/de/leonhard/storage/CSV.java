@@ -4,8 +4,9 @@ import de.leonhard.storage.base.CSVBase;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
- class CSV extends StorageCreator implements CSVBase {
+class CSV extends StorageCreator implements CSVBase {
     @Override
     public Object get(String key) {
         return null;
@@ -211,4 +212,9 @@ import java.util.Map;
     public void update() {
 
     }
+
+   @Override
+   public Set<String> getKeySet() {
+      return null;
+   }
 }

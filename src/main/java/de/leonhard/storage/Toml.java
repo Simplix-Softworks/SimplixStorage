@@ -5,10 +5,7 @@ import de.leonhard.storage.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Toml extends StorageCreator implements TomlBase {
     private Map<String, Object> data;
@@ -295,6 +292,11 @@ public class Toml extends StorageCreator implements TomlBase {
             System.err.println("Exception while reading '" + file.getName() + "'");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Set<String> getKeySet() {
+        return data.keySet();
     }
 
     /**

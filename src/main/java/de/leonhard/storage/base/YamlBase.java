@@ -15,6 +15,5 @@ public interface YamlBase extends StorageBase {
 
     void set(final String key, final Object value, final ConfigSettings configSettings);
 
-    Set<String> getKeySet();
 
 }
