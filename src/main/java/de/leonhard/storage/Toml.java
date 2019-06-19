@@ -301,6 +301,7 @@ public class Toml extends StorageCreator implements TomlBase {
 
     @Override
     public Set<String> getKeySet() {
+        reload();
         return data.keySet();
     }
 

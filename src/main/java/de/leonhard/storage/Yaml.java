@@ -442,6 +442,7 @@ public class Yaml extends StorageCreator implements YamlBase {
 
     @Override
     public Set<String> getKeySet() {
+        reload();
         return yamlObject.toHashMap().keySet();
     }
 

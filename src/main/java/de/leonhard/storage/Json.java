@@ -522,6 +522,7 @@ public class Json extends StorageCreator implements JsonBase {
 
     @Override
     public Set<String> getKeySet() {
+        reload();
         return object.toMap().keySet();
     }
 
