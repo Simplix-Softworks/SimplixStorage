@@ -224,23 +224,15 @@ public class Json extends StorageCreator implements JsonBase {
 
     @Override
     public float getFloat(String key) {
-
         reload();
 
         if (!contains(key))
             return 0;
 
-        if (key.contains(".")) {
-            if (get(key) instanceof Double) {
-                return (float) (double) get(key);
-            }
-            return (get(key) instanceof Integer) ? (float) (int) get(key) : (int) get(key);// TrobleShooting: Integer
-            // not castable to Double ->
-            // Wrapper class
-            //
+        if (get(key) instanceof Double) {
+            return (float) (double) get(key);
         }
-        return (object.get(key) instanceof Integer) ? (float) (int) object.get(key) : (float) object.get(key);
-
+        return (get(key) instanceof Integer) ? (float) (int) get(key) : (float) get(key);
     }
 
     /**
@@ -259,7 +251,6 @@ public class Json extends StorageCreator implements JsonBase {
             return 0;
 
         return (int) get(key);
-
     }
 
     /**
