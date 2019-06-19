@@ -209,9 +209,10 @@ public class Json extends StorageCreator implements JsonBase {
         if (!contains(key))
             return 0;
 
-        return (get(key) instanceof Integer) ? (double) (int) get(key) : (double) get(key);// TrobleShooting: Integer
-        // not castable to Double
-        // -> Wrapper class
+        return (get(key) instanceof Integer) ? (double) (int) get(key) : (double) get(key);
+       /*  TrobleShooting: Integer
+         not castable to Double
+         -> Wrapper class*/
 
     }
 
