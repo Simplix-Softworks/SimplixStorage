@@ -17,7 +17,7 @@ public class FileUtils {
     }
 
     public static void deleteFile(String filename, String path) {
-        final File file = new File("plugins/" + path, filename);
+        final File file = new File(path, filename);
         if (file.exists()) {
             file.delete();
         }
