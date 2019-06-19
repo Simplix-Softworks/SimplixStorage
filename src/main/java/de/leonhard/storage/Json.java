@@ -154,7 +154,7 @@ public class Json extends StorageCreator implements JsonBase {
             return;
 
         if (reloadSettings.equals(ReloadSettings.intelligent))
-            if (!FileUtils.hasChanged(file, lastModified))
+            if (FileUtils.hasNotChanged(file, lastModified))
                 return;
 
         update();

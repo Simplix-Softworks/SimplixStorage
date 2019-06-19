@@ -56,7 +56,7 @@ public abstract class StorageCreator {
             return true;
 
         if (reloadSettings.equals(ReloadSettings.intelligent))
-            if (!FileUtils.hasChanged(file, lastModified))
+            if (FileUtils.hasNotChanged(file, lastModified))
                 return true;
         return false;
     }

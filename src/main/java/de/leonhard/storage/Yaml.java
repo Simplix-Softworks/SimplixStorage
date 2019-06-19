@@ -381,7 +381,7 @@ public class Yaml extends StorageCreator implements YamlBase {
             return;
 
         if (reloadSettings.equals(ReloadSettings.intelligent))
-            if (!FileUtils.hasChanged(file, lastModified))
+            if (FileUtils.hasNotChanged(file, lastModified))
                 return;
 
         update();
