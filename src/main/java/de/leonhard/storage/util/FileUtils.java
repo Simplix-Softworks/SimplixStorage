@@ -4,8 +4,9 @@ import java.io.File;
 
 public class FileUtils {
 
+
     public static File getFile(String filename, String path) {
-        return new File("plugins/" + path, filename);
+        return new File(path, filename);
     }
 
     public static boolean exists(String filename, String path) {
@@ -23,3 +24,4 @@ public class FileUtils {
         }
     }
 }
+
