@@ -1,6 +1,7 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.TomlBase;
+import de.leonhard.storage.objects.YamlObject;
 import de.leonhard.storage.util.Utils;
 
 import java.io.File;
@@ -279,10 +280,14 @@ public class Toml extends StorageCreator implements TomlBase {
         }
     }
 
-//    @Override
-//    public void remove(String key) {
-//
-//    }
+    public void write(final Map<String, Object> data) {
+        try {
+            com.electronwill.toml.Toml.write(data, file);
+        } catch (IOException e) {
+            System.err.println("Exception while writing data to file '" + file.getName() + "'");
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void update() {
@@ -307,6 +312,21 @@ public class Toml extends StorageCreator implements TomlBase {
         if (!shouldReload(reloadSettings))
             return;
         update();
+    }
+
+    @Override
+    public void removeKey(final String key) {
+        data.remove(key);
+        write(data);
+    }
+
+    public void remove(final String key) {
+        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final Map<String, Object> old = data;
+
+        data = Utils.remove(old, finalKey);
+
+        write(data);
     }
 
     public String getPathPrefix() {

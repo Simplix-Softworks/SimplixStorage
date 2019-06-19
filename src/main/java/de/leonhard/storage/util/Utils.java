@@ -1,9 +1,6 @@
 package de.leonhard.storage.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Utils {
 
@@ -64,7 +61,9 @@ public class Utils {
 
             return deepMerge(object, result);
         }
-        return new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        result.put(string, value);
+        return result;
     }
 
     public static boolean contains(String string, final Map object) {
@@ -106,25 +105,31 @@ public class Utils {
     }
 
     public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
-        final String[] parts = key.split("\\.");
-        final String last = parts[parts.length - 1];
-        final String path = Utils.getFirst(key, 1);
-
-        //TODO
         /*
+        TODO
         Get ->Via method
         ->Remove key
         ->Add as new Map via put
          */
+        final String[] parts = key.split("\\.");
 
-        System.out.println(path);
-        Map<String, Object> result = (Map) get(path, map);
-        result.remove(last);
-        System.out.println(result);
-        return new HashMap<>();
+        final String withoutLast = getFirst(key, 1);
+        final String first = parts[0];
+        final String last = parts[parts.length - 1];
+
+        final Map tmp = (Map) get(withoutLast, map); //Getter
+
+        if (tmp == null)
+            throw new IllegalStateException("Map mustn't be null");
+
+        tmp.remove(last);
+
+        Map<String, Object> preResult = stringToMap(withoutLast, tmp, map);
+
+        return deepMerge(map, preResult);
     }
 
-    private static String getFirst(final String string, int offset) {
+    public static String getFirst(final String string, int offset) {
         final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
         final StringBuilder sb = new StringBuilder();
 

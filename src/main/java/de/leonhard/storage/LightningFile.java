@@ -249,4 +249,9 @@ class LightningFile extends StorageCreator implements LightningBase {
     public Set<String> getKeySet() {
         return null;
     }
+
+    @Override
+    public void removeKey(String key) {
+
+    }
 }

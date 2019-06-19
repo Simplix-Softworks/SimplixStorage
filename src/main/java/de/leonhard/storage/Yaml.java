@@ -433,10 +433,29 @@ public class Yaml extends StorageCreator implements YamlBase {
     }
 
     @Override
+    public void removeKey(final String key) {
+        final Map obj = yamlObject.toHashMap();
+        obj.remove(key);
+
+        yamlObject = new YamlObject(obj);
+    }
+
+    @Override
     public Set<String> getKeySet() {
         return yamlObject.toHashMap().keySet();
     }
 
+    public void remove(final String key) {
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final Map<String, Object> old = yamlObject.toHashMap();
+        System.out.println();
+        yamlObject = new YamlObject(Utils.remove(old, finalKey));
+        try {
+            write(yamlObject.toHashMap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void setConfigSettings(final ConfigSettings configSettings) {
         this.configSettings = configSettings;

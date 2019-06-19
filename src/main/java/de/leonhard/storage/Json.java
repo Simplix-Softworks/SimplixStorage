@@ -459,9 +459,8 @@ public class Json extends StorageCreator implements JsonBase {
                     if (old.toString().equals(object.toString()) && file.length() != 0)
                         return;
 
-                    Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
-                    writer.write(object.toString(3));
-                    writer.close();
+                    write(object);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -480,6 +479,14 @@ public class Json extends StorageCreator implements JsonBase {
             }
         }
     }
+
+    @Override
+    public void write(final JSONObject object) throws IOException {
+        Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+        writer.write(object.toString(3));
+        writer.close();
+    }
+
 
     @Override
     public <T> T getOrSetDefault(final String path, T def) {
@@ -529,6 +536,27 @@ public class Json extends StorageCreator implements JsonBase {
     public boolean contains(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
         return has(finalKey);
+    }
+
+    @Override
+    public void removeKey(final String key) {
+        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+        final Map obj = object.toMap();
+        obj.remove(key);
+
+        object = new JSONObject(obj);
+    }
+
+    public void remove(final String key) {
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        final Map<String, Object> old = object.toMap();
+        object = new JSONObject(Utils.remove(old, finalKey));
+        try {
+            write(object);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getPathPrefix() {

@@ -175,6 +175,5 @@ public interface StorageBase {
 
     Set<String> getKeySet();
 
-
-
+    void removeKey(final String key);
 }

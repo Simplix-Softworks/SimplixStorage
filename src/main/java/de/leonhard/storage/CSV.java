@@ -1,6 +1,7 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.CSVBase;
+import de.leonhard.storage.objects.YamlObject;
 
 import java.util.List;
 import java.util.Map;
@@ -211,6 +212,9 @@ class CSV extends StorageCreator implements CSVBase {
     @Override
     public void update() {
 
+    }
+
+    public void removeKey(final String key) {
     }
 
    @Override
