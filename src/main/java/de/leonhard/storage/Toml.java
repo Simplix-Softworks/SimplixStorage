@@ -150,6 +150,8 @@ public class Toml extends StorageCreator implements TomlBase {
         final Object obj = get(key);
         if (obj instanceof Integer)
             return (float) (int) obj;
+        if (obj instanceof Double)
+            return (float) (double) obj;
         return (contains(key)) ? (float) obj : 0;
     }
 
