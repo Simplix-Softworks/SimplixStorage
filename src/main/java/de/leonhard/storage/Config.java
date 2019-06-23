@@ -13,7 +13,7 @@ import java.util.List;
 
 @Setter
 @Getter
-class Config extends Yaml implements ConfigBase {
+public class Config extends Yaml implements ConfigBase {
 
 
     private List<String> header;
@@ -65,10 +65,7 @@ class Config extends Yaml implements ConfigBase {
 
             final List<String> lines = yamlEditor.read();
 
-            byte[] bytes =  Files.readAllBytes(file.toPath());
-
-
-
+            byte[] bytes = Files.readAllBytes(file.toPath());
 
 
             final List<String> oldHeader = yamlEditor.readHeader();
