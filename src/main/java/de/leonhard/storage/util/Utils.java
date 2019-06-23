@@ -4,9 +4,6 @@ import java.util.*;
 
 public class Utils {
 
-    private Utils() {
-    }
-
     //Method to create nested objects from String keys
     public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
 
@@ -112,10 +109,12 @@ public class Utils {
         ->Add as new Map via put
          */
         final String[] parts = key.split("\\.");
-
         final String withoutLast = getFirst(key, 1);
         final String first = parts[0];
         final String last = parts[parts.length - 1];
+
+        System.out.println(map);
+        System.out.println(withoutLast);
 
         final Map tmp = (Map) get(withoutLast, map); //Getter
 

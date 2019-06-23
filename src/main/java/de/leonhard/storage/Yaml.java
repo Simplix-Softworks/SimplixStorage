@@ -154,7 +154,6 @@ public class Yaml extends StorageCreator implements YamlBase {
         set(key, value);
     }
 
-
     @Override
     public <T> T getOrSetDefault(final String path, T def) {
         reload();
@@ -162,7 +161,14 @@ public class Yaml extends StorageCreator implements YamlBase {
             set(path, def);
             return def;
         } else {
-            return (T) get(path);
+            Object obj = get(path); //
+            if (obj instanceof String && def instanceof Integer)
+                obj = Integer.parseInt((String) obj);
+            if (obj instanceof String && def instanceof Double)
+                obj = Double.parseDouble((String) obj);
+            if (obj instanceof String && def instanceof Float)
+                obj = Double.parseDouble((String) obj);
+            return (T) obj;
         }
     }
 
@@ -448,8 +454,9 @@ public class Yaml extends StorageCreator implements YamlBase {
 
     public void remove(final String key) {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        if (!finalKey.contains("."))
+            removeKey(key);
         final Map<String, Object> old = yamlObject.toHashMap();
-        System.out.println();
         yamlObject = new YamlObject(Utils.remove(old, finalKey));
         try {
             write(yamlObject.toHashMap());

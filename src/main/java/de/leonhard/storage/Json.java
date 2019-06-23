@@ -542,6 +542,9 @@ public class Json extends StorageCreator implements JsonBase {
     }
 
     public void remove(final String key) {
+        if (!key.contains("."))
+            removeKey(key);
+
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
         final Map<String, Object> old = object.toMap();
         object = new JSONObject(Utils.remove(old, finalKey));

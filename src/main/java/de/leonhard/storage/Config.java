@@ -59,6 +59,16 @@ public class Config extends Yaml implements ConfigBase {
 
     @Override
     public void setHeader(List<String> header) {
+        List<String> tmp = new ArrayList<>();
+        //Updating the values to have a comments, if someone forgets to set them
+        for (final String line : header) {
+            if (!line.startsWith("#"))
+                tmp.add("#" + line);
+            else
+                tmp.add(line);
+        }
+        header = tmp;
+        tmp = null;
         this.header = header;
 
         try {
