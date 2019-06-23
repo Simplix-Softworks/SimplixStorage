@@ -440,10 +440,21 @@ public class Yaml extends StorageCreator implements YamlBase {
 
     @Override
     public void removeKey(final String key) {
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        if (finalKey.contains(".")) {
+            remove(key);
+            return;
+        }
+
         final Map obj = yamlObject.toHashMap();
         obj.remove(key);
 
         yamlObject = new YamlObject(obj);
+        try {
+            write(yamlObject.toHashMap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -453,9 +464,11 @@ public class Yaml extends StorageCreator implements YamlBase {
     }
 
     public void remove(final String key) {
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        if (!finalKey.contains("."))
+        final String finalKey = (pathPrefix == null || pathPrefix.isEmpty()) ? key : pathPrefix + "." + key;
+        if (!finalKey.contains(".")) {
             removeKey(key);
+            return;
+        }
         final Map<String, Object> old = yamlObject.toHashMap();
         yamlObject = new YamlObject(Utils.remove(old, finalKey));
         try {
