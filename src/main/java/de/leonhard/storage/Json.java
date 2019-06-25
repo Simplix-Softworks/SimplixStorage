@@ -518,6 +518,12 @@ public class Json extends StorageCreator implements JsonBase {
         return object.toMap().keySet();
     }
 
+    public Set<String> getKeySet(String key) {
+        reload();
+        JSONObject keys = (JSONObject) object.get(key);
+        return keys.keySet();
+    }
+
     private boolean has(final String key) {
         reload();
         if (key.contains("."))
