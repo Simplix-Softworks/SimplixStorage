@@ -4,6 +4,8 @@ class Main {
     public static void main(String[] args) {
 //
         final Json json = new Json("Test", "");
+        final test test = new test("tee", "");
+
 
 //        json.set("10.x", 3.03);
 //        json.set("10.y", 3.03);

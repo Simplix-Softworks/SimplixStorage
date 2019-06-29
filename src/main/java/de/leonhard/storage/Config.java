@@ -71,12 +71,21 @@ public class Config extends Yaml implements ConfigBase {
         tmp = null;
         this.header = header;
 
+        header.forEach(System.out::println);
+
+        if(file.length() == 0){
+            try {
+                yamlEditor.write(header);
+            } catch (IOException e) {
+                System.err.println("Error while setting header of '" + file.getName() + "'");
+                e.printStackTrace();
+            }
+            return;
+        }
+
         try {
 
             final List<String> lines = yamlEditor.read();
-
-            byte[] bytes = Files.readAllBytes(file.toPath());
-
 
             final List<String> oldHeader = yamlEditor.readHeader();
             final List<String> footer = yamlEditor.readFooter();
@@ -85,9 +94,11 @@ public class Config extends Yaml implements ConfigBase {
 
             Collections.reverse(lines);
 
-            lines.addAll(header);
 
             Collections.reverse(lines);
+
+            lines.addAll(header);
+
 
             lines.addAll(footer);
 
