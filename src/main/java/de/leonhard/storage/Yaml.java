@@ -86,17 +86,17 @@ public class Yaml extends StorageCreator implements YamlBase {
 
     @Override
     public void set(String key, Object value) {
-        insert(key, value);
+        insert(key, value, this.configSettings);
     }
 
 
     @Override
     public void set(String key, Object value, ConfigSettings configSettings) {
-        insert(key, value);
+        insert(key, value, configSettings);
     }
 
 
-    private void insert(String key, Object value) {
+    private void insert(String key, Object value, ConfigSettings configSettings) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
