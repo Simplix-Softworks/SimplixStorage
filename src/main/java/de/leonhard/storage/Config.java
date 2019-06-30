@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,6 @@ public class Config extends Yaml implements ConfigBase {
     public Config(String name, String path, ReloadSettings reloadSettings) {
         super(name, path, reloadSettings);
         this.configSettings = ConfigSettings.preserveComments;
-
     }
 
     Config(File file) {
@@ -39,6 +37,31 @@ public class Config extends Yaml implements ConfigBase {
     public void set(String key, Object value) {
         super.set(key, value, configSettings);
     }
+
+    @Override
+    public void setDefault(final String key, final Object value) {
+        if (!contains(key))
+            set(key, value, configSettings);
+    }
+
+    @Override
+    public <T> T getOrSetDefault(final String path, T def) {
+        reload();
+        if (!contains(path)) {
+            set(path, def, configSettings);
+            return def;
+        } else {
+            Object obj = get(path); //
+            if (obj instanceof String && def instanceof Integer)
+                obj = Integer.parseInt((String) obj);
+            if (obj instanceof String && def instanceof Double)
+                obj = Double.parseDouble((String) obj);
+            if (obj instanceof String && def instanceof Float)
+                obj = Double.parseDouble((String) obj);
+            return (T) obj;
+        }
+    }
+
 
     @Override
     public List<String> getHeader() {
@@ -73,7 +96,7 @@ public class Config extends Yaml implements ConfigBase {
 
         header.forEach(System.out::println);
 
-        if(file.length() == 0){
+        if (file.length() == 0) {
             try {
                 yamlEditor.write(header);
             } catch (IOException e) {

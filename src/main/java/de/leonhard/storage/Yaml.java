@@ -381,7 +381,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         return (Map) yamlObject.get(finalKey);
     }
 
-    private void reload() {
+    protected void reload() {
 
         if (reloadSettings.equals(ReloadSettings.manually))
             return;
