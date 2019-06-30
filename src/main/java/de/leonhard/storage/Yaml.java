@@ -89,12 +89,10 @@ public class Yaml extends StorageCreator implements YamlBase {
         insert(key, value, this.configSettings);
     }
 
-
     @Override
     public void set(String key, Object value, ConfigSettings configSettings) {
         insert(key, value, configSettings);
     }
-
 
     private void insert(String key, Object value, ConfigSettings configSettings) {
         reload();
@@ -118,8 +116,8 @@ public class Yaml extends StorageCreator implements YamlBase {
                     write(yamlObject.toHashMap());
                     final List<String> lines = header;
                     lines.addAll(yamlEditor.read());
-                    lines.addAll(footer);
-
+                    if (!header.containsAll(footer))
+                        lines.addAll(footer);
                     yamlEditor.write(parser.parseComments(unEdited, lines));
                     return;
                 }
