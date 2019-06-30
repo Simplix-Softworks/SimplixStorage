@@ -28,6 +28,7 @@ public class Config extends Yaml implements ConfigBase {
         this.configSettings = ConfigSettings.preserveComments;
     }
 
+
     Config(File file) {
         super(file);
         this.configSettings = ConfigSettings.preserveComments;
