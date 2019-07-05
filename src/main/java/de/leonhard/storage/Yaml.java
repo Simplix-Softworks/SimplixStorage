@@ -166,6 +166,8 @@ public class Yaml extends StorageCreator implements YamlBase {
                 obj = Double.parseDouble((String) obj);
             if (obj instanceof String && def instanceof Float)
                 obj = Double.parseDouble((String) obj);
+            if (obj instanceof String && def instanceof Boolean)
+                return (T) (Boolean) obj.equals("true"); //Mustn't be primitive
             return (T) obj;
         }
     }
