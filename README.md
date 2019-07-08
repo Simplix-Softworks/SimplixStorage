@@ -83,7 +83,7 @@ More file formats will be supported soon
     <dependency>
             <groupId>de.leonhard</groupId>
             <artifactId>LightningStorage</artifactId>
-            <version>1.9</version>
+            <version>2.3.6</version>
             <scope>compile</scope>
     </dependency>
 ```       
