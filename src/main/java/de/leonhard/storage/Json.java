@@ -97,9 +97,12 @@ public class Json extends StorageCreator implements JsonBase {
 
     }
 
-    Json(final File file) {
+    public Json(final File file) {
 
         try {
+            if (!file.exists())
+                file.createNewFile();
+
             load(file);
             this.file = file;
 

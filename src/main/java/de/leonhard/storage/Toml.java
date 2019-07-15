@@ -36,7 +36,14 @@ public class Toml extends StorageCreator implements TomlBase {
         update();
     }
 
-    Toml(final File file) {
+    public Toml(final File file) {
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         this.file = file;
         this.reloadSettings = ReloadSettings.intelligent;

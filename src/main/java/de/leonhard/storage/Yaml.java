@@ -71,8 +71,17 @@ public class Yaml extends StorageCreator implements YamlBase {
         update();
     }
 
-    Yaml(final File file) {
+    public Yaml(final File file) {
         this.file = file;
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         load(file);
 
         update();

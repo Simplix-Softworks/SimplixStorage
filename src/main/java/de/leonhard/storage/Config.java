@@ -29,7 +29,7 @@ public class Config extends Yaml implements ConfigBase {
     }
 
 
-    Config(File file) {
+    public Config(File file) {
         super(file);
         this.configSettings = ConfigSettings.preserveComments;
     }
