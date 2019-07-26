@@ -6,7 +6,7 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>LightningStorage</artifactId>
-    <version>2.3.6</version>
+    <version>2.3.8</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/lightningstorage</url>
@@ -63,6 +63,22 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.json</pattern>
+                            <shadedPattern>de.leonhard.storage.shaded.json</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.esotericsoftware</pattern>
+                            <shadedPattern>de.leonhard.storage.shaded.esotericsoftware</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.electronwill</pattern>
+                            <shadedPattern>de.leonhard.storage.shaded.electronwill</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -131,11 +147,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.8</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
         </dependency>
     </dependencies>
 </project>
