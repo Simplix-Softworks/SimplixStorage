@@ -69,23 +69,21 @@ More file formats will be supported soon
 >Example Pom: https://pastebin.com/eiyRZYyi 
 
 ```xml
-    <repository>
-        <id>TheWarKing-Public-Storage</id>
-        <url>http://thewarking.de:8081/repository/Storage/</url>
-    </repository>
+<repository>
+     <id>jitpack.io</id>
+     <url>https://jitpack.io</url>
+ </repository>
 ```       
 
 
 2. Place this in your dependency-section: 
 
 ```xml
-
-    <dependency>
-            <groupId>de.leonhard</groupId>
-            <artifactId>LightningStorage</artifactId>
-            <version>2.3.6</version>
-            <scope>compile</scope>
-    </dependency>
+        <dependency>
+	    <groupId>com.github.JavaFactoryDev</groupId>
+	    <artifactId>LightningStorage</artifactId>
+	    <version>2.3.8</version>
+	</dependency>
 ```       
     
 
