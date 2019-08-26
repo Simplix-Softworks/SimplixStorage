@@ -171,25 +171,16 @@ public class Yaml extends StorageCreator implements YamlBase {
             Object obj = get(path); //
             if (obj instanceof String && def instanceof Integer)
                 obj = Integer.parseInt((String) obj);
-            if (obj instanceof String && def instanceof Double)
+            else if (obj instanceof String && def instanceof Double)
                 obj = Double.parseDouble((String) obj);
-            if (obj instanceof String && def instanceof Float)
+            else if (obj instanceof String && def instanceof Float)
                 obj = Double.parseDouble((String) obj);
-            if (obj instanceof String && def instanceof Boolean)
+            else if (obj instanceof String && def instanceof Boolean)
                 return (T) (Boolean) obj.equals("true"); //Mustn't be primitive
             return (T) obj;
         }
     }
 
-//    @Override
-//    public void remove(String key) {
-//        String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-//        try {
-//            write(Utils.remove(yamlObject.toHashMap(), finalKey));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     public Object get(final String key) {
