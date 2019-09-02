@@ -1,4 +1,4 @@
-package de.leonhard.storage;
+package de.leonhard.storage.base;
 
 import de.leonhard.storage.util.FileUtils;
 
@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class StorageCreator {
-    File file;
+    protected File file;
     private FileType fileType;
-    long lastModified;
+    protected long lastModified;
 
     /**
      * Creates an empty .yml or .json file.
@@ -21,7 +21,7 @@ public abstract class StorageCreator {
      * @throws IOException Exception thrown if file could not be created.
      */
 
-    synchronized void create(final String path, final String name, final FileType fileType) throws IOException {
+    protected synchronized void create(final String path, final String name, final FileType fileType) throws IOException {
         this.fileType = fileType;
         if (path == null || path.equals("")) {
             file = new File(name + fileType.getExtension());
@@ -47,17 +47,16 @@ public abstract class StorageCreator {
         lastModified = System.currentTimeMillis();
     }
 
-    synchronized void load(final File file) {
+    protected synchronized void load(final File file) {
         this.file = file;
     }
 
-    boolean shouldReload(ReloadSettings reloadSettings) {
+    protected boolean shouldReload(ReloadSettings reloadSettings) {
         if (reloadSettings.equals(ReloadSettings.manually))
             return true;
 
         if (reloadSettings.equals(ReloadSettings.intelligent))
-            if (FileUtils.hasNotChanged(file, lastModified))
-                return true;
+            return FileUtils.hasNotChanged(file, lastModified);
         return false;
     }
 

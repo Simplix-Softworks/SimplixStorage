@@ -2,7 +2,9 @@ package de.leonhard.storage;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
-import de.leonhard.storage.base.YamlBase;
+import de.leonhard.storage.base.*;
+import de.leonhard.storage.editor.YamlEditor;
+import de.leonhard.storage.editor.YamlParser;
 import de.leonhard.storage.objects.YamlObject;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Utils;

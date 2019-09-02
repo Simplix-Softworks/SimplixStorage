@@ -1,7 +1,10 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.base.FileType;
+import de.leonhard.storage.base.ReloadSettings;
+import de.leonhard.storage.base.StorageCreator;
 import de.leonhard.storage.base.TomlBase;
-import de.leonhard.storage.objects.YamlObject;
+import de.leonhard.storage.util.Primitive;
 import de.leonhard.storage.util.Utils;
 
 import java.io.File;
@@ -56,6 +59,7 @@ public class Toml extends StorageCreator implements TomlBase {
      * @param key   The key your value should be associated with
      * @param value The value you want to set in your file
      */
+
     @Override
     public void set(final String key, Object value) {
         reload();
@@ -104,13 +108,10 @@ public class Toml extends StorageCreator implements TomlBase {
      * @param key Path to long in file
      * @return String from file
      */
+
     @Override
     public long getLong(String key) {
-        final Object obj = get(key);
-        if (obj instanceof Integer)
-            return (long) (int) obj;
-        return (contains(key)) ? (long) obj : 0;
-
+        return contains(key) ? Primitive.LONG.getLong(get(key)) : 0;
     }
 
     /**
@@ -121,7 +122,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public int getInt(String key) {
-        return (contains(key)) ? (int) get(key) : 0;
+        return contains(key) ? Primitive.INTEGER.getInt(get(key)) : 0;
     }
 
     /**
@@ -130,9 +131,10 @@ public class Toml extends StorageCreator implements TomlBase {
      * @param key Path to byte in file
      * @return Byte from file
      */
+
     @Override
     public byte getByte(String key) {
-        return (contains(key)) ? (byte) get(key) : 0;
+        return contains(key) ? Primitive.BYTE.getByte(get(key)) : 0;
     }
 
     /**
@@ -141,6 +143,7 @@ public class Toml extends StorageCreator implements TomlBase {
      * @param key Path to boolean in file
      * @return Boolean from file
      */
+
     @Override
     public boolean getBoolean(String key) {
         return (contains(key)) ? (boolean) get(key) : false;
@@ -154,12 +157,7 @@ public class Toml extends StorageCreator implements TomlBase {
      */
     @Override
     public float getFloat(String key) {
-        final Object obj = get(key);
-        if (obj instanceof Integer)
-            return (float) (int) obj;
-        if (obj instanceof Double)
-            return (float) (double) obj;
-        return (contains(key)) ? (float) obj : 0;
+        return contains(key) ? Primitive.FLOAT.getFloat(get(key)) : 0;
     }
 
     /**

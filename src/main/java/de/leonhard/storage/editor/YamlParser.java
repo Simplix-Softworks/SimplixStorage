@@ -1,4 +1,6 @@
-package de.leonhard.storage;
+package de.leonhard.storage.editor;
+
+import de.leonhard.storage.editor.YamlEditor;
 
 import java.io.File;
 import java.io.IOException;

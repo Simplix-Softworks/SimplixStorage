@@ -1,4 +1,4 @@
-package de.leonhard.storage;
+package de.leonhard.storage.base;
 
 public enum ReloadSettings {
 

@@ -1,13 +1,14 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.CSVBase;
-import de.leonhard.storage.objects.YamlObject;
+import de.leonhard.storage.base.StorageBase;
+import de.leonhard.storage.base.StorageCreator;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class CSV extends StorageCreator implements CSVBase {
+class CSV extends StorageCreator implements StorageBase
+{
     @Override
     public Object get(String key) {
         return null;

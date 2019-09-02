@@ -1,6 +1,6 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.LightningBase;
+import de.leonhard.storage.base.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class LightningFile extends StorageCreator implements LightningBase {
+class LightningFile extends StorageCreator implements StorageBase {
 
 
     private Map<String, Object> data;
