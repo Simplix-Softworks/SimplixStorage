@@ -24,7 +24,7 @@ public class Toml extends StorageCreator implements TomlBase {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.reloadSettings = ReloadSettings.intelligent;
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
         update();
     }
 
@@ -49,7 +49,7 @@ public class Toml extends StorageCreator implements TomlBase {
         }
 
         this.file = file;
-        this.reloadSettings = ReloadSettings.intelligent;
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
         update();
     }
 

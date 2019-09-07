@@ -52,10 +52,10 @@ public abstract class StorageCreator {
     }
 
     protected boolean shouldReload(ReloadSettings reloadSettings) {
-        if (reloadSettings.equals(ReloadSettings.manually))
+        if (reloadSettings.equals(ReloadSettings.MANUALLY))
             return true;
 
-        if (reloadSettings.equals(ReloadSettings.intelligent))
+        if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
             return FileUtils.hasNotChanged(file, lastModified);
         return false;
     }

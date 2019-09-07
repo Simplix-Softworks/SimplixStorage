@@ -22,7 +22,7 @@ class LightningFile extends StorageCreator implements StorageBase {
             System.err.println("Exception while creating '" + file.getName() + "'");
             e.printStackTrace();
         }
-        this.reloadSettings = ReloadSettings.intelligent;
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
     }
 
     public LightningFile(final String name, final String path, final ReloadSettings reloadSettings) {
@@ -32,7 +32,7 @@ class LightningFile extends StorageCreator implements StorageBase {
 
     LightningFile(final File file) {
         this.file = file;
-        this.reloadSettings = ReloadSettings.intelligent;
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
     }
 
 

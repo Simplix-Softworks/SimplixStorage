@@ -50,7 +50,7 @@ public class Yaml extends StorageCreator implements YamlBase {
             e.printStackTrace();
         }
 
-        this.reloadSettings = ReloadSettings.intelligent;
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
         this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
@@ -91,7 +91,7 @@ public class Yaml extends StorageCreator implements YamlBase {
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
 
-        this.reloadSettings = ReloadSettings.intelligent;
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
         this.configSettings = ConfigSettings.skipComments;
     }
 
@@ -385,10 +385,10 @@ public class Yaml extends StorageCreator implements YamlBase {
 
     protected void reload() {
 
-        if (reloadSettings.equals(ReloadSettings.manually))
+        if (reloadSettings.equals(ReloadSettings.MANUALLY))
             return;
 
-        if (reloadSettings.equals(ReloadSettings.intelligent))
+        if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
             if (FileUtils.hasNotChanged(file, lastModified))
                 return;
 

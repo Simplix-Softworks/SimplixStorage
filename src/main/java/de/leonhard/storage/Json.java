@@ -54,6 +54,7 @@ public class Json extends StorageCreator implements JsonBase {
             JSONTokener tokener = new JSONTokener(fis);
             object = new JSONObject(tokener);
 
+            fis.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception ex) {
@@ -62,7 +63,7 @@ public class Json extends StorageCreator implements JsonBase {
             ex.printStackTrace();
         }
 
-        this.reloadSettings = ReloadSettings.intelligent;
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
     }
 
     public Json(final String name, final String path, ReloadSettings reloadSettings) {
@@ -123,7 +124,7 @@ public class Json extends StorageCreator implements JsonBase {
                 writer.write(object.toString(2));
                 writer.close();
             }
-
+            this.reloadSettings = ReloadSettings.INTELLIGENT;
             JSONTokener tokener = new JSONTokener(fis);
             object = new JSONObject(tokener);
 
@@ -137,8 +138,6 @@ public class Json extends StorageCreator implements JsonBase {
 
     }
 
-    // TODO IMMER auf TODOS überprüfen.
-
     /**
      * Sets a value to the json if the file doesn't already contain the value (Not
      * mix up with Bukkit addDefault) Uses {@link JSONObject}
@@ -146,11 +145,6 @@ public class Json extends StorageCreator implements JsonBase {
      * @param key   Key to set the value
      * @param value Value to set
      */
-
-
-    public Number getNumber(final String key) {
-        return (Number) get(key);
-    }
 
     @Override
     public void setDefault(String key, Object value) {
@@ -162,10 +156,9 @@ public class Json extends StorageCreator implements JsonBase {
 
     private void reload() {
 
-        if (reloadSettings.equals(ReloadSettings.manually))
+        if(ReloadSettings.MANUALLY.equals(reloadSettings))
             return;
-
-        if (reloadSettings.equals(ReloadSettings.intelligent))
+        if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
             if (FileUtils.hasNotChanged(file, lastModified))
                 return;
 
@@ -582,5 +575,4 @@ public class Json extends StorageCreator implements JsonBase {
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
     }
-
 }

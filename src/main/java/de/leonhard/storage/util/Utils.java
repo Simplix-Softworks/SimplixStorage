@@ -113,8 +113,8 @@ public class Utils {
         final String first = parts[0];
         final String last = parts[parts.length - 1];
 
-        System.out.println(map);
-        System.out.println(withoutLast);
+//        System.out.println(map);
+//        System.out.println(withoutLast);
 
         final Map tmp = (Map) get(withoutLast, map); //Getter
 
