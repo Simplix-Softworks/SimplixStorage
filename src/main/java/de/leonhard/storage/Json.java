@@ -1,23 +1,23 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.FileType;
-import de.leonhard.storage.base.JsonBase;
 import de.leonhard.storage.base.ReloadSettings;
+import de.leonhard.storage.base.StorageBase;
 import de.leonhard.storage.base.StorageCreator;
-import de.leonhard.storage.objects.YamlObject;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.JsonUtil;
-import de.leonhard.storage.util.Primitive;
 import de.leonhard.storage.util.Utils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-public class Json extends StorageCreator implements JsonBase {
+public class Json extends StorageCreator implements StorageBase {
     private JSONObject object;
     private File file;
     private String pathPrefix;
@@ -156,7 +156,7 @@ public class Json extends StorageCreator implements JsonBase {
 
     private void reload() {
 
-        if(ReloadSettings.MANUALLY.equals(reloadSettings))
+        if (ReloadSettings.MANUALLY.equals(reloadSettings))
             return;
         if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
             if (FileUtils.hasNotChanged(file, lastModified))
@@ -165,6 +165,7 @@ public class Json extends StorageCreator implements JsonBase {
         update();
     }
 
+    @Override
     public Object get(final String key) {
 
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -180,220 +181,6 @@ public class Json extends StorageCreator implements JsonBase {
             return Utils.contains(key, object.toMap()) ? Utils.get(key, object.toMap()) : null;
         }
         return object.has(key) ? object.get(key) : null;
-    }
-
-    /**
-     * Gets a long from a JSON-File Uses {@link JSONObject}
-     *
-     * @param key Path to long in JSON-FILE
-     * @return long from JSON
-     */
-
-    @Override
-    public long getLong(String key) {
-        reload();
-        if (!contains(key))
-            return 0;
-
-        return Primitive.LONG.getLong(get(key));
-        // castable to Long
-    }
-
-    /**
-     * Get a double from a JSON-File Uses {@link JSONObject}
-     *
-     * @param key Path to double in JSON-File
-     * @return Double from JSON
-     */
-
-    @Override
-    public double getDouble(String key) {
-        reload();
-        if (!contains(key))
-            return 0;
-
-        return Primitive.DOUBLE.getDouble(get(key));
-       /*  TrobleShooting: Integer
-         not castable to Double
-         -> Wrapper class*/
-
-    }
-
-    /**
-     * Get a float from a JSON-File Uses {@link JSONObject}
-     *
-     * @param key Path to float in JSON-File
-     * @return Float from JSON
-     */
-
-    @Override
-    public float getFloat(String key) {
-        reload();
-
-        if (!contains(key))
-            return 0;
-
-        return Primitive.FLOAT.getFloat(get(key));
-    }
-
-    /**
-     * Gets a int from a JSON-File
-     * <p>
-     * Uses {@link JSONObject}
-     *
-     * @param key Path to int in JSON-File
-     * @return Int from JSON
-     */
-    @Override
-    public int getInt(String key) {
-        reload();
-
-        if (!contains(key))
-            return 0;
-
-        return Primitive.INTEGER.getInt(get(key));
-    }
-
-    /**
-     * Get a byte from a JSON-File Uses {@link JSONObject}
-     *
-     * @param key Path to byte in JSON-File
-     * @return Byte from JSON
-     */
-
-    @Override
-    public byte getByte(String key) {
-        reload();
-
-        if (!contains(key))
-            return 0;
-
-        return Primitive.BYTE.getByte(get(key));
-    }
-
-    /**
-     * Get a boolean from a JSON-File Uses {@link JSONObject}
-     *
-     * @param key Path to boolean in JSON-File
-     * @return Boolean from JSON
-     */
-
-    @Override
-    public boolean getBoolean(String key) {
-        reload();
-
-        if (!contains(key))
-            return false;
-
-        return (boolean) get(key);
-    }
-
-    /**
-     * Get String List Uses {@link JSONObject}
-     *
-     * @param key Path to String in Json-File
-     * @return String from Json
-     */
-
-    @Override
-    public String getString(String key) {
-        reload();
-
-        if (!contains(key))
-            return null;
-
-        return (String) get(key);
-    }
-
-    /**
-     * Get a List from a JSON-File by key Uses {@link YamlObject}
-     *
-     * @param key Path to StringList in JSON-File
-     * @return String-List
-     */
-
-    @Override
-    public List<?> getList(final String key) {
-        reload();
-        if (!contains(key))
-            return new ArrayList<>();
-
-        final Object object = get(key);
-        final JSONArray ja = new JSONArray(object.toString());
-        List<Object> list = new ArrayList<>();
-        for (Object a : ja) {
-            list.add(a);
-        }
-        return list;
-
-    }
-
-    /**
-     * Get a String-List from a JSON-File by key Uses {@link JSONObject}
-     *
-     * @param key Path to String List in YAML-File
-     * @return String-List
-     */
-
-    @Override
-    public List<String> getStringList(String key) {
-        reload();
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<String>) getList(key);
-
-    }
-
-    /**
-     * Get a Integer-List from a JSON-File by key Uses {@link JSONObject}
-     *
-     * @param key Path to Integer List in JSON-File
-     * @return Integer-List
-     */
-
-    @Override
-    public List<Integer> getIntegerList(String key) {
-        reload();
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<Integer>) getList(key);
-    }
-
-    /**
-     * Get a Byte-List from a JSON-File by key Uses {@link JSONObject}
-     *
-     * @param key Path to Byte List in JSON-File
-     * @return Byte-List
-     */
-
-    @Override
-    public List<Byte> getByteList(String key) {
-        reload();
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<Byte>) getList(key);
-    }
-
-    /**
-     * Get a Long-List from a JSON-File by key Uses {@link JSONObject}
-     *
-     * @param key Path to Long List in JSON-File
-     * @return Long-List
-     */
-
-    @Override
-    public List<Long> getLongList(String key) {
-        reload();
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<Long>) getList(key);
     }
 
     /**
@@ -471,7 +258,6 @@ public class Json extends StorageCreator implements JsonBase {
         }
     }
 
-    @Override
     public void write(final JSONObject object) throws IOException {
         Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
         writer.write(object.toString(3));
