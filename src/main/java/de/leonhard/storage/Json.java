@@ -51,7 +51,7 @@ public class Json extends StorageCreator implements StorageBase {
                 writer.close();
             }
 
-            JSONTokener tokener = new JSONTokener(fis);
+            final JSONTokener tokener = new JSONTokener(fis);
             object = new JSONObject(tokener);
 
             fis.close();
@@ -90,11 +90,8 @@ public class Json extends StorageCreator implements StorageBase {
             final JSONTokener tokener = new JSONTokener(fis);
             object = new JSONObject(tokener);
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception ex) {
-            System.err.println(
-                    "Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+            System.err.println("Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
             ex.printStackTrace();
         }
 

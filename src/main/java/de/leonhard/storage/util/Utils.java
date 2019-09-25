@@ -1,8 +1,24 @@
 package de.leonhard.storage.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Utils {
+
+    public static Map stringToMap(final String string) {
+        final Map result = new HashMap();
+        final String str = string.replace("{", "").replace("}", "");
+        final String[] array = str.split(",");
+        for (String s : array) {
+            final String[] splitted = s.split("=");
+            if (splitted.length != 2)
+                continue;
+            result.put(splitted[0].replace(" ", ""), splitted[1]);
+        }
+        return result;
+    }
 
     //Method to create nested objects from String keys
     public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
