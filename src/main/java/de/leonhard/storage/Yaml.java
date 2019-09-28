@@ -5,42 +5,29 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.*;
 import de.leonhard.storage.editor.YamlEditor;
 import de.leonhard.storage.editor.YamlParser;
-import de.leonhard.storage.objects.YamlObject;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 @Getter
 @Setter
-public class Yaml extends StorageCreator implements YamlBase {
-
+public class Yaml extends StorageCreator implements StorageBase {
     protected File file;
     @Setter(AccessLevel.PRIVATE)
-    protected YamlObject yamlObject;
+    protected Map<String, Object> yamlObject;
     protected String pathPrefix;
     protected ReloadSettings reloadSettings;
     protected ConfigSettings configSettings;
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
-
-
-    /*
-    Inheritance
-     */
-
-    /*
-    Structure:
-    -Constructors:
-    -Setters
-    -Getters
-    -private Methods (Reloaders etc.)
-    -
-     */
 
     public Yaml(String name, String path) {
         try {
@@ -100,7 +87,6 @@ public class Yaml extends StorageCreator implements YamlBase {
         insert(key, value, this.configSettings);
     }
 
-    @Override
     public void set(String key, Object value, ConfigSettings configSettings) {
         insert(key, value, configSettings);
     }
@@ -124,7 +110,7 @@ public class Yaml extends StorageCreator implements YamlBase {
                     final List<String> unEdited = yamlEditor.read();
                     final List<String> header = yamlEditor.readHeader();
                     final List<String> footer = yamlEditor.readFooter();
-                    write(yamlObject.toHashMap());
+                    write(yamlObject);
                     final List<String> lines = header;
                     lines.addAll(yamlEditor.read());
                     if (!header.containsAll(footer))
@@ -132,7 +118,7 @@ public class Yaml extends StorageCreator implements YamlBase {
                     yamlEditor.write(parser.parseComments(unEdited, lines));
                     return;
                 }
-                write(yamlObject.toHashMap());
+                write(yamlObject);
 
             } catch (final IOException e) {
                 System.err.println("Error while writing '" + file.getName() + "'");
@@ -141,48 +127,11 @@ public class Yaml extends StorageCreator implements YamlBase {
         }
     }
 
-    @Override
     public void write(Map data) throws IOException {
         YamlWriter writer = new YamlWriter(new FileWriter(file));
         writer.write(data);
         writer.close();
     }
-
-    /**
-     * Sets a value to the yaml if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
-     *
-     * @param key   Key to set the value
-     * @param value Value to set
-     */
-
-    @Override
-    public void setDefault(String key, Object value) {
-        if (contains(key)) {
-            return;
-        }
-        set(key, value);
-    }
-
-    @Override
-    public <T> T getOrSetDefault(final String path, T def) {
-        reload();
-        if (!contains(path)) {
-            set(path, def);
-            return def;
-        } else {
-            Object obj = get(path); //
-            if (obj instanceof String && def instanceof Integer)
-                obj = Integer.parseInt((String) obj);
-            else if (obj instanceof String && def instanceof Double)
-                obj = Double.parseDouble((String) obj);
-            else if (obj instanceof String && def instanceof Float)
-                obj = Double.parseDouble((String) obj);
-            else if (obj instanceof String && def instanceof Boolean)
-                return (T) (Boolean) obj.equals("true"); //Mustn't be primitive
-            return (T) obj;
-        }
-    }
-
 
     @Override
     public Object get(final String key) {
@@ -192,101 +141,8 @@ public class Yaml extends StorageCreator implements YamlBase {
     }
 
     @Override
-    public String getString(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-        if (!contains(key))
-            return "";
-
-        return yamlObject.getString(finalKey);
-    }
-
-    @Override
-    public byte getByte(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return 0;
-
-        return yamlObject.getByte(finalKey);
-    }
-
-    @Override
-    public int getInt(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return 0;
-
-        return yamlObject.getInt(finalKey);
-    }
-
-    @Override
-    public float getFloat(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return 0;
-
-        return yamlObject.getFloat(finalKey);
-    }
-
-    @Override
-    public double getDouble(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return 0;
-
-        return yamlObject.getDouble(finalKey);
-    }
-
-    @Override
-    public long getLong(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-        if (!contains(key))
-            return 0;
-
-        return yamlObject.getLong(finalKey);
-    }
-
-    @Override
-    public boolean getBoolean(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key)) {
-            return false;
-
-        }
-
-        return yamlObject.getBoolean(finalKey);
-    }
-
-    @Override
     public boolean contains(String key) {
-
         key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
         return has(key);
     }
 
@@ -294,93 +150,10 @@ public class Yaml extends StorageCreator implements YamlBase {
         reload();
 
         if (key.contains(".")) {
-            return Utils.contains(key, yamlObject.toHashMap());
+            return Utils.contains(key, yamlObject);
         }
 
-        return yamlObject.toHashMap().containsKey(key);
-    }
-
-    @Override
-    public List<?> getList(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        if (yamlObject.get(finalKey) instanceof String)
-            return new ArrayList<>(Arrays.asList(((String) yamlObject.get(finalKey)).split("-")));
-
-
-        return (List) yamlObject.get(key);
-    }
-
-    @Override
-    public List<String> getStringList(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<String>) yamlObject.get(finalKey);
-
-    }
-
-    @Override
-    public List<Integer> getIntegerList(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<Integer>) yamlObject.get(finalKey);
-
-    }
-
-    @Override
-    public List<Byte> getByteList(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<Byte>) yamlObject.get(finalKey);
-    }
-
-    @Override
-    public List<Long> getLongList(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return new ArrayList<>();
-
-        return (List<Long>) yamlObject.get(finalKey);
-    }
-
-    @Override
-    public Map getMap(String key) {
-        reload();
-
-        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        if (!contains(key))
-            return new HashMap();
-
-        return (Map) yamlObject.get(finalKey);
+        return yamlObject.containsKey(key);
     }
 
     protected void reload() {
@@ -399,8 +172,8 @@ public class Yaml extends StorageCreator implements YamlBase {
     public void update() {
         YamlReader reader = null;
         try {
-            reader = new YamlReader(new FileReader(file));
-            yamlObject = new YamlObject(reader.read());
+            reader = new YamlReader(new FileReader(file));//Needed?
+            yamlObject = (Map<String, Object>) reader.read();
         } catch (IOException e) {
             System.err.println("Exception while reloading yaml");
             e.printStackTrace();
@@ -420,16 +193,14 @@ public class Yaml extends StorageCreator implements YamlBase {
             HashMap result = (HashMap) getNotNested(parts[0]);
             return result.containsKey(parts[1]) ? result.get(parts[1]) : null;
         }
-        return yamlObject.toHashMap().containsKey(key) ? yamlObject.toHashMap().get(key) : null;
+        return yamlObject.getOrDefault(key, null);
     }
-
 
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
         reload();
     }
 
-    @Override
     public List<String> getHeader() {
         try {
             return yamlEditor.readHeader();
@@ -448,12 +219,11 @@ public class Yaml extends StorageCreator implements YamlBase {
             return;
         }
 
-        final Map obj = yamlObject.toHashMap();
+        final Map obj = yamlObject;
         obj.remove(key);
 
-        yamlObject = new YamlObject(obj);
         try {
-            write(yamlObject.toHashMap());
+            write(yamlObject);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -462,7 +232,7 @@ public class Yaml extends StorageCreator implements YamlBase {
     @Override
     public Set<String> getKeySet() {
         reload();
-        return yamlObject.toHashMap().keySet();
+        return yamlObject.keySet();
     }
 
     public void remove(final String key) {
@@ -471,10 +241,10 @@ public class Yaml extends StorageCreator implements YamlBase {
             removeKey(key);
             return;
         }
-        final Map<String, Object> old = yamlObject.toHashMap();
-        yamlObject = new YamlObject(Utils.remove(old, finalKey));
+        final Map<String, Object> old = yamlObject;
+        yamlObject = Utils.remove(old, finalKey);
         try {
-            write(yamlObject.toHashMap());
+            write(yamlObject);
         } catch (IOException e) {
             e.printStackTrace();
         }

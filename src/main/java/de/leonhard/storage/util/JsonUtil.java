@@ -1,20 +1,18 @@
 package de.leonhard.storage.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtil {
 
-
-    private JsonUtil() {
-
-    }
-
     public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
-        Map<String, Object> retMap = new HashMap<String, Object>();
+        Map<String, Object> retMap = new HashMap<>();
 
         if (json != JSONObject.NULL) {
             retMap = toMap(json);
@@ -24,7 +22,7 @@ public class JsonUtil {
 
 
     public static Map<String, Object> toMap(JSONObject object) throws JSONException {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         Iterator<String> keysItr = object.keys();
         while (keysItr.hasNext()) {
@@ -42,7 +40,7 @@ public class JsonUtil {
     }
 
     public static List<Object> toList(JSONArray array) throws JSONException {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
             Object value = array.get(i);
             if (value instanceof JSONArray) {

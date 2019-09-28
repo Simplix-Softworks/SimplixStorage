@@ -1,6 +1,5 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.ConfigBase;
 import de.leonhard.storage.base.ConfigSettings;
 import de.leonhard.storage.base.ReloadSettings;
 import lombok.Getter;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @Setter
 @Getter
-public class Config extends Yaml implements ConfigBase {
+public class Config extends Yaml {
 
 
     private List<String> header;
@@ -83,7 +82,6 @@ public class Config extends Yaml implements ConfigBase {
         return new ArrayList<>();
     }
 
-    @Override
     public void setHeader(List<String> header) {
         List<String> tmp = new ArrayList<>();
         //Updating the values to have a comments, if someone forgets to set them

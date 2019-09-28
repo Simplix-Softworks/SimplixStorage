@@ -2,7 +2,6 @@ package de.leonhard.storage.util;
 
 public class Primitive {
 
-
     public static class LONG {
         public static long getLong(Object obj) {
             if (obj instanceof Number)
@@ -58,6 +57,7 @@ public class Primitive {
                 return Short.parseShort(obj.toString());
         }
     }
+
     public static class BYTE {
         public static byte getByte(Object obj) {
             if (obj instanceof Number)
@@ -68,4 +68,8 @@ public class Primitive {
                 return Byte.parseByte(obj.toString());
         }
     }
+
+//    public static <T> T get(final Object object, final T type) {
+//
+//    }
 }
