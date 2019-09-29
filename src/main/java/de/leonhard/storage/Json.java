@@ -243,6 +243,7 @@ public class Json extends StorageCreator implements StorageBase {
                 }
                 return;
             }
+
             object.put(finalKey, value);
             try {
                 Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));

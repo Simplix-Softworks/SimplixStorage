@@ -22,62 +22,61 @@ public class Utils {
 
     //Method to create nested objects from String keys
     public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
+        if (!string.contains(".")) {
+            object.put(string, value);
+            return object;
+        }
+        final String[] parts = string.split("\\.");
+        HashMap<String, Object> keyMap = new HashMap<>();
 
-        if (string.contains(".")) {
-            final String[] parts = string.split("\\.");
-            HashMap<String, Object> keyMap = new HashMap<>();
 
+        int j = 0;
+        for (int i = parts.length - 1; i > 0; i--) {
 
-            int j = 0;
-            for (int i = parts.length - 1; i > 0; i--) {
+            final String key = getFirst(string, j);
 
-                final String key = getFirst(string, j);
-
-                if (contains(key, object)) {
-                    final Object obj = get(key, object);
-                    if (obj instanceof Map) {
-                        if (i == parts.length - 2) {
-                            keyMap = (HashMap<String, Object>) deepMerge((Map) keyMap.clone(), (Map) obj);
-                            if (keyMap.containsKey(parts[i + 1])) {
-                                keyMap.remove(parts[i + 1]);
-                                keyMap.put(parts[i + 1], value); //PUTTING THE VALUE
-                            }
-                        } else {
-                            keyMap = (HashMap<String, Object>) deepMerge((Map) keyMap.clone(), (Map) obj);
+            if (contains(key, object)) {
+                final Object obj = get(key, object);
+                if (obj instanceof Map) {
+                    if (i == parts.length - 2) {
+                        keyMap = (HashMap<String, Object>) deepMerge((Map) keyMap.clone(), (Map) obj);
+                        if (keyMap.containsKey(parts[i + 1])) {
+                            keyMap.remove(parts[i + 1]);
+                            keyMap.put(parts[i + 1], value); //PUTTING THE VALUE
                         }
                     } else {
-                        keyMap.put(parts[i], obj);//NOW BUGFREE
+                        keyMap = (HashMap<String, Object>) deepMerge((Map) keyMap.clone(), (Map) obj);
                     }
-                }
-                if (i == parts.length - 1) {
-                    keyMap.put(parts[parts.length - 1], value); //ADDED DIE VALUE -> BUGGFREI
                 } else {
-
-                    if (keyMap.containsKey(parts[i])) {
-                        keyMap.remove(parts[i]);
-                        keyMap.put(parts[i + 1], value);
-                    }
-
-
-                    HashMap<String, Object> preResult = new HashMap<>();
-                    preResult.put(parts[i], keyMap);
-                    keyMap = preResult;
+                    keyMap.put(parts[i], obj);//NOW BUGFREE
                 }
-                j++;
             }
-            //Merging
-            final Map result = new HashMap();
+            if (i == parts.length - 1) {
+                keyMap.put(parts[parts.length - 1], value); //ADDED DIE VALUE -> BUGGFREI
+            } else {
+
+                if (keyMap.containsKey(parts[i])) {
+                    keyMap.remove(parts[i]);
+                    keyMap.put(parts[i + 1], value);
+                }
 
 
-            result.put(parts[0], keyMap);
-
-
-            return deepMerge(object, result);
+                HashMap<String, Object> preResult = new HashMap<>();
+                preResult.put(parts[i], keyMap);
+                keyMap = preResult;
+            }
+            j++;
         }
-        Map<String, Object> result = new HashMap<>();
-        result.put(string, value);
-        return result;
+        //Merging
+        final Map result = new HashMap();
+
+
+        result.put(parts[0], keyMap);
+
+
+        return deepMerge(object, result);
     }
+
 
     public static boolean contains(String string, final Map object) {
         if (string.contains(".")) {
@@ -118,19 +117,11 @@ public class Utils {
     }
 
     public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
-        /*
-        TODO
-        Get ->Via method
-        ->Remove key
-        ->Add as new Map via put
-         */
         final String[] parts = key.split("\\.");
         final String withoutLast = getFirst(key, 1);
         final String first = parts[0];
         final String last = parts[parts.length - 1];
 
-//        System.out.println(map);
-//        System.out.println(withoutLast);
 
         final Map tmp = (Map) get(withoutLast, map); //Getter
 
@@ -162,6 +153,13 @@ public class Utils {
 
 
         return sb.toString();
+    }
+
+    public static Map<String, String> convertStringToMap(String str) {
+        String[] tokens = str.split("[ =]");
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < tokens.length - 1; ) map.put(tokens[i++], tokens[i++]);
+        return map;
     }
 
     //Method to merge Maps
