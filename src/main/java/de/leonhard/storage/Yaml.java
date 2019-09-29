@@ -135,7 +135,7 @@ public class Yaml extends FlatFile implements StorageBase {
     public Object get(final String key) {
         reload();
         String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-        return yamlObject.get(finalKey);
+        return Utils.get(finalKey, yamlObject);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.leonhard.storage.base;
 
+import com.sun.tools.javac.util.StringUtils;
 import de.leonhard.storage.util.FileUtil;
 
 import java.io.File;
@@ -19,6 +20,11 @@ public class FlatFile {
      * @throws IOException Exception thrown if file could not be created.
      */
     protected final synchronized void create(final String path, final String name, final FileType fileType) throws IOException {
+        if(path == null || path.isEmpty()){
+            file = new File(name + fileType.getExtension());
+            file.createNewFile();
+            return;
+        }
         this.fileType = fileType;
         String fixedPath = path.replace("\\", "/"); //Windows
 
