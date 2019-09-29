@@ -54,6 +54,4 @@ public class FlatFile {
     public final FileType getFileType() {
         return fileType;
     }
-
-
 }

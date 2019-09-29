@@ -99,6 +99,7 @@ public class Toml extends FlatFile implements StorageBase {
     @Override
     public boolean contains(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        reload();
         return Utils.contains(finalKey, data);
     }
 

@@ -140,6 +140,7 @@ public class Yaml extends FlatFile implements StorageBase {
 
     @Override
     public boolean contains(String key) {
+        reload();
         key = (pathPrefix == null) ? key : pathPrefix + "." + key;
         return has(key);
     }
