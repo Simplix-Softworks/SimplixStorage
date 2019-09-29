@@ -9,20 +9,20 @@ import java.util.Map;
 
 public class LightningEditor {
 
-	private final File file;
+    private final File file;
 
-	public LightningEditor(final File file) {
-		this.file = file;
-	}
+    public LightningEditor(final File file) {
+        this.file = file;
+    }
 
-	public List<String> readLines() throws IOException {
-		final byte[] bytes = Files.readAllBytes(file.toPath());
-		return Arrays.asList(new String(bytes).split("\n"));
-	}
+    public List<String> readLines() throws IOException {
+        final byte[] bytes = Files.readAllBytes(file.toPath());
+        return Arrays.asList(new String(bytes).split("\n"));
+    }
 
-	public Map<String, Object> readData() throws IOException {
-		final byte[] bytes = Files.readAllBytes(file.toPath());
-		final Object obj = new String(bytes).replace("\n", "");
-		return (Map<String, Object>) obj;
-	}
+    public Map<String, Object> readData() throws IOException {
+        final byte[] bytes = Files.readAllBytes(file.toPath());
+        final Object obj = new String(bytes).replace("\n", "");
+        return (Map<String, Object>) obj;
+    }
 }

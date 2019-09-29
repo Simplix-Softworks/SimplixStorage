@@ -8,98 +8,101 @@ import java.util.*;
 
 public class YamlParser {
 
-	final private YamlEditor yamlEditor;
-	final private File file;
+    final private YamlEditor yamlEditor;
+    final private File file;
 
-	public YamlParser(final YamlEditor yamlEditor) {
-		this.yamlEditor = yamlEditor;
-		this.file = yamlEditor.getFile();
-	}
 
-	/**
-	 * Method to assign a comment to a key
-	 *
-	 * @return
-	 */
+    public YamlParser(final YamlEditor yamlEditor) {
+        this.yamlEditor = yamlEditor;
+        this.file = yamlEditor.getFile();
+    }
 
-	private Map<String, List<String>> assignCommentsToKey() throws IOException {
-		return assignCommentsToKey(yamlEditor.read());
-	}
 
-	public List<String> parseComments(final List<String> comments, final List<String> updated) {
-		final List<String> keys;
-		final Map<String, List<String>> parsed;
-		try {
-			keys = yamlEditor.readKeys();
-			parsed = assignCommentsToKey(comments);
-		} catch (final IOException e) {
-			System.err.println("Exception while reading keys from '" + file.getName() + "'");
-			e.printStackTrace();
-			return new ArrayList<>();
-		}
+    /**
+     * Method to assign a comment to a key
+     *
+     * @return
+     */
 
-		for (final String key : parsed.keySet()) {
-			int i = 0;
-			for (final String line : parsed.get(key)) {
-				if (line.isEmpty())
-					continue;
-				if (updated.contains(key + " ")) {
-					updated.add(updated.indexOf(key + " ") + i, line);
-					continue;
-				}
-				if (updated.contains(" " + key)) {
-					updated.add(updated.indexOf(" " + key) + i, line);
-				}
+    private Map<String, List<String>> assignCommentsToKey() throws IOException {
+        return assignCommentsToKey(yamlEditor.read());
+    }
 
-			}
-		}
-		return updated;
-	}
+    public List<String> parseComments(final List<String> comments, final List<String> updated) {
+        final List<String> keys;
+        final Map<String, List<String>> parsed;
+        try {
+            keys = yamlEditor.readKeys();
+            parsed = assignCommentsToKey(comments);
+        } catch (final IOException e) {
+            System.err.println("Exception while reading keys from '" + file.getName() + "'");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
 
-	private boolean contains(final List<String> list, final String toFind) {
-		for (final String toCheck : list) {
-			if (toCheck.startsWith("#"))
-				continue;
-			if (toCheck.equals(toFind)) {
-				System.out.println("The value '" + toCheck + "' is equal to '" + toFind + "'.");
-				return true;
-			} else {
-				System.out.println("The value '" + toCheck + "' is not equal to '" + toFind + "'.");
-			}
-		}
-		return false;
-	}
+        for (final String key : parsed.keySet()) {
+            int i = 0;
+            for (final String line : parsed.get(key)) {
+                if (line.isEmpty())
+                    continue;
+                if (updated.contains(key + " ")) {
+                    updated.add(updated.indexOf(key + " ") + i, line);
+                    continue;
+                }
+                if (updated.contains(" " + key)) {
+                    updated.add(updated.indexOf(" " + key) + i, line);
+                }
 
-	private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
+            }
+        }
+        return updated;
+    }
 
-		List<String> storage = new ArrayList<>();
-		final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
-		final Map<String, List<String>> result = new HashMap<>();
 
-		// Loop over the remaining lines
-		int i = 0;
-		Collections.reverse(lines);// Reverse -> Should start from the end
-		for (final String line : lines) {
-			if (line.replaceAll("\\s+", "").startsWith("#") || line.isEmpty()) { // Replacing the whitespaces
-				storage.add(line);
-				continue;
-			}
-			result.put(line, storage);
-			storage = new ArrayList<>();
-		}
+    private boolean contains(final List<String> list, final String toFind) {
+        for (final String toCheck : list) {
+            if (toCheck.startsWith("#"))
+                continue;
+            if (toCheck.equals(toFind)) {
+                System.out.println("The value '" + toCheck + "' is equal to '" + toFind + "'.");
+                return true;
+            } else {
+                System.out.println("The value '" + toCheck + "' is not equal to '" + toFind + "'.");
+            }
+        }
+        return false;
+    }
 
-		// Removing keys without comments
+    private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
 
-		final List<String> keysToRemove = new ArrayList<>();
-		for (final String line : result.keySet()) {
-			if (result.get(line).equals(new ArrayList<>()))
-				keysToRemove.add(line);
-		}
+        List<String> storage = new ArrayList<>();
+        final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
+        final Map<String, List<String>> result = new HashMap<>();
 
-		for (final String key : keysToRemove)
-			result.remove(key);
+        //Loop over the remaining lines
+        int i = 0;
+        Collections.reverse(lines);//Reverse -> Should start from the end
+        for (final String line : lines) {
+            if (line.replaceAll("\\s+", "").startsWith("#") || line.isEmpty()) { //Replacing the whitespaces
+                storage.add(line);
+                continue;
+            }
+            result.put(line, storage);
+            storage = new ArrayList<>();
+        }
 
-		return result;
+        //Removing keys without comments
 
-	}
+        final List<String> keysToRemove = new ArrayList<>();
+        for (final String line : result.keySet()) {
+            if (result.get(line).equals(new ArrayList<>()))
+                keysToRemove.add(line);
+        }
+
+        for (final String key : keysToRemove)
+            result.remove(key);
+
+        return result;
+
+    }
 }
