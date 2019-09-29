@@ -5,7 +5,7 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.*;
 import de.leonhard.storage.editor.YamlEditor;
 import de.leonhard.storage.editor.YamlParser;
-import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.util.FileUtil;
 import de.leonhard.storage.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,8 +19,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class Yaml extends StorageCreator implements StorageBase {
-    protected File file;
+public class Yaml extends FlatFile implements StorageBase {
     @Setter(AccessLevel.PRIVATE)
     protected Map<String, Object> yamlObject;
     protected String pathPrefix;
@@ -32,7 +31,6 @@ public class Yaml extends StorageCreator implements StorageBase {
     public Yaml(String name, String path) {
         try {
             create(path, name, FileType.YAML);
-            this.file = super.file;
         } catch (final IOException e) {
             e.printStackTrace();
         }
@@ -162,7 +160,7 @@ public class Yaml extends StorageCreator implements StorageBase {
             return;
 
         if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
-            if (FileUtils.hasNotChanged(file, lastModified))
+            if (FileUtil.hasNotChanged(file, lastModified))
                 return;
 
         update();

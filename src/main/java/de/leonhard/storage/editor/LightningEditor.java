@@ -25,6 +25,4 @@ public class LightningEditor {
         final Object obj = new String(bytes).replace("\n", "");
         return (Map<String, Object>) obj;
     }
-
-
 }

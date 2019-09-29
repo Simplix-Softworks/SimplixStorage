@@ -3,10 +3,12 @@ package de.leonhard.storage;
 import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.base.StorageCreator;
-import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.base.FlatFile;
+import de.leonhard.storage.util.FileUtil;
 import de.leonhard.storage.util.JsonUtil;
 import de.leonhard.storage.util.Utils;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -17,9 +19,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Json extends StorageCreator implements StorageBase {
+public class Json extends FlatFile implements StorageBase {
     private JSONObject object;
-    private File file;
     private String pathPrefix;
     private ReloadSettings reloadSettings;
 
@@ -156,7 +157,7 @@ public class Json extends StorageCreator implements StorageBase {
         if (ReloadSettings.MANUALLY.equals(reloadSettings))
             return;
         if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
-            if (FileUtils.hasNotChanged(file, lastModified))
+            if (FileUtil.hasNotChanged(file, lastModified))
                 return;
 
         update();

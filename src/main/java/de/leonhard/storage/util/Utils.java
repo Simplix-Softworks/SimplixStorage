@@ -21,14 +21,13 @@ public class Utils {
     }
 
     //Method to create nested objects from String keys
-    public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
+    public static Map<String, Object> stringToMap(final String string, final Object value, final Map<String, Object> object) {
         if (!string.contains(".")) {
             object.put(string, value);
             return object;
         }
         final String[] parts = string.split("\\.");
         HashMap<String, Object> keyMap = new HashMap<>();
-
 
         int j = 0;
         for (int i = parts.length - 1; i > 0; i--) {
@@ -60,7 +59,6 @@ public class Utils {
                     keyMap.put(parts[i + 1], value);
                 }
 
-
                 HashMap<String, Object> preResult = new HashMap<>();
                 preResult.put(parts[i], keyMap);
                 keyMap = preResult;
@@ -68,11 +66,9 @@ public class Utils {
             j++;
         }
         //Merging
-        final Map result = new HashMap();
-
+        final Map<String, Object> result = new HashMap<>();
 
         result.put(parts[0], keyMap);
-
 
         return deepMerge(object, result);
     }

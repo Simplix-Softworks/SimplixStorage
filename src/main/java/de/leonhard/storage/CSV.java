@@ -1,14 +1,13 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.base.StorageCreator;
+import de.leonhard.storage.base.FlatFile;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class CSV extends StorageCreator implements StorageBase
-{
+class CSV extends FlatFile implements StorageBase {
     @Override
     public Object get(String key) {
         return null;
@@ -158,16 +157,6 @@ class CSV extends StorageCreator implements StorageBase
     }
 
     /**
-     * Returns the FilePath as String
-     *
-     * @return FilePath as String
-     */
-    @Override
-    public String getFilePath() {
-        return null;
-    }
-
-    /**
      * Set a object to your file
      *
      * @param key   The key your value should be associated with
@@ -218,8 +207,8 @@ class CSV extends StorageCreator implements StorageBase
     public void removeKey(final String key) {
     }
 
-   @Override
-   public Set<String> getKeySet() {
-      return null;
-   }
+    @Override
+    public Set<String> getKeySet() {
+        return null;
+    }
 }

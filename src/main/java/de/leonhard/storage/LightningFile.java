@@ -3,14 +3,13 @@ package de.leonhard.storage;
 import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.base.StorageCreator;
+import de.leonhard.storage.base.FlatFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-
-class LightningFile extends StorageCreator implements StorageBase {
+class LightningFile extends FlatFile implements StorageBase {
 
 
     private Map<String, Object> data;

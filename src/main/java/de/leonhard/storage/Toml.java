@@ -1,9 +1,9 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.FileType;
+import de.leonhard.storage.base.FlatFile;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.base.StorageCreator;
 import de.leonhard.storage.util.Utils;
 
 import java.io.File;
@@ -11,9 +11,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-public class Toml extends StorageCreator implements StorageBase {
+public class Toml extends FlatFile implements StorageBase {
     private Map<String, Object> data;
-    private File file;
     private String pathPrefix;
     private final ReloadSettings reloadSettings;
 
@@ -89,16 +88,6 @@ public class Toml extends StorageCreator implements StorageBase {
     public Object get(String key) {
         reload();
         return Utils.get(key, data);
-    }
-
-    /**
-     * Returns the FilePath as String
-     *
-     * @return FilePath as String
-     */
-    @Override
-    public String getFilePath() {
-        return null;
     }
 
     /**
