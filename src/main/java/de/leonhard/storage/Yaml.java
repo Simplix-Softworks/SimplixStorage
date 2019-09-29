@@ -1,25 +1,37 @@
 package de.leonhard.storage;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
-import de.leonhard.storage.base.*;
+
+import de.leonhard.storage.base.ConfigSettings;
+import de.leonhard.storage.base.FileType;
+import de.leonhard.storage.base.ReloadSettings;
+import de.leonhard.storage.base.StorageBase;
+import de.leonhard.storage.base.StorageCreator;
 import de.leonhard.storage.editor.YamlEditor;
 import de.leonhard.storage.editor.YamlParser;
-import de.leonhard.storage.util.FileUtil;
+import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
-
 @Getter
 @Setter
-public class Yaml extends FlatFile implements StorageBase {
+public class Yaml extends StorageCreator implements StorageBase {
+	protected File file;
 	@Setter(AccessLevel.PRIVATE)
 	protected Map<String, Object> yamlObject;
 	protected String pathPrefix;
@@ -28,9 +40,14 @@ public class Yaml extends FlatFile implements StorageBase {
 	protected final YamlEditor yamlEditor;
 	protected final YamlParser parser;
 
+	private BufferedInputStream configInputStream;
+	private FileOutputStream outputStream;
+
+	
 	public Yaml(String name, String path) {
 		try {
 			create(path, name, FileType.YAML);
+			this.file = super.file;
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
@@ -43,7 +60,6 @@ public class Yaml extends FlatFile implements StorageBase {
 	}
 
 	public Yaml(String name, String path, ReloadSettings reloadSettings) {
-
 		try {
 			create(path, name, FileType.YAML);
 			this.file = super.file;
@@ -80,6 +96,351 @@ public class Yaml extends FlatFile implements StorageBase {
 		this.configSettings = ConfigSettings.skipComments;
 	}
 
+	public Yaml(String name, String path, String resourcefile) {
+		try {
+			if (create(path, name, FileType.YAML)) {
+				this.file = super.file;
+				try {
+					this.configInputStream = new BufferedInputStream(
+							Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"));
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} else {
+				this.file = super.file;
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
+		this.reloadSettings = ReloadSettings.INTELLIGENT;
+		this.configSettings = ConfigSettings.skipComments;
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+		update();
+	}
+
+	public Yaml(String name, String path, ReloadSettings reloadSettings, String resourcefile) {
+		try {
+			if (create(path, name, FileType.YAML)) {
+				this.file = super.file;
+				try {
+					this.configInputStream = new BufferedInputStream(
+							Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"));
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} else {
+				this.file = super.file;
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		this.reloadSettings = reloadSettings;
+		this.configSettings = ConfigSettings.skipComments;
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+
+		update();
+	}
+
+	public Yaml(final File file, String resourcefile) {
+		this.file = file;
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+
+				try {
+					this.configInputStream = new BufferedInputStream(
+							Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"));
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		load(file);
+
+		update();
+
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+
+		this.reloadSettings = ReloadSettings.INTELLIGENT;
+		this.configSettings = ConfigSettings.skipComments;
+	}
+
+	public Yaml(String name, String path, File resourcefile) {
+		try {
+			if (create(path, name, FileType.YAML)) {
+				this.file = super.file;
+				try {
+					this.configInputStream = new BufferedInputStream(
+							Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()));
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} else {
+				this.file = super.file;
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
+		this.reloadSettings = ReloadSettings.INTELLIGENT;
+		this.configSettings = ConfigSettings.skipComments;
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+		update();
+	}
+
+	public Yaml(String name, String path, ReloadSettings reloadSettings, File resourcefile) {
+		try {
+			if (create(path, name, FileType.YAML)) {
+				this.file = super.file;
+				try {
+					this.configInputStream = new BufferedInputStream(
+							Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()));
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} else {
+				this.file = super.file;
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		this.reloadSettings = reloadSettings;
+		this.configSettings = ConfigSettings.skipComments;
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+
+		update();
+	}
+
+	public Yaml(final File file, File resourcefile) {
+		this.file = file;
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+
+				try {
+					this.configInputStream = new BufferedInputStream(
+							Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()));
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		load(file);
+
+		update();
+
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+
+		this.reloadSettings = ReloadSettings.INTELLIGENT;
+		this.configSettings = ConfigSettings.skipComments;
+	}
+
+	public Yaml(String name, String path, BufferedInputStream resourceStream) {
+		try {
+			if (create(path, name, FileType.YAML)) {
+				this.file = super.file;
+				try {
+					this.configInputStream = resourceStream;
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} else {
+				this.file = super.file;
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+
+		this.reloadSettings = ReloadSettings.INTELLIGENT;
+		this.configSettings = ConfigSettings.skipComments;
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+		update();
+	}
+
+	public Yaml(String name, String path, ReloadSettings reloadSettings, BufferedInputStream resourceStream) {
+		try {
+			if (create(path, name, FileType.YAML)) {
+				this.file = super.file;
+				try {
+					this.configInputStream = resourceStream;
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} else {
+				this.file = super.file;
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		this.reloadSettings = reloadSettings;
+		this.configSettings = ConfigSettings.skipComments;
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+
+		update();
+	}
+
+	public Yaml(final File file, BufferedInputStream resourceStream) {
+		this.file = file;
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+
+				try {
+					this.configInputStream = resourceStream;
+					outputStream = new FileOutputStream(file.getAbsolutePath());
+					final byte data[] = new byte[1024];
+					int count;
+					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+						outputStream.write(data, 0, count);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (this.configInputStream != null) {
+						this.configInputStream.close();
+					}
+					if (outputStream != null) {
+						outputStream.close();
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		load(file);
+
+		update();
+
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+
+		this.reloadSettings = ReloadSettings.INTELLIGENT;
+		this.configSettings = ConfigSettings.skipComments;
+	}
+
 	@Override
 	public void set(String key, Object value) {
 		insert(key, value, this.configSettings);
@@ -97,10 +458,11 @@ public class Yaml extends FlatFile implements StorageBase {
 		synchronized (this) {
 
 			String old = yamlObject.toString();
-			yamlObject = Utils.stringToMap(key, value, yamlObject);
+			yamlObject.put(finalKey, value);
 
-			if (old.equals(yamlObject.toString()) && yamlObject != null)
+			if (old.equals(yamlObject.toString()) && yamlObject != null) {
 				return;
+			}
 
 			try {
 				if (configSettings.equals(ConfigSettings.preserveComments)) {
@@ -135,12 +497,11 @@ public class Yaml extends FlatFile implements StorageBase {
 	public Object get(final String key) {
 		reload();
 		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-		return Utils.get(finalKey, yamlObject);
+		return yamlObject.get(finalKey);
 	}
 
 	@Override
 	public boolean contains(String key) {
-		reload();
 		key = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		return has(key);
 	}
@@ -157,32 +518,37 @@ public class Yaml extends FlatFile implements StorageBase {
 
 	protected void reload() {
 
-		if (reloadSettings.equals(ReloadSettings.MANUALLY))
+		if (reloadSettings.equals(ReloadSettings.MANUALLY)) {
 			return;
+		}
 
-		if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
-			if (FileUtil.hasNotChanged(file, lastModified))
+		if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
+			if (FileUtils.hasNotChanged(file, lastModified)) {
 				return;
+			}
+		}
 
 		update();
 	}
 
+	public boolean hasNotChanged() {
+		return FileUtils.hasNotChanged(file, lastModified);
+	}
+	
 	@Override
 	public void update() {
 		YamlReader reader = null;
 		try {
-			reader = new YamlReader(new FileReader(file));//Needed?
-			if (file.length() == 0)
-				yamlObject = new HashMap<>();
-			else
-				yamlObject = (Map<String, Object>) reader.read();
+			reader = new YamlReader(new FileReader(file));// Needed?
+			yamlObject = (Map<String, Object>) reader.read();
 		} catch (IOException e) {
 			System.err.println("Exception while reloading yaml");
 			e.printStackTrace();
 		} finally {
 			try {
-				if (reader != null) reader.close();
-				if (yamlObject == null) yamlObject = new HashMap<>();
+				if (reader != null) {
+					reader.close();
+				}
 			} catch (IOException e) {
 				System.err.println("Exception while closing file");
 				e.printStackTrace();
@@ -257,4 +623,3 @@ public class Yaml extends FlatFile implements StorageBase {
 		this.configSettings = configSettings;
 	}
 }
-

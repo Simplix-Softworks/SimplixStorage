@@ -1,140 +1,179 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.ConfigSettings;
-import de.leonhard.storage.base.ReloadSettings;
-import lombok.Getter;
-import lombok.Setter;
-
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.leonhard.storage.base.ConfigSettings;
+import de.leonhard.storage.base.ReloadSettings;
+import lombok.Getter;
+import lombok.Setter;
+
 @Setter
 @Getter
 public class Config extends Yaml {
 
+	private List<String> header;
+	private ConfigSettings configSettings;
 
-    private List<String> header;
-    private ConfigSettings configSettings;
+	public Config(String name, String path) {
+		super(name, path);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    public Config(String name, String path) {
-        super(name, path);
-        this.configSettings = ConfigSettings.preserveComments;
-    }
+	public Config(String name, String path, ReloadSettings reloadSettings) {
+		super(name, path, reloadSettings);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    public Config(String name, String path, ReloadSettings reloadSettings) {
-        super(name, path, reloadSettings);
-        this.configSettings = ConfigSettings.preserveComments;
-    }
+	public Config(File file) {
+		super(file);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
+	public Config(String name, String path, String resourcefile) {
+		super(name, path, resourcefile);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    public Config(File file) {
-        super(file);
-        this.configSettings = ConfigSettings.preserveComments;
-    }
+	public Config(String name, String path, ReloadSettings reloadSettings, String resourcefile) {
+		super(name, path, reloadSettings, resourcefile);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    @Override
-    public void set(String key, Object value) {
-        super.set(key, value, configSettings);
-    }
+	public Config(File file, String resourcefile) {
+		super(file, resourcefile);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    @Override
-    public void setDefault(final String key, final Object value) {
-        if (!contains(key))
-            set(key, value, configSettings);
-    }
+	public Config(String name, String path, File resourcefile) {
+		super(name, path, resourcefile);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    @Override
-    public <T> T getOrSetDefault(final String path, T def) {
-        reload();
-        if (!contains(path)) {
-            set(path, def, configSettings);
-            return def;
-        } else {
-            Object obj = get(path); //
-            if (obj instanceof String && def instanceof Integer)
-                obj = Integer.parseInt((String) obj);
-            if (obj instanceof String && def instanceof Double)
-                obj = Double.parseDouble((String) obj);
-            if (obj instanceof String && def instanceof Float)
-                obj = Double.parseDouble((String) obj);
-            return (T) obj;
-        }
-    }
+	public Config(String name, String path, ReloadSettings reloadSettings, File resourcefile) {
+		super(name, path, reloadSettings, resourcefile);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
+	public Config(File file, File resourcefile) {
+		super(file, resourcefile);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    @Override
-    public List<String> getHeader() {
+	public Config(String name, String path, BufferedInputStream resourceStream) {
+		super(name, path, resourceStream);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-        if (configSettings.equals(ConfigSettings.skipComments))
-            return new ArrayList<>();
+	public Config(String name, String path, ReloadSettings reloadSettings, BufferedInputStream resourceStream) {
+		super(name, path, reloadSettings, resourceStream);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-        if (!shouldReload(reloadSettings))
-            return header;
-        try {
-            return yamlEditor.readHeader();
-        } catch (IOException e) {
-            System.err.println("Couldn't get header of '" + file.getName() + "'.");
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
+	public Config(File file, BufferedInputStream resourceStream) {
+		super(file, resourceStream);
+		this.configSettings = ConfigSettings.preserveComments;
+	}
 
-    public void setHeader(List<String> header) {
-        List<String> tmp = new ArrayList<>();
-        //Updating the values to have a comments, if someone forgets to set them
-        for (final String line : header) {
-            if (!line.startsWith("#"))
-                tmp.add("#" + line);
-            else
-                tmp.add(line);
-        }
-        header = tmp;
-        tmp = null;
-        this.header = header;
+	
+	@Override
+	public void set(String key, Object value) {
+		super.set(key, value, configSettings);
+	}
 
-        header.forEach(System.out::println);
+	@Override
+	public void setDefault(final String key, final Object value) {
+		if (!contains(key))
+			set(key, value, configSettings);
+	}
 
-        if (file.length() == 0) {
-            try {
-                yamlEditor.write(header);
-            } catch (IOException e) {
-                System.err.println("Error while setting header of '" + file.getName() + "'");
-                e.printStackTrace();
-            }
-            return;
-        }
+	@Override
+	public <T> T getOrSetDefault(final String path, T def) {
+		reload();
+		if (!contains(path)) {
+			set(path, def, configSettings);
+			return def;
+		} else {
+			Object obj = get(path); //
+			if (obj instanceof String && def instanceof Integer)
+				obj = Integer.parseInt((String) obj);
+			if (obj instanceof String && def instanceof Double)
+				obj = Double.parseDouble((String) obj);
+			if (obj instanceof String && def instanceof Float)
+				obj = Double.parseDouble((String) obj);
+			return (T) obj;
+		}
+	}
 
-        try {
+	@Override
+	public List<String> getHeader() {
 
-            final List<String> lines = yamlEditor.read();
+		if (configSettings.equals(ConfigSettings.skipComments))
+			return new ArrayList<>();
 
-            final List<String> oldHeader = yamlEditor.readHeader();
-            final List<String> footer = yamlEditor.readFooter();
-            lines.removeAll(oldHeader);
-            lines.removeAll(footer);
+		if (!shouldReload(reloadSettings))
+			return header;
+		try {
+			return yamlEditor.readHeader();
+		} catch (IOException e) {
+			System.err.println("Couldn't get header of '" + file.getName() + "'.");
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}
 
-            Collections.reverse(lines);
+	public void setHeader(List<String> header) {
+		List<String> tmp = new ArrayList<>();
+		// Updating the values to have a comments, if someone forgets to set
+		// them
+		for (final String line : header) {
+			if (!line.startsWith("#"))
+				tmp.add("#" + line);
+			else
+				tmp.add(line);
+		}
+		header = tmp;
+		tmp = null;
+		this.header = header;
 
+		header.forEach(System.out::println);
 
-            Collections.reverse(lines);
+		if (file.length() == 0) {
+			try {
+				yamlEditor.write(header);
+			} catch (IOException e) {
+				System.err.println("Error while setting header of '" + file.getName() + "'");
+				e.printStackTrace();
+			}
+			return;
+		}
 
-            lines.addAll(header);
+		try {
 
+			final List<String> lines = yamlEditor.read();
 
-            lines.addAll(footer);
+			final List<String> oldHeader = yamlEditor.readHeader();
+			final List<String> footer = yamlEditor.readFooter();
+			lines.removeAll(oldHeader);
+			lines.removeAll(footer);
 
+			Collections.reverse(lines);
 
-            yamlEditor.write(lines);
+			Collections.reverse(lines);
 
-        } catch (final IOException e) {
-            System.err.println("Exception while modifying header of '" + file.getName() + "'");
-            e.printStackTrace();
-        }
+			lines.addAll(header);
 
+			lines.addAll(footer);
 
-    }
+			yamlEditor.write(lines);
 
+		} catch (final IOException e) {
+			System.err.println("Exception while modifying header of '" + file.getName() + "'");
+			e.printStackTrace();
+		}
+	}
 }
