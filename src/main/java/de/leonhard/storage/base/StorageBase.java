@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings({"unused", "unchecked"})
 public interface StorageBase {
 
 	/**

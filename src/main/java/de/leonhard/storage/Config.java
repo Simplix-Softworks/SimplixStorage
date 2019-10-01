@@ -79,7 +79,7 @@ public class Config extends Yaml {
 		this.configSettings = ConfigSettings.preserveComments;
 	}
 
-	
+
 	@Override
 	public void set(String key, Object value) {
 		super.set(key, value, configSettings);
@@ -115,7 +115,7 @@ public class Config extends Yaml {
 		if (configSettings.equals(ConfigSettings.skipComments))
 			return new ArrayList<>();
 
-		if (!shouldReload(reloadSettings))
+		if (shouldNotReload(reloadSettings))
 			return header;
 		try {
 			return yamlEditor.readHeader();

@@ -1,11 +1,10 @@
 package de.leonhard.storage.editor;
 
-import de.leonhard.storage.editor.YamlEditor;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class YamlParser {
 
 	final private YamlEditor yamlEditor;
@@ -20,12 +19,14 @@ public class YamlParser {
 	 * Method to assign a comment to a key
 	 *
 	 * @return
+	 * @throws IOException
 	 */
-
+	@SuppressWarnings("JavaDoc")
 	private Map<String, List<String>> assignCommentsToKey() throws IOException {
 		return assignCommentsToKey(yamlEditor.read());
 	}
 
+	@SuppressWarnings("UnusedAssignment")
 	public List<String> parseComments(final List<String> comments, final List<String> updated) {
 		final List<String> keys;
 		final Map<String, List<String>> parsed;
@@ -77,7 +78,6 @@ public class YamlParser {
 		final Map<String, List<String>> result = new HashMap<>();
 
 		// Loop over the remaining lines
-		int i = 0;
 		Collections.reverse(lines);// Reverse -> Should start from the end
 		for (final String line : lines) {
 			if (line.replaceAll("\\s+", "").startsWith("#") || line.isEmpty()) { // Replacing the whitespaces

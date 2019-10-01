@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public abstract class StorageCreator {
 	protected File file;
 	private FileType fileType;
@@ -26,7 +27,7 @@ public abstract class StorageCreator {
 	 */
 
 	protected synchronized boolean create(final String path, final String name, final FileType fileType)
-		throws IOException {
+			throws IOException {
 		this.fileType = fileType;
 		if (path == null || path.equals("")) {
 			file = new File(name + fileType.getExtension());
@@ -36,7 +37,7 @@ public abstract class StorageCreator {
 			StringBuilder datafolder = new StringBuilder();
 
 			for (String part : parts) {
-				datafolder.append(part + "/");
+				datafolder.append(part).append("/");
 			}
 			File folders = new File(datafolder.toString());
 			if (!folders.exists()) {
@@ -61,13 +62,13 @@ public abstract class StorageCreator {
 		this.file = file;
 	}
 
-	protected boolean shouldReload(ReloadSettings reloadSettings) {
-		if (reloadSettings.equals(ReloadSettings.MANUALLY))
-			return true;
-
-		if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
-			return FileUtils.hasNotChanged(file, lastModified);
-		return false;
+	protected boolean shouldNotReload(ReloadSettings reloadSettings) {
+		if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
+			return !FileUtils.hasNotChanged(file, lastModified);
+		}
+		else {
+			return !reloadSettings.equals(ReloadSettings.MANUALLY);
+		}
 	}
 
 	public File getFile() {

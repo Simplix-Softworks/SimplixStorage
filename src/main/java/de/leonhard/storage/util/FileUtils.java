@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class FileUtils {
 
 	public static File getFile(String filename, String path) {
@@ -22,6 +23,10 @@ public class FileUtils {
 	}
 
 	public static List<String> readAllLines(final File file) throws IOException {
+		return getStrings(file);
+	}
+
+	public static List<String> getStrings(File file) throws IOException {
 		final byte[] fileBytes = Files.readAllBytes(file.toPath());
 		final String asString = new String(fileBytes);
 		return new ArrayList<>(Arrays.asList(asString.split("\n")));

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 class CSV extends StorageCreator implements StorageBase {
 	@Override
 	public Object get(String key) {

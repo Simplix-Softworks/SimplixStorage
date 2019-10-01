@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 class LightningFile extends StorageCreator implements StorageBase {
 
 

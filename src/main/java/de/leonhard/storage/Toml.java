@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings({"unused", "WeakerAccess", "ResultOfMethodCallIgnored"})
 public class Toml extends StorageCreator implements StorageBase {
 	private Map<String, Object> data;
 	private File file;
@@ -145,7 +146,7 @@ public class Toml extends StorageCreator implements StorageBase {
 	 * information
 	 */
 	private void reload() {
-		if (!shouldReload(reloadSettings))
+		if (shouldNotReload(reloadSettings))
 			return;
 		update();
 	}

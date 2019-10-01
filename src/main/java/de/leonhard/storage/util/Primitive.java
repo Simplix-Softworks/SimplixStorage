@@ -47,6 +47,7 @@ public class Primitive {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public static class SHORT {
 		public static short getShort(Object obj) {
 			if (obj instanceof Number)

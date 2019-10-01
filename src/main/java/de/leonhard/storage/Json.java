@@ -12,11 +12,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+@SuppressWarnings({"Duplicates", "unused", "ResultOfMethodCallIgnored", "WeakerAccess", "unchecked"})
 public class Json extends StorageCreator implements StorageBase {
 	private JSONObject object;
 	private File file;
@@ -244,8 +242,6 @@ public class Json extends StorageCreator implements StorageBase {
 
 				} catch (IOException e) {
 					e.printStackTrace();
-				} finally {
-					old = null;
 				}
 				return;
 			}
@@ -286,7 +282,7 @@ public class Json extends StorageCreator implements StorageBase {
 			System.err.println("Exception while reading Json");
 			e.printStackTrace();
 		}
-		final JSONTokener tokener = new JSONTokener(fis);
+		final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
 		object = new JSONObject(tokener);
 	}
 

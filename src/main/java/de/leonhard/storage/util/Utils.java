@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class Utils {
 
 	public static Map stringToMap(final String string) {
@@ -40,7 +41,7 @@ public class Utils {
 							if (keyMap.containsKey(parts[i + 1])) {
 								keyMap.remove(parts[i + 1]);
 								keyMap.put(parts[i + 1], value); // PUTTING THE
-																	// VALUE
+								// VALUE
 							}
 						} else {
 							keyMap = (HashMap<String, Object>) deepMerge((Map) keyMap.clone(), (Map) obj);
@@ -51,8 +52,8 @@ public class Utils {
 				}
 				if (i == parts.length - 1) {
 					keyMap.put(parts[parts.length - 1], value); // ADDED DIE
-																// VALUE ->
-																// BUGGFREI
+					// VALUE ->
+					// BUGGFREI
 				} else {
 
 					if (keyMap.containsKey(parts[i])) {
@@ -80,28 +81,23 @@ public class Utils {
 
 	public static boolean contains(String string, final Map object) {
 		if (string.contains(".")) {
-			boolean result = true;
 			String[] parts = string.split("\\.");
 			Map preResult = object;
 			for (int i = 0; i < parts.length; i++) {
 				if (!preResult.containsKey(parts[i])) {
 					return false;
-				}
-				if (!(preResult.get(parts[i]) instanceof HashMap) && i != parts.length - 1) {
-					result = false;
+				} else if (!(preResult.get(parts[i]) instanceof HashMap) && i != parts.length - 1) {
 					return false;
-				}
-
-				if (preResult.containsKey(parts[i]) && preResult.get(parts[i]) instanceof HashMap) {
+				} else if (preResult.containsKey(parts[i]) && preResult.get(parts[i]) instanceof HashMap) {
 					preResult = (HashMap) preResult.get(parts[i]);
-
-				} else
+				} else {
 					return preResult.containsKey(parts[i]) && i == parts.length - 1;
-
+				}
 			}
 			return true;
+		} else {
+			return object.containsKey(string);
 		}
-		return object.containsKey(string);
 	}
 
 	public static Object get(final String key, final Map object) {

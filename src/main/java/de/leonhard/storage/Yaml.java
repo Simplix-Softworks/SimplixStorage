@@ -6,11 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
@@ -28,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+@SuppressWarnings({"ResultOfMethodCallIgnored", "unused", "WeakerAccess", "unchecked"})
 @Getter
 @Setter
 public class Yaml extends StorageCreator implements StorageBase {
@@ -43,7 +40,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 	private BufferedInputStream configInputStream;
 	private FileOutputStream outputStream;
 
-	
+
 	public Yaml(String name, String path) {
 		try {
 			create(path, name, FileType.YAML);
@@ -104,7 +101,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 					this.configInputStream = new BufferedInputStream(
 							Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"));
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -141,7 +138,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 					this.configInputStream = new BufferedInputStream(
 							Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"));
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -181,7 +178,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 					this.configInputStream = new BufferedInputStream(
 							Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"));
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -220,7 +217,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 					this.configInputStream = new BufferedInputStream(
 							Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()));
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -257,7 +254,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 					this.configInputStream = new BufferedInputStream(
 							Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()));
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -297,7 +294,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 					this.configInputStream = new BufferedInputStream(
 							Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()));
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -335,7 +332,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 				try {
 					this.configInputStream = resourceStream;
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -371,7 +368,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 				try {
 					this.configInputStream = resourceStream;
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -410,7 +407,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 				try {
 					this.configInputStream = resourceStream;
 					outputStream = new FileOutputStream(file.getAbsolutePath());
-					final byte data[] = new byte[1024];
+					final byte[] data = new byte[1024];
 					int count;
 					while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
 						outputStream.write(data, 0, count);
@@ -471,11 +468,10 @@ public class Yaml extends StorageCreator implements StorageBase {
 					final List<String> header = yamlEditor.readHeader();
 					final List<String> footer = yamlEditor.readFooter();
 					write(yamlObject);
-					final List<String> lines = header;
-					lines.addAll(yamlEditor.read());
+					header.addAll(yamlEditor.read());
 					if (!header.containsAll(footer))
-						lines.addAll(footer);
-					yamlEditor.write(parser.parseComments(unEdited, lines));
+						header.addAll(footer);
+					yamlEditor.write(parser.parseComments(unEdited, header));
 					return;
 				}
 				write(yamlObject);
@@ -483,7 +479,6 @@ public class Yaml extends StorageCreator implements StorageBase {
 			} catch (final IOException e) {
 				System.err.println("Error while writing '" + file.getName() + "'");
 			}
-			old = null;
 		}
 	}
 
@@ -534,7 +529,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 	public boolean hasNotChanged() {
 		return FileUtils.hasNotChanged(file, lastModified);
 	}
-	
+
 	@Override
 	public void update() {
 		YamlReader reader = null;
@@ -560,7 +555,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 		if (key.contains(".")) {
 			String[] parts = key.split("\\.");
 			HashMap result = (HashMap) getNotNested(parts[0]);
-			return result.containsKey(parts[1]) ? result.get(parts[1]) : null;
+			return Objects.requireNonNull(result).containsKey(parts[1]) ? result.get(parts[1]) : null;
 		}
 		return yamlObject.getOrDefault(key, null);
 	}

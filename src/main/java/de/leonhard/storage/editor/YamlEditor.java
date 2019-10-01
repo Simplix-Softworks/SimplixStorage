@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class YamlEditor {
 
 	private final File file;
@@ -18,9 +19,7 @@ public class YamlEditor {
 	}
 
 	public List<String> read() throws IOException {
-		final byte[] fileBytes = Files.readAllBytes(file.toPath());
-		final String asString = new String(fileBytes);
-		return new ArrayList<>(Arrays.asList(asString.split("\n")));
+		return getStrings(file);
 	}
 
 	public List<String> readKeys() throws IOException {
