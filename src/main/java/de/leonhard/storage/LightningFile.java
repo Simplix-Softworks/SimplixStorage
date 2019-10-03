@@ -14,8 +14,8 @@ import java.util.Set;
 class LightningFile extends StorageCreator implements StorageBase {
 
 
-    private Map<String, Object> data;
     private final ReloadSettings reloadSettings;
+    private Map<String, Object> data;
     private File file;
 
     public LightningFile(final String name, final String path) {
