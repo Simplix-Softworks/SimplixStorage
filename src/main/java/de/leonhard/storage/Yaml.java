@@ -494,7 +494,7 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     private Object getObjectFromMap(Map<String, Object> map, String[] args) {
         Map tempMap = map;
-        if (args.length > 0) {
+        if (args.length > 1) {
             if (map.get(args[0]) instanceof HashMap) {
                 tempMap = (HashMap<String, Object>) map.get(args[0]);
                 args = (String[]) ArrayUtils.removeElement(args, args[0]);
