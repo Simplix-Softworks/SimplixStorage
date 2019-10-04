@@ -33,7 +33,7 @@ public class Utils {
     }*/
 
     // Method to create nested objects from String keys
-    /*public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
+    public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
 
         if (string.contains(".")) {
             final String[] parts = string.split("\\.");
@@ -88,7 +88,7 @@ public class Utils {
         Map<String, Object> result = new HashMap<>();
         result.put(string, value);
         return result;
-    }*/
+    }
 
     public static boolean contains(String string, final Map object) {
         if (string.contains(".")) {
@@ -125,7 +125,7 @@ public class Utils {
         return object.containsKey(key) ? object.get(key) : null;
     }
 
-    /*public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
+    public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
         //
         // TODO Get ->Via method ->Remove key ->Add as new Map via put
         //
@@ -147,9 +147,9 @@ public class Utils {
         Map<String, Object> preResult = stringToMap(withoutLast, tmp, map);
 
         return deepMerge(map, preResult);
-    }*/
+    }
 
-    public static String getFirst(final String string, int offset) {
+    private static String getFirst(final String string, int offset) {
         final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
         final StringBuilder sb = new StringBuilder();
 
