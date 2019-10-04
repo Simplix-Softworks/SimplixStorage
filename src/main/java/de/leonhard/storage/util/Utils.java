@@ -2,7 +2,7 @@ package de.leonhard.storage.util;
 
 import java.util.*;
 
-@SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
+@SuppressWarnings({"unused", "unchecked"})
 public class Utils {
 
     public static Object getObjectFromMap(Map<String, Object> map, String[] args, int id) {
@@ -33,7 +33,7 @@ public class Utils {
     }*/
 
     // Method to create nested objects from String keys
-    public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
+    /*public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
 
         if (string.contains(".")) {
             final String[] parts = string.split("\\.");
@@ -88,7 +88,7 @@ public class Utils {
         Map<String, Object> result = new HashMap<>();
         result.put(string, value);
         return result;
-    }
+    }*/
 
     public static boolean contains(String string, final Map object) {
         if (string.contains(".")) {
@@ -125,10 +125,10 @@ public class Utils {
         return object.containsKey(key) ? object.get(key) : null;
     }
 
-    public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
-        /*
-         * TODO Get ->Via method ->Remove key ->Add as new Map via put
-         */
+    /*public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
+        //
+        // TODO Get ->Via method ->Remove key ->Add as new Map via put
+        //
         final String[] parts = key.split("\\.");
         final String withoutLast = getFirst(key, 1);
         final String first = parts[0];
@@ -147,7 +147,7 @@ public class Utils {
         Map<String, Object> preResult = stringToMap(withoutLast, tmp, map);
 
         return deepMerge(map, preResult);
-    }
+    }*/
 
     public static String getFirst(final String string, int offset) {
         final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
