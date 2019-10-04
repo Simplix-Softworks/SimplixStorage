@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Getter
@@ -27,26 +29,34 @@ public class Yaml extends FlatFile implements StorageBase {
 	private BufferedInputStream configInputStream;
 	private FileOutputStream outputStream;
 
-
 	public Yaml(String name, String path) {
-		try {
-			create(name, path, FileType.YAML);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-
-		this.reloadSettings = ReloadSettings.INTELLIGENT;
-		this.configSettings = ConfigSettings.skipComments;
-		yamlEditor = new YamlEditor(file);
-		parser = new YamlParser(yamlEditor);
-		update();
+		this(name, path, null);
 	}
 
-	public Yaml(String name, String path, ReloadSettings reloadSettings) {
-		this(name, path);
+	public Yaml(final String name, final String path, final FileInputStream fileInputStream, final ReloadSettings reloadSettings) {
+		this(name, path, fileInputStream);
 		this.reloadSettings = reloadSettings;
 	}
 
+	public Yaml(String name, String path, FileInputStream fileInputStream) {
+		try {
+			create(name, path, FileType.YAML);
+
+			this.reloadSettings = ReloadSettings.INTELLIGENT;
+			this.configSettings = ConfigSettings.skipComments;
+			yamlEditor = new YamlEditor(file);
+			parser = new YamlParser(yamlEditor);
+			update();
+
+			if (fileInputStream == null || !FileUtil.isEmpty(file))
+				return;
+			Files.copy(fileInputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+		} catch (final IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException("Couldn't create YAML...");
+		}
+	}
 
 	@Override
 	public void set(String key, Object value) {
