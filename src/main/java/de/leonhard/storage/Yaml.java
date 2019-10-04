@@ -10,7 +10,6 @@ import de.leonhard.storage.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.ArrayUtils;
 
 import java.io.*;
 import java.util.*;
@@ -485,23 +484,11 @@ public class Yaml extends StorageCreator implements StorageBase {
         if (finalKey.contains(".")) {
             String[] parts = key.split("\\.");
             if (yamlObject.get(parts[0]) instanceof HashMap) {
-                return getObjectFromMap(yamlObject, parts);
+                return Utils.getObjectFromMap(yamlObject, parts);
             }
             return null;
         }
         return yamlObject.get(finalKey);
-    }
-
-    private Object getObjectFromMap(Map<String, Object> map, String[] args) {
-        Map tempMap = map;
-        if (args.length > 1) {
-            if (map.get(args[0]) instanceof HashMap) {
-                tempMap = (HashMap<String, Object>) map.get(args[0]);
-                args = (String[]) ArrayUtils.removeElement(args, args[0]);
-                getObjectFromMap(tempMap, args);
-            }
-        }
-        return tempMap.get(args[0]);
     }
 
     @Override

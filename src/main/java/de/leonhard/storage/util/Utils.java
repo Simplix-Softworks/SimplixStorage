@@ -1,11 +1,25 @@
 package de.leonhard.storage.util;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import java.util.*;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class Utils {
 
-    public static Map stringToMap(final String string) {
+    public static Object getObjectFromMap(Map<String, Object> map, String[] args) {
+        Map tempMap = map;
+        if (args.length > 1) {
+            if (map.get(args[0]) instanceof HashMap) {
+                tempMap = (HashMap<String, Object>) map.get(args[0]);
+                args = (String[]) ArrayUtils.removeElement(args, args[0]);
+                getObjectFromMap(tempMap, args);
+            }
+        }
+        return tempMap.get(args[0]);
+    }
+
+    /* static Map stringToMap(final String string) {
         final Map result = new HashMap();
         final String str = string.replace("{", "").replace("}", "");
         final String[] array = str.split(",");
@@ -16,7 +30,7 @@ public class Utils {
             result.put(splitted[0].replace(" ", ""), splitted[1]);
         }
         return result;
-    }
+    }*/
 
     // Method to create nested objects from String keys
     public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
