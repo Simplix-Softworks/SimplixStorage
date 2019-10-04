@@ -1,12 +1,10 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.base.ConfigSettings;
-import de.leonhard.storage.base.ReloadSettings;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.BufferedInputStream;
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,69 +14,18 @@ import java.util.List;
 @Getter
 public class Config extends Yaml {
 
+	public Config(final String name, final String path) {
+		super(name, path);
+	}
+
+	public Config(final String name, final String path, final FileInputStream fileInputStream) {
+		super(name, path, fileInputStream);
+	}
+
 
 	private List<String> header;
 	private ConfigSettings configSettings;
 
-	public Config(String name, String path) {
-		super(name, path);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(String name, String path, ReloadSettings reloadSettings) {
-		super(name, path, reloadSettings);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(File file) {
-		super(file);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(String name, String path, String resourcefile) {
-		super(name, path, resourcefile);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(String name, String path, ReloadSettings reloadSettings, String resourcefile) {
-		super(name, path, reloadSettings, resourcefile);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(File file, String resourcefile) {
-		super(file, resourcefile);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(String name, String path, File resourcefile) {
-		super(name, path, resourcefile);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(String name, String path, ReloadSettings reloadSettings, File resourcefile) {
-		super(name, path, reloadSettings, resourcefile);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(File file, File resourcefile) {
-		super(file, resourcefile);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(String name, String path, BufferedInputStream resourceStream) {
-		super(name, path, resourceStream);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(String name, String path, ReloadSettings reloadSettings, BufferedInputStream resourceStream) {
-		super(name, path, reloadSettings, resourceStream);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
-
-	public Config(File file, BufferedInputStream resourceStream) {
-		super(file, resourceStream);
-		this.configSettings = ConfigSettings.preserveComments;
-	}
 
 	@Override
 	public void set(String key, Object value) {
