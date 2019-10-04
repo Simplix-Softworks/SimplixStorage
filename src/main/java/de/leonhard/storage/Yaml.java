@@ -11,10 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 @Getter
@@ -27,10 +24,13 @@ public class Yaml extends FlatFile implements StorageBase {
 	protected ConfigSettings configSettings;
 	protected final YamlEditor yamlEditor;
 	protected final YamlParser parser;
+	private BufferedInputStream configInputStream;
+	private FileOutputStream outputStream;
+
 
 	public Yaml(String name, String path) {
 		try {
-			create(path, name, FileType.YAML);
+			create(name, path, FileType.YAML);
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
@@ -43,42 +43,10 @@ public class Yaml extends FlatFile implements StorageBase {
 	}
 
 	public Yaml(String name, String path, ReloadSettings reloadSettings) {
-
-		try {
-			create(path, name, FileType.YAML);
-			this.file = super.file;
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+		this(name, path);
 		this.reloadSettings = reloadSettings;
-		this.configSettings = ConfigSettings.skipComments;
-		yamlEditor = new YamlEditor(file);
-		parser = new YamlParser(yamlEditor);
-
-		update();
 	}
 
-	public Yaml(final File file) {
-		this.file = file;
-
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		load(file);
-
-		update();
-
-		yamlEditor = new YamlEditor(file);
-		parser = new YamlParser(yamlEditor);
-
-		this.reloadSettings = ReloadSettings.INTELLIGENT;
-		this.configSettings = ConfigSettings.skipComments;
-	}
 
 	@Override
 	public void set(String key, Object value) {

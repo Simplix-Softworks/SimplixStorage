@@ -6,57 +6,58 @@ import java.io.File;
 import java.io.IOException;
 
 public class FlatFile {
-    protected File file;
-    private FileType fileType;
-    protected long lastModified;
+	protected File file;
+	private FileType fileType;
+	protected long lastModified;
 
-    /**
-     * Creates an empty .yml or .json file.
-     *
-     * @param path     Absolute path where the file should be created
-     * @param name     Name of the file
-     * @param fileType .yml/.file  Uses the Enum FileType
-     * @throws IOException Exception thrown if file could not be created.
-     */
-    protected final synchronized void create(final String path, final String name, final FileType fileType) throws IOException {
-        if (path == null || path.isEmpty()) {
-            file = new File(name + fileType.getExtension());
-            file.createNewFile();
-            return;
-        }
-        this.fileType = fileType;
-        String fixedPath = path.replace("\\", "/"); //Windows
+	/**
+	 * Creates an empty .yml or .json file.
+	 *
+	 * @param name     Name of the file
+	 * @param path     Absolute path where the file should be created
+	 * @param fileType .yml/.file  Uses the Enum FileType
+	 * @throws IOException Exception thrown if file could not be created.
+	 */
+	protected final synchronized void create(final String name, final String path, final FileType fileType) throws IOException {
 
-        file = FileUtil.getOrCreate(new File(fixedPath + File.separator + name + fileType.getExtension()));
+		if (path == null || path.isEmpty()) {
+			file = new File(name + fileType.getExtension());
+			file.createNewFile();
+			return;
+		}
+		this.fileType = fileType;
+		String fixedPath = path.replace("\\", "/"); //Windows
 
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        lastModified = System.currentTimeMillis();
-    }
+		file = FileUtil.getOrCreate(new File(fixedPath + File.separator + name + fileType.getExtension()));
 
-    protected final synchronized void load(final File file) {
-        this.file = file;
-    }
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		lastModified = System.currentTimeMillis();
+	}
 
-    protected final boolean shouldReload(final ReloadSettings reloadSettings) {
-        if (reloadSettings.equals(ReloadSettings.MANUALLY))
-            return true;
+	protected final synchronized void load(final File file) {
+		this.file = file;
+	}
 
-        if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
-            return FileUtil.hasNotChanged(file, lastModified);
-        return false;
-    }
+	protected final boolean shouldReload(final ReloadSettings reloadSettings) {
+		if (reloadSettings.equals(ReloadSettings.MANUALLY))
+			return true;
 
-    public final File getFile() {
-        return file;
-    }
+		if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
+			return FileUtil.hasNotChanged(file, lastModified);
+		return false;
+	}
 
-    public String getFilePath() {
-        return file.getAbsolutePath();
-    }
+	public final File getFile() {
+		return file;
+	}
 
-    public final FileType getFileType() {
-        return fileType;
-    }
+	public String getFilePath() {
+		return file.getAbsolutePath();
+	}
+
+	public final FileType getFileType() {
+		return fileType;
+	}
 }
