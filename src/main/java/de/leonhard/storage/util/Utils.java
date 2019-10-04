@@ -1,22 +1,22 @@
 package de.leonhard.storage.util;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import java.util.*;
 
 @SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class Utils {
 
-    public static Object getObjectFromMap(Map<String, Object> map, String[] args) {
+    public static Object getObjectFromMap(Map<String, Object> map, String[] args, int id) {
         Map tempMap = map;
-        if (args.length > 1) {
+        if (id < args.length - 1) {
             if (map.get(args[0]) instanceof HashMap) {
-                tempMap = (HashMap<String, Object>) map.get(args[0]);
-                args = (String[]) ArrayUtils.removeElement(args, args[0]);
-                getObjectFromMap(tempMap, args);
+                tempMap = (HashMap<String, Object>) map.get(args[id]);
+                return getObjectFromMap(tempMap, args, id + 1);
+            } else {
+                return null;
             }
+        } else {
+            return tempMap.get(args[id]);
         }
-        return tempMap.get(args[0]);
     }
 
     /* static Map stringToMap(final String string) {
