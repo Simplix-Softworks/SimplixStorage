@@ -485,20 +485,20 @@ public class Yaml extends StorageCreator implements StorageBase {
         if (finalKey.contains(".")) {
             String[] parts = key.split("\\.");
             if (yamlObject.get(parts[0]) instanceof HashMap) {
-                return getObjectFromMap((HashMap<String, Object>) yamlObject.get(parts[0]), parts);
+                return getObjectFromMap(yamlObject, parts);
             }
             return null;
         }
         return yamlObject.get(finalKey);
     }
 
-    private Object getObjectFromMap(HashMap<String, Object> map, String[] args) {
-        HashMap tempMap = map;
+    private Object getObjectFromMap(Map<String, Object> map, String[] args) {
+        Map tempMap = map;
         if (args.length > 1) {
             if (map.get(args[0]) instanceof HashMap) {
                 tempMap = (HashMap<String, Object>) map.get(args[0]);
                 args = (String[]) ArrayUtils.removeElement(args, args[0]);
-                getObjectFromMap(map, args);
+                getObjectFromMap(tempMap, args);
             }
         }
         return tempMap.get(args[0]);
