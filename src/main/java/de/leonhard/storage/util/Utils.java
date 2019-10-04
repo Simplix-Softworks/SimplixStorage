@@ -5,17 +5,16 @@ import java.util.*;
 @SuppressWarnings({"unused", "unchecked"})
 public class Utils {
 
-    public static Object getObjectFromMap(Map<String, Object> map, String[] args, int id) {
-        Map tempMap = map;
+    public static Object getObjectFromMap(Map<String, Object> map, String[] args, int 
         if (id < args.length - 1) {
-            if (map.get(args[0]) instanceof HashMap) {
-                tempMap = (HashMap<String, Object>) map.get(args[id]);
+            if (map.get(args[0]) instanceof Map) {
+                Map tempMap = map.get(args[id]);
                 return getObjectFromMap(tempMap, args, id + 1);
             } else {
                 return null;
             }
         } else {
-            return tempMap.get(args[id]);
+            return map.get(args[id]);
         }
     }
 
