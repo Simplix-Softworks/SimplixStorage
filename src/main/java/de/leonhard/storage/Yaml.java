@@ -3,6 +3,7 @@ package de.leonhard.storage;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.*;
+import de.leonhard.storage.comparator.Comparator;
 import de.leonhard.storage.editor.YamlEditor;
 import de.leonhard.storage.editor.YamlParser;
 import de.leonhard.storage.util.FileUtils;
@@ -17,7 +18,7 @@ import java.util.*;
 @SuppressWarnings({"ResultOfMethodCallIgnored", "unused", "WeakerAccess", "unchecked"})
 @Getter
 @Setter
-public class Yaml extends StorageCreator implements StorageBase {
+public class Yaml extends StorageCreator implements StorageBase, Comparator {
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
     protected File file;
@@ -427,6 +428,10 @@ public class Yaml extends StorageCreator implements StorageBase {
         this.configSettings = ConfigSettings.skipComments;
     }
 
+    public String getName() {
+        return this.file.getName();
+    }
+
     @Override
     public void set(String key, Object value) {
         insert(key, value, this.configSettings);
@@ -508,7 +513,6 @@ public class Yaml extends StorageCreator implements StorageBase {
     }
 
     protected void reload() {
-
         if (reloadSettings.equals(ReloadSettings.MANUALLY)) {
             return;
         }
@@ -612,5 +616,29 @@ public class Yaml extends StorageCreator implements StorageBase {
 
     public void setConfigSettings(final ConfigSettings configSettings) {
         this.configSettings = configSettings;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && this.getClass() == obj.getClass()) {
+            return this.file.equals(obj);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int compareTo(File pathname) {
+        return this.file.compareTo(pathname);
+    }
+
+    @Override
+    public int hashCode() {
+        return file.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.file.getAbsolutePath();
     }
 }

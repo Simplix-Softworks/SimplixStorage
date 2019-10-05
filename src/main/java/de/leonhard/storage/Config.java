@@ -176,4 +176,28 @@ public class Config extends Yaml {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && this.getClass() == obj.getClass()) {
+            return this.file.equals(obj);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int compareTo(File pathname) {
+        return this.file.compareTo(pathname);
+    }
+
+    @Override
+    public int hashCode() {
+        return file.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.file.getAbsolutePath();
+    }
 }

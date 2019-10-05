@@ -4,6 +4,7 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
 import de.leonhard.storage.base.StorageCreator;
+import de.leonhard.storage.comparator.Comparator;
 import de.leonhard.storage.util.Utils;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings({"unused", "WeakerAccess", "ResultOfMethodCallIgnored"})
-public class Toml extends StorageCreator implements StorageBase {
+public class Toml extends StorageCreator implements StorageBase, Comparator {
     private final ReloadSettings reloadSettings;
     private Map<String, Object> data;
     private File file;
@@ -169,5 +170,29 @@ public class Toml extends StorageCreator implements StorageBase {
 
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && this.getClass() == obj.getClass()) {
+            return this.file.equals(obj);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int compareTo(File pathname) {
+        return this.file.compareTo(pathname);
+    }
+
+    @Override
+    public int hashCode() {
+        return file.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.file.getAbsolutePath();
     }
 }
