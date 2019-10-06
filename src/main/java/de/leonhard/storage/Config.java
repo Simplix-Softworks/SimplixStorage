@@ -193,7 +193,7 @@ public class Config extends Yaml {
 
     @Override
     public int hashCode() {
-        return file.hashCode();
+        return this.file.hashCode();
     }
 
     @Override

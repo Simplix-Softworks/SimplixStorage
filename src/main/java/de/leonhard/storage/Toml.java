@@ -55,6 +55,10 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
         update();
     }
 
+    public String getName() {
+        return this.file.getName();
+    }
+
     /**
      * Set a object to your file
      *
@@ -188,7 +192,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
 
     @Override
     public int hashCode() {
-        return file.hashCode();
+        return this.file.hashCode();
     }
 
     @Override

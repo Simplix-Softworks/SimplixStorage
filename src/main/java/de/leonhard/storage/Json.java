@@ -135,6 +135,10 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
 
     }
 
+    public String getName() {
+        return this.file.getName();
+    }
+
     /**
      * Sets a value to the json if the file doesn't already contain the value
      * (Not mix up with Bukkit addDefault) Uses {@link JSONObject}
@@ -372,7 +376,7 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
 
     @Override
     public int hashCode() {
-        return file.hashCode();
+        return this.file.hashCode();
     }
 
     @Override

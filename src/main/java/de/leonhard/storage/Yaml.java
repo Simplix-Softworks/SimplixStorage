@@ -634,7 +634,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
 
     @Override
     public int hashCode() {
-        return file.hashCode();
+        return this.file.hashCode();
     }
 
     @Override
