@@ -185,19 +185,4 @@ public class Config extends Yaml {
             return false;
         }
     }
-
-    @Override
-    public int compareTo(File pathname) {
-        return this.file.compareTo(pathname);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return this.file.getAbsolutePath();
-    }
 }
