@@ -127,6 +127,7 @@ public class Config extends Yaml {
         return new ArrayList<>();
     }
 
+    @SuppressWarnings("unused")
     public void setHeader(List<String> header) {
         List<String> tmp = new ArrayList<>();
         // Updating the values to have a comments, if someone forgets to set
