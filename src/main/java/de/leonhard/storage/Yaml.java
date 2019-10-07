@@ -15,7 +15,7 @@ import lombok.Setter;
 import java.io.*;
 import java.util.*;
 
-@SuppressWarnings({"ResultOfMethodCallIgnored", "unused", "WeakerAccess", "unchecked"})
+@SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
 @Getter
 @Setter
 public class Yaml extends StorageCreator implements StorageBase, Comparator {
@@ -62,16 +62,12 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file) {
-        this.file = file;
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            create(file.getParent(), file.getName(), FileType.YAML);
+            this.file = super.file;
+        } catch (final IOException e) {
+            e.printStackTrace();
         }
-
         load(file);
 
         update();
@@ -90,7 +86,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -127,7 +123,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -158,16 +154,14 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file, String resourcefile) {
-        this.file = file;
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
+        try {
+            if (create(file.getParent(), file.getName(), FileType.YAML)) {
+                this.file = super.file;
 
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -183,9 +177,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
                         outputStream.close();
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                this.file = super.file;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         load(file);
@@ -203,10 +199,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
+
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -240,10 +237,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
+
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -274,16 +272,14 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file, File resourcefile) {
-        this.file = file;
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
+        try {
+            if (create(file.getParent(), file.getName(), FileType.YAML)) {
+                this.file = super.file;
 
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -299,9 +295,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
                         outputStream.close();
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                this.file = super.file;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         load(file);
@@ -319,9 +317,10 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
+
                 try {
                     this.configInputStream = resourceStream;
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -355,9 +354,10 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
+
                 try {
                     this.configInputStream = resourceStream;
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -388,15 +388,13 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file, BufferedInputStream resourceStream) {
-        this.file = file;
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
+        try {
+            if (create(file.getParent(), file.getName(), FileType.YAML)) {
+                this.file = super.file;
 
                 try {
                     this.configInputStream = resourceStream;
-                    outputStream = new FileOutputStream(file.getAbsolutePath());
+                    outputStream = new FileOutputStream(this.file);
                     final byte[] data = new byte[1024];
                     int count;
                     while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
@@ -412,9 +410,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
                         outputStream.close();
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                this.file = super.file;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         load(file);
