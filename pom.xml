@@ -22,6 +22,10 @@
             <name>Leonhard Solbach</name>
             <email>JavaFactoryDev@gmail.com</email>
         </developer>
+        <developer>
+            <name>Zeanon</name>
+            <email>thezeanon@gmail.com</email>
+        </developer>
     </developers>
 
     <scm>
