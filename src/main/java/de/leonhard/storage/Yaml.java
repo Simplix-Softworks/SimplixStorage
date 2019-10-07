@@ -62,21 +62,26 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file) {
-        try {
-            create(file.getParent(), file.getName(), FileType.YAML);
-            this.file = super.file;
-        } catch (final IOException e) {
-            e.printStackTrace();
+        if (isYaml(file)) {
+            try {
+                create(file);
+                this.file = super.file;
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+            load(file);
+
+            update();
+
+            yamlEditor = new YamlEditor(file);
+            parser = new YamlParser(yamlEditor);
+
+            this.reloadSettings = ReloadSettings.INTELLIGENT;
+            this.configSettings = ConfigSettings.skipComments;
+        } else {
+            yamlEditor = null;
+            parser = null;
         }
-        load(file);
-
-        update();
-
-        yamlEditor = new YamlEditor(file);
-        parser = new YamlParser(yamlEditor);
-
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
     }
 
     public Yaml(String name, String path, String resourcefile) {
@@ -154,45 +159,50 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file, String resourcefile) {
-        try {
-            if (create(file.getParent(), file.getName(), FileType.YAML)) {
-                this.file = super.file;
+        if (isYaml(file)) {
+            try {
+                if (create(file)) {
+                    this.file = super.file;
 
-                try {
-                    this.configInputStream = new BufferedInputStream(
-                            Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
+                    try {
+                        this.configInputStream = new BufferedInputStream(
+                                Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
+                        outputStream = new FileOutputStream(this.file);
+                        final byte[] data = new byte[1024];
+                        int count;
+                        while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+                            outputStream.write(data, 0, count);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (this.configInputStream != null) {
+                            this.configInputStream.close();
+                        }
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+                } else {
+                    this.file = super.file;
                 }
-            } else {
-                this.file = super.file;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            load(file);
+
+            update();
+
+            yamlEditor = new YamlEditor(file);
+            parser = new YamlParser(yamlEditor);
+
+            this.reloadSettings = ReloadSettings.INTELLIGENT;
+            this.configSettings = ConfigSettings.skipComments;
+        } else {
+            yamlEditor = null;
+            parser = null;
         }
-
-        load(file);
-
-        update();
-
-        yamlEditor = new YamlEditor(file);
-        parser = new YamlParser(yamlEditor);
-
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
     }
 
     public Yaml(String name, String path, File resourcefile) {
@@ -272,45 +282,50 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file, File resourcefile) {
-        try {
-            if (create(file.getParent(), file.getName(), FileType.YAML)) {
-                this.file = super.file;
+        if (isYaml(file)) {
+            try {
+                if (create(file)) {
+                    this.file = super.file;
 
-                try {
-                    this.configInputStream = new BufferedInputStream(
-                            Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
+                    try {
+                        this.configInputStream = new BufferedInputStream(
+                                Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
+                        outputStream = new FileOutputStream(this.file);
+                        final byte[] data = new byte[1024];
+                        int count;
+                        while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+                            outputStream.write(data, 0, count);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (this.configInputStream != null) {
+                            this.configInputStream.close();
+                        }
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+                } else {
+                    this.file = super.file;
                 }
-            } else {
-                this.file = super.file;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            load(file);
+
+            update();
+
+            yamlEditor = new YamlEditor(file);
+            parser = new YamlParser(yamlEditor);
+
+            this.reloadSettings = ReloadSettings.INTELLIGENT;
+            this.configSettings = ConfigSettings.skipComments;
+        } else {
+            yamlEditor = null;
+            parser = null;
         }
-
-        load(file);
-
-        update();
-
-        yamlEditor = new YamlEditor(file);
-        parser = new YamlParser(yamlEditor);
-
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
     }
 
     public Yaml(String name, String path, BufferedInputStream resourceStream) {
@@ -388,44 +403,57 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     }
 
     public Yaml(final File file, BufferedInputStream resourceStream) {
-        try {
-            if (create(file.getParent(), file.getName(), FileType.YAML)) {
-                this.file = super.file;
+        if (isYaml(file)) {
+            try {
+                if (create(file)) {
+                    this.file = super.file;
 
-                try {
-                    this.configInputStream = resourceStream;
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
+                    try {
+                        this.configInputStream = resourceStream;
+                        outputStream = new FileOutputStream(this.file);
+                        final byte[] data = new byte[1024];
+                        int count;
+                        while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
+                            outputStream.write(data, 0, count);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (this.configInputStream != null) {
+                            this.configInputStream.close();
+                        }
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+                } else {
+                    this.file = super.file;
                 }
-            } else {
-                this.file = super.file;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            load(file);
+
+            update();
+
+            yamlEditor = new YamlEditor(file);
+            parser = new YamlParser(yamlEditor);
+
+            this.reloadSettings = ReloadSettings.INTELLIGENT;
+            this.configSettings = ConfigSettings.skipComments;
+        } else {
+            yamlEditor = null;
+            parser = null;
         }
+    }
 
-        load(file);
+    public static boolean isYaml(String file) {
+        return (file.lastIndexOf(".") > 0 ? file.substring(file.lastIndexOf(".") + 1) : "").equals("yml");
+    }
 
-        update();
-
-        yamlEditor = new YamlEditor(file);
-        parser = new YamlParser(yamlEditor);
-
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
+    public static boolean isYaml(File file) {
+        return isYaml(file.getName());
     }
 
     public String getName() {

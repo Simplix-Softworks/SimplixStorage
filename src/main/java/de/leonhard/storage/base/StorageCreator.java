@@ -25,8 +25,29 @@ public abstract class StorageCreator {
     protected synchronized boolean create(final String path, final String name, final FileType fileType)
             throws IOException {
         this.fileType = fileType;
+        initFile(path, name, fileType);
+
+        return createFile(this.file);
+    }
+
+    protected synchronized boolean create(final String path, final String name)
+            throws IOException {
+        this.fileType = FileType.getFileType(name);
+        initFile(path, name, fileType);
+
+        return createFile(file);
+    }
+
+    protected synchronized boolean create(final File file)
+            throws IOException {
+        this.fileType = FileType.getFileType(file);
+        this.file = file;
+        return createFile(this.file);
+    }
+
+    private void initFile(String path, String name, FileType fileType) {
         if (path == null || path.equals("")) {
-            file = new File(name + fileType.getExtension());
+            this.file = new File(name + "." + fileType.getExtension());
         } else {
             String fixedPath = path.replace("\\", "/");
             ArrayList<String> parts = new ArrayList<>(Arrays.asList(fixedPath.split("/")));
@@ -40,9 +61,11 @@ public abstract class StorageCreator {
                 folders.mkdirs();
             }
 
-            file = new File(fixedPath + File.separator + name + fileType.getExtension());
+            this.file = new File(fixedPath + File.separator + name + "." + fileType.getExtension());
         }
+    }
 
+    private boolean createFile(File file) throws IOException {
         if (!file.exists()) {
             file.createNewFile();
             lastModified = System.currentTimeMillis();
