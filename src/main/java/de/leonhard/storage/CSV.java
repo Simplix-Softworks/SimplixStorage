@@ -2,13 +2,15 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.base.StorageBase;
 import de.leonhard.storage.base.StorageCreator;
+import de.leonhard.storage.comparator.Comparator;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-class CSV extends StorageCreator implements StorageBase {
+class CSV extends StorageCreator implements StorageBase, Comparator {
     @Override
     public Object get(String key) {
         return null;
@@ -222,5 +224,29 @@ class CSV extends StorageCreator implements StorageBase {
     @Override
     public Set<String> getKeySet() {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && this.getClass() == obj.getClass()) {
+            return this.file.equals(obj);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int compareTo(File pathname) {
+        return this.file.compareTo(pathname);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.file.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.file.getAbsolutePath();
     }
 }
