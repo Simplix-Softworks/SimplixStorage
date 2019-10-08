@@ -59,6 +59,10 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
         return this.file.getName();
     }
 
+    public File getFile() {
+        return this.file;
+    }
+
     /**
      * Set a object to your file
      *

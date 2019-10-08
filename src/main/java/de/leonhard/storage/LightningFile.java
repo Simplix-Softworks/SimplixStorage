@@ -42,6 +42,10 @@ class LightningFile extends StorageCreator implements StorageBase, Comparator {
         return this.file.getName();
     }
 
+    public File getFile() {
+        return this.file;
+    }
+
     @Override
     public void update() {
 

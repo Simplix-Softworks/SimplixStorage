@@ -139,6 +139,10 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
         return this.file.getName();
     }
 
+    public File getFile() {
+        return this.file;
+    }
+
     /**
      * Sets a value to the json if the file doesn't already contain the value
      * (Not mix up with Bukkit addDefault) Uses {@link JSONObject}

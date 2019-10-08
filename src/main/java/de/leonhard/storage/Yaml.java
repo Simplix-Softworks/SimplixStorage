@@ -460,6 +460,10 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         return this.file.getName();
     }
 
+    public File getFile() {
+        return this.file;
+    }
+
     @Override
     public void set(String key, Object value) {
         insert(key, value, this.configSettings);
