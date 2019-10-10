@@ -508,6 +508,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         }
     }
 
+
     public void write(Map data) throws IOException {
         YamlWriter writer = new YamlWriter(new FileWriter(file));
         writer.write(data);
