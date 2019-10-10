@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.leonhard</groupId>
-    <artifactId>LightningStorage</artifactId>
+    <artifactId>lightningstorage</artifactId>
     <version>2.5.5</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
