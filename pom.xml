@@ -37,6 +37,8 @@
 
     <build>
         <defaultGoal>clean install -U</defaultGoal>
+        <finalName>${project.name}-${project.version}</finalName>
+        <sourceDirectory>${basedir}/src/</sourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
