@@ -36,7 +36,6 @@
 
     <build>
         <defaultGoal>clean install -U</defaultGoal>
-        <finalName>${project.name}-${project.version}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
