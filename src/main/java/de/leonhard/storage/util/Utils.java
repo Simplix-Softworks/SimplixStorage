@@ -7,7 +7,7 @@ public class Utils {
 
     public static Object getObjectFromMap(Map<String, Object> map, String[] args, int id) {
         if (id < args.length - 1) {
-            if (map.get(args[0]) instanceof Map) {
+            if (map.get(args[id]) instanceof Map) {
                 Map<String, Object> tempMap = (Map<String, Object>) map.get(args[id]);
                 return getObjectFromMap(tempMap, args, id + 1);
             } else {
