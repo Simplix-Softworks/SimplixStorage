@@ -5,7 +5,7 @@ import java.util.*;
 @SuppressWarnings({"unused", "unchecked"})
 public class Utils {
 
-    public static Object getObjectFromMap(Map<String, Object> map, String[] args, int id) {
+    public static Object getObjectFromMap(final Map<String, Object> map, final String[] args, final int id) {
         if (id < args.length - 1) {
             if (map.get(args[id]) instanceof Map) {
                 Map<String, Object> tempMap = (Map<String, Object>) map.get(args[id]);
@@ -30,6 +30,10 @@ public class Utils {
         }
         return result;
     }*/
+
+    public static Map<String, Object> insertKeyToMap(final String key) {
+        return null;
+    }
 
     // Method to create nested objects from String keys
     public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
