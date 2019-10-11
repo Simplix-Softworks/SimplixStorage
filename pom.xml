@@ -35,7 +35,7 @@
     </scm>
 
     <build>
-        <defaultGoal>clean install -U</defaultGoal>
+        <defaultGoal>clean package -U</defaultGoal>
         <pluginManagement>
             <plugins>
                 <plugin>
