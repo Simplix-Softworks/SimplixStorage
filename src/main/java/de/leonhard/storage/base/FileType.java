@@ -16,10 +16,6 @@ public enum FileType {
         this.extension = extension;
     }
 
-    public String getExtension() {
-        return extension;
-    }
-
     public static String getExtension(String path) {
         return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
     }
@@ -46,5 +42,9 @@ public enum FileType {
 
     public static FileType getFileType(File file) {
         return getFileType(getExtension(file));
+    }
+
+    public String getExtension() {
+        return extension;
     }
 }
