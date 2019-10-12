@@ -79,7 +79,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
         final String old = data.toString();
 
         if (finalKey.contains("."))
-            data = Utils.stringToMap(finalKey, value, data);
+            Utils.insertKeyToMap(data, finalKey, value);
         else
             data.put(finalKey, value);
 
@@ -165,9 +165,8 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
 
     public void remove(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        final Map<String, Object> old = data;
 
-        data = Utils.remove(old, finalKey);
+        Utils.remove(data, finalKey);
 
         write(data);
     }

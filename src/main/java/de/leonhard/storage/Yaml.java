@@ -637,8 +637,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             removeKey(key);
             return;
         }
-        final Map<String, Object> old = yamlObject;
-        yamlObject = Utils.remove(old, finalKey);
+        Utils.remove(yamlObject, finalKey);
         try {
             write(yamlObject);
         } catch (IOException e) {

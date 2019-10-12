@@ -235,7 +235,9 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
 
                 JSONObject old = this.object;
 
-                final Map map = Utils.stringToMap(finalKey, value, object.toMap());
+                final Map map = new HashMap(object.toMap());
+
+                Utils.insertKeyToMap(map, finalKey, value);
 
                 object = new JSONObject(map);
                 try {
@@ -348,7 +350,10 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
             removeKey(key);
 
         final Map<String, Object> old = object.toMap();
-        object = new JSONObject(Utils.remove(old, finalKey));
+
+        Utils.remove(old, finalKey);
+
+        object = new JSONObject(old);
         try {
             write(object);
         } catch (IOException e) {

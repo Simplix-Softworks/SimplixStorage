@@ -2,6 +2,7 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.base.ConfigSettings;
 import de.leonhard.storage.base.ReloadSettings;
+import de.leonhard.storage.util.Utils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -90,6 +91,12 @@ public class Config extends Yaml {
     public void setDefault(final String key, final Object value) {
         if (!contains(key))
             set(key, value, configSettings);
+    }
+
+    public void insertTestKey() {
+        Utils.insertKeyToMap(yamlObject, "this.is.a.test", "TEST");
+        System.out.println(yamlObject);
+        System.out.println("TEST");
     }
 
     @Override

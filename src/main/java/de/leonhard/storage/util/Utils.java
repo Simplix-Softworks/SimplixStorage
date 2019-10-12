@@ -18,7 +18,7 @@ public class Utils {
         }
     }
 
-    /* static Map stringToMap(final String string) {
+    /* static Map insertKeyToMap(final String string) {
         final Map result = new HashMap();
         final String str = string.replace("{", "").replace("}", "");
         final String[] array = str.split(",");
@@ -31,12 +31,24 @@ public class Utils {
         return result;
     }*/
 
-    public static Map<String, Object> insertKeyToMap(final String key) {
-        return null;
+    public static void insertKeyToMap(final Map map, final String key, final Object value) {
+        final String[] parts = key.split("\\.");
+        map.put(parts[0], insertKeyToMap(map, parts, value, 1));
+    }
+
+    private static Object insertKeyToMap(final Map map, final String[] key, final Object value, final int id) {
+        if (id < key.length) {
+            Map<String, Object> tempMap = new HashMap<>(map);
+            Map<String, Object> childMap = map.containsKey(key[id]) ? (map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>()) : new HashMap<>();
+            tempMap.put(key[id], insertKeyToMap(childMap, key, value, id + 1));
+            return tempMap;
+        } else {
+            return value;
+        }
     }
 
     // Method to create nested objects from String keys
-    public static Map<String, Object> stringToMap(final String string, final Object value, final Map object) {
+    /*public static Map<String, Object> insertKeyToMap(final String string, final Object value, final Map object) {
 
         if (string.contains(".")) {
             final String[] parts = string.split("\\.");
@@ -91,7 +103,7 @@ public class Utils {
         Map<String, Object> result = new HashMap<>();
         result.put(string, value);
         return result;
-    }
+    }*/
 
     public static boolean contains(String string, final Map object) {
         if (string.contains(".")) {
@@ -128,12 +140,12 @@ public class Utils {
         return object.containsKey(key) ? object.get(key) : null;
     }
 
-    public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
+    /*public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
         //
         // TODO Get ->Via method ->Remove key ->Add as new Map via put
         //
         final String[] parts = key.split("\\.");
-        final String withoutLast = getFirst(key, 1);
+        final String withoutLast = getFirst(key);
         final String first = parts[0];
         final String last = parts[parts.length - 1];
 
@@ -147,16 +159,36 @@ public class Utils {
 
         tmp.remove(last);
 
-        Map<String, Object> preResult = stringToMap(withoutLast, tmp, map);
+        Map<String, Object> preResult = insertKeyToMap(map, withoutLast, tmp);
 
         return deepMerge(map, preResult);
+    }*/
+
+    public static void remove(final Map map, final String key) {
+        if (contains(key, map)) {
+            final String[] parts = key.split("\\.");
+            remove(map, parts, 0);
+        }
     }
 
-    private static String getFirst(final String string, int offset) {
+    private static void remove(final Map map, final String[] key, final int id) {
+        Map tempMap = map;
+        for (int i = 0; i < key.length - (1 + id); i++) {
+            if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
+                tempMap = (Map) tempMap.get(key[i]);
+            }
+        }
+        if (tempMap.keySet().size() <= 1) {
+            map.remove(key[key.length - (1 + id)]);
+            remove(map, key, id + 1);
+        }
+    }
+
+    private static String getFirst(final String string) {
         final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
         final StringBuilder sb = new StringBuilder();
 
-        final int max = strings.size() - offset;
+        final int max = strings.size() - 1;
         int i = 0;
         for (final String str : strings) {
             if (i < max) {
@@ -172,7 +204,7 @@ public class Utils {
     }
 
     // Method to merge Maps
-    private static Map<String, Object> deepMerge(Map original, Map newMap) {
+    /*private static Map<String, Object> deepMerge(Map original, Map newMap) {
         for (Object key : newMap.keySet()) {
             if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
                 Map originalChild = (Map) original.get(key);
@@ -183,5 +215,5 @@ public class Utils {
             }
         }
         return original;
-    }
+    }*/
 }
