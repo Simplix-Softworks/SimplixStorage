@@ -183,7 +183,7 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
             return null;
 
         if (key.contains(".")) {
-            return Utils.contains(key, object.toMap()) ? Utils.get(key, object.toMap()) : null;
+            return Utils.contains(object.toMap(), key) ? Utils.getObjectFromMap(object.toMap(), key) : null;
         }
         return object.has(key) ? object.get(key) : null;
     }
@@ -313,7 +313,7 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
     private boolean has(final String key) {
         reload();
         if (key.contains("."))
-            return Utils.contains(key, object.toMap());
+            return Utils.contains(object.toMap(), key);
         return object.has(key);
     }
 

@@ -2,21 +2,25 @@ package de.leonhard.storage.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @SuppressWarnings({"unused", "unchecked"})
 public class Utils {
 
-    public static Object getObjectFromMap(final Map<String, Object> map, final String[] args, final int id) {
-        if (id < args.length - 1) {
-            if (map.get(args[id]) instanceof Map) {
-                Map<String, Object> tempMap = (Map<String, Object>) map.get(args[id]);
-                return getObjectFromMap(tempMap, args, id + 1);
+    public static Object getObjectFromMap(final Map<String, Object> map, final String key) {
+        final String[] parts = key.split("\\.");
+        return getObjectFromMap(map, parts, 0);
+    }
+
+    private static Object getObjectFromMap(final Map<String, Object> map, final String[] key, final int id) {
+        if (id < key.length - 1) {
+            if (map.get(key[id]) instanceof Map) {
+                Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+                return getObjectFromMap(tempMap, key, id + 1);
             } else {
                 return null;
             }
         } else {
-            return map.get(args[id]);
+            return map.get(key[id]);
         }
     }
 
@@ -33,12 +37,12 @@ public class Utils {
         return result;
     }*/
 
-    public static void insertKeyToMap(final Map map, final String key, final Object value) {
+    public static void insertKeyToMap(final Map<String, Object> map, final String key, final Object value) {
         final String[] parts = key.split("\\.");
         map.put(parts[0], insertKeyToMap(map, parts, value, 1));
     }
 
-    private static Object insertKeyToMap(final Map map, final String[] key, final Object value, final int id) {
+    private static Object insertKeyToMap(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
             Map<String, Object> childMap = map.containsKey(key[id]) ? (map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>()) : new HashMap<>();
@@ -107,7 +111,7 @@ public class Utils {
         return result;
     }*/
 
-    public static boolean contains(String string, final Map object) {
+    /*public static boolean contains(String string, final Map object) {
         if (string.contains(".")) {
             String[] parts = string.split("\\.");
             Map preResult = object;
@@ -126,13 +130,31 @@ public class Utils {
         } else {
             return object.containsKey(string);
         }
+    }*/
+
+    public static boolean contains(final Map<String, Object> map, String key) {
+        String[] parts = key.split("\\.");
+        return contains(map, parts, 0);
     }
 
-    public static Object get(final String key, final Map object) {
+    private static boolean contains(final Map<String, Object> map, String[] key, int id) {
+        if (id < key.length - 1) {
+            if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
+                Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+                return contains(tempMap, key, id + 1);
+            } else {
+                return false;
+            }
+        } else {
+            return map.containsKey(key[id]);
+        }
+    }
+
+    /*public static Object get(final Map object, final String key) {
         if (key.contains(".")) {
             String[] parts = key.split("\\.");
-            Map preResult = (get(parts[0], object) == null || (!(get(parts[0], object) instanceof Map)) ? new HashMap()
-                    : (HashMap) get(parts[0], object));// WARNING RECURSION!
+            Map preResult = (get(object, parts[0]) == null || (!(get(object, parts[0]) instanceof Map)) ? new HashMap()
+                    : (HashMap) get(object, parts[0]));// WARNING RECURSION!
             for (int i = 1; i < parts.length; i++) {
                 if (!(Objects.requireNonNull(preResult).get(parts[i]) instanceof HashMap) || i == parts.length - 1)
                     return preResult.get(parts[i]);
@@ -140,7 +162,7 @@ public class Utils {
             }
         }
         return object.containsKey(key) ? object.get(key) : null;
-    }
+    }*/
 
     /*public static Map<String, Object> remove(final Map<String, Object> map, final String key) {
         //
@@ -166,14 +188,14 @@ public class Utils {
         return deepMerge(map, preResult);
     }*/
 
-    public static void remove(final Map map, final String key) {
-        if (contains(key, map)) {
+    public static void remove(final Map<String, Object> map, final String key) {
+        if (contains(map, key)) {
             final String[] parts = key.split("\\.");
             remove(map, parts, 0);
         }
     }
 
-    private static void remove(final Map map, final String[] key, final int id) {
+    private static void remove(final Map<String, Object> map, final String[] key, final int id) {
         Map tempMap = map;
         for (int i = 0; i < key.length - (1 + id); i++) {
             if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {

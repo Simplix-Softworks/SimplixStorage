@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+
 import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
@@ -97,7 +98,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
     @Override
     public Object get(String key) {
         reload();
-        return Utils.get(key, data);
+        return Utils.getObjectFromMap(data, key);
     }
 
     /**
@@ -119,7 +120,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
     @Override
     public boolean contains(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        return Utils.contains(finalKey, data);
+        return Utils.contains(data, finalKey);
     }
 
     public void write(final Map<String, Object> data) {

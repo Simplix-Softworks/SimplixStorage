@@ -519,11 +519,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         reload();
         String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
         if (finalKey.contains(".")) {
-            String[] parts = key.split("\\.");
-            if (yamlObject.get(parts[0]) instanceof HashMap) {
-                return Utils.getObjectFromMap(yamlObject, parts, 0);
-            }
-            return null;
+            return Utils.getObjectFromMap(yamlObject, key);
         }
         return yamlObject.get(finalKey);
     }
@@ -538,7 +534,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         reload();
 
         if (key.contains(".")) {
-            return Utils.contains(key, yamlObject);
+            return Utils.contains(yamlObject, key);
         }
 
         return yamlObject.containsKey(key);
