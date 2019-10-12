@@ -5,7 +5,6 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
 import de.leonhard.storage.base.StorageCreator;
-import de.leonhard.storage.comparator.Comparator;
 import de.leonhard.storage.util.FileData;
 
 import java.io.File;
@@ -14,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings({"unused", "WeakerAccess", "ResultOfMethodCallIgnored"})
-public class Toml extends StorageCreator implements StorageBase, Comparator {
+public class Toml extends StorageCreator implements StorageBase, Comparable<Toml> {
     private final ReloadSettings reloadSettings;
     private FileData data;
     private File file;
@@ -95,7 +94,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
     @Override
     public Object get(String key) {
         reload();
-        return data.getObjectFromMap(key);
+        return data.get(key);
     }
 
     /**
@@ -117,7 +116,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
     @Override
     public boolean contains(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        return data.contains(finalKey);
+        return data.containsKey(finalKey);
     }
 
     public void write(final Map<String, Object> data) {
@@ -180,15 +179,17 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            return this.file.equals(obj);
+            Toml toml = (Toml) obj;
+            return this.file.equals(toml.file);
         } else {
             return false;
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(File pathname) {
-        return this.file.compareTo(pathname);
+    public int compareTo(Toml toml) {
+        return this.file.compareTo(toml.file);
     }
 
     @Override

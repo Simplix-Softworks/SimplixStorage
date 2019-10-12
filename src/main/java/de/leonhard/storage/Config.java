@@ -181,24 +181,10 @@ public class Config extends Yaml {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            return this.file.equals(obj);
+            Config config = (Config) obj;
+            return this.file.equals(config.file);
         } else {
             return false;
         }
-    }
-
-    @Override
-    public int compareTo(File pathname) {
-        return this.file.compareTo(pathname);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return this.file.getAbsolutePath();
     }
 }

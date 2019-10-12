@@ -12,17 +12,17 @@ public class FileData {
     }
 
 
-    public Object getObjectFromMap(final String key) {
+    public Object get(final String key) {
         final String[] parts = key.split("\\.");
-        return getObjectFromMap(localMap, parts, 0);
+        return get(localMap, parts, 0);
     }
 
     @SuppressWarnings("unchecked")
-    private Object getObjectFromMap(final Map<String, Object> map, final String[] key, final int id) {
+    private Object get(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.get(key[id]) instanceof Map) {
                 Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
-                return getObjectFromMap(tempMap, key, id + 1);
+                return get(tempMap, key, id + 1);
             } else {
                 return null;
             }
@@ -50,17 +50,17 @@ public class FileData {
     }
 
 
-    public boolean contains(String key) {
+    public boolean containsKey(String key) {
         String[] parts = key.split("\\.");
-        return contains(localMap, parts, 0);
+        return containsKey(localMap, parts, 0);
     }
 
     @SuppressWarnings("unchecked")
-    private boolean contains(final Map<String, Object> map, String[] key, int id) {
+    private boolean containsKey(final Map<String, Object> map, String[] key, int id) {
         if (id < key.length - 1) {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
                 Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
-                return contains(tempMap, key, id + 1);
+                return containsKey(tempMap, key, id + 1);
             } else {
                 return false;
             }
@@ -71,7 +71,7 @@ public class FileData {
 
 
     public void remove(final String key) {
-        if (contains(key)) {
+        if (containsKey(key)) {
             final String[] parts = key.split("\\.");
             remove(localMap, parts, 0);
         }
@@ -96,5 +96,25 @@ public class FileData {
         } else {
             return localMap;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && this.getClass() == obj.getClass()) {
+            FileData fileData = (FileData) obj;
+            return this.localMap.equals(fileData.localMap);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return this.localMap.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.localMap.toString();
     }
 }

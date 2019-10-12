@@ -3,7 +3,6 @@ package de.leonhard.storage;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.*;
-import de.leonhard.storage.comparator.Comparator;
 import de.leonhard.storage.editor.YamlEditor;
 import de.leonhard.storage.editor.YamlParser;
 import de.leonhard.storage.util.FileData;
@@ -18,7 +17,7 @@ import java.util.*;
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
 @Getter
 @Setter
-public class Yaml extends StorageCreator implements StorageBase, Comparator {
+public abstract class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml> {
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
     protected File file;
@@ -491,7 +490,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     public Object get(final String key) {
         reload();
         String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-        return fileData.getObjectFromMap(key);
+        return fileData.get(key);
     }
 
     @Override
@@ -503,7 +502,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     private boolean has(String key) {
         reload();
 
-        return fileData.contains(key);
+        return fileData.containsKey(key);
     }
 
     protected void reload() {
@@ -551,7 +550,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             HashMap result = (HashMap) getNotNested(parts[0]);
             return Objects.requireNonNull(result).containsKey(parts[1]) ? result.get(parts[1]) : null;
         }
-        return fileData.getObjectFromMap(key);
+        return fileData.get(key);
     }
 
     public void setPathPrefix(String pathPrefix) {
@@ -614,15 +613,17 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            return this.file.equals(obj);
+            Yaml yaml = (Yaml) obj;
+            return this.file.equals(yaml.file);
         } else {
             return false;
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(File pathname) {
-        return this.file.compareTo(pathname);
+    public int compareTo(Yaml yaml) {
+        return this.file.compareTo(yaml.file);
     }
 
     @Override

@@ -4,7 +4,6 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
 import de.leonhard.storage.base.StorageCreator;
-import de.leonhard.storage.comparator.Comparator;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-class LightningFile extends StorageCreator implements StorageBase, Comparator {
+class LightningFile extends StorageCreator implements StorageBase, Comparable<LightningFile> {
 
 
     private final ReloadSettings reloadSettings;
@@ -79,15 +78,17 @@ class LightningFile extends StorageCreator implements StorageBase, Comparator {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            return this.file.equals(obj);
+            LightningFile lightningFile = (LightningFile) obj;
+            return this.file.equals(lightningFile.file);
         } else {
             return false;
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(File pathname) {
-        return this.file.compareTo(pathname);
+    public int compareTo(LightningFile lightningFile) {
+        return this.file.compareTo(lightningFile.file);
     }
 
     @Override

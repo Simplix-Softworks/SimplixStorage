@@ -4,7 +4,6 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
 import de.leonhard.storage.base.StorageCreator;
-import de.leonhard.storage.comparator.Comparator;
 import de.leonhard.storage.util.FileData;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.JsonUtil;
@@ -16,7 +15,7 @@ import java.io.*;
 import java.util.*;
 
 @SuppressWarnings({"Duplicates", "unused", "ResultOfMethodCallIgnored", "WeakerAccess", "unchecked"})
-public class Json extends StorageCreator implements StorageBase, Comparator {
+public class Json extends StorageCreator implements StorageBase, Comparable<Json> {
     private JSONObject object;
     private File file;
     private String pathPrefix;
@@ -183,7 +182,7 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
             return null;
 
         if (key.contains(".")) {
-            return new FileData(object.toMap()).contains(key) ? new FileData(object.toMap()).getObjectFromMap(key) : null;
+            return new FileData(object.toMap()).containsKey(key) ? new FileData(object.toMap()).get(key) : null;
         }
         return object.has(key) ? object.get(key) : null;
     }
@@ -313,7 +312,7 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
     private boolean has(final String key) {
         reload();
         if (key.contains("."))
-            return new FileData(object.toMap()).contains(key);
+            return new FileData(object.toMap()).containsKey(key);
         return object.has(key);
     }
 
@@ -371,15 +370,17 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
     @Override
     public boolean equals(Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
-            return this.file.equals(obj);
+            Json json = (Json) obj;
+            return this.file.equals(json.file);
         } else {
             return false;
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(File pathname) {
-        return this.file.compareTo(pathname);
+    public int compareTo(Json json) {
+        return this.file.compareTo(json.file);
     }
 
     @Override
