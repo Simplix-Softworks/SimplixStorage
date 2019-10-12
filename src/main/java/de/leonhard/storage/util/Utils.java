@@ -8,7 +8,11 @@ public class Utils {
 
     public static Object getObjectFromMap(final Map<String, Object> map, final String key) {
         final String[] parts = key.split("\\.");
-        return getObjectFromMap(map, parts, 0);
+        if (contains(map, key) {
+            return getObjectFromMap(map, parts, 0);
+        } else {
+            return null;
+        }
     }
 
     private static Object getObjectFromMap(final Map<String, Object> map, final String[] key, final int id) {
