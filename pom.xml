@@ -21,10 +21,22 @@
         <developer>
             <name>Leonhard Solbach</name>
             <email>JavaFactoryDev@gmail.com</email>
+            <url>https://github.com/JavaFactoryDev</url>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+            <timezone>Germany</timezone>
         </developer>
+
         <developer>
+            <id>Zeanon</id>
             <name>Zeanon</name>
             <email>thezeanon@gmail.com</email>
+            <url>https://github.com/Zeanon</url>
+            <roles>
+                <role>Refactoring</role>
+            </roles>
+            <timezone>Germany</timezone>
         </developer>
     </developers>
 
