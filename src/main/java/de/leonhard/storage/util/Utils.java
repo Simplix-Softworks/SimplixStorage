@@ -48,7 +48,7 @@ public class Utils {
     }
 
     private static boolean contains(final Map<String, Object> map, String[] key, int id) {
-        if (id < key.length - 1) {
+        if (id < key.length - 2) {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
                 Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
                 return contains(tempMap, key, id + 1);
