@@ -25,8 +25,8 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     @Setter(AccessLevel.PRIVATE)
     protected FileData fileData;
     protected String pathPrefix;
-    protected ReloadSettings reloadSettings;
-    protected ConfigSettings configSettings;
+    protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+    protected ConfigSettings configSettings = ConfigSettings.skipComments;
     private BufferedInputStream configInputStream;
     private FileOutputStream outputStream;
 
@@ -40,7 +40,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         }
 
         this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
         update();
@@ -54,7 +53,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
 
@@ -75,9 +73,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
 
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
-
-            this.reloadSettings = ReloadSettings.INTELLIGENT;
-            this.configSettings = ConfigSettings.skipComments;
         } else {
             yamlEditor = null;
             parser = null;
@@ -113,9 +108,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         } catch (final IOException e) {
             e.printStackTrace();
         }
-
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
         update();
@@ -151,7 +143,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
 
@@ -196,9 +187,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
 
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
-
-            this.reloadSettings = ReloadSettings.INTELLIGENT;
-            this.configSettings = ConfigSettings.skipComments;
         } else {
             yamlEditor = null;
             parser = null;
@@ -235,9 +223,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         } catch (final IOException e) {
             e.printStackTrace();
         }
-
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
         update();
@@ -274,7 +259,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
 
@@ -319,9 +303,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
 
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
-
-            this.reloadSettings = ReloadSettings.INTELLIGENT;
-            this.configSettings = ConfigSettings.skipComments;
         } else {
             yamlEditor = null;
             parser = null;
@@ -357,9 +338,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         } catch (final IOException e) {
             e.printStackTrace();
         }
-
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
         update();
@@ -395,7 +373,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
-        this.configSettings = ConfigSettings.skipComments;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
 
@@ -439,9 +416,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
 
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
-
-            this.reloadSettings = ReloadSettings.INTELLIGENT;
-            this.configSettings = ConfigSettings.skipComments;
         } else {
             yamlEditor = null;
             parser = null;
