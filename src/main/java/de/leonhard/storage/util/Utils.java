@@ -5,7 +5,11 @@ public class Utils {
 
     /*public static Object getObjectFromMap(final Map<String, Object> map, final String key) {
         final String[] parts = key.split("\\.");
-        return getObjectFromMap(map, parts, 0);
+        if (contains(map, key) {
+            return getObjectFromMap(map, parts, 0);
+        } else {
+            return null;
+        }
     }
 
     private static Object getObjectFromMap(final Map<String, Object> map, final String[] key, final int id) {
@@ -66,7 +70,7 @@ public class Utils {
     }
 
     private static void remove(final Map<String, Object> map, final String[] key, final int id) {
-        Map tempMap = map;
+        Map tempMap = new HashMap<>(map);
         for (int i = 0; i < key.length - (1 + id); i++) {
             if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
                 tempMap = (Map) tempMap.get(key[i]);
