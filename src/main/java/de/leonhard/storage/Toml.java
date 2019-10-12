@@ -77,7 +77,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparator {
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        final String old = data.toString();
+        final String old = data.toMap().toString();
 
         data.insert(finalKey, value);
 

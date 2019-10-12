@@ -7,10 +7,6 @@ public class FileData {
 
     private HashMap<String, Object> localMap;
 
-    public FileData() {
-        localMap = new HashMap<>();
-    }
-
     public FileData(Map<String, Object> map) {
         localMap = new HashMap<>(map);
     }

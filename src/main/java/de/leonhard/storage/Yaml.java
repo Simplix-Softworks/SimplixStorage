@@ -454,7 +454,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
 
         synchronized (this) {
 
-            String old = fileData.toString();
+            String old = fileData.toMap().toString();
             fileData.insert(finalKey, value);
 
             if (old.equals(fileData.toString()) && fileData != null) {
