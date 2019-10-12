@@ -24,18 +24,6 @@ public class Utils {
         }
     }
 
-    /* static Map insertKeyToMap(final String string) {
-        final Map result = new HashMap();
-        final String str = string.replace("{", "").replace("}", "");
-        final String[] array = str.split(",");
-        for (String s : array) {
-            final String[] splitted = s.split("=");
-            if (splitted.length != 2)
-                continue;
-            result.put(splitted[0].replace(" ", ""), splitted[1]);
-        }
-        return result;
-    }*/
 
     public static void insertKeyToMap(final Map<String, Object> map, final String key, final Object value) {
         final String[] parts = key.split("\\.");
@@ -52,6 +40,60 @@ public class Utils {
             return value;
         }
     }
+
+
+    public static boolean contains(final Map<String, Object> map, String key) {
+        String[] parts = key.split("\\.");
+        return contains(map, parts, 0);
+    }
+
+    private static boolean contains(final Map<String, Object> map, String[] key, int id) {
+        if (id < key.length - 1) {
+            if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
+                Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+                return contains(tempMap, key, id + 1);
+            } else {
+                return false;
+            }
+        } else {
+            return map.containsKey(key[id]);
+        }
+    }
+
+
+    public static void remove(final Map<String, Object> map, final String key) {
+        if (contains(map, key)) {
+            final String[] parts = key.split("\\.");
+            remove(map, parts, 0);
+        }
+    }
+
+    private static void remove(final Map<String, Object> map, final String[] key, final int id) {
+        Map tempMap = map;
+        for (int i = 0; i < key.length - (1 + id); i++) {
+            if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
+                tempMap = (Map) tempMap.get(key[i]);
+            }
+        }
+        if (tempMap.keySet().size() <= 1) {
+            map.remove(key[key.length - (1 + id)]);
+            remove(map, key, id + 1);
+        }
+    }
+
+    /* static Map insertKeyToMap(final String string) {
+        final Map result = new HashMap();
+        final String str = string.replace("{", "").replace("}", "");
+        final String[] array = str.split(",");
+        for (String s : array) {
+            final String[] splitted = s.split("=");
+            if (splitted.length != 2)
+                continue;
+            result.put(splitted[0].replace(" ", ""), splitted[1]);
+        }
+        return result;
+    }*/
+
 
     // Method to create nested objects from String keys
     /*public static Map<String, Object> insertKeyToMap(final String string, final Object value, final Map object) {
@@ -132,23 +174,6 @@ public class Utils {
         }
     }*/
 
-    public static boolean contains(final Map<String, Object> map, String key) {
-        String[] parts = key.split("\\.");
-        return contains(map, parts, 0);
-    }
-
-    private static boolean contains(final Map<String, Object> map, String[] key, int id) {
-        if (id < key.length - 1) {
-            if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
-                Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
-                return contains(tempMap, key, id + 1);
-            } else {
-                return false;
-            }
-        } else {
-            return map.containsKey(key[id]);
-        }
-    }
 
     /*public static Object get(final Map object, final String key) {
         if (key.contains(".")) {
@@ -188,25 +213,6 @@ public class Utils {
         return deepMerge(map, preResult);
     }*/
 
-    public static void remove(final Map<String, Object> map, final String key) {
-        if (contains(map, key)) {
-            final String[] parts = key.split("\\.");
-            remove(map, parts, 0);
-        }
-    }
-
-    private static void remove(final Map<String, Object> map, final String[] key, final int id) {
-        Map tempMap = map;
-        for (int i = 0; i < key.length - (1 + id); i++) {
-            if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
-                tempMap = (Map) tempMap.get(key[i]);
-            }
-        }
-        if (tempMap.keySet().size() <= 1) {
-            map.remove(key[key.length - (1 + id)]);
-            remove(map, key, id + 1);
-        }
-    }
 
     /*private static String getFirst(final String string) {
         final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
