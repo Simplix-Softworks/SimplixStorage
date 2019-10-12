@@ -1,12 +1,9 @@
 package de.leonhard.storage.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings({"unused"})
 public class Utils {
 
-    public static Object getObjectFromMap(final Map<String, Object> map, final String key) {
+    /*public static Object getObjectFromMap(final Map<String, Object> map, final String key) {
         final String[] parts = key.split("\\.");
         return getObjectFromMap(map, parts, 0);
     }
@@ -25,16 +22,16 @@ public class Utils {
     }
 
 
-    public static void insertKeyToMap(final Map<String, Object> map, final String key, final Object value) {
+    public static void insert(final Map<String, Object> map, final String key, final Object value) {
         final String[] parts = key.split("\\.");
-        map.put(parts[0], insertKeyToMap(map, parts, value, 1));
+        map.put(parts[0], insert(map, parts, value, 1));
     }
 
-    private static Object insertKeyToMap(final Map<String, Object> map, final String[] key, final Object value, final int id) {
+    private static Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
             Map<String, Object> childMap = map.containsKey(key[id]) ? (map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>()) : new HashMap<>();
-            tempMap.put(key[id], insertKeyToMap(childMap, key, value, id + 1));
+            tempMap.put(key[id], insert(childMap, key, value, id + 1));
             return tempMap;
         } else {
             return value;
@@ -79,9 +76,9 @@ public class Utils {
             map.remove(key[key.length - (1 + id)]);
             remove(map, key, id + 1);
         }
-    }
+    }*/
 
-    /* static Map insertKeyToMap(final String string) {
+    /* static Map insert(final String string) {
         final Map result = new HashMap();
         final String str = string.replace("{", "").replace("}", "");
         final String[] array = str.split(",");
@@ -96,7 +93,7 @@ public class Utils {
 
 
     // Method to create nested objects from String keys
-    /*public static Map<String, Object> insertKeyToMap(final String string, final Object value, final Map object) {
+    /*public static Map<String, Object> insert(final String string, final Object value, final Map object) {
 
         if (string.contains(".")) {
             final String[] parts = string.split("\\.");
@@ -208,7 +205,7 @@ public class Utils {
 
         tmp.remove(last);
 
-        Map<String, Object> preResult = insertKeyToMap(map, withoutLast, tmp);
+        Map<String, Object> preResult = insert(map, withoutLast, tmp);
 
         return deepMerge(map, preResult);
     }*/

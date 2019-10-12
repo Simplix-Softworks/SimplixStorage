@@ -6,8 +6,8 @@ import de.leonhard.storage.base.*;
 import de.leonhard.storage.comparator.Comparator;
 import de.leonhard.storage.editor.YamlEditor;
 import de.leonhard.storage.editor.YamlParser;
+import de.leonhard.storage.util.FileData;
 import de.leonhard.storage.util.FileUtils;
-import de.leonhard.storage.util.Utils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     protected final YamlParser parser;
     protected File file;
     @Setter(AccessLevel.PRIVATE)
-    protected Map<String, Object> yamlObject;
+    protected FileData fileData;
     protected String pathPrefix;
     protected ReloadSettings reloadSettings;
     protected ConfigSettings configSettings;
@@ -480,10 +480,10 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
 
         synchronized (this) {
 
-            String old = yamlObject.toString();
-            yamlObject.put(finalKey, value);
+            String old = fileData.toString();
+            fileData.insert(finalKey, value);
 
-            if (old.equals(yamlObject.toString()) && yamlObject != null) {
+            if (old.equals(fileData.toString()) && fileData != null) {
                 return;
             }
 
@@ -493,15 +493,14 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
                     final List<String> unEdited = yamlEditor.read();
                     final List<String> header = yamlEditor.readHeader();
                     final List<String> footer = yamlEditor.readFooter();
-                    write(yamlObject);
+                    write(fileData.toMap());
                     header.addAll(yamlEditor.read());
                     if (!header.containsAll(footer))
                         header.addAll(footer);
                     yamlEditor.write(parser.parseComments(unEdited, header));
                     return;
                 }
-                write(yamlObject);
-
+                write(Objects.requireNonNull(fileData).toMap());
             } catch (final IOException e) {
                 System.err.println("Error while writing '" + file.getName() + "'");
             }
@@ -518,10 +517,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     public Object get(final String key) {
         reload();
         String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-        if (finalKey.contains(".")) {
-            return Utils.getObjectFromMap(yamlObject, key);
-        }
-        return yamlObject.get(finalKey);
+        return fileData.getObjectFromMap(key);
     }
 
     @Override
@@ -533,11 +529,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     private boolean has(String key) {
         reload();
 
-        if (key.contains(".")) {
-            return Utils.contains(yamlObject, key);
-        }
-
-        return yamlObject.containsKey(key);
+        return fileData.contains(key);
     }
 
     protected void reload() {
@@ -563,7 +555,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
         YamlReader reader = null;
         try {
             reader = new YamlReader(new FileReader(file));// Needed?
-            yamlObject = (Map<String, Object>) reader.read();
+            fileData = new FileData((Map<String, Object>) reader.read());
         } catch (IOException e) {
             System.err.println("Exception while reloading yaml");
             e.printStackTrace();
@@ -585,7 +577,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             HashMap result = (HashMap) getNotNested(parts[0]);
             return Objects.requireNonNull(result).containsKey(parts[1]) ? result.get(parts[1]) : null;
         }
-        return yamlObject.getOrDefault(key, null);
+        return fileData.getObjectFromMap(key);
     }
 
     public void setPathPrefix(String pathPrefix) {
@@ -611,11 +603,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             return;
         }
 
-        final Map obj = yamlObject;
+        final FileData obj = fileData;
         obj.remove(key);
 
         try {
-            write(yamlObject);
+            write(fileData.toMap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -624,7 +616,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
     @Override
     public Set<String> getKeySet() {
         reload();
-        return yamlObject.keySet();
+        return fileData.toMap().keySet();
     }
 
     public void remove(final String key) {
@@ -633,9 +625,9 @@ public class Yaml extends StorageCreator implements StorageBase, Comparator {
             removeKey(key);
             return;
         }
-        Utils.remove(yamlObject, finalKey);
+        fileData.remove(finalKey);
         try {
-            write(yamlObject);
+            write(fileData.toMap());
         } catch (IOException e) {
             e.printStackTrace();
         }

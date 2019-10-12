@@ -5,9 +5,9 @@ import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
 import de.leonhard.storage.base.StorageCreator;
 import de.leonhard.storage.comparator.Comparator;
+import de.leonhard.storage.util.FileData;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.JsonUtil;
-import de.leonhard.storage.util.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -183,7 +183,7 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
             return null;
 
         if (key.contains(".")) {
-            return Utils.contains(object.toMap(), key) ? Utils.getObjectFromMap(object.toMap(), key) : null;
+            return new FileData(object.toMap()).contains(key) ? new FileData(object.toMap()).getObjectFromMap(key) : null;
         }
         return object.has(key) ? object.get(key) : null;
     }
@@ -235,11 +235,11 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
 
                 JSONObject old = this.object;
 
-                final Map map = new HashMap(object.toMap());
+                final FileData data = new FileData(object.toMap());
 
-                Utils.insertKeyToMap(map, finalKey, value);
+                data.insert(finalKey, value);
 
-                object = new JSONObject(map);
+                object = new JSONObject(data.toMap());
                 try {
                     if (old.toString().equals(object.toString()) && file.length() != 0)
                         return;
@@ -313,7 +313,7 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
     private boolean has(final String key) {
         reload();
         if (key.contains("."))
-            return Utils.contains(object.toMap(), key);
+            return new FileData(object.toMap()).contains(key);
         return object.has(key);
     }
 
@@ -349,9 +349,8 @@ public class Json extends StorageCreator implements StorageBase, Comparator {
         if (!finalKey.contains("."))
             removeKey(key);
 
-        final Map<String, Object> old = object.toMap();
-
-        Utils.remove(old, finalKey);
+        final FileData old = new FileData(object.toMap());
+        old.remove(finalKey);
 
         object = new JSONObject(old);
         try {
