@@ -36,6 +36,7 @@
             <url>https://github.com/Zeanon</url>
             <roles>
                 <role>Refactoring</role>
+                <role>Performance improvements</role>
             </roles>
             <timezone>Germany</timezone>
         </developer>
