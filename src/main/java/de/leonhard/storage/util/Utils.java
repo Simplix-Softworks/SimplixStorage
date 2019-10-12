@@ -1,6 +1,8 @@
 package de.leonhard.storage.util;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings({"unused", "unchecked"})
 public class Utils {
@@ -184,7 +186,7 @@ public class Utils {
         }
     }
 
-    private static String getFirst(final String string) {
+    /*private static String getFirst(final String string) {
         final ArrayList<String> strings = new ArrayList<>(Arrays.asList(string.split("\\.")));
         final StringBuilder sb = new StringBuilder();
 
@@ -201,7 +203,7 @@ public class Utils {
         }
 
         return sb.toString();
-    }
+    }*/
 
     // Method to merge Maps
     /*private static Map<String, Object> deepMerge(Map original, Map newMap) {
