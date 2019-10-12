@@ -311,9 +311,7 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
 
     private boolean has(final String key) {
         reload();
-        if (key.contains("."))
-            return new FileData(object.toMap()).containsKey(key);
-        return object.has(key);
+        return new FileData(object.toMap()).containsKey(key);
     }
 
     @Override

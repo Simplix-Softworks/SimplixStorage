@@ -15,7 +15,7 @@ import java.util.Set;
 @SuppressWarnings({"unused", "WeakerAccess", "ResultOfMethodCallIgnored"})
 public class Toml extends StorageCreator implements StorageBase, Comparable<Toml> {
     private final ReloadSettings reloadSettings;
-    private FileData data;
+    private FileData fileData;
     private File file;
     private String pathPrefix;
 
@@ -76,15 +76,15 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        final String old = data.toMap().toString();
+        final String old = fileData.toString();
 
-        data.insert(finalKey, value);
+        fileData.insert(finalKey, value);
 
-        if (old.equals(data.toString()))
+        if (old.equals(fileData.toString()))
             return;
 
         try {
-            com.electronwill.toml.Toml.write(data.toMap(), file);
+            com.electronwill.toml.Toml.write(fileData.toMap(), file);
         } catch (IOException e) {
             System.err.println("Exception while writing to Toml file '" + file.getName() + "'");
             e.printStackTrace();
@@ -94,7 +94,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     @Override
     public Object get(String key) {
         reload();
-        return data.get(key);
+        return fileData.get(key);
     }
 
     /**
@@ -116,14 +116,14 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     @Override
     public boolean contains(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        return data.containsKey(finalKey);
+        return fileData.containsKey(finalKey);
     }
 
     public void write(final Map<String, Object> data) {
         try {
             com.electronwill.toml.Toml.write(data, file);
         } catch (IOException e) {
-            System.err.println("Exception while writing data to file '" + file.getName() + "'");
+            System.err.println("Exception while writing fileData to file '" + file.getName() + "'");
             e.printStackTrace();
         }
     }
@@ -131,7 +131,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     @Override
     public void update() {
         try {
-            data = new FileData(com.electronwill.toml.Toml.read(file));
+            fileData = new FileData(com.electronwill.toml.Toml.read(file));
         } catch (IOException e) {
             System.err.println("Exception while reading '" + file.getName() + "'");
             e.printStackTrace();
@@ -141,7 +141,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     @Override
     public Set<String> getKeySet() {
         reload();
-        return data.toMap().keySet();
+        return fileData.keySet();
     }
 
     /**
@@ -156,16 +156,16 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
 
     @Override
     public void removeKey(final String key) {
-        data.remove(key);
-        write(data.toMap());
+        fileData.remove(key);
+        write(fileData.toMap());
     }
 
     public void remove(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        data.remove(finalKey);
+        fileData.remove(finalKey);
 
-        write(data.toMap());
+        write(fileData.toMap());
     }
 
     public String getPathPrefix() {

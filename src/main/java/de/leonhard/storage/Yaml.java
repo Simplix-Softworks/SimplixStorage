@@ -453,10 +453,10 @@ public abstract class Yaml extends StorageCreator implements StorageBase, Compar
 
         synchronized (this) {
 
-            String old = fileData.toMap().toString();
+            String old = fileData.toString();
             fileData.insert(finalKey, value);
 
-            if (old.equals(fileData.toString()) && fileData != null) {
+            if (fileData != null && old.equals(fileData.toString())) {
                 return;
             }
 
@@ -589,7 +589,7 @@ public abstract class Yaml extends StorageCreator implements StorageBase, Compar
     @Override
     public Set<String> getKeySet() {
         reload();
-        return fileData.toMap().keySet();
+        return fileData.keySet();
     }
 
     public void remove(final String key) {

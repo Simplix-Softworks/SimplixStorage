@@ -1,7 +1,9 @@
 package de.leonhard.storage.util;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class FileData {
 
@@ -88,6 +90,25 @@ public class FileData {
             map.remove(key[key.length - (1 + id)]);
             remove(map, key, id + 1);
         }
+    }
+
+    public Set<String> keySet() {
+        return localMap.keySet();
+    }
+
+    public Set<String> nestedKeySet() {
+        return getNestedKeys(localMap);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<String> getNestedKeys(final Map<String, Object> map) {
+        Set<String> localSet = new HashSet<>(map.keySet());
+        for (String key : map.keySet()) {
+            if (map.get(key) instanceof Map) {
+                localSet.addAll(getNestedKeys((Map<String, Object>) map.get(key)));
+            }
+        }
+        return localSet;
     }
 
     public Map<String, Object> toMap() {
