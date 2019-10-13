@@ -22,7 +22,7 @@ public class FlatFile {
      */
     protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
         this.fileType = fileType;
-        file = new File(path, name + fileType.getExtension());
+        file = new File(path, name + "." + fileType.getExtension());
         if (file.exists()) {
             lastModified = System.currentTimeMillis();
             return false;
