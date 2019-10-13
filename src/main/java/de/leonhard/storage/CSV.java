@@ -231,12 +231,12 @@ class CSV extends StorageCreator implements StorageBase, Comparable<CSV> {
     }
 
     @Override
-    public Set<String> totalKeySet() {
+    public Set<String> deepKeySet() {
         return null;
     }
 
     @Override
-    public Set<String> totalKeySet(String key) {
+    public Set<String> deepKeySet(String key) {
         return null;
     }
 

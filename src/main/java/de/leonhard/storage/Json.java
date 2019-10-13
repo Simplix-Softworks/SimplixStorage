@@ -307,15 +307,15 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     }
 
     @Override
-    public Set<String> totalKeySet() {
+    public Set<String> deepKeySet() {
         reload();
-        return new FileData(object.toMap()).totalKeySet();
+        return new FileData(object.toMap()).deepKeySet();
     }
 
     @Override
-    public Set<String> totalKeySet(String key) {
+    public Set<String> deepKeySet(String key) {
         reload();
-        return new FileData(object.toMap()).totalKeySet(key);
+        return new FileData(object.toMap()).deepKeySet(key);
     }
 
     private boolean has(final String key) {

@@ -585,15 +585,15 @@ public abstract class Yaml extends StorageCreator implements StorageBase, Compar
     }
 
     @Override
-    public Set<String> totalKeySet() {
+    public Set<String> deepKeySet() {
         reload();
-        return fileData.totalKeySet();
+        return fileData.deepKeySet();
     }
 
     @Override
-    public Set<String> totalKeySet(String key) {
+    public Set<String> deepKeySet(String key) {
         reload();
-        return fileData.totalKeySet(key);
+        return fileData.deepKeySet(key);
     }
 
     public void setConfigSettings(final ConfigSettings configSettings) {

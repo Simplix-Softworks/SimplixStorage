@@ -106,26 +106,26 @@ public class FileData {
     }
 
 
-    public Set<String> totalKeySet() {
-        return totalKeySet(localMap);
+    public Set<String> deepKeySet() {
+        return deepKeySet(localMap);
     }
 
     @SuppressWarnings("unchecked")
-    public Set<String> totalKeySet(String key) {
+    public Set<String> deepKeySet(String key) {
         if (get(key) instanceof Map) {
             Map tempMap = (Map<String, Object>) get(key);
-            return totalKeySet(tempMap);
+            return deepKeySet(tempMap);
         } else {
             return new HashSet<>();
         }
     }
 
     @SuppressWarnings("unchecked")
-    private Set<String> totalKeySet(final Map<String, Object> map) {
+    private Set<String> deepKeySet(final Map<String, Object> map) {
         Set<String> localSet = new HashSet<>(map.keySet());
         for (String key : map.keySet()) {
             if (map.get(key) instanceof Map) {
-                localSet.addAll(totalKeySet((Map<String, Object>) map.get(key)));
+                localSet.addAll(deepKeySet((Map<String, Object>) map.get(key)));
             }
         }
         return localSet;

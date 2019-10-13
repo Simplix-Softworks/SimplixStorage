@@ -24,9 +24,9 @@ public interface StorageBase {
     Set<String> keySet(String key);
 
 
-    Set<String> totalKeySet();
+    Set<String> deepKeySet();
 
-    Set<String> totalKeySet(String key);
+    Set<String> deepKeySet(String key);
 
     void remove(final String key);
 
