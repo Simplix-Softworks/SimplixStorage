@@ -162,14 +162,11 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     }
 
     private void reload() {
-
-        if (ReloadSettings.MANUALLY.equals(reloadSettings))
-            return;
-        if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
-            if (FileUtils.hasNotChanged(file, lastModified))
-                return;
-
-        update();
+        if (!(ReloadSettings.MANUALLY.equals(reloadSettings)
+                || (ReloadSettings.INTELLIGENT.equals(reloadSettings)
+                && FileUtils.hasNotChanged(file, lastModified)))) {
+            update();
+        }
     }
 
     @Override

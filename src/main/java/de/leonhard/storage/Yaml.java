@@ -506,17 +506,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     }
 
     protected void reload() {
-        if (reloadSettings.equals(ReloadSettings.MANUALLY)) {
-            return;
+        if (!(ReloadSettings.MANUALLY.equals(reloadSettings)
+                || (ReloadSettings.INTELLIGENT.equals(reloadSettings)
+                && FileUtils.hasNotChanged(file, lastModified)))) {
+            update();
         }
-
-        if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
-            if (FileUtils.hasNotChanged(file, lastModified)) {
-                return;
-            }
-        }
-
-        update();
     }
 
     public boolean hasNotChanged() {

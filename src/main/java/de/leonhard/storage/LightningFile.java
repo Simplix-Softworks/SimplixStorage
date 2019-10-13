@@ -45,36 +45,43 @@ class LightningFile extends StorageCreator implements StorageBase, Comparable<Li
         return this.file;
     }
 
+    //added method for later implementation
     @Override
     public void update() {
 
     }
 
+    //added method for later implementation
     @Override
     public Set<String> singleLayerKeySet() {
         return null;
     }
 
+    //added method for later implementation
     @Override
     public Set<String> singleLayerKeySet(String key) {
         return null;
     }
 
+    //added method for later implementation
     @Override
     public Set<String> keySet() {
         return null;
     }
 
+    //added method for later implementation
     @Override
     public Set<String> keySet(String key) {
         return null;
     }
 
+    //added method for later implementation
     @Override
     public void remove(String key) {
 
     }
 
+    //added method for later implementation
     @Override
     public void set(String key, Object value) {
 
