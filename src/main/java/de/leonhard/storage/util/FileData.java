@@ -96,16 +96,36 @@ public class FileData {
         return localMap.keySet();
     }
 
-    public Set<String> nestedKeySet() {
-        return getNestedKeys(localMap);
+    @SuppressWarnings("unchecked")
+    public Set<String> keySet(String key) {
+        if (get(key) instanceof Map) {
+            return ((Map<String, Object>) get(key)).keySet();
+        } else {
+            return new HashSet<>();
+        }
+    }
+
+
+    public Set<String> totalKeySet() {
+        return totalKeySet(localMap);
     }
 
     @SuppressWarnings("unchecked")
-    private Set<String> getNestedKeys(final Map<String, Object> map) {
+    public Set<String> totalKeySet(String key) {
+        if (get(key) instanceof Map) {
+            Map tempMap = (Map<String, Object>) get(key);
+            return totalKeySet(tempMap);
+        } else {
+            return new HashSet<>();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<String> totalKeySet(final Map<String, Object> map) {
         Set<String> localSet = new HashSet<>(map.keySet());
         for (String key : map.keySet()) {
             if (map.get(key) instanceof Map) {
-                localSet.addAll(getNestedKeys((Map<String, Object>) map.get(key)));
+                localSet.addAll(totalKeySet((Map<String, Object>) map.get(key)));
             }
         }
         return localSet;

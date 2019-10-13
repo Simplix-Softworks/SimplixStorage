@@ -544,15 +544,6 @@ public abstract class Yaml extends StorageCreator implements StorageBase, Compar
         }
     }
 
-    private Object getNotNested(String key) {
-        if (key.contains(".")) {
-            String[] parts = key.split("\\.");
-            HashMap result = (HashMap) getNotNested(parts[0]);
-            return Objects.requireNonNull(result).containsKey(parts[1]) ? result.get(parts[1]) : null;
-        }
-        return fileData.get(key);
-    }
-
     public void setPathPrefix(String pathPrefix) {
         this.pathPrefix = pathPrefix;
         reload();
@@ -569,15 +560,10 @@ public abstract class Yaml extends StorageCreator implements StorageBase, Compar
     }
 
     @Override
-    public void removeKey(final String key) {
+    public void remove(final String key) {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        if (finalKey.contains(".")) {
-            remove(key);
-            return;
-        }
 
-        final FileData obj = fileData;
-        obj.remove(key);
+        fileData.remove(finalKey);
 
         try {
             write(fileData.toMap());
@@ -587,23 +573,27 @@ public abstract class Yaml extends StorageCreator implements StorageBase, Compar
     }
 
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> keySet() {
         reload();
         return fileData.keySet();
     }
 
-    public void remove(final String key) {
-        final String finalKey = (pathPrefix == null || pathPrefix.isEmpty()) ? key : pathPrefix + "." + key;
-        if (!finalKey.contains(".")) {
-            removeKey(key);
-            return;
-        }
-        fileData.remove(finalKey);
-        try {
-            write(fileData.toMap());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public Set<String> keySet(String key) {
+        reload();
+        return fileData.keySet(key);
+    }
+
+    @Override
+    public Set<String> totalKeySet() {
+        reload();
+        return fileData.totalKeySet();
+    }
+
+    @Override
+    public Set<String> totalKeySet(String key) {
+        reload();
+        return fileData.totalKeySet(key);
     }
 
     public void setConfigSettings(final ConfigSettings configSettings) {

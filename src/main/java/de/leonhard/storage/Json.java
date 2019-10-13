@@ -12,7 +12,10 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @SuppressWarnings({"Duplicates", "unused", "ResultOfMethodCallIgnored", "WeakerAccess", "unchecked"})
 public class Json extends StorageCreator implements StorageBase, Comparable<Json> {
@@ -292,21 +295,27 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     }
 
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> keySet() {
         reload();
-        return object.toMap().keySet();
+        return new FileData(object.toMap()).keySet();
     }
 
-    public Set<String> getKeySet(String key) {
+    @Override
+    public Set<String> keySet(String key) {
         reload();
-        if (!contains(key))
-            return new HashSet<>();
-        try {
-            JSONObject keys = (JSONObject) object.get(key);
-            return keys.keySet();
-        } catch (final Exception ex) {
-            return new HashSet<>();
-        }
+        return new FileData(object.toMap()).keySet(key);
+    }
+
+    @Override
+    public Set<String> totalKeySet() {
+        reload();
+        return new FileData(object.toMap()).totalKeySet();
+    }
+
+    @Override
+    public Set<String> totalKeySet(String key) {
+        reload();
+        return new FileData(object.toMap()).totalKeySet(key);
     }
 
     private boolean has(final String key) {
@@ -321,16 +330,11 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     }
 
     @Override
-    public void removeKey(final String key) {
+    public void remove(final String key) {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        if (finalKey.contains(".")) {
-            remove(key);
-            return;
-        }
-
         final Map obj = object.toMap();
-        obj.remove(key);
+        obj.remove(finalKey);
 
         object = new JSONObject(obj);
         try {
@@ -340,22 +344,6 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
         }
     }
 
-    public void remove(final String key) {
-        final String finalKey = (pathPrefix == null || pathPrefix.isEmpty()) ? key : pathPrefix + "." + key;
-
-        if (!finalKey.contains("."))
-            removeKey(key);
-
-        final FileData old = new FileData(object.toMap());
-        old.remove(finalKey);
-
-        object = new JSONObject(old);
-        try {
-            write(object);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public String getPathPrefix() {
         return pathPrefix;

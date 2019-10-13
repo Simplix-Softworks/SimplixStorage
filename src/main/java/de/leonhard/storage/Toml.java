@@ -139,9 +139,27 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     }
 
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> keySet() {
         reload();
         return fileData.keySet();
+    }
+
+    @Override
+    public Set<String> keySet(String key) {
+        reload();
+        return fileData.keySet(key);
+    }
+
+    @Override
+    public Set<String> totalKeySet() {
+        reload();
+        return fileData.totalKeySet();
+    }
+
+    @Override
+    public Set<String> totalKeySet(String key) {
+        reload();
+        return fileData.totalKeySet(key);
     }
 
     /**
@@ -155,11 +173,6 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     }
 
     @Override
-    public void removeKey(final String key) {
-        fileData.remove(key);
-        write(fileData.toMap());
-    }
-
     public void remove(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
@@ -167,6 +180,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
 
         write(fileData.toMap());
     }
+
 
     public String getPathPrefix() {
         return pathPrefix;

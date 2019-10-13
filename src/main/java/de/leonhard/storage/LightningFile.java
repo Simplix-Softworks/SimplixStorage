@@ -51,12 +51,27 @@ class LightningFile extends StorageCreator implements StorageBase, Comparable<Li
     }
 
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> keySet() {
         return null;
     }
 
     @Override
-    public void removeKey(String key) {
+    public Set<String> keySet(String key) {
+        return null;
+    }
+
+    @Override
+    public Set<String> totalKeySet() {
+        return null;
+    }
+
+    @Override
+    public Set<String> totalKeySet(String key) {
+        return null;
+    }
+
+    @Override
+    public void remove(String key) {
 
     }
 

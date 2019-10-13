@@ -19,9 +19,16 @@ public interface StorageBase {
 
     void update();
 
-    Set<String> getKeySet();
+    Set<String> keySet();
 
-    void removeKey(final String key);
+    Set<String> keySet(String key);
+
+
+    Set<String> totalKeySet();
+
+    Set<String> totalKeySet(String key);
+
+    void remove(final String key);
 
     /**
      * Set a object to your file

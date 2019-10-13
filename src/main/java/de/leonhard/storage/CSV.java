@@ -216,11 +216,27 @@ class CSV extends StorageCreator implements StorageBase, Comparable<CSV> {
 
     }
 
-    public void removeKey(final String key) {
+    @Override
+    public void remove(final String key) {
     }
 
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> keySet() {
+        return null;
+    }
+
+    @Override
+    public Set<String> keySet(String key) {
+        return null;
+    }
+
+    @Override
+    public Set<String> totalKeySet() {
+        return null;
+    }
+
+    @Override
+    public Set<String> totalKeySet(String key) {
         return null;
     }
 
