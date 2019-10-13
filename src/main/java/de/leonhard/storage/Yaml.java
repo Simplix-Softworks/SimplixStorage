@@ -22,8 +22,7 @@ public class Yaml extends FlatFile implements StorageBase {
 	@Setter(AccessLevel.PRIVATE)
 	protected Map<String, Object> yamlObject;
 	protected String pathPrefix;
-	protected ReloadSettings reloadSettings;
-	protected ConfigSettings configSettings;
+	protected ConfigSettings configSettings = ConfigSettings.skipComments;
 	protected final YamlEditor yamlEditor;
 	protected final YamlParser parser;
 	private BufferedInputStream configInputStream;
@@ -41,9 +40,6 @@ public class Yaml extends FlatFile implements StorageBase {
 	public Yaml(String name, String path, FileInputStream fileInputStream) {
 		try {
 			create(name, path, FileType.YAML);
-
-			this.reloadSettings = ReloadSettings.INTELLIGENT;
-			this.configSettings = ConfigSettings.skipComments;
 			yamlEditor = new YamlEditor(file);
 			parser = new YamlParser(yamlEditor);
 			update();

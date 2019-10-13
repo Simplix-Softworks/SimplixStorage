@@ -17,7 +17,6 @@ import java.util.*;
 public class Json extends FlatFile implements StorageBase {
 	private JSONObject object;
 	private String pathPrefix;
-	private ReloadSettings reloadSettings;
 
 
 	/**
@@ -54,8 +53,6 @@ public class Json extends FlatFile implements StorageBase {
 			System.err.println("IOException while creating file - Maybe wrong format - Try deleting the file " + file.getName());
 			ex.printStackTrace();
 		}
-
-		this.reloadSettings = ReloadSettings.INTELLIGENT;
 	}
 
 

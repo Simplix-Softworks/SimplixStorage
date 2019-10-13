@@ -9,6 +9,8 @@ public class FlatFile {
 	protected File file;
 	private FileType fileType;
 	protected long lastModified;
+	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+
 
 	/**
 	 * Creates an empty .yml or .json file.
