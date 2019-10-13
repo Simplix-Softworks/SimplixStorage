@@ -150,11 +150,9 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            update();
-
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
+            update();
         } else {
             yamlEditor = null;
             parser = null;
@@ -221,7 +219,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
         this.reloadSettings = reloadSettings;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
-
         update();
     }
 
@@ -252,11 +249,9 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            update();
-
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
+            update();
         } else {
             yamlEditor = null;
             parser = null;
@@ -321,7 +316,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
         this.reloadSettings = reloadSettings;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
-
         update();
     }
 
@@ -351,11 +345,9 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            update();
-
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
+            update();
         } else {
             yamlEditor = null;
             parser = null;
