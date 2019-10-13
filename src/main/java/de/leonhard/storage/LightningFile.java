@@ -4,8 +4,8 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.FlatFile;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,35 +13,23 @@ import java.util.Set;
 class LightningFile extends FlatFile implements StorageBase, Comparable<LightningFile> {
 
 
-    private final ReloadSettings reloadSettings;
     private Map<String, Object> data;
-    private File file;
 
-	public LightningFile(final String name, final String path) {
-		try {
-			create(name, path, FileType.LS);
-		} catch (IOException e) {
-			System.err.println("Exception while creating '" + file.getName() + "'");
-			e.printStackTrace();
-		}
-		this.reloadSettings = ReloadSettings.INTELLIGENT;
-	}
+    public LightningFile(final String name, final String path) {
+        create(name, path, FileType.LS);
+        this.reloadSettings = ReloadSettings.INTELLIGENT;
+    }
 
     public LightningFile(final String name, final String path, final ReloadSettings reloadSettings) {
         this.reloadSettings = reloadSettings;
     }
 
-	LightningFile(final File file) {
-		this.file = file;
-		this.reloadSettings = ReloadSettings.INTELLIGENT;
-	}
+    LightningFile(final File file) {
+        create(file);
+    }
 
     public String getName() {
         return this.file.getName();
-    }
-
-    public File getFile() {
-        return this.file;
     }
 
     //added method for later implementation

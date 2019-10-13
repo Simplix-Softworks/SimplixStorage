@@ -2,9 +2,9 @@ package de.leonhard.storage;
 
 
 import de.leonhard.storage.base.FileType;
+import de.leonhard.storage.base.FlatFile;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.base.StorageCreator;
 import de.leonhard.storage.util.FileData;
 
 import java.io.File;
@@ -12,55 +12,29 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings({"unused", "WeakerAccess", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
-    private final ReloadSettings reloadSettings;
     private FileData fileData;
-    private File file;
     private String pathPrefix;
 
     public Toml(final String name, final String path) {
-        try {
-            create(path, name, FileType.TOML);
-            this.file = super.file;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
+        create(path, name, FileType.TOML);
         update();
     }
 
     public Toml(final String name, final String path, final ReloadSettings reloadSettings) {
-        try {
-            create(name, path, FileType.YAML);
-            this.file = super.file;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.reloadSettings = reloadSettings;
+        create(name, path, FileType.YAML);
         update();
     }
 
     public Toml(final File file) {
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+        create(file);
         this.file = file;
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
         update();
     }
 
     public String getName() {
         return this.file.getName();
-    }
-
-    public File getFile() {
-        return this.file;
     }
 
     /**
@@ -95,16 +69,6 @@ public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
     public Object get(final String key) {
         reload();
         return fileData.get(key);
-    }
-
-    /**
-     * Returns the FilePath as String
-     *
-     * @return FilePath as String
-     */
-    @Override
-    public String getFilePath() {
-        return null;
     }
 
     /**
@@ -167,9 +131,9 @@ public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
      * information
      */
     private void reload() {
-        if (shouldNotReload(reloadSettings))
-            return;
-        update();
+        if (shouldReload(reloadSettings)) {
+            update();
+        }
     }
 
     @Override

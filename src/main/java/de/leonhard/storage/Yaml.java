@@ -20,37 +20,24 @@ import java.util.*;
 public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
-    protected File file;
     @Setter(AccessLevel.PRIVATE)
     protected FileData fileData;
     protected String pathPrefix;
-    protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
     protected ConfigSettings configSettings = ConfigSettings.skipComments;
     private BufferedInputStream configInputStream;
     private FileOutputStream outputStream;
 
 
     public Yaml(final String name, final String path) {
-        try {
-            create(path, name, FileType.YAML);
-            this.file = super.file;
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        create(path, name, FileType.YAML);
 
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
         update();
     }
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings) {
-        try {
-            create(path, name, FileType.YAML);
-            this.file = super.file;
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        create(path, name, FileType.YAML);
         this.reloadSettings = reloadSettings;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
@@ -60,13 +47,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final File file) {
         if (isYaml(file)) {
-            try {
-                create(file);
-                this.file = super.file;
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-            load(file);
+            create(file);
 
             update();
 
@@ -81,7 +62,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     public Yaml(final String name, final String path, final String resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
-                this.file = super.file;
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
@@ -101,8 +81,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                         outputStream.close();
                     }
                 }
-            } else {
-                this.file = super.file;
             }
         } catch (final IOException e) {
             e.printStackTrace();
@@ -115,7 +93,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
-                this.file = super.file;
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
@@ -135,8 +112,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                         outputStream.close();
                     }
                 }
-            } else {
-                this.file = super.file;
             }
         } catch (final IOException e) {
             e.printStackTrace();
@@ -152,8 +127,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
         if (isYaml(file)) {
             try {
                 if (create(file)) {
-                    this.file = super.file;
-
                     try {
                         this.configInputStream = new BufferedInputStream(
                                 Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
@@ -173,14 +146,10 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                             outputStream.close();
                         }
                     }
-                } else {
-                    this.file = super.file;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            load(file);
 
             update();
 
@@ -195,8 +164,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     public Yaml(final String name, final String path, final File resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
-                this.file = super.file;
-
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
@@ -216,8 +183,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                         outputStream.close();
                     }
                 }
-            } else {
-                this.file = super.file;
             }
         } catch (final IOException e) {
             e.printStackTrace();
@@ -230,8 +195,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
-                this.file = super.file;
-
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
@@ -251,8 +214,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                         outputStream.close();
                     }
                 }
-            } else {
-                this.file = super.file;
             }
         } catch (final IOException e) {
             e.printStackTrace();
@@ -268,8 +229,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
         if (isYaml(file)) {
             try {
                 if (create(file)) {
-                    this.file = super.file;
-
                     try {
                         this.configInputStream = new BufferedInputStream(
                                 Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
@@ -289,14 +248,10 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                             outputStream.close();
                         }
                     }
-                } else {
-                    this.file = super.file;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            load(file);
 
             update();
 
@@ -311,8 +266,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     public Yaml(final String name, final String path, final BufferedInputStream resourceStream) {
         try {
             if (create(path, name, FileType.YAML)) {
-                this.file = super.file;
-
                 try {
                     this.configInputStream = resourceStream;
                     outputStream = new FileOutputStream(this.file);
@@ -331,8 +284,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                         outputStream.close();
                     }
                 }
-            } else {
-                this.file = super.file;
             }
         } catch (final IOException e) {
             e.printStackTrace();
@@ -345,8 +296,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
         try {
             if (create(path, name, FileType.YAML)) {
-                this.file = super.file;
-
                 try {
                     this.configInputStream = resourceStream;
                     outputStream = new FileOutputStream(this.file);
@@ -365,8 +314,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                         outputStream.close();
                     }
                 }
-            } else {
-                this.file = super.file;
             }
         } catch (final IOException e) {
             e.printStackTrace();
@@ -382,8 +329,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
         if (isYaml(file)) {
             try {
                 if (create(file)) {
-                    this.file = super.file;
-
                     try {
                         this.configInputStream = resourceStream;
                         outputStream = new FileOutputStream(this.file);
@@ -402,14 +347,10 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
                             outputStream.close();
                         }
                     }
-                } else {
-                    this.file = super.file;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            load(file);
 
             update();
 
@@ -431,10 +372,6 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public String getName() {
         return this.file.getName();
-    }
-
-    public File getFile() {
-        return this.file;
     }
 
     @Override

@@ -4,7 +4,6 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.FlatFile;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.base.StorageCreator;
 import de.leonhard.storage.util.FileData;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.JsonUtil;
@@ -18,12 +17,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-@SuppressWarnings({"Duplicates", "unused", "ResultOfMethodCallIgnored", "WeakerAccess", "unchecked"})
+@SuppressWarnings({"Duplicates", "unused", "WeakerAccess", "unchecked"})
 public class Json extends FlatFile implements StorageBase, Comparable<Json> {
     private JSONObject object;
-    private File file;
     private String pathPrefix;
-    private ReloadSettings reloadSettings;
 
     /**
      * Creates a .json file where you can put your data in.+
@@ -36,8 +33,6 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
 
         try {
             create(path, name, FileType.JSON);
-
-            this.file = super.file;
 
             FileInputStream fis = null;
             try {
@@ -73,8 +68,6 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
         try {
             create(path, name, FileType.JSON);
 
-            this.file = super.file;
-
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(file);
@@ -105,11 +98,7 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
     public Json(final File file) {
 
         try {
-            if (!file.exists())
-                file.createNewFile();
-
-            load(file);
-            this.file = file;
+            create(file);
 
             FileInputStream fis = null;
             try {
@@ -140,10 +129,6 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
 
     public String getName() {
         return this.file.getName();
-    }
-
-    public File getFile() {
-        return this.file;
     }
 
     /**

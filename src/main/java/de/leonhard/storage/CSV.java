@@ -1,14 +1,14 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.base.FlatFile;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.base.StorageCreator;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-class CSV extends StorageCreator implements StorageBase, Comparable<CSV> {
+class CSV extends FlatFile implements StorageBase, Comparable<CSV> {
     @Override
     public Object get(final String key) {
         return null;
@@ -154,16 +154,6 @@ class CSV extends StorageCreator implements StorageBase, Comparable<CSV> {
      */
     @Override
     public Map getMap(final String key) {
-        return null;
-    }
-
-    /**
-     * Returns the FilePath as String
-     *
-     * @return FilePath as String
-     */
-    @Override
-    public String getFilePath() {
         return null;
     }
 
