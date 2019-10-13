@@ -29,7 +29,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
 
     public Yaml(final String name, final String path) {
-        create(path, name, FileType.YAML);
+        create(name, path, FileType.YAML);
 
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
@@ -37,7 +37,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings) {
-        create(path, name, FileType.YAML);
+        create(name, path, FileType.YAML);
         this.reloadSettings = reloadSettings;
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
@@ -61,7 +61,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final String name, final String path, final String resourcefile) {
         try {
-            if (create(path, name, FileType.YAML)) {
+            if (create(name, path, FileType.YAML)) {
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
@@ -92,7 +92,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
         try {
-            if (create(path, name, FileType.YAML)) {
+            if (create(name, path, FileType.YAML)) {
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
@@ -163,7 +163,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final String name, final String path, final File resourcefile) {
         try {
-            if (create(path, name, FileType.YAML)) {
+            if (create(name, path, FileType.YAML)) {
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
@@ -194,7 +194,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
         try {
-            if (create(path, name, FileType.YAML)) {
+            if (create(name, path, FileType.YAML)) {
                 try {
                     this.configInputStream = new BufferedInputStream(
                             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
@@ -265,7 +265,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final String name, final String path, final BufferedInputStream resourceStream) {
         try {
-            if (create(path, name, FileType.YAML)) {
+            if (create(name, path, FileType.YAML)) {
                 try {
                     this.configInputStream = resourceStream;
                     outputStream = new FileOutputStream(this.file);
@@ -295,7 +295,7 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
         try {
-            if (create(path, name, FileType.YAML)) {
+            if (create(name, path, FileType.YAML)) {
                 try {
                     this.configInputStream = resourceStream;
                     outputStream = new FileOutputStream(this.file);
