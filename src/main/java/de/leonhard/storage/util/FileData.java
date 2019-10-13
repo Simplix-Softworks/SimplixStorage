@@ -128,6 +128,8 @@ public class FileData {
                 for (String tempKey : deepKeySet((Map<String, Object>) map.get(key))) {
                     localSet.add(key + "." + tempKey);
                 }
+            } else {
+                localSet.add(key);
             }
         }
         return localSet;
