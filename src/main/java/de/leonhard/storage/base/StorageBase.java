@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings({"unused", "unchecked"})
 public interface StorageBase {
 
     /**
@@ -18,9 +19,16 @@ public interface StorageBase {
 
     void update();
 
-    Set<String> getKeySet();
+    Set<String> singleLayerKeySet();
 
-    void removeKey(final String key);
+    Set<String> singleLayerKeySet(String key);
+
+
+    Set<String> keySet();
+
+    Set<String> keySet(String key);
+
+    void remove(final String key);
 
     /**
      * Set a object to your file
@@ -166,7 +174,6 @@ public interface StorageBase {
      * @return Integer-List
      */
 
-
     default List<Integer> getIntegerList(final String key) {
         if (!contains(key))
             return new ArrayList<>();
@@ -206,13 +213,13 @@ public interface StorageBase {
      * @return Map
      */
 
-
     default Map getMap(final String key) {
         return (Map) get(key);
     }
 
     /**
-     * Sets a value to the file if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
+     * Sets a value to the file if the file doesn't already contain the value
+     * (Not mix up with Bukkit addDefault)
      *
      * @param key   Key to set the value
      * @param value Value to set
@@ -237,9 +244,8 @@ public interface StorageBase {
             else if (obj instanceof String && def instanceof Float)
                 obj = Double.parseDouble((String) obj);
             else if (obj instanceof String && def instanceof Boolean)
-                return (T) (Boolean) obj.equals("true"); //Mustn't be primitive
+                return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
             return (T) obj;
         }
     }
-
 }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.leonhard</groupId>
-    <artifactId>LightningStorage</artifactId>
-    <version>2.4.0</version>
+    <artifactId>lightningstorage</artifactId>
+    <version>2.5.8</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/lightningstorage</url>
@@ -20,8 +19,26 @@
 
     <developers>
         <developer>
+            <id>JavaFactoryDev</id>
             <name>Leonhard Solbach</name>
             <email>JavaFactoryDev@gmail.com</email>
+            <url>https://github.com/JavaFactoryDev</url>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+            <timezone>Germany</timezone>
+        </developer>
+
+        <developer>
+            <id>Zeanon</id>
+            <name>Zeanon</name>
+            <email>thezeanon@gmail.com</email>
+            <url>https://github.com/Zeanon</url>
+            <roles>
+                <role>Refactoring</role>
+                <role>Performance improvements</role>
+            </roles>
+            <timezone>Germany</timezone>
         </developer>
     </developers>
 
@@ -31,7 +48,12 @@
         <url>//github.com/JavaFactoryDev/lightningstorage</url>
     </scm>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <build>
+        <defaultGoal>clean package -U</defaultGoal>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -123,13 +145,11 @@
         </repository>
     </repositories>
     <dependencies>
-
         <dependency>
             <groupId>de.leonhard</groupId>
             <artifactId>toml</artifactId>
             <version>1.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.esotericsoftware.yamlbeans</groupId>
             <artifactId>yamlbeans</artifactId>
@@ -140,7 +160,12 @@
             <artifactId>json</artifactId>
             <version>20180813</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.1-jre</version>
+        </dependency>
         <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

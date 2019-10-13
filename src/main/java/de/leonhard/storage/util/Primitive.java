@@ -47,6 +47,7 @@ public class Primitive {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class SHORT {
         public static short getShort(Object obj) {
             if (obj instanceof Number)
@@ -69,7 +70,7 @@ public class Primitive {
         }
     }
 
-//    public static <T> T get(final Object object, final T type) {
-//
-//    }
+	/* public static <T> T get(final Object object, final T type) {
+	
+	} */
 }

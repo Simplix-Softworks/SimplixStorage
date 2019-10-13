@@ -4,28 +4,86 @@ import de.leonhard.storage.base.ConfigSettings;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 @Setter
 @Getter
 public class Config extends Yaml {
 
-	public Config(final String name, final String path) {
-		super(name, path);
-	}
+    private List<String> header;
+    private ConfigSettings configSettings;
 
-	public Config(final String name, final String path, final FileInputStream fileInputStream) {
-		super(name, path, fileInputStream);
-	}
+    public Config(final String name, final String path) {
+        super(name, path);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final String name, final String path, final ReloadSettings reloadSettings) {
+        super(name, path, reloadSettings);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final File file) {
+        super(file);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final String name, final String path, final String resourcefile) {
+        super(name, path, resourcefile);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
+        super(name, path, reloadSettings, resourcefile);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final File file, final String resourcefile) {
+        super(file, resourcefile);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final String name, final String path, final File resourcefile) {
+        super(name, path, resourcefile);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
+        super(name, path, reloadSettings, resourcefile);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final File file, final File resourcefile) {
+        super(file, resourcefile);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final String name, final String path, final BufferedInputStream resourceStream) {
+        super(name, path, resourceStream);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
+        super(name, path, reloadSettings, resourceStream);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
+
+    public Config(final File file, final BufferedInputStream resourceStream) {
+        super(file, resourceStream);
+        this.configSettings = ConfigSettings.preserveComments;
+    }
 
 
-	private List<String> header;
-	private ConfigSettings configSettings;
-
+    @Override
+    public void set(final String key, final Object value) {
+        super.set(key, value, configSettings);
+    }
 
 	@Override
 	public void set(String key, Object value) {
@@ -73,6 +131,29 @@ public class Config extends Yaml {
 		}
 		return new ArrayList<>();
 	}
+        if (shouldNotReload(reloadSettings))
+            return header;
+        try {
+            return yamlEditor.readHeader();
+        } catch (IOException e) {
+            System.err.println("Couldn't get header of '" + file.getName() + "'.");
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    @SuppressWarnings("unused")
+    public void setHeader(final List<String> header) {
+        List<String> tmp = new ArrayList<>();
+        // Updating the values to have a comments, if someone forgets to set
+        // them
+        for (final String line : header) {
+            if (!line.startsWith("#"))
+                tmp.add("#" + line);
+            else
+                tmp.add(line);
+        }
+        this.header = tmp;
 
 	public void setHeader(List<String> header) {
 		List<String> tmp = new ArrayList<>();
@@ -101,32 +182,34 @@ public class Config extends Yaml {
 
 		try {
 
-			final List<String> lines = yamlEditor.read();
+            final List<String> oldHeader = yamlEditor.readHeader();
+            final List<String> footer = yamlEditor.readFooter();
+            lines.removeAll(oldHeader);
+            lines.removeAll(footer);
 
-			final List<String> oldHeader = yamlEditor.readHeader();
-			final List<String> footer = yamlEditor.readFooter();
-			lines.removeAll(oldHeader);
-			lines.removeAll(footer);
+            Collections.reverse(lines);
 
-			Collections.reverse(lines);
+            Collections.reverse(lines);
 
+            lines.addAll(header);
 
-			Collections.reverse(lines);
+            lines.addAll(footer);
 
-			lines.addAll(header);
+            yamlEditor.write(lines);
 
+        } catch (final IOException e) {
+            System.err.println("Exception while modifying header of '" + file.getName() + "'");
+            e.printStackTrace();
+        }
+    }
 
-			lines.addAll(footer);
-
-
-			yamlEditor.write(lines);
-
-		} catch (final IOException e) {
-			System.err.println("Exception while modifying header of '" + file.getName() + "'");
-			e.printStackTrace();
-		}
-
-
-	}
-
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj != null && this.getClass() == obj.getClass()) {
+            Config config = (Config) obj;
+            return this.file.equals(config.file);
+        } else {
+            return false;
+        }
+    }
 }
