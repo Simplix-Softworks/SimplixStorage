@@ -19,11 +19,11 @@ public class FileData {
         return get(localMap, parts, 0);
     }
 
-    @SuppressWarnings("unchecked")
+    
     private Object get(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.get(key[id]) instanceof Map) {
-                Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+                @SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
                 return get(tempMap, key, id + 1);
             } else {
                 return null;
@@ -39,10 +39,11 @@ public class FileData {
         localMap.put(parts[0], insert(localMap, parts, value, 1));
     }
 
-    @SuppressWarnings("unchecked")
+    
     private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
+            //noinspection unchecked
             Map<String, Object> childMap = map.containsKey(key[id]) ? (map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>()) : new HashMap<>();
             tempMap.put(key[id], insert(childMap, key, value, id + 1));
             return tempMap;
@@ -57,10 +58,11 @@ public class FileData {
         return containsKey(localMap, parts, 0);
     }
 
-    @SuppressWarnings("unchecked")
+    
     private boolean containsKey(final Map<String, Object> map, String[] key, int id) {
         if (id < key.length - 1) {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
+                //noinspection unchecked
                 Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
                 return containsKey(tempMap, key, id + 1);
             } else {
@@ -96,9 +98,10 @@ public class FileData {
         return localMap.keySet();
     }
 
-    @SuppressWarnings("unchecked")
+    
     public Set<String> singleLayerKeySet(String key) {
         if (get(key) instanceof Map) {
+            //noinspection unchecked
             return ((Map<String, Object>) get(key)).keySet();
         } else {
             return new HashSet<>();
@@ -110,21 +113,24 @@ public class FileData {
         return keySet(localMap);
     }
 
-    @SuppressWarnings("unchecked")
+    
     public Set<String> keySet(String key) {
         if (get(key) instanceof Map) {
+            //noinspection unchecked
             Map tempMap = (Map<String, Object>) get(key);
+            //noinspection unchecked
             return keySet(tempMap);
         } else {
             return new HashSet<>();
         }
     }
 
-    @SuppressWarnings("unchecked")
+    
     private Set<String> keySet(final Map<String, Object> map) {
         Set<String> localSet = new HashSet<>();
         for (String key : map.keySet()) {
             if (map.get(key) instanceof Map) {
+                //noinspection unchecked
                 for (String tempKey : keySet((Map<String, Object>) map.get(key))) {
                     localSet.add(key + "." + tempKey);
                 }
