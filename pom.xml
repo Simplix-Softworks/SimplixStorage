@@ -48,6 +48,10 @@
         <url>//github.com/JavaFactoryDev/lightningstorage</url>
     </scm>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <build>
         <defaultGoal>clean package -U</defaultGoal>
         <pluginManagement>
