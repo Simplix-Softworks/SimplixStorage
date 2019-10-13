@@ -573,6 +573,18 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     }
 
     @Override
+    public Set<String> singleLayerKeySet() {
+        reload();
+        return fileData.singleLayerKeySet();
+    }
+
+    @Override
+    public Set<String> singleLayerKeySet(String key) {
+        reload();
+        return fileData.singleLayerKeySet(key);
+    }
+
+    @Override
     public Set<String> keySet() {
         reload();
         return fileData.keySet();
@@ -582,18 +594,6 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     public Set<String> keySet(String key) {
         reload();
         return fileData.keySet(key);
-    }
-
-    @Override
-    public Set<String> deepKeySet() {
-        reload();
-        return fileData.deepKeySet();
-    }
-
-    @Override
-    public Set<String> deepKeySet(String key) {
-        reload();
-        return fileData.deepKeySet(key);
     }
 
     public void setConfigSettings(final ConfigSettings configSettings) {

@@ -19,14 +19,14 @@ public interface StorageBase {
 
     void update();
 
+    Set<String> singleLayerKeySet();
+
+    Set<String> singleLayerKeySet(String key);
+
+
     Set<String> keySet();
 
     Set<String> keySet(String key);
-
-
-    Set<String> deepKeySet();
-
-    Set<String> deepKeySet(String key);
 
     void remove(final String key);
 

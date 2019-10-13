@@ -92,12 +92,12 @@ public class FileData {
         }
     }
 
-    public Set<String> keySet() {
+    public Set<String> singleLayerKeySet() {
         return localMap.keySet();
     }
 
     @SuppressWarnings("unchecked")
-    public Set<String> keySet(String key) {
+    public Set<String> singleLayerKeySet(String key) {
         if (get(key) instanceof Map) {
             return ((Map<String, Object>) get(key)).keySet();
         } else {
@@ -106,26 +106,26 @@ public class FileData {
     }
 
 
-    public Set<String> deepKeySet() {
-        return deepKeySet(localMap);
+    public Set<String> keySet() {
+        return keySet(localMap);
     }
 
     @SuppressWarnings("unchecked")
-    public Set<String> deepKeySet(String key) {
+    public Set<String> keySet(String key) {
         if (get(key) instanceof Map) {
             Map tempMap = (Map<String, Object>) get(key);
-            return deepKeySet(tempMap);
+            return keySet(tempMap);
         } else {
             return new HashSet<>();
         }
     }
 
     @SuppressWarnings("unchecked")
-    private Set<String> deepKeySet(final Map<String, Object> map) {
+    private Set<String> keySet(final Map<String, Object> map) {
         Set<String> localSet = new HashSet<>();
         for (String key : map.keySet()) {
             if (map.get(key) instanceof Map) {
-                for (String tempKey : deepKeySet((Map<String, Object>) map.get(key))) {
+                for (String tempKey : keySet((Map<String, Object>) map.get(key))) {
                     localSet.add(key + "." + tempKey);
                 }
             } else {

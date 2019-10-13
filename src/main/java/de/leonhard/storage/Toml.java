@@ -139,6 +139,18 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     }
 
     @Override
+    public Set<String> singleLayerKeySet() {
+        reload();
+        return fileData.singleLayerKeySet();
+    }
+
+    @Override
+    public Set<String> singleLayerKeySet(String key) {
+        reload();
+        return fileData.singleLayerKeySet(key);
+    }
+
+    @Override
     public Set<String> keySet() {
         reload();
         return fileData.keySet();
@@ -148,18 +160,6 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     public Set<String> keySet(String key) {
         reload();
         return fileData.keySet(key);
-    }
-
-    @Override
-    public Set<String> deepKeySet() {
-        reload();
-        return fileData.deepKeySet();
-    }
-
-    @Override
-    public Set<String> deepKeySet(String key) {
-        reload();
-        return fileData.deepKeySet(key);
     }
 
     /**

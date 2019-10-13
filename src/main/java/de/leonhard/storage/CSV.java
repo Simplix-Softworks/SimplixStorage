@@ -221,22 +221,22 @@ class CSV extends StorageCreator implements StorageBase, Comparable<CSV> {
     }
 
     @Override
+    public Set<String> singleLayerKeySet() {
+        return null;
+    }
+
+    @Override
+    public Set<String> singleLayerKeySet(String key) {
+        return null;
+    }
+
+    @Override
     public Set<String> keySet() {
         return null;
     }
 
     @Override
     public Set<String> keySet(String key) {
-        return null;
-    }
-
-    @Override
-    public Set<String> deepKeySet() {
-        return null;
-    }
-
-    @Override
-    public Set<String> deepKeySet(String key) {
         return null;
     }
 

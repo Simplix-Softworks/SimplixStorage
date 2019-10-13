@@ -295,6 +295,18 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     }
 
     @Override
+    public Set<String> singleLayerKeySet() {
+        reload();
+        return new FileData(object.toMap()).singleLayerKeySet();
+    }
+
+    @Override
+    public Set<String> singleLayerKeySet(String key) {
+        reload();
+        return new FileData(object.toMap()).singleLayerKeySet(key);
+    }
+
+    @Override
     public Set<String> keySet() {
         reload();
         return new FileData(object.toMap()).keySet();
@@ -304,18 +316,6 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     public Set<String> keySet(String key) {
         reload();
         return new FileData(object.toMap()).keySet(key);
-    }
-
-    @Override
-    public Set<String> deepKeySet() {
-        reload();
-        return new FileData(object.toMap()).deepKeySet();
-    }
-
-    @Override
-    public Set<String> deepKeySet(String key) {
-        reload();
-        return new FileData(object.toMap()).deepKeySet(key);
     }
 
     private boolean has(final String key) {
