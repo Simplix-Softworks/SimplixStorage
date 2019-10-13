@@ -124,7 +124,7 @@ public class YamlEditor {
         writer.close();
     }
 
-    public File getFile() {
+    public final File getFile() {
         return file;
     }
 }
