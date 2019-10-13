@@ -122,10 +122,12 @@ public class FileData {
 
     @SuppressWarnings("unchecked")
     private Set<String> deepKeySet(final Map<String, Object> map) {
-        Set<String> localSet = new HashSet<>(map.keySet());
+        Set<String> localSet = new HashSet<>();
         for (String key : map.keySet()) {
             if (map.get(key) instanceof Map) {
-                localSet.addAll(deepKeySet((Map<String, Object>) map.get(key)));
+                for (String tempKey : deepKeySet((Map<String, Object>) map.get(key))) {
+                    localSet.add(key + "." + tempKey);
+                }
             }
         }
         return localSet;
