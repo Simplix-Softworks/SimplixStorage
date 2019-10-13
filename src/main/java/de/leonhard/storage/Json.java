@@ -32,7 +32,7 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
     public Json(final String name, final String path) {
 
         try {
-            create(path, name, FileType.JSON);
+            create(name, path, FileType.JSON);
 
             FileInputStream fis = null;
             try {
@@ -66,7 +66,7 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
     public Json(final String name, final String path, ReloadSettings reloadSettings) {
 
         try {
-            create(path, name, FileType.JSON);
+            create(name, path, FileType.JSON);
 
             FileInputStream fis = null;
             try {

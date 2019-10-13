@@ -18,7 +18,7 @@ public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
     private String pathPrefix;
 
     public Toml(final String name, final String path) {
-        create(path, name, FileType.TOML);
+        create(name, path, FileType.TOML);
         update();
     }
 
@@ -29,7 +29,6 @@ public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
 
     public Toml(final File file) {
         create(file);
-        this.file = file;
         update();
     }
 
