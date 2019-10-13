@@ -17,7 +17,7 @@ import java.util.*;
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
 @Getter
 @Setter
-public abstract class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml> {
+public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml> {
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
     protected File file;
