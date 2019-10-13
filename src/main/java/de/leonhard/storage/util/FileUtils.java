@@ -14,7 +14,7 @@ public class FileUtils {
         return file.lastModified() <= timeStamp;
     }
 
-    private static List<String> readAllLines(File file) throws IOException {
+    public static List<String> readAllLines(final File file) throws IOException {
         final byte[] fileBytes = Files.readAllBytes(file.toPath());
         final String asString = new String(fileBytes);
         return new ArrayList<>(Arrays.asList(asString.split("\n")));

@@ -1,11 +1,11 @@
 package de.leonhard.storage.editor;
 
+import de.leonhard.storage.util.FileUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,9 +89,7 @@ public class YamlEditor {
     }
 
     public List<String> read() throws IOException {
-        final byte[] fileBytes = Files.readAllBytes(file.toPath());
-        final String asString = new String(fileBytes);
-        return new ArrayList<>(Arrays.asList(asString.split("\n")));
+        return FileUtils.readAllLines(file);
     }
 
     public List<String> readKeys() throws IOException {

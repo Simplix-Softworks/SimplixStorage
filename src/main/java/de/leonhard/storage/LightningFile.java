@@ -48,7 +48,7 @@ class LightningFile extends StorageCreator implements StorageBase, Comparable<Li
     //added method for later implementation
     @Override
     public void update() {
-
+        //TODO
     }
 
     //added method for later implementation
@@ -59,7 +59,7 @@ class LightningFile extends StorageCreator implements StorageBase, Comparable<Li
 
     //added method for later implementation
     @Override
-    public Set<String> singleLayerKeySet(String key) {
+    public Set<String> singleLayerKeySet(final String key) {
         return null;
     }
 
@@ -71,34 +71,34 @@ class LightningFile extends StorageCreator implements StorageBase, Comparable<Li
 
     //added method for later implementation
     @Override
-    public Set<String> keySet(String key) {
+    public Set<String> keySet(final String key) {
         return null;
     }
 
     //added method for later implementation
     @Override
-    public void remove(String key) {
-
+    public void remove(final String key) {
+        //TODO
     }
 
     //added method for later implementation
     @Override
-    public void set(String key, Object value) {
-
+    public void set(final String key, final Object value) {
+        //TODO
     }
 
     @Override
-    public boolean contains(String key) {
+    public boolean contains(final String key) {
         return false;
     }
 
     @Override
-    public Object get(String key) {
+    public Object get(final String key) {
         return null;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
             LightningFile lightningFile = (LightningFile) obj;
             return this.file.equals(lightningFile.file);
@@ -109,7 +109,7 @@ class LightningFile extends StorageCreator implements StorageBase, Comparable<Li
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(LightningFile lightningFile) {
+    public int compareTo(final LightningFile lightningFile) {
         return this.file.compareTo(lightningFile.file);
     }
 

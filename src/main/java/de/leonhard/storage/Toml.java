@@ -71,7 +71,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
      */
 
     @Override
-    public void set(final String key, Object value) {
+    public void set(final String key, final Object value) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -92,7 +92,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     }
 
     @Override
-    public Object get(String key) {
+    public Object get(final String key) {
         reload();
         return fileData.get(key);
     }
@@ -145,7 +145,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     }
 
     @Override
-    public Set<String> singleLayerKeySet(String key) {
+    public Set<String> singleLayerKeySet(final String key) {
         reload();
         return fileData.singleLayerKeySet(key);
     }
@@ -157,7 +157,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
     }
 
     @Override
-    public Set<String> keySet(String key) {
+    public Set<String> keySet(final String key) {
         reload();
         return fileData.keySet(key);
     }
@@ -186,12 +186,12 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
         return pathPrefix;
     }
 
-    public void setPathPrefix(String pathPrefix) {
+    public void setPathPrefix(final String pathPrefix) {
         this.pathPrefix = pathPrefix;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
             Toml toml = (Toml) obj;
             return this.file.equals(toml.file);
@@ -202,7 +202,7 @@ public class Toml extends StorageCreator implements StorageBase, Comparable<Toml
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(Toml toml) {
+    public int compareTo(final Toml toml) {
         return this.file.compareTo(toml.file);
     }
 

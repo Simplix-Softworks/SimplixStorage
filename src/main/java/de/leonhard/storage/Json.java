@@ -195,11 +195,13 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
      */
 
     @Override
-    public Map getMap(String key) {
-        if (!contains(key))
+    public Map getMap(final String key) {
+        String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        if (!contains(tempKey)) {
             return new HashMap();
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        return getMapWithoutPath(key);
+        } else {
+            return getMapWithoutPath(tempKey);
+        }
     }
 
     private Map getMapWithoutPath(final String key) {
@@ -298,7 +300,7 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     }
 
     @Override
-    public Set<String> singleLayerKeySet(String key) {
+    public Set<String> singleLayerKeySet(final String key) {
         reload();
         return new FileData(object.toMap()).singleLayerKeySet(key);
     }
@@ -310,7 +312,7 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
     }
 
     @Override
-    public Set<String> keySet(String key) {
+    public Set<String> keySet(final String key) {
         reload();
         return new FileData(object.toMap()).keySet(key);
     }
@@ -346,12 +348,12 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
         return pathPrefix;
     }
 
-    public void setPathPrefix(String pathPrefix) {
+    public void setPathPrefix(final String pathPrefix) {
         this.pathPrefix = pathPrefix;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
             Json json = (Json) obj;
             return this.file.equals(json.file);
@@ -362,7 +364,7 @@ public class Json extends StorageCreator implements StorageBase, Comparable<Json
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(Json json) {
+    public int compareTo(final Json json) {
         return this.file.compareTo(json.file);
     }
 

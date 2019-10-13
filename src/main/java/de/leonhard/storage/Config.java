@@ -20,69 +20,69 @@ public class Config extends Yaml {
     private List<String> header;
     private ConfigSettings configSettings;
 
-    public Config(String name, String path) {
+    public Config(final String name, final String path) {
         super(name, path);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(String name, String path, ReloadSettings reloadSettings) {
+    public Config(final String name, final String path, final ReloadSettings reloadSettings) {
         super(name, path, reloadSettings);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(File file) {
+    public Config(final File file) {
         super(file);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(String name, String path, String resourcefile) {
+    public Config(final String name, final String path, final String resourcefile) {
         super(name, path, resourcefile);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(String name, String path, ReloadSettings reloadSettings, String resourcefile) {
+    public Config(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
         super(name, path, reloadSettings, resourcefile);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(File file, String resourcefile) {
+    public Config(final File file, final String resourcefile) {
         super(file, resourcefile);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(String name, String path, File resourcefile) {
+    public Config(final String name, final String path, final File resourcefile) {
         super(name, path, resourcefile);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(String name, String path, ReloadSettings reloadSettings, File resourcefile) {
+    public Config(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
         super(name, path, reloadSettings, resourcefile);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(File file, File resourcefile) {
+    public Config(final File file, final File resourcefile) {
         super(file, resourcefile);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(String name, String path, BufferedInputStream resourceStream) {
+    public Config(final String name, final String path, final BufferedInputStream resourceStream) {
         super(name, path, resourceStream);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(String name, String path, ReloadSettings reloadSettings, BufferedInputStream resourceStream) {
+    public Config(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
         super(name, path, reloadSettings, resourceStream);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
-    public Config(File file, BufferedInputStream resourceStream) {
+    public Config(final File file, final BufferedInputStream resourceStream) {
         super(file, resourceStream);
         this.configSettings = ConfigSettings.preserveComments;
     }
 
 
     @Override
-    public void set(String key, Object value) {
+    public void set(final String key, final Object value) {
         super.set(key, value, configSettings);
     }
 
@@ -93,7 +93,7 @@ public class Config extends Yaml {
     }
 
     @Override
-    public <T> T getOrSetDefault(final String path, T def) {
+    public <T> T getOrSetDefault(final String path, final T def) {
         reload();
         if (!contains(path)) {
             set(path, def, configSettings);
@@ -128,7 +128,7 @@ public class Config extends Yaml {
     }
 
     @SuppressWarnings("unused")
-    public void setHeader(List<String> header) {
+    public void setHeader(final List<String> header) {
         List<String> tmp = new ArrayList<>();
         // Updating the values to have a comments, if someone forgets to set
         // them
@@ -138,8 +138,7 @@ public class Config extends Yaml {
             else
                 tmp.add(line);
         }
-        header = tmp;
-        this.header = header;
+        this.header = tmp;
 
         header.forEach(System.out::println);
 
@@ -179,7 +178,7 @@ public class Config extends Yaml {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
             Config config = (Config) obj;
             return this.file.equals(config.file);

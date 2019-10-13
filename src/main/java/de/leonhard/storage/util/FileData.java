@@ -9,7 +9,7 @@ public class FileData {
 
     private HashMap<String, Object> localMap;
 
-    public FileData(Map<String, Object> map) {
+    public FileData(final Map<String, Object> map) {
         localMap = new HashMap<>(map);
     }
 
@@ -19,7 +19,7 @@ public class FileData {
         return get(localMap, parts, 0);
     }
 
-    
+
     private Object get(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.get(key[id]) instanceof Map) {
@@ -39,7 +39,7 @@ public class FileData {
         localMap.put(parts[0], insert(localMap, parts, value, 1));
     }
 
-    
+
     private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
@@ -53,13 +53,13 @@ public class FileData {
     }
 
 
-    public boolean containsKey(String key) {
+    public boolean containsKey(final String key) {
         String[] parts = key.split("\\.");
         return containsKey(localMap, parts, 0);
     }
 
-    
-    private boolean containsKey(final Map<String, Object> map, String[] key, int id) {
+
+    private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
                 //noinspection unchecked
@@ -98,8 +98,8 @@ public class FileData {
         return localMap.keySet();
     }
 
-    
-    public Set<String> singleLayerKeySet(String key) {
+
+    public Set<String> singleLayerKeySet(final String key) {
         if (get(key) instanceof Map) {
             //noinspection unchecked
             return ((Map<String, Object>) get(key)).keySet();
@@ -113,8 +113,8 @@ public class FileData {
         return keySet(localMap);
     }
 
-    
-    public Set<String> keySet(String key) {
+
+    public Set<String> keySet(final String key) {
         if (get(key) instanceof Map) {
             //noinspection unchecked
             Map tempMap = (Map<String, Object>) get(key);
@@ -125,7 +125,7 @@ public class FileData {
         }
     }
 
-    
+
     private Set<String> keySet(final Map<String, Object> map) {
         Set<String> localSet = new HashSet<>();
         for (String key : map.keySet()) {
@@ -150,7 +150,7 @@ public class FileData {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj != null && this.getClass() == obj.getClass()) {
             FileData fileData = (FileData) obj;
             return this.localMap.equals(fileData.localMap);

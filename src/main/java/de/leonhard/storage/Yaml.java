@@ -30,7 +30,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     private FileOutputStream outputStream;
 
 
-    public Yaml(String name, String path) {
+    public Yaml(final String name, final String path) {
         try {
             create(path, name, FileType.YAML);
             this.file = super.file;
@@ -44,7 +44,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         update();
     }
 
-    public Yaml(String name, String path, ReloadSettings reloadSettings) {
+    public Yaml(final String name, final String path, final ReloadSettings reloadSettings) {
         try {
             create(path, name, FileType.YAML);
             this.file = super.file;
@@ -78,7 +78,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         }
     }
 
-    public Yaml(String name, String path, String resourcefile) {
+    public Yaml(final String name, final String path, final String resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
@@ -112,7 +112,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         update();
     }
 
-    public Yaml(String name, String path, ReloadSettings reloadSettings, String resourcefile) {
+    public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
@@ -148,7 +148,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         update();
     }
 
-    public Yaml(final File file, String resourcefile) {
+    public Yaml(final File file, final String resourcefile) {
         if (isYaml(file)) {
             try {
                 if (create(file)) {
@@ -192,7 +192,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         }
     }
 
-    public Yaml(String name, String path, File resourcefile) {
+    public Yaml(final String name, final String path, final File resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
@@ -227,7 +227,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         update();
     }
 
-    public Yaml(String name, String path, ReloadSettings reloadSettings, File resourcefile) {
+    public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
@@ -264,7 +264,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         update();
     }
 
-    public Yaml(final File file, File resourcefile) {
+    public Yaml(final File file, final File resourcefile) {
         if (isYaml(file)) {
             try {
                 if (create(file)) {
@@ -308,7 +308,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         }
     }
 
-    public Yaml(String name, String path, BufferedInputStream resourceStream) {
+    public Yaml(final String name, final String path, final BufferedInputStream resourceStream) {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
@@ -342,7 +342,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         update();
     }
 
-    public Yaml(String name, String path, ReloadSettings reloadSettings, BufferedInputStream resourceStream) {
+    public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
         try {
             if (create(path, name, FileType.YAML)) {
                 this.file = super.file;
@@ -378,7 +378,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         update();
     }
 
-    public Yaml(final File file, BufferedInputStream resourceStream) {
+    public Yaml(final File file, final BufferedInputStream resourceStream) {
         if (isYaml(file)) {
             try {
                 if (create(file)) {
@@ -421,11 +421,11 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         }
     }
 
-    public static boolean isYaml(String file) {
+    public static boolean isYaml(final String file) {
         return (file.lastIndexOf(".") > 0 ? file.substring(file.lastIndexOf(".") + 1) : "").equals("yml");
     }
 
-    public static boolean isYaml(File file) {
+    public static boolean isYaml(final File file) {
         return isYaml(file.getName());
     }
 
@@ -438,15 +438,15 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     }
 
     @Override
-    public void set(String key, Object value) {
+    public void set(final String key, final Object value) {
         insert(key, value, this.configSettings);
     }
 
-    public void set(String key, Object value, ConfigSettings configSettings) {
+    public void set(final String key, final Object value, final ConfigSettings configSettings) {
         insert(key, value, configSettings);
     }
 
-    private void insert(String key, Object value, ConfigSettings configSettings) {
+    private void insert(final String key, final Object value, final ConfigSettings configSettings) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -480,7 +480,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         }
     }
 
-    public void write(Map data) throws IOException {
+    public void write(final Map data) throws IOException {
         YamlWriter writer = new YamlWriter(new FileWriter(file));
         writer.write(data);
         writer.close();
@@ -494,15 +494,10 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     }
 
     @Override
-    public boolean contains(String key) {
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        return has(key);
-    }
-
-    private boolean has(String key) {
+    public boolean contains(final String key) {
+        String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
         reload();
-
-        return fileData.containsKey(key);
+        return fileData.containsKey(tempKey);
     }
 
     protected void reload() {
@@ -538,7 +533,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
         }
     }
 
-    public void setPathPrefix(String pathPrefix) {
+    public void setPathPrefix(final String pathPrefix) {
         this.pathPrefix = pathPrefix;
         reload();
     }
@@ -573,7 +568,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     }
 
     @Override
-    public Set<String> singleLayerKeySet(String key) {
+    public Set<String> singleLayerKeySet(final String key) {
         reload();
         return fileData.singleLayerKeySet(key);
     }
@@ -585,7 +580,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
     }
 
     @Override
-    public Set<String> keySet(String key) {
+    public Set<String> keySet(final String key) {
         reload();
         return fileData.keySet(key);
     }
@@ -606,7 +601,7 @@ public class Yaml extends StorageCreator implements StorageBase, Comparable<Yaml
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public int compareTo(Yaml yaml) {
+    public int compareTo(final Yaml yaml) {
         return this.file.compareTo(yaml.file);
     }
 
