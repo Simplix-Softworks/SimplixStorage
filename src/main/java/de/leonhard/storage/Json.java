@@ -4,9 +4,9 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.FlatFile;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.util.FileData;
-import de.leonhard.storage.util.FileUtils;
-import de.leonhard.storage.util.JsonUtil;
+import de.leonhard.storage.utils.FileData;
+import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -205,7 +205,7 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
         if (map instanceof Map) {
             return (Map<?, ?>) object.get(key);
         } else if (map instanceof JSONObject) {
-            return JsonUtil.jsonToMap((JSONObject) map);
+            return JsonUtils.jsonToMap((JSONObject) map);
         }
         throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
     }

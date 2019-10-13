@@ -1,4 +1,4 @@
-package de.leonhard.storage.util;
+package de.leonhard.storage.utils;
 
 import java.io.File;
 import java.io.IOException;

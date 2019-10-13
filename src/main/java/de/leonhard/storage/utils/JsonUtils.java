@@ -1,4 +1,4 @@
-package de.leonhard.storage.util;
+package de.leonhard.storage.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.*;
 
 @SuppressWarnings("WeakerAccess")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JsonUtil {
+public class JsonUtils {
 
     public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
         Map<String, Object> retMap = new HashMap<>();

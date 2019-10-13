@@ -1,6 +1,6 @@
 package de.leonhard.storage.base;
 
-import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

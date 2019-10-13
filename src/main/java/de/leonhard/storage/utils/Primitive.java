@@ -1,4 +1,4 @@
-package de.leonhard.storage.util;
+package de.leonhard.storage.utils;
 
 public class Primitive {
 

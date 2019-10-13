@@ -5,7 +5,7 @@ import de.leonhard.storage.base.FileType;
 import de.leonhard.storage.base.FlatFile;
 import de.leonhard.storage.base.ReloadSettings;
 import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.util.FileData;
+import de.leonhard.storage.utils.FileData;
 
 import java.io.File;
 import java.io.IOException;
