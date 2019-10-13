@@ -85,6 +85,7 @@ public class FlatFile {
         return file.getAbsolutePath();
     }
 
+    @SuppressWarnings("unused")
     public final FileType getFileType() {
         return fileType;
     }

@@ -14,25 +14,6 @@ public class FileUtils {
         return file.lastModified() <= timeStamp;
     }
 
-    /*public static File getOrCreate(final File file) {
-        if (file.exists()) {
-            return file;
-        } else {
-            try {
-                if (file.getAbsoluteFile().getParentFile().exists() || file.getAbsoluteFile().getParentFile().mkdirs()) {
-                    if (!file.createNewFile()) {
-                        throw new IOException();
-                    }
-                }
-            } catch (IOException ex) {
-                System.err.println("Exception while creating File '" + file.getName() + "'");
-                System.err.println("Path: '" + file.getAbsolutePath() + "'");
-                ex.printStackTrace();
-            }
-            return file;
-        }
-    }*/
-
 
     public static List<String> readAllLines(final File file) throws IOException {
         final byte[] fileBytes = Files.readAllBytes(file.toPath());
