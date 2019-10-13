@@ -98,7 +98,6 @@ public class FileData {
         return localMap.keySet();
     }
 
-
     public Set<String> singleLayerKeySet(final String key) {
         if (get(key) instanceof Map) {
             //noinspection unchecked
@@ -113,7 +112,6 @@ public class FileData {
         return keySet(localMap);
     }
 
-
     public Set<String> keySet(final String key) {
         if (get(key) instanceof Map) {
             //noinspection unchecked
@@ -124,7 +122,6 @@ public class FileData {
             return new HashSet<>();
         }
     }
-
 
     private Set<String> keySet(final Map<String, Object> map) {
         Set<String> localSet = new HashSet<>();
