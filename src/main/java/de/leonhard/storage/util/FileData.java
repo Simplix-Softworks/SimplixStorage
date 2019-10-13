@@ -19,7 +19,6 @@ public class FileData {
         return get(localMap, parts, 0);
     }
 
-
     private Object get(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.get(key[id]) instanceof Map) {
@@ -39,7 +38,6 @@ public class FileData {
         localMap.put(parts[0], insert(localMap, parts, value, 1));
     }
 
-
     private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
@@ -57,7 +55,6 @@ public class FileData {
         String[] parts = key.split("\\.");
         return containsKey(localMap, parts, 0);
     }
-
 
     private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
@@ -93,6 +90,7 @@ public class FileData {
             remove(map, key, id + 1);
         }
     }
+
 
     public Set<String> singleLayerKeySet() {
         return localMap.keySet();
