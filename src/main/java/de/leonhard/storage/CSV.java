@@ -1,7 +1,7 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.FlatFile;
-import de.leonhard.storage.base.StorageBase;
+import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.StorageBase;
 
 import java.util.List;
 import java.util.Map;
@@ -242,15 +242,5 @@ class CSV extends FlatFile implements StorageBase {
             CSV csv = (CSV) obj;
             return super.equals(csv.flatFileInstance);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return this.file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return this.file.getAbsolutePath();
     }
 }

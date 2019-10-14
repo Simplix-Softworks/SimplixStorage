@@ -1,10 +1,13 @@
-package de.leonhard.storage.base;
+package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.internal.enums.FileType;
+import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class FlatFile implements Comparable<FlatFile> {
     protected FlatFile flatFileInstance = this;
     protected File file;
@@ -18,7 +21,7 @@ public abstract class FlatFile implements Comparable<FlatFile> {
      *
      * @param name     Name of the file
      * @param path     Absolute path where the file should be created
-     * @param fileType .yml/.file  Uses the Enum FileType
+     * @param fileType .yml/.json  Uses the Enum FileType
      * @return true if file was created.
      */
     protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
@@ -68,7 +71,9 @@ public abstract class FlatFile implements Comparable<FlatFile> {
     }
 
     protected final boolean shouldReload() {
-        if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
+        if (reloadSettings.equals(ReloadSettings.AUTOMATICALLY)) {
+            return true;
+        } else if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
             return FileUtils.hasChanged(file, lastModified);
         } else {
             return false;
@@ -98,11 +103,12 @@ public abstract class FlatFile implements Comparable<FlatFile> {
             FlatFile flatFile = (FlatFile) obj;
             return this.file.equals(flatFile.file)
                     && this.lastModified == flatFile.lastModified
-                    && reloadSettings == flatFile.reloadSettings
-                    && fileType == flatFile.fileType;
+                    && reloadSettings.equals(flatFile.reloadSettings)
+                    && fileType.equals(flatFile.fileType);
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public synchronized int compareTo(final FlatFile flatFile) {
         return this.file.compareTo(flatFile.file);

@@ -1,9 +1,9 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.FileType;
-import de.leonhard.storage.base.FlatFile;
-import de.leonhard.storage.base.ReloadSettings;
-import de.leonhard.storage.base.StorageBase;
+import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.StorageBase;
+import de.leonhard.storage.internal.enums.FileType;
+import de.leonhard.storage.internal.enums.ReloadSettings;
 
 import java.io.File;
 import java.util.Map;
@@ -95,15 +95,5 @@ public class LightningFile extends FlatFile implements StorageBase {
             return this.data.equals(lightningFile.data)
                     && super.equals(lightningFile.flatFileInstance);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return this.file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return this.file.getAbsolutePath();
     }
 }

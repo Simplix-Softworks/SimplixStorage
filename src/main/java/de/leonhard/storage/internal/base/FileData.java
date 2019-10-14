@@ -1,4 +1,4 @@
-package de.leonhard.storage.base;
+package de.leonhard.storage.internal.base;
 
 import java.util.HashMap;
 import java.util.HashSet;

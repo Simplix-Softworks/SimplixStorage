@@ -1,4 +1,4 @@
-package de.leonhard.storage.base;
+package de.leonhard.storage.internal.enums;
 
 import java.io.File;
 
@@ -44,7 +44,8 @@ public enum FileType {
         return getFileType(getExtension(file));
     }
 
-    public String getExtension() {
+    @Override
+    public String toString() {
         return extension;
     }
 }

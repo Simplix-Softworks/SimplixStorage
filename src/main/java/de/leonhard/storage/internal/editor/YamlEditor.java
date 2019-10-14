@@ -1,6 +1,6 @@
-package de.leonhard.storage.editor;
+package de.leonhard.storage.internal.editor;
 
-import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.internal.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileWriter;

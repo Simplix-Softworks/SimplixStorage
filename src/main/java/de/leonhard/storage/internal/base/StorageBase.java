@@ -1,6 +1,6 @@
-package de.leonhard.storage.base;
+package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.utils.Primitive;
+import de.leonhard.storage.internal.utils.Primitive;
 
 import java.util.ArrayList;
 import java.util.List;

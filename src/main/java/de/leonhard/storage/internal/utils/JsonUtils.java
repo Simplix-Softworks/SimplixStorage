@@ -1,4 +1,4 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.internal.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

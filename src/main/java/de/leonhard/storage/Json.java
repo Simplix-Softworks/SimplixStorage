@@ -1,7 +1,11 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.*;
-import de.leonhard.storage.utils.JsonUtils;
+import de.leonhard.storage.internal.base.FileData;
+import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.StorageBase;
+import de.leonhard.storage.internal.enums.FileType;
+import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -343,15 +347,5 @@ public class Json extends FlatFile implements StorageBase {
                     && this.pathPrefix.equals(json.pathPrefix)
                     && super.equals(json.flatFileInstance);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return this.file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return this.file.getAbsolutePath();
     }
 }

@@ -2,10 +2,15 @@ package de.leonhard.storage;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
-import de.leonhard.storage.base.*;
-import de.leonhard.storage.editor.YamlEditor;
-import de.leonhard.storage.editor.YamlParser;
-import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.internal.base.FileData;
+import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.StorageBase;
+import de.leonhard.storage.internal.editor.YamlEditor;
+import de.leonhard.storage.internal.editor.YamlParser;
+import de.leonhard.storage.internal.enums.ConfigSettings;
+import de.leonhard.storage.internal.enums.FileType;
+import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.utils.FileUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -408,18 +413,8 @@ public class Yaml extends FlatFile implements StorageBase {
             Yaml yaml = (Yaml) obj;
             return this.fileData.equals(yaml.fileData)
                     && this.pathPrefix.equals(yaml.pathPrefix)
-                    && this.configSettings == yaml.configSettings
+                    && this.configSettings.equals(yaml.configSettings)
                     && super.equals(yaml.flatFileInstance);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return this.file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return this.file.getAbsolutePath();
     }
 }

@@ -1,7 +1,7 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.ConfigSettings;
-import de.leonhard.storage.base.ReloadSettings;
+import de.leonhard.storage.internal.enums.ConfigSettings;
+import de.leonhard.storage.internal.enums.ReloadSettings;
 import lombok.Getter;
 import lombok.Setter;
 
