@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.io.File;
 import java.io.IOException;
 
+@SuppressWarnings("WeakerAccess")
 @Getter
 public abstract class FlatFile implements Comparable<FlatFile> {
     @Setter
@@ -72,7 +73,7 @@ public abstract class FlatFile implements Comparable<FlatFile> {
         }
     }
 
-    protected final boolean shouldReload() {
+    public final boolean shouldReload() {
         if (reloadSettings.equals(ReloadSettings.AUTOMATICALLY)) {
             return true;
         } else if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
@@ -82,16 +83,16 @@ public abstract class FlatFile implements Comparable<FlatFile> {
         }
     }
 
-    protected boolean hasChanged() {
+    public boolean hasChanged() {
         return FileUtils.hasChanged(file, lastModified);
     }
 
-    protected final String getName() {
+    public final String getName() {
         return this.file.getName();
     }
 
     @SuppressWarnings("unused")
-    protected final String getFilePath() {
+    public final String getFilePath() {
         return file.getAbsolutePath();
     }
 
