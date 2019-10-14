@@ -7,7 +7,6 @@ import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-@SuppressWarnings("WeakerAccess")
 public abstract class FlatFile implements Comparable<FlatFile> {
     protected FlatFile flatFileInstance = this;
     protected File file;
