@@ -1,19 +1,20 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.StorageBase;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
 public class LightningFile extends FlatFile implements StorageBase {
 
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private Map<String, Object> data;
+    private FileData fileData;
 
     public LightningFile(final String name, final String path) {
         create(name, path, FileType.LS);
@@ -88,8 +89,30 @@ public class LightningFile extends FlatFile implements StorageBase {
             return false;
         } else {
             LightningFile lightningFile = (LightningFile) obj;
-            return this.data.equals(lightningFile.data)
+            return this.fileData.equals(lightningFile.fileData)
                     && super.equals(lightningFile.getFlatFileInstance());
+        }
+    }
+
+    public void write(PrintWriter writer) {
+        for (String key : fileData.singleLayerKeySet()) {
+            if (fileData.get(key) instanceof Map) {
+                //noinspection unchecked
+                write((Map<String, Object>) fileData.get(key), writer, "");
+            } else {
+                writer.println(key + " = " + fileData.get(key));
+            }
+        }
+    }
+
+    private void write(Map<String, Object> map, PrintWriter writer, String indentation) {
+        for (String key : map.keySet()) {
+            if (map.get(key) instanceof Map) {
+                //noinspection unchecked
+                write((Map<String, Object>) map.get(key), writer, indentation + "  ");
+            } else {
+                writer.println(indentation + key + " = " + map.get(key));
+            }
         }
     }
 }
