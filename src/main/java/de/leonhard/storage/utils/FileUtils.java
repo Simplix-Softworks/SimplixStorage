@@ -6,12 +6,10 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-@SuppressWarnings({"unused"})
 public class FileUtils {
 
-    public static boolean hasNotChanged(final File file, final long timeStamp) {
-        return file.lastModified() <= timeStamp;
+    public static boolean hasChanged(final File file, final long timeStamp) {
+        return timeStamp < file.lastModified();
     }
 
 

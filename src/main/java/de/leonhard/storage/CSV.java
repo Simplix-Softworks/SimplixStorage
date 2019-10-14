@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-class CSV extends FlatFile implements StorageBase, Comparable<CSV> {
+class CSV extends FlatFile implements StorageBase {
     @Override
     public Object get(final String key) {
         return null;
@@ -234,18 +234,14 @@ class CSV extends FlatFile implements StorageBase, Comparable<CSV> {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
-            CSV csv = (CSV) obj;
-            return this.file.equals(csv.file);
-        } else {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
             return false;
+        } else {
+            CSV csv = (CSV) obj;
+            return super.equals(csv.flatFileInstance);
         }
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public int compareTo(final CSV csv) {
-        return this.file.compareTo(csv.file);
     }
 
     @Override

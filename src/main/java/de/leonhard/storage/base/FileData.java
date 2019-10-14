@@ -1,4 +1,4 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.base;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,12 +14,12 @@ public class FileData {
     }
 
 
-    public Object get(final String key) {
+    public synchronized Object get(final String key) {
         final String[] parts = key.split("\\.");
         return get(localMap, parts, 0);
     }
 
-    private Object get(final Map<String, Object> map, final String[] key, final int id) {
+    private synchronized Object get(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.get(key[id]) instanceof Map) {
                 @SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
@@ -33,12 +33,12 @@ public class FileData {
     }
 
 
-    public void insert(final String key, final Object value) {
+    public synchronized void insert(final String key, final Object value) {
         final String[] parts = key.split("\\.");
         localMap.put(parts[0], insert(localMap, parts, value, 1));
     }
 
-    private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
+    private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
             //noinspection unchecked
@@ -51,12 +51,12 @@ public class FileData {
     }
 
 
-    public boolean containsKey(final String key) {
+    public synchronized boolean containsKey(final String key) {
         String[] parts = key.split("\\.");
         return containsKey(localMap, parts, 0);
     }
 
-    private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
+    private synchronized boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
                 //noinspection unchecked
@@ -71,14 +71,14 @@ public class FileData {
     }
 
 
-    public void remove(final String key) {
+    public synchronized void remove(final String key) {
         if (containsKey(key)) {
             final String[] parts = key.split("\\.");
             remove(localMap, parts, 0);
         }
     }
 
-    private void remove(final Map<String, Object> map, final String[] key, final int id) {
+    private synchronized void remove(final Map<String, Object> map, final String[] key, final int id) {
         Map tempMap = map;
         for (int i = 0; i < key.length - (1 + id); i++) {
             if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
@@ -92,11 +92,11 @@ public class FileData {
     }
 
 
-    public Set<String> singleLayerKeySet() {
+    public synchronized Set<String> singleLayerKeySet() {
         return localMap.keySet();
     }
 
-    public Set<String> singleLayerKeySet(final String key) {
+    public synchronized Set<String> singleLayerKeySet(final String key) {
         if (get(key) instanceof Map) {
             //noinspection unchecked
             return ((Map<String, Object>) get(key)).keySet();
@@ -106,11 +106,11 @@ public class FileData {
     }
 
 
-    public Set<String> keySet() {
+    public synchronized Set<String> keySet() {
         return keySet(localMap);
     }
 
-    public Set<String> keySet(final String key) {
+    public synchronized Set<String> keySet(final String key) {
         if (get(key) instanceof Map) {
             //noinspection unchecked
             Map tempMap = (Map<String, Object>) get(key);
@@ -121,7 +121,7 @@ public class FileData {
         }
     }
 
-    private Set<String> keySet(final Map<String, Object> map) {
+    private synchronized Set<String> keySet(final Map<String, Object> map) {
         Set<String> localSet = new HashSet<>();
         for (String key : map.keySet()) {
             if (map.get(key) instanceof Map) {
@@ -136,7 +136,7 @@ public class FileData {
         return localSet;
     }
 
-    public Map<String, Object> toMap() {
+    public synchronized Map<String, Object> toMap() {
         if (localMap == null) {
             throw new IllegalStateException("Couldn't get null");
         } else {
@@ -145,22 +145,24 @@ public class FileData {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
+    public synchronized boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        } else {
             FileData fileData = (FileData) obj;
             return this.localMap.equals(fileData.localMap);
-        } else {
-            return false;
         }
     }
 
     @Override
-    public int hashCode() {
+    public synchronized int hashCode() {
         return this.localMap.hashCode();
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return this.localMap.toString();
     }
 }
