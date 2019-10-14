@@ -3,16 +3,19 @@ package de.leonhard.storage.internal.base;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import de.leonhard.storage.internal.utils.FileUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.IOException;
 
+@Getter
 public abstract class FlatFile implements Comparable<FlatFile> {
-    protected FlatFile flatFileInstance = this;
-    protected File file;
-    protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
-    private long lastModified;
+    @Setter
+    private ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+    private File file;
     private FileType fileType;
+    private long lastModified;
 
 
     /**
@@ -79,21 +82,21 @@ public abstract class FlatFile implements Comparable<FlatFile> {
         }
     }
 
-    public boolean hasChanged() {
+    protected boolean hasChanged() {
         return FileUtils.hasChanged(file, lastModified);
     }
 
-    public final File getFile() {
-        return file;
-    }
-
-    public final String getFilePath() {
-        return file.getAbsolutePath();
+    protected final String getName() {
+        return this.file.getName();
     }
 
     @SuppressWarnings("unused")
-    public final FileType getFileType() {
-        return fileType;
+    protected final String getFilePath() {
+        return file.getAbsolutePath();
+    }
+
+    protected final FlatFile getFlatFileInstance() {
+        return this;
     }
 
     @Override

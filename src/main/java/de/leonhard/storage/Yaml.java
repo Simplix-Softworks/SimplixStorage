@@ -10,7 +10,6 @@ import de.leonhard.storage.internal.editor.YamlParser;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,42 +18,40 @@ import java.util.*;
 
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
 @Getter
-@Setter
 public class Yaml extends FlatFile implements StorageBase {
-    protected final Yaml yamlInstance = this;
-    protected final YamlEditor yamlEditor;
-    protected final YamlParser parser;
-    @Setter(AccessLevel.PRIVATE)
-    protected FileData fileData;
-    protected String pathPrefix;
-    protected ConfigSettings configSettings = ConfigSettings.skipComments;
+    @Setter
+    private String pathPrefix;
+    @Setter
+    private ConfigSettings configSettings = ConfigSettings.skipComments;
+    private final YamlEditor yamlEditor;
+    private final YamlParser parser;
+    private FileData fileData;
     private final int BUFFER_SIZE = 8192;
 
 
     public Yaml(final String name, final String path) {
         create(name, path, FileType.YAML);
-
-        yamlEditor = new YamlEditor(file);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
         update();
     }
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings) {
         create(name, path, FileType.YAML);
-        this.reloadSettings = reloadSettings;
-        yamlEditor = new YamlEditor(file);
+        setReloadSettings(reloadSettings);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
 
         update();
     }
 
     public Yaml(final File file) {
-        if (isYaml(file)) {
-            create(file);
+        if (isYaml(getFile())) {
+            create(getFile());
 
             update();
 
-            yamlEditor = new YamlEditor(file);
+            yamlEditor = new YamlEditor(getFile());
             parser = new YamlParser(yamlEditor);
         } else {
             yamlEditor = null;
@@ -65,7 +62,7 @@ public class Yaml extends FlatFile implements StorageBase {
     public Yaml(final String name, final String path, final String resourcefile) {
         if (create(name, path, FileType.YAML)) {
             try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                 final byte[] data = new byte[BUFFER_SIZE];
                 int count;
                 while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -75,7 +72,7 @@ public class Yaml extends FlatFile implements StorageBase {
                 e.printStackTrace();
             }
         }
-        yamlEditor = new YamlEditor(file);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
         update();
     }
@@ -83,7 +80,7 @@ public class Yaml extends FlatFile implements StorageBase {
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
         if (create(name, path, FileType.YAML)) {
             try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(file)) {
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(getFile())) {
                 final byte[] data = new byte[BUFFER_SIZE];
                 int count;
                 while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -93,18 +90,18 @@ public class Yaml extends FlatFile implements StorageBase {
                 e.printStackTrace();
             }
         }
-        this.reloadSettings = reloadSettings;
-        yamlEditor = new YamlEditor(file);
+        setReloadSettings(reloadSettings);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
 
         update();
     }
 
     public Yaml(final File file, final String resourcefile) {
-        if (isYaml(file) && create(file)) {
-            if (create(file)) {
+        if (isYaml(getFile()) && create(getFile())) {
+            if (create(getFile())) {
                 try (BufferedInputStream configInputStream = new BufferedInputStream(
-                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                     final byte[] data = new byte[BUFFER_SIZE];
                     int count;
                     while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -114,7 +111,7 @@ public class Yaml extends FlatFile implements StorageBase {
                     e.printStackTrace();
                 }
             }
-            yamlEditor = new YamlEditor(file);
+            yamlEditor = new YamlEditor(getFile());
             parser = new YamlParser(yamlEditor);
             update();
         } else {
@@ -126,7 +123,7 @@ public class Yaml extends FlatFile implements StorageBase {
     public Yaml(final String name, final String path, final File resourcefile) {
         if (create(name, path, FileType.YAML)) {
             try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                 final byte[] data = new byte[BUFFER_SIZE];
                 int count;
                 while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -136,7 +133,7 @@ public class Yaml extends FlatFile implements StorageBase {
                 e.printStackTrace();
             }
         }
-        yamlEditor = new YamlEditor(file);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
         update();
     }
@@ -144,7 +141,7 @@ public class Yaml extends FlatFile implements StorageBase {
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
         if (create(name, path, FileType.YAML)) {
             try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                 final byte[] data = new byte[BUFFER_SIZE];
                 int count;
                 while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -154,17 +151,17 @@ public class Yaml extends FlatFile implements StorageBase {
                 e.printStackTrace();
             }
         }
-        this.reloadSettings = reloadSettings;
-        yamlEditor = new YamlEditor(file);
+        setReloadSettings(reloadSettings);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
         update();
     }
 
     public Yaml(final File file, final File resourcefile) {
-        if (isYaml(file)) {
-            if (create(file)) {
+        if (isYaml(getFile())) {
+            if (create(getFile())) {
                 try (BufferedInputStream configInputStream = new BufferedInputStream(
-                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                     final byte[] data = new byte[BUFFER_SIZE];
                     int count;
                     while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -174,7 +171,7 @@ public class Yaml extends FlatFile implements StorageBase {
                     e.printStackTrace();
                 }
             }
-            yamlEditor = new YamlEditor(file);
+            yamlEditor = new YamlEditor(getFile());
             parser = new YamlParser(yamlEditor);
             update();
         } else {
@@ -185,7 +182,7 @@ public class Yaml extends FlatFile implements StorageBase {
 
     public Yaml(final String name, final String path, final BufferedInputStream resourceStream) {
         if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.file)) {
+            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                 final byte[] data = new byte[BUFFER_SIZE];
                 int count;
                 while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -195,14 +192,14 @@ public class Yaml extends FlatFile implements StorageBase {
                 e.printStackTrace();
             }
         }
-        yamlEditor = new YamlEditor(file);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
         update();
     }
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
         if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.file)) {
+            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                 final byte[] data = new byte[BUFFER_SIZE];
                 int count;
                 while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -212,16 +209,16 @@ public class Yaml extends FlatFile implements StorageBase {
                 e.printStackTrace();
             }
         }
-        this.reloadSettings = reloadSettings;
-        yamlEditor = new YamlEditor(file);
+        setReloadSettings(reloadSettings);
+        yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
         update();
     }
 
     public Yaml(final File file, final BufferedInputStream resourceStream) {
-        if (isYaml(file)) {
-            if (create(file)) {
-                try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.file)) {
+        if (isYaml(getFile())) {
+            if (create(getFile())) {
+                try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                     final byte[] data = new byte[BUFFER_SIZE];
                     int count;
                     while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -231,7 +228,7 @@ public class Yaml extends FlatFile implements StorageBase {
                     e.printStackTrace();
                 }
             }
-            yamlEditor = new YamlEditor(file);
+            yamlEditor = new YamlEditor(getFile());
             parser = new YamlParser(yamlEditor);
             update();
         } else {
@@ -248,16 +245,12 @@ public class Yaml extends FlatFile implements StorageBase {
         return isYaml(file.getName());
     }
 
-    public String getName() {
-        return this.file.getName();
-    }
-
     @Override
     public void set(final String key, final Object value) {
         set(key, value, this.configSettings);
     }
 
-    private void set(final String key, final Object value, final ConfigSettings configSettings) {
+    public void set(final String key, final Object value, final ConfigSettings configSettings) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -286,13 +279,13 @@ public class Yaml extends FlatFile implements StorageBase {
                 }
                 write(Objects.requireNonNull(fileData).toMap());
             } catch (final IOException e) {
-                System.err.println("Error while writing '" + file.getName() + "'");
+                System.err.println("Error while writing '" + getName() + "'");
             }
         }
     }
 
     public void write(final Map data) throws IOException {
-        YamlWriter writer = new YamlWriter(new FileWriter(file));
+        YamlWriter writer = new YamlWriter(new FileWriter(getFile()));
         writer.write(data);
         writer.close();
     }
@@ -321,7 +314,7 @@ public class Yaml extends FlatFile implements StorageBase {
     public void update() {
         YamlReader reader = null;
         try {
-            reader = new YamlReader(new FileReader(file));// Needed?
+            reader = new YamlReader(new FileReader(getFile()));// Needed?
             fileData = new FileData((Map<String, Object>) reader.read());
         } catch (IOException e) {
             System.err.println("Exception while reloading yaml");
@@ -338,16 +331,11 @@ public class Yaml extends FlatFile implements StorageBase {
         }
     }
 
-    public void setPathPrefix(final String pathPrefix) {
-        this.pathPrefix = pathPrefix;
-        reload();
-    }
-
     public List<String> getHeader() {
         try {
             return yamlEditor.readHeader();
         } catch (IOException e) {
-            System.err.println("Error while getting header of '" + file.getName() + "'");
+            System.err.println("Error while getting header of '" + getName() + "'");
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -390,8 +378,8 @@ public class Yaml extends FlatFile implements StorageBase {
         return fileData.keySet(key);
     }
 
-    public void setConfigSettings(final ConfigSettings configSettings) {
-        this.configSettings = configSettings;
+    protected final Yaml getYamlInstance() {
+        return this;
     }
 
     @Override
@@ -405,7 +393,7 @@ public class Yaml extends FlatFile implements StorageBase {
             return this.fileData.equals(yaml.fileData)
                     && this.pathPrefix.equals(yaml.pathPrefix)
                     && this.configSettings.equals(yaml.configSettings)
-                    && super.equals(yaml.flatFileInstance);
+                    && super.equals(yaml.getFlatFileInstance());
         }
     }
 }

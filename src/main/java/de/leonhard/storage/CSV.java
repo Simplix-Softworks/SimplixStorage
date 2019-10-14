@@ -240,7 +240,7 @@ class CSV extends FlatFile implements StorageBase {
             return false;
         } else {
             CSV csv = (CSV) obj;
-            return super.equals(csv.flatFileInstance);
+            return super.equals(csv.getFlatFileInstance());
         }
     }
 }

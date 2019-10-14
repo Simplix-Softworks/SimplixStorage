@@ -6,6 +6,8 @@ import de.leonhard.storage.internal.base.StorageBase;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import de.leonhard.storage.internal.utils.JsonUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -17,9 +19,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings({"Duplicates", "unused", "WeakerAccess", "unchecked"})
+@Getter
 public class Json extends FlatFile implements StorageBase {
-    private JSONObject jsonObject;
+    @Setter
     private String pathPrefix;
+    private JSONObject jsonObject;
 
     /**
      * Creates a .json file where you can put your data in.+
@@ -35,14 +39,14 @@ public class Json extends FlatFile implements StorageBase {
 
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream(file);
+                fis = new FileInputStream(getFile());
             } catch (FileNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
 
-            if (file.length() == 0) {
+            if (getFile().length() == 0) {
                 jsonObject = new JSONObject();
-                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+                Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
                 writer.write(jsonObject.toString(2));
                 writer.close();
             }
@@ -55,11 +59,11 @@ public class Json extends FlatFile implements StorageBase {
             e.printStackTrace();
         } catch (Exception ex) {
             System.err.println(
-                    "Error while creating file - Maybe wrong format - Try deleting the file " + Objects.requireNonNull(file).getName());
+                    "Error while creating file - Maybe wrong format - Try deleting the file " + Objects.requireNonNull(getFile()).getName());
             ex.printStackTrace();
         }
 
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
+        setReloadSettings(ReloadSettings.INTELLIGENT);
     }
 
     public Json(final String name, final String path, ReloadSettings reloadSettings) {
@@ -69,14 +73,14 @@ public class Json extends FlatFile implements StorageBase {
 
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream(file);
+                fis = new FileInputStream(getFile());
             } catch (FileNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
 
-            if (file.length() == 0) {
+            if (getFile().length() == 0) {
                 jsonObject = new JSONObject();
-                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+                Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
                 writer.write(jsonObject.toString(3));
                 writer.close();
             }
@@ -86,11 +90,11 @@ public class Json extends FlatFile implements StorageBase {
 
         } catch (Exception ex) {
             System.err.println(
-                    "Error while creating file - Maybe wrong format - Try deleting the file " + Objects.requireNonNull(file).getName());
+                    "Error while creating file - Maybe wrong format - Try deleting the file " + getName());
             ex.printStackTrace();
         }
 
-        this.reloadSettings = reloadSettings;
+        this.setReloadSettings(reloadSettings);
 
     }
 
@@ -101,18 +105,18 @@ public class Json extends FlatFile implements StorageBase {
 
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream(file);
+                fis = new FileInputStream(getFile());
             } catch (FileNotFoundException | NullPointerException e) {
                 e.printStackTrace();
             }
 
-            if (file.length() == 0) {
+            if (getFile().length() == 0) {
                 jsonObject = new JSONObject();
-                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+                Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
                 writer.write(jsonObject.toString(2));
                 writer.close();
             }
-            this.reloadSettings = ReloadSettings.INTELLIGENT;
+            this.setReloadSettings(ReloadSettings.INTELLIGENT);
             JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
             jsonObject = new JSONObject(tokener);
 
@@ -120,14 +124,10 @@ public class Json extends FlatFile implements StorageBase {
             e.printStackTrace();
         } catch (Exception ex) {
             System.err.println(
-                    "Error while creating file - Maybe wrong format - Try deleting the file " + file.getName());
+                    "Error while creating file - Maybe wrong format - Try deleting the file " + getName());
             ex.printStackTrace();
         }
 
-    }
-
-    public String getName() {
-        return this.file.getName();
     }
 
     /**
@@ -225,7 +225,7 @@ public class Json extends FlatFile implements StorageBase {
 
                 jsonObject = new JSONObject(data.toMap());
                 try {
-                    if (old.toString().equals(jsonObject.toString()) && file.length() != 0)
+                    if (old.toString().equals(jsonObject.toString()) && getFile().length() != 0)
                         return;
 
                     write(jsonObject);
@@ -237,7 +237,7 @@ public class Json extends FlatFile implements StorageBase {
             }
             jsonObject.put(finalKey, value);
             try {
-                Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+                Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
                 writer.write(jsonObject.toString(2));
                 writer.close();
             } catch (IOException e) {
@@ -248,7 +248,7 @@ public class Json extends FlatFile implements StorageBase {
     }
 
     public void write(final JSONObject object) throws IOException {
-        Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+        Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
         writer.write(object.toString(3));
         writer.close();
     }
@@ -267,7 +267,7 @@ public class Json extends FlatFile implements StorageBase {
     public void update() {
         FileInputStream fis = null;
         try {
-            fis = new FileInputStream(file);
+            fis = new FileInputStream(getFile());
         } catch (FileNotFoundException | NullPointerException e) {
             System.err.println("Exception while reading Json");
             e.printStackTrace();
@@ -326,15 +326,6 @@ public class Json extends FlatFile implements StorageBase {
         }
     }
 
-
-    public String getPathPrefix() {
-        return pathPrefix;
-    }
-
-    public void setPathPrefix(final String pathPrefix) {
-        this.pathPrefix = pathPrefix;
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {
@@ -345,7 +336,7 @@ public class Json extends FlatFile implements StorageBase {
             Json json = (Json) obj;
             return this.jsonObject.equals(json.jsonObject)
                     && this.pathPrefix.equals(json.pathPrefix)
-                    && super.equals(json.flatFileInstance);
+                    && super.equals(json.getFlatFileInstance());
         }
     }
 }

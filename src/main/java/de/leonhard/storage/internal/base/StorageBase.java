@@ -10,13 +10,6 @@ import java.util.Set;
 @SuppressWarnings({"unused", "unchecked"})
 public interface StorageBase {
 
-    /**
-     * Returns the FilePath as String
-     *
-     * @return FilePath as String
-     */
-    String getFilePath();
-
     void update();
 
     Set<String> singleLayerKeySet();

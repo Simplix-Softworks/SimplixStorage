@@ -17,19 +17,15 @@ public class LightningFile extends FlatFile implements StorageBase {
 
     public LightningFile(final String name, final String path) {
         create(name, path, FileType.LS);
-        this.reloadSettings = ReloadSettings.INTELLIGENT;
+        setReloadSettings(ReloadSettings.INTELLIGENT);
     }
 
     public LightningFile(final String name, final String path, final ReloadSettings reloadSettings) {
-        this.reloadSettings = reloadSettings;
+        setReloadSettings(reloadSettings);
     }
 
     LightningFile(final File file) {
         create(file);
-    }
-
-    public String getName() {
-        return this.file.getName();
     }
 
     //added method for later implementation
@@ -93,7 +89,7 @@ public class LightningFile extends FlatFile implements StorageBase {
         } else {
             LightningFile lightningFile = (LightningFile) obj;
             return this.data.equals(lightningFile.data)
-                    && super.equals(lightningFile.flatFileInstance);
+                    && super.equals(lightningFile.getFlatFileInstance());
         }
     }
 }

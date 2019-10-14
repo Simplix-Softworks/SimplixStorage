@@ -6,6 +6,8 @@ import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.StorageBase;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
+@Getter
 public class Toml extends FlatFile implements StorageBase {
-    private FileData fileData;
+    @Setter
     private String pathPrefix;
+    private FileData fileData;
 
     public Toml(final String name, final String path) {
         create(name, path, FileType.TOML);
@@ -30,10 +34,6 @@ public class Toml extends FlatFile implements StorageBase {
     public Toml(final File file) {
         create(file);
         update();
-    }
-
-    public String getName() {
-        return this.file.getName();
     }
 
     /**
@@ -57,9 +57,9 @@ public class Toml extends FlatFile implements StorageBase {
             return;
 
         try {
-            com.electronwill.toml.Toml.write(fileData.toMap(), file);
+            com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
         } catch (IOException e) {
-            System.err.println("Exception while writing to Toml file '" + file.getName() + "'");
+            System.err.println("Exception while writing to Toml file '" + getName() + "'");
             e.printStackTrace();
         }
     }
@@ -84,9 +84,9 @@ public class Toml extends FlatFile implements StorageBase {
 
     public void write(final Map<String, Object> data) {
         try {
-            com.electronwill.toml.Toml.write(data, file);
+            com.electronwill.toml.Toml.write(data, getFile());
         } catch (IOException e) {
-            System.err.println("Exception while writing fileData to file '" + file.getName() + "'");
+            System.err.println("Exception while writing fileData to file '" + getName() + "'");
             e.printStackTrace();
         }
     }
@@ -94,9 +94,9 @@ public class Toml extends FlatFile implements StorageBase {
     @Override
     public void update() {
         try {
-            fileData = new FileData(com.electronwill.toml.Toml.read(file));
+            fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
         } catch (IOException e) {
-            System.err.println("Exception while reading '" + file.getName() + "'");
+            System.err.println("Exception while reading '" + getName() + "'");
             e.printStackTrace();
         }
     }
@@ -144,15 +144,6 @@ public class Toml extends FlatFile implements StorageBase {
         write(fileData.toMap());
     }
 
-
-    public String getPathPrefix() {
-        return pathPrefix;
-    }
-
-    public void setPathPrefix(final String pathPrefix) {
-        this.pathPrefix = pathPrefix;
-    }
-
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {
@@ -163,7 +154,7 @@ public class Toml extends FlatFile implements StorageBase {
             Toml toml = (Toml) obj;
             return this.fileData.equals(toml.fileData)
                     && this.pathPrefix.equals(toml.pathPrefix)
-                    && super.equals(toml.flatFileInstance);
+                    && super.equals(toml.getFlatFileInstance());
         }
     }
 }
