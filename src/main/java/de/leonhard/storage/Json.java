@@ -26,7 +26,7 @@ public class Json extends FlatFile implements StorageBase {
     private JSONObject jsonObject;
 
     /**
-     * Creates a .json file where you can put your data in.+
+     * Creates a .json file where you can put your data in.
      *
      * @param name Name of the .json file
      * @param path Absolute path, where the .json file should be created.

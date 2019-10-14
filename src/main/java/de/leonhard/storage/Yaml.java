@@ -33,6 +33,7 @@ public class Yaml extends FlatFile implements StorageBase {
         create(name, path, FileType.YAML);
         yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
+
         update();
     }
 
@@ -74,6 +75,7 @@ public class Yaml extends FlatFile implements StorageBase {
         }
         yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
+
         update();
     }
 
@@ -113,6 +115,7 @@ public class Yaml extends FlatFile implements StorageBase {
             }
             yamlEditor = new YamlEditor(getFile());
             parser = new YamlParser(yamlEditor);
+
             update();
         } else {
             yamlEditor = null;
@@ -135,6 +138,7 @@ public class Yaml extends FlatFile implements StorageBase {
         }
         yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
+
         update();
     }
 
@@ -154,6 +158,7 @@ public class Yaml extends FlatFile implements StorageBase {
         setReloadSettings(reloadSettings);
         yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
+
         update();
     }
 
@@ -173,6 +178,7 @@ public class Yaml extends FlatFile implements StorageBase {
             }
             yamlEditor = new YamlEditor(getFile());
             parser = new YamlParser(yamlEditor);
+
             update();
         } else {
             yamlEditor = null;
@@ -194,6 +200,7 @@ public class Yaml extends FlatFile implements StorageBase {
         }
         yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
+
         update();
     }
 
@@ -212,6 +219,7 @@ public class Yaml extends FlatFile implements StorageBase {
         setReloadSettings(reloadSettings);
         yamlEditor = new YamlEditor(getFile());
         parser = new YamlParser(yamlEditor);
+
         update();
     }
 
@@ -230,6 +238,7 @@ public class Yaml extends FlatFile implements StorageBase {
             }
             yamlEditor = new YamlEditor(getFile());
             parser = new YamlParser(yamlEditor);
+
             update();
         } else {
             yamlEditor = null;
