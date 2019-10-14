@@ -11,13 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 @Setter
 @Getter
 public class Config extends Yaml {
 
     private List<String> header;
-    private ConfigSettings configSettings;
 
     public Config(final String name, final String path) {
         super(name, path);
@@ -117,7 +116,7 @@ public class Config extends Yaml {
         if (configSettings.equals(ConfigSettings.skipComments))
             return new ArrayList<>();
 
-        if (!shouldReload(reloadSettings))
+        if (!shouldReload())
             return header;
         try {
             return yamlEditor.readHeader();
@@ -171,11 +170,14 @@ public class Config extends Yaml {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
-            Config config = (Config) obj;
-            return this.file.equals(config.file);
-        } else {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
             return false;
+        } else {
+            Config config = (Config) obj;
+            return this.header.equals(config.header)
+                    && super.equals(config.yamlInstance);
         }
     }
 }

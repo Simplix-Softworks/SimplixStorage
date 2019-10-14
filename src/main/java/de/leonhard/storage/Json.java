@@ -1,11 +1,6 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.base.FileType;
-import de.leonhard.storage.base.FlatFile;
-import de.leonhard.storage.base.ReloadSettings;
-import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.utils.FileData;
-import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.base.*;
 import de.leonhard.storage.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,8 +13,8 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings({"Duplicates", "unused", "WeakerAccess", "unchecked"})
-public class Json extends FlatFile implements StorageBase, Comparable<Json> {
-    private JSONObject object;
+public class Json extends FlatFile implements StorageBase {
+    private JSONObject jsonObject;
     private String pathPrefix;
 
     /**
@@ -42,14 +37,14 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
             }
 
             if (file.length() == 0) {
-                object = new JSONObject();
+                jsonObject = new JSONObject();
                 Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
-                writer.write(object.toString(2));
+                writer.write(jsonObject.toString(2));
                 writer.close();
             }
 
             final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
-            object = new JSONObject(tokener);
+            jsonObject = new JSONObject(tokener);
 
             fis.close();
         } catch (IOException e) {
@@ -76,14 +71,14 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
             }
 
             if (file.length() == 0) {
-                object = new JSONObject();
+                jsonObject = new JSONObject();
                 Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
-                writer.write(object.toString(3));
+                writer.write(jsonObject.toString(3));
                 writer.close();
             }
 
             final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
-            object = new JSONObject(tokener);
+            jsonObject = new JSONObject(tokener);
 
         } catch (Exception ex) {
             System.err.println(
@@ -108,14 +103,14 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
             }
 
             if (file.length() == 0) {
-                object = new JSONObject();
+                jsonObject = new JSONObject();
                 Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
-                writer.write(object.toString(2));
+                writer.write(jsonObject.toString(2));
                 writer.close();
             }
             this.reloadSettings = ReloadSettings.INTELLIGENT;
             JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
-            object = new JSONObject(tokener);
+            jsonObject = new JSONObject(tokener);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,9 +143,7 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
     }
 
     private void reload() {
-        if (!(ReloadSettings.MANUALLY.equals(reloadSettings)
-                || (ReloadSettings.INTELLIGENT.equals(reloadSettings)
-                && FileUtils.hasNotChanged(file, lastModified)))) {
+        if (shouldReload()) {
             update();
         }
     }
@@ -168,9 +161,9 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
             return null;
 
         if (key.contains(".")) {
-            return new FileData(object.toMap()).containsKey(key) ? new FileData(object.toMap()).get(key) : null;
+            return new FileData(jsonObject.toMap()).containsKey(key) ? new FileData(jsonObject.toMap()).get(key) : null;
         }
-        return object.has(key) ? object.get(key) : null;
+        return jsonObject.has(key) ? jsonObject.get(key) : null;
     }
 
     /**
@@ -203,7 +196,7 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
             return new HashMap<>();
         }
         if (map instanceof Map) {
-            return (Map<?, ?>) object.get(key);
+            return (Map<?, ?>) jsonObject.get(key);
         } else if (map instanceof JSONObject) {
             return JsonUtils.jsonToMap((JSONObject) map);
         }
@@ -220,28 +213,28 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
 
             if (finalKey.contains(".")) {
 
-                JSONObject old = this.object;
+                JSONObject old = this.jsonObject;
 
-                final FileData data = new FileData(object.toMap());
+                final FileData data = new FileData(jsonObject.toMap());
 
                 data.insert(finalKey, value);
 
-                object = new JSONObject(data.toMap());
+                jsonObject = new JSONObject(data.toMap());
                 try {
-                    if (old.toString().equals(object.toString()) && file.length() != 0)
+                    if (old.toString().equals(jsonObject.toString()) && file.length() != 0)
                         return;
 
-                    write(object);
+                    write(jsonObject);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 return;
             }
-            object.put(finalKey, value);
+            jsonObject.put(finalKey, value);
             try {
                 Writer writer = new PrintWriter(new FileWriter(file.getAbsolutePath()));
-                writer.write(object.toString(2));
+                writer.write(jsonObject.toString(2));
                 writer.close();
             } catch (IOException e) {
                 System.err.println("Couldn' t set " + finalKey + " " + value);
@@ -276,36 +269,36 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
             e.printStackTrace();
         }
         final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
-        object = new JSONObject(tokener);
+        jsonObject = new JSONObject(tokener);
     }
 
     @Override
     public Set<String> singleLayerKeySet() {
         reload();
-        return new FileData(object.toMap()).singleLayerKeySet();
+        return new FileData(jsonObject.toMap()).singleLayerKeySet();
     }
 
     @Override
     public Set<String> singleLayerKeySet(final String key) {
         reload();
-        return new FileData(object.toMap()).singleLayerKeySet(key);
+        return new FileData(jsonObject.toMap()).singleLayerKeySet(key);
     }
 
     @Override
     public Set<String> keySet() {
         reload();
-        return new FileData(object.toMap()).keySet();
+        return new FileData(jsonObject.toMap()).keySet();
     }
 
     @Override
     public Set<String> keySet(final String key) {
         reload();
-        return new FileData(object.toMap()).keySet(key);
+        return new FileData(jsonObject.toMap()).keySet(key);
     }
 
     private boolean has(final String key) {
         reload();
-        return new FileData(object.toMap()).containsKey(key);
+        return new FileData(jsonObject.toMap()).containsKey(key);
     }
 
     @Override
@@ -318,12 +311,12 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
     public void remove(final String key) {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        final Map obj = object.toMap();
+        final Map obj = jsonObject.toMap();
         obj.remove(finalKey);
 
-        object = new JSONObject(obj);
+        jsonObject = new JSONObject(obj);
         try {
-            write(object);
+            write(jsonObject);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -340,18 +333,16 @@ public class Json extends FlatFile implements StorageBase, Comparable<Json> {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
-            Json json = (Json) obj;
-            return this.file.equals(json.file);
-        } else {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
             return false;
+        } else {
+            Json json = (Json) obj;
+            return this.jsonObject.equals(json.jsonObject)
+                    && this.pathPrefix.equals(json.pathPrefix)
+                    && super.equals(json.flatFileInstance);
         }
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public int compareTo(final Json json) {
-        return this.file.compareTo(json.file);
     }
 
     @Override

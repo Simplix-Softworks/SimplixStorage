@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-class LightningFile extends FlatFile implements StorageBase, Comparable<LightningFile> {
+public class LightningFile extends FlatFile implements StorageBase {
 
-
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private Map<String, Object> data;
 
     public LightningFile(final String name, final String path) {
@@ -86,18 +86,15 @@ class LightningFile extends FlatFile implements StorageBase, Comparable<Lightnin
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
-            LightningFile lightningFile = (LightningFile) obj;
-            return this.file.equals(lightningFile.file);
-        } else {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
             return false;
+        } else {
+            LightningFile lightningFile = (LightningFile) obj;
+            return this.data.equals(lightningFile.data)
+                    && super.equals(lightningFile.flatFileInstance);
         }
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public int compareTo(final LightningFile lightningFile) {
-        return this.file.compareTo(lightningFile.file);
     }
 
     @Override

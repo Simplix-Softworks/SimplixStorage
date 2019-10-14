@@ -5,7 +5,6 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.base.*;
 import de.leonhard.storage.editor.YamlEditor;
 import de.leonhard.storage.editor.YamlParser;
-import de.leonhard.storage.utils.FileData;
 import de.leonhard.storage.utils.FileUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,15 +16,15 @@ import java.util.*;
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
 @Getter
 @Setter
-public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
+public class Yaml extends FlatFile implements StorageBase {
+    protected final Yaml yamlInstance = this;
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
     @Setter(AccessLevel.PRIVATE)
     protected FileData fileData;
     protected String pathPrefix;
     protected ConfigSettings configSettings = ConfigSettings.skipComments;
-    private BufferedInputStream configInputStream;
-    private FileOutputStream outputStream;
+    private final int BUFFER_SIZE = 8192;
 
 
     public Yaml(final String name, final String path) {
@@ -60,30 +59,17 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final String name, final String path, final String resourcefile) {
-        try {
-            if (create(name, path, FileType.YAML)) {
-                try {
-                    this.configInputStream = new BufferedInputStream(
-                            Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+        if (create(name, path, FileType.YAML)) {
+            try (BufferedInputStream configInputStream = new BufferedInputStream(
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                final byte[] data = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                    outputStream.write(data, 0, count);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
         }
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
@@ -91,30 +77,17 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
-        try {
-            if (create(name, path, FileType.YAML)) {
-                try {
-                    this.configInputStream = new BufferedInputStream(
-                            Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
-                    outputStream = new FileOutputStream(file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+        if (create(name, path, FileType.YAML)) {
+            try (BufferedInputStream configInputStream = new BufferedInputStream(
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(file)) {
+                final byte[] data = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                    outputStream.write(data, 0, count);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
         yamlEditor = new YamlEditor(file);
@@ -124,31 +97,18 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final File file, final String resourcefile) {
-        if (isYaml(file)) {
-            try {
-                if (create(file)) {
-                    try {
-                        this.configInputStream = new BufferedInputStream(
-                                Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml")));
-                        outputStream = new FileOutputStream(this.file);
-                        final byte[] data = new byte[1024];
-                        int count;
-                        while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                            outputStream.write(data, 0, count);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (this.configInputStream != null) {
-                            this.configInputStream.close();
-                        }
-                        if (outputStream != null) {
-                            outputStream.close();
-                        }
+        if (isYaml(file) && create(file)) {
+            if (create(file)) {
+                try (BufferedInputStream configInputStream = new BufferedInputStream(
+                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                    final byte[] data = new byte[BUFFER_SIZE];
+                    int count;
+                    while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                        outputStream.write(data, 0, count);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
@@ -160,30 +120,17 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final String name, final String path, final File resourcefile) {
-        try {
-            if (create(name, path, FileType.YAML)) {
-                try {
-                    this.configInputStream = new BufferedInputStream(
-                            Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+        if (create(name, path, FileType.YAML)) {
+            try (BufferedInputStream configInputStream = new BufferedInputStream(
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                final byte[] data = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                    outputStream.write(data, 0, count);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
         }
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
@@ -191,30 +138,17 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
-        try {
-            if (create(name, path, FileType.YAML)) {
-                try {
-                    this.configInputStream = new BufferedInputStream(
-                            Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+        if (create(name, path, FileType.YAML)) {
+            try (BufferedInputStream configInputStream = new BufferedInputStream(
+                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                final byte[] data = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                    outputStream.write(data, 0, count);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
         yamlEditor = new YamlEditor(file);
@@ -224,30 +158,17 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final File file, final File resourcefile) {
         if (isYaml(file)) {
-            try {
-                if (create(file)) {
-                    try {
-                        this.configInputStream = new BufferedInputStream(
-                                Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName())));
-                        outputStream = new FileOutputStream(this.file);
-                        final byte[] data = new byte[1024];
-                        int count;
-                        while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                            outputStream.write(data, 0, count);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (this.configInputStream != null) {
-                            this.configInputStream.close();
-                        }
-                        if (outputStream != null) {
-                            outputStream.close();
-                        }
+            if (create(file)) {
+                try (BufferedInputStream configInputStream = new BufferedInputStream(
+                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                    final byte[] data = new byte[BUFFER_SIZE];
+                    int count;
+                    while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                        outputStream.write(data, 0, count);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
@@ -259,29 +180,16 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final String name, final String path, final BufferedInputStream resourceStream) {
-        try {
-            if (create(name, path, FileType.YAML)) {
-                try {
-                    this.configInputStream = resourceStream;
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+        if (create(name, path, FileType.YAML)) {
+            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                final byte[] data = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                    outputStream.write(data, 0, count);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
         }
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
@@ -289,29 +197,16 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
-        try {
-            if (create(name, path, FileType.YAML)) {
-                try {
-                    this.configInputStream = resourceStream;
-                    outputStream = new FileOutputStream(this.file);
-                    final byte[] data = new byte[1024];
-                    int count;
-                    while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.configInputStream != null) {
-                        this.configInputStream.close();
-                    }
-                    if (outputStream != null) {
-                        outputStream.close();
-                    }
+        if (create(name, path, FileType.YAML)) {
+            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                final byte[] data = new byte[BUFFER_SIZE];
+                int count;
+                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                    outputStream.write(data, 0, count);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
         }
         this.reloadSettings = reloadSettings;
         yamlEditor = new YamlEditor(file);
@@ -321,29 +216,16 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
 
     public Yaml(final File file, final BufferedInputStream resourceStream) {
         if (isYaml(file)) {
-            try {
-                if (create(file)) {
-                    try {
-                        this.configInputStream = resourceStream;
-                        outputStream = new FileOutputStream(this.file);
-                        final byte[] data = new byte[1024];
-                        int count;
-                        while ((count = this.configInputStream.read(data, 0, 1024)) != -1) {
-                            outputStream.write(data, 0, count);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (this.configInputStream != null) {
-                            this.configInputStream.close();
-                        }
-                        if (outputStream != null) {
-                            outputStream.close();
-                        }
+            if (create(file)) {
+                try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.file)) {
+                    final byte[] data = new byte[BUFFER_SIZE];
+                    int count;
+                    while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
+                        outputStream.write(data, 0, count);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
             yamlEditor = new YamlEditor(file);
             parser = new YamlParser(yamlEditor);
@@ -430,15 +312,13 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     protected void reload() {
-        if (!(ReloadSettings.MANUALLY.equals(reloadSettings)
-                || (ReloadSettings.INTELLIGENT.equals(reloadSettings)
-                && FileUtils.hasNotChanged(file, lastModified)))) {
+        if (shouldReload()) {
             update();
         }
     }
 
     public boolean hasNotChanged() {
-        return FileUtils.hasNotChanged(file, lastModified);
+        return FileUtils.hasChanged(file, lastModified);
     }
 
     @Override
@@ -519,19 +399,18 @@ public class Yaml extends FlatFile implements StorageBase, Comparable<Yaml> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
-            Yaml yaml = (Yaml) obj;
-            return this.file.equals(yaml.file);
-        } else {
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
             return false;
+        } else {
+            Yaml yaml = (Yaml) obj;
+            return this.fileData.equals(yaml.fileData)
+                    && this.pathPrefix.equals(yaml.pathPrefix)
+                    && this.configSettings == yaml.configSettings
+                    && super.equals(yaml.flatFileInstance);
         }
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public int compareTo(final Yaml yaml) {
-        return this.file.compareTo(yaml.file);
     }
 
     @Override

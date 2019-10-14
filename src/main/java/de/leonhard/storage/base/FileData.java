@@ -1,4 +1,4 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.base;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -146,11 +146,13 @@ public class FileData {
 
     @Override
     public synchronized boolean equals(final Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        } else {
             FileData fileData = (FileData) obj;
             return this.localMap.equals(fileData.localMap);
-        } else {
-            return false;
         }
     }
 

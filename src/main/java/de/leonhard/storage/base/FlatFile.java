@@ -5,11 +5,12 @@ import de.leonhard.storage.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class FlatFile {
+public abstract class FlatFile implements Comparable<FlatFile> {
+    protected FlatFile flatFileInstance = this;
     protected File file;
-    private FileType fileType;
     protected long lastModified;
     protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+    private FileType fileType;
 
 
     /**
@@ -66,15 +67,12 @@ public class FlatFile {
         }
     }
 
-    protected final boolean shouldReload(final ReloadSettings reloadSettings) {
-        if (reloadSettings.equals(ReloadSettings.MANUALLY)) {
-            return true;
+    protected final boolean shouldReload() {
+        if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
+            return FileUtils.hasChanged(file, lastModified);
+        } else {
+            return false;
         }
-
-        if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
-            return FileUtils.hasNotChanged(file, lastModified);
-        }
-        return false;
     }
 
     public final File getFile() {
@@ -88,5 +86,35 @@ public class FlatFile {
     @SuppressWarnings("unused")
     public final FileType getFileType() {
         return fileType;
+    }
+
+    @Override
+    public synchronized boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        } else {
+            FlatFile flatFile = (FlatFile) obj;
+            return this.file.equals(flatFile.file)
+                    && this.lastModified == flatFile.lastModified
+                    && reloadSettings == flatFile.reloadSettings
+                    && fileType == flatFile.fileType;
+        }
+    }
+
+    @Override
+    public synchronized int compareTo(final FlatFile flatFile) {
+        return this.file.compareTo(flatFile.file);
+    }
+
+    @Override
+    public synchronized int hashCode() {
+        return this.file.hashCode();
+    }
+
+    @Override
+    public synchronized String toString() {
+        return this.file.getAbsolutePath();
     }
 }

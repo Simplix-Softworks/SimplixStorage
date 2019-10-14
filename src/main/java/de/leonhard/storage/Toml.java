@@ -1,11 +1,7 @@
 package de.leonhard.storage;
 
 
-import de.leonhard.storage.base.FileType;
-import de.leonhard.storage.base.FlatFile;
-import de.leonhard.storage.base.ReloadSettings;
-import de.leonhard.storage.base.StorageBase;
-import de.leonhard.storage.utils.FileData;
+import de.leonhard.storage.base.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
+public class Toml extends FlatFile implements StorageBase {
     private FileData fileData;
     private String pathPrefix;
 
@@ -130,7 +126,7 @@ public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
      * information
      */
     private void reload() {
-        if (shouldReload(reloadSettings)) {
+        if (shouldReload()) {
             update();
         }
     }
@@ -155,18 +151,16 @@ public class Toml extends FlatFile implements StorageBase, Comparable<Toml> {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj != null && this.getClass() == obj.getClass()) {
-            Toml toml = (Toml) obj;
-            return this.file.equals(toml.file);
-        } else {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
             return false;
+        } else {
+            Toml toml = (Toml) obj;
+            return this.fileData.equals(toml.fileData)
+                    && this.pathPrefix.equals(toml.pathPrefix)
+                    && super.equals(toml.flatFileInstance);
         }
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public int compareTo(final Toml toml) {
-        return this.file.compareTo(toml.file);
     }
 
     @Override
