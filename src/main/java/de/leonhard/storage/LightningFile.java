@@ -6,9 +6,7 @@ import de.leonhard.storage.internal.base.StorageBase;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 
-import java.io.*;
-import java.util.Base64;
-import java.util.Map;
+import java.io.File;
 import java.util.Set;
 
 @SuppressWarnings("unused")
@@ -92,45 +90,5 @@ public class LightningFile extends FlatFile implements StorageBase {
             return this.fileData.equals(lightningFile.fileData)
                     && super.equals(lightningFile.getFlatFileInstance());
         }
-    }
-
-    public void write(PrintWriter writer) {
-        for (String key : fileData.singleLayerKeySet()) {
-            if (fileData.get(key) instanceof Map) {
-                //noinspection unchecked
-                write((Map<String, Object>) fileData.get(key), writer, "");
-            } else {
-                writer.println(key + " = " + fileData.get(key));
-            }
-        }
-    }
-
-    private void write(Map<String, Object> map, PrintWriter writer, String indentation) {
-        for (String key : map.keySet()) {
-            if (map.get(key) instanceof Map) {
-                //noinspection unchecked
-                write((Map<String, Object>) map.get(key), writer, indentation + "  ");
-            } else {
-                writer.println(indentation + key + " = " + map.get(key));
-            }
-        }
-    }
-
-    private String serialize(Serializable o) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(o);
-        oos.close();
-        return Base64.getEncoder().encodeToString(baos.toByteArray());
-    }
-
-    private Map<String, Object> deserialize(String s) throws IOException,
-            ClassNotFoundException {
-        byte[] data = Base64.getDecoder().decode(s);
-        ObjectInputStream ois = new ObjectInputStream(
-                new ByteArrayInputStream(data));
-        Object o = ois.readObject();
-        ois.close();
-        return (Map<String, Object>) o;
     }
 }
