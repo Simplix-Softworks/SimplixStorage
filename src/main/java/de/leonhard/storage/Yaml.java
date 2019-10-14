@@ -10,7 +10,6 @@ import de.leonhard.storage.internal.editor.YamlParser;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
-import de.leonhard.storage.internal.utils.FileUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -255,14 +254,10 @@ public class Yaml extends FlatFile implements StorageBase {
 
     @Override
     public void set(final String key, final Object value) {
-        insert(key, value, this.configSettings);
+        set(key, value, this.configSettings);
     }
 
-    public void set(final String key, final Object value, final ConfigSettings configSettings) {
-        insert(key, value, configSettings);
-    }
-
-    private void insert(final String key, final Object value, final ConfigSettings configSettings) {
+    private void set(final String key, final Object value, final ConfigSettings configSettings) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -320,10 +315,6 @@ public class Yaml extends FlatFile implements StorageBase {
         if (shouldReload()) {
             update();
         }
-    }
-
-    public boolean hasNotChanged() {
-        return FileUtils.hasChanged(file, lastModified);
     }
 
     @Override
