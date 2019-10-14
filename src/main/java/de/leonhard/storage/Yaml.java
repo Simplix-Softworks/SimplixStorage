@@ -47,8 +47,8 @@ public class Yaml extends FlatFile implements StorageBase {
     }
 
     public Yaml(final File file) {
-        if (isYaml(getFile())) {
-            create(getFile());
+        if (isYaml(file)) {
+            create(file);
 
             update();
 
@@ -100,8 +100,8 @@ public class Yaml extends FlatFile implements StorageBase {
     }
 
     public Yaml(final File file, final String resourcefile) {
-        if (isYaml(getFile()) && create(getFile())) {
-            if (create(getFile())) {
+        if (isYaml(file)) {
+            if (create(file)) {
                 try (BufferedInputStream configInputStream = new BufferedInputStream(
                         Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                     final byte[] data = new byte[BUFFER_SIZE];
@@ -163,8 +163,8 @@ public class Yaml extends FlatFile implements StorageBase {
     }
 
     public Yaml(final File file, final File resourcefile) {
-        if (isYaml(getFile())) {
-            if (create(getFile())) {
+        if (isYaml(file)) {
+            if (create(file)) {
                 try (BufferedInputStream configInputStream = new BufferedInputStream(
                         Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                     final byte[] data = new byte[BUFFER_SIZE];
@@ -224,8 +224,8 @@ public class Yaml extends FlatFile implements StorageBase {
     }
 
     public Yaml(final File file, final BufferedInputStream resourceStream) {
-        if (isYaml(getFile())) {
-            if (create(getFile())) {
+        if (isYaml(file)) {
+            if (create(file)) {
                 try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
                     final byte[] data = new byte[BUFFER_SIZE];
                     int count;
@@ -246,11 +246,11 @@ public class Yaml extends FlatFile implements StorageBase {
         }
     }
 
-    public static boolean isYaml(final String file) {
-        return (file.lastIndexOf(".") > 0 ? file.substring(file.lastIndexOf(".") + 1) : "").equals("yml");
+    protected final boolean isYaml(final String fileName) {
+        return (fileName.lastIndexOf(".") > 0 ? fileName.substring(fileName.lastIndexOf(".") + 1) : "").equals("yml");
     }
 
-    public static boolean isYaml(final File file) {
+    protected final boolean isYaml(final File file) {
         return isYaml(file.getName());
     }
 
