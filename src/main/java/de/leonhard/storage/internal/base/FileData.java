@@ -63,10 +63,10 @@ public class FileData {
     public synchronized void insert(final String key, final Object value) {
         final String[] parts = key.split("\\.");
         //noinspection unchecked
-        localMap.put(parts[0], localMap.containsKey(parts[0])
-                ? (localMap.get(parts[0]) instanceof Map
+        localMap.put(parts[0],
+                localMap.containsKey(parts[0])
+                && (localMap.get(parts[0]) instanceof Map
                 ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-                : insert(new HashMap<>(), parts, value, 1))
                 : insert(new HashMap<>(), parts, value, 1));
     }
 
