@@ -26,11 +26,12 @@ public abstract class FlatFile implements Comparable<FlatFile> {
 	 * @param fileType .yml/.json  Uses the Enum FileType
 	 */
 	protected final synchronized void create(final String name, final String path, final FileType fileType) {
+		file = new File(path, name + "." + fileType);
+
 		if (file.exists()) {
 			return;
 		}
 		this.fileType = fileType;
-		file = new File(path, name + "." + fileType);
 		if (file.exists()) {
 			lastModified = System.currentTimeMillis();
 		} else {
