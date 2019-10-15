@@ -24,14 +24,15 @@ public abstract class FlatFile implements Comparable<FlatFile> {
 	 * @param name     Name of the file
 	 * @param path     Absolute path where the file should be created
 	 * @param fileType .yml/.json  Uses the Enum FileType
-	 * @return true if file was created.
 	 */
-	protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
+	protected final synchronized void create(final String name, final String path, final FileType fileType) {
+		if (file.exists()) {
+			return;
+		}
 		this.fileType = fileType;
 		file = new File(path, name + "." + fileType);
 		if (file.exists()) {
 			lastModified = System.currentTimeMillis();
-			return false;
 		} else {
 			try {
 				if (file.getAbsoluteFile().getParentFile().exists() || file.getAbsoluteFile().getParentFile().mkdirs()) {
@@ -45,16 +46,14 @@ public abstract class FlatFile implements Comparable<FlatFile> {
 				ex.printStackTrace();
 			}
 			lastModified = System.currentTimeMillis();
-			return true;
 		}
 	}
 
-	protected final synchronized boolean create(final File file) {
+	protected final synchronized void create(final File file) {
 		this.fileType = FileType.getFileType(file);
 		this.file = file;
 		if (this.file.exists()) {
 			lastModified = System.currentTimeMillis();
-			return false;
 		} else {
 			try {
 				if (this.file.getAbsoluteFile().getParentFile().exists() || file.getAbsoluteFile().getParentFile().mkdirs()) {
@@ -68,7 +67,6 @@ public abstract class FlatFile implements Comparable<FlatFile> {
 				ex.printStackTrace();
 			}
 			lastModified = System.currentTimeMillis();
-			return true;
 		}
 	}
 
