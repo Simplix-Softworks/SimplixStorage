@@ -38,8 +38,7 @@ public class Yaml extends FlatFile implements StorageBase {
 	}
 
 	public Yaml(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
-		boolean existing = create(name, path, FileType.YAML);
-		if (existing) {
+		if (create(name, path, FileType.YAML)) {
 			if (inputStream != null) {
 				FileUtils.copy(inputStream, file.toPath());
 			}

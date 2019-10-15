@@ -18,7 +18,6 @@ public abstract class FlatFile implements Comparable<FlatFile> {
 	protected FileType fileType;
 	private long lastModified;
 
-
 	/**
 	 * Creates an empty .yml or .json file.
 	 *
@@ -34,17 +33,7 @@ public abstract class FlatFile implements Comparable<FlatFile> {
 			lastModified = System.currentTimeMillis();
 			return false;
 		} else {
-			try {
-				if (file.getAbsoluteFile().getParentFile().exists() || file.getAbsoluteFile().getParentFile().mkdirs()) {
-					if (!file.createNewFile()) {
-						throw new IOException();
-					}
-				}
-			} catch (IOException ex) {
-				System.err.println("Exception while creating File '" + file.getName() + "'");
-				System.err.println("Path: '" + file.getAbsolutePath() + "'");
-				ex.printStackTrace();
-			}
+			FileUtils.getAndMake(file);
 			lastModified = System.currentTimeMillis();
 			return true;
 		}
