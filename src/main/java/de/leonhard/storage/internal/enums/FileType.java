@@ -1,11 +1,13 @@
 package de.leonhard.storage.internal.enums;
 
+import java.io.File;
+
 public enum FileType {
-    JSON(".json"),
-    YAML(".yml"),
-    TOML(".toml"),
-    CSV(".csv"),
-    LS(".ls");
+    JSON("json"),
+    YAML("yml"),
+    TOML("toml"),
+    CSV("csv"),
+    LS("ls");
 
 
     private String extension;
