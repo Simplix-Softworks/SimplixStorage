@@ -16,11 +16,10 @@ public class FileData {
 
     private final HashMap<String, Object> localMap;
 
-    /**
-     * Constructor for FileData
-     *
-     * @param map the the class utilizes.
-     */
+    public FileData() {
+        this.localMap = new HashMap<>();
+    }
+
     public FileData(final Map<String, Object> map) {
         localMap = new HashMap<>(map);
     }
