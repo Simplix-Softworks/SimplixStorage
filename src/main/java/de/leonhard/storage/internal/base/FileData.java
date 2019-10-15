@@ -25,6 +25,14 @@ public class FileData {
 		localMap = new HashMap<>(map);
 	}
 
+	public FileData() {
+		localMap = new HashMap<>();
+	}
+
+	public FileData(final JSONObject jsonObject) {
+		localMap = new HashMap<>(jsonObject.toMap());
+	}
+
 
 	/**
 	 * Method to get the object assign to a key from a FileData Object.
@@ -243,7 +251,7 @@ public class FileData {
 	 * Get localMap.
 	 *
 	 * @return localMap.
-	 * @throws IllegalStateException() if localMap is null.
+	 * @throws IllegalStateException() Thrown if localMap is null.
 	 */
 	public synchronized Map<String, Object> toMap() {
 		if (localMap == null) {
