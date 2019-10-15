@@ -30,31 +30,52 @@ public class LightningFile extends FlatFile implements StorageBase {
     //added method for later implementation
     @Override
     public void update() {
-
+        //TODO
     }
 
+    //added method for later implementation
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> singleLayerKeySet() {
         return null;
     }
 
+    //added method for later implementation
     @Override
-    public void removeKey(String key) {
+    public Set<String> singleLayerKeySet(final String key) {
+        return null;
+    }
 
+    //added method for later implementation
+    @Override
+    public Set<String> keySet() {
+        return null;
+    }
+
+    //added method for later implementation
+    @Override
+    public Set<String> keySet(final String key) {
+        return null;
+    }
+
+    //added method for later implementation
+    @Override
+    public void remove(final String key) {
+        //TODO
+    }
+
+    //added method for later implementation
+    @Override
+    public void set(final String key, final Object value) {
+        //TODO
     }
 
     @Override
-    public void set(String key, Object value) {
-
-    }
-
-    @Override
-    public boolean contains(String key) {
+    public boolean contains(final String key) {
         return false;
     }
 
     @Override
-    public Object get(String key) {
+    public Object get(final String key) {
         return null;
     }
 
