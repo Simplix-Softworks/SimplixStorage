@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.io.File;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
 @Getter
 public abstract class FlatFile implements Comparable<FlatFile> {
     @Setter
