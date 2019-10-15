@@ -10,18 +10,22 @@ import java.util.List;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class Config extends Yaml {
+
     private List<String> header;
 
     public Config(String name, String path) {
         super(name, path);
+        this.setConfigSettings(ConfigSettings.preserveComments);
     }
 
     public Config(String name, String path, InputStream inputStream) {
         super(name, path, inputStream);
+        this.setConfigSettings(ConfigSettings.preserveComments);
     }
 
     public Config(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
         super(name, path, inputStream, reloadSettings);
+        this.setConfigSettings(ConfigSettings.preserveComments);
     }
 
     @Override
