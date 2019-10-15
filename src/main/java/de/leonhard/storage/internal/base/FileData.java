@@ -65,19 +65,19 @@ public class FileData {
         //noinspection unchecked
         localMap.put(parts[0],
                 localMap.containsKey(parts[0])
-                && (localMap.get(parts[0]) instanceof Map
+                && localMap.get(parts[0]) instanceof Map
                 ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-                : insert(new HashMap<>(), parts, value, 1));
+                : insert(new HashMap<>(), parts, value, 1);
     }
 
     private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
             //noinspection unchecked
-            Map<String, Object> childMap = map.containsKey(key[id])
-                    ? (map.get(key[id]) instanceof Map
-                    ? (Map<String, Object>) map.get(key[id])
-                    : new HashMap<>())
+            Map<String, Object> childMap =
+                    map.containsKey(key[id])
+                    && (map.get(key[id]) instanceof Map
+                    ? Map<String, Object>) map.get(key[id])
                     : new HashMap<>();
             tempMap.put(key[id], insert(childMap, key, value, id + 1));
             return tempMap;
