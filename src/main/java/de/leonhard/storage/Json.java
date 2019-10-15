@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,13 +29,7 @@ public class Json extends FlatFile implements StorageBase {
 	public Json(final String name, final String path) {
 		try {
 			create(name, path, FileType.JSON);
-
-			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(getFile());
-			} catch (FileNotFoundException | NullPointerException e) {
-				e.printStackTrace();
-			}
+			final InputStream inputStream = Files.newInputStream(file.toPath());
 
 			if (getFile().length() == 0) {
 				jsonObject = new JSONObject();
@@ -43,13 +38,14 @@ public class Json extends FlatFile implements StorageBase {
 				writer.close();
 			}
 
-			final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
+			final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(inputStream));
 			jsonObject = new JSONObject(tokener);
 
-			fis.close();
-		} catch (Exception ex) {
-			System.err.println(
-					"Error while creating file - Maybe wrong format - Try deleting the file " + Objects.requireNonNull(getFile()).getName());
+			inputStream.close();
+
+		} catch (final Exception ex) {
+			System.err.println("Error creating JSON '" + file.getName() + "'");
+			System.err.println("In '" + file.getAbsolutePath() + "'");
 			ex.printStackTrace();
 		}
 	}
