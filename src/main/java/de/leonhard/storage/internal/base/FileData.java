@@ -1,5 +1,8 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.utils.JsonUtils;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -228,6 +231,11 @@ public class FileData {
 			}
 		}
 		return size;
+	}
+
+
+	public JSONObject toJsonObject() {
+		return JsonUtils.getJsonFromMap(localMap);
 	}
 
 
