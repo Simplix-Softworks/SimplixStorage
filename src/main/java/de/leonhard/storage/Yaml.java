@@ -10,10 +10,13 @@ import de.leonhard.storage.internal.editor.YamlParser;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.utils.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
@@ -26,225 +29,38 @@ public class Yaml extends FlatFile implements StorageBase {
     private final YamlEditor yamlEditor;
     private final YamlParser parser;
     private FileData fileData;
-    private final int BUFFER_SIZE = 8192;
 
 
-    public Yaml(final String name, final String path) {
+    public Yaml(final String name, final String path, final ReloadSettings reloadSettings){
+        this(name, path, null, reloadSettings);
+    }
+
+    public Yaml(final String name, final String path){
+        this(name, path, null, null);
+    }
+
+    public Yaml(final String name, final String path, final FileInputStream fileInputStream){
+        this(name, path, fileInputStream, null);
+    }
+
+    public Yaml(final String name, final String path, final FileInputStream fileInputStream, final ReloadSettings reloadSettings){
         create(name, path, FileType.YAML);
-        yamlEditor = new YamlEditor(getFile());
+        yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
-
         update();
-    }
-
-    public Yaml(final String name, final String path, final ReloadSettings reloadSettings) {
-        create(name, path, FileType.YAML);
-        setReloadSettings(reloadSettings);
-        yamlEditor = new YamlEditor(getFile());
-        parser = new YamlParser(yamlEditor);
-
-        update();
-    }
-
-    public Yaml(final File file) {
-        if (isYaml(file)) {
-            create(file);
-
-            update();
-
-            yamlEditor = new YamlEditor(getFile());
-            parser = new YamlParser(yamlEditor);
-        } else {
-            yamlEditor = null;
-            parser = null;
+        if(reloadSettings != null)
+            setReloadSettings(reloadSettings);
+        if(fileInputStream == null)
+            return;
+        try {
+            Files.copy(fileInputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.err.println("Exception while creating YAML + '" + file.getName() + "'.");
+            System.err.println("Path: '" + file.getAbsolutePath() + "'.");
+            e.printStackTrace();
         }
     }
 
-    public Yaml(final String name, final String path, final String resourcefile) {
-        if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                final byte[] data = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                    outputStream.write(data, 0, count);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        yamlEditor = new YamlEditor(getFile());
-        parser = new YamlParser(yamlEditor);
-
-        update();
-    }
-
-    public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
-        if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(getFile())) {
-                final byte[] data = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                    outputStream.write(data, 0, count);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        setReloadSettings(reloadSettings);
-        yamlEditor = new YamlEditor(getFile());
-        parser = new YamlParser(yamlEditor);
-
-        update();
-    }
-
-    public Yaml(final File file, final String resourcefile) {
-        if (isYaml(file)) {
-            if (create(file)) {
-                try (BufferedInputStream configInputStream = new BufferedInputStream(
-                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile + ".yml"))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                    final byte[] data = new byte[BUFFER_SIZE];
-                    int count;
-                    while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            yamlEditor = new YamlEditor(getFile());
-            parser = new YamlParser(yamlEditor);
-
-            update();
-        } else {
-            yamlEditor = null;
-            parser = null;
-        }
-    }
-
-    public Yaml(final String name, final String path, final File resourcefile) {
-        if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                final byte[] data = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                    outputStream.write(data, 0, count);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        yamlEditor = new YamlEditor(getFile());
-        parser = new YamlParser(yamlEditor);
-
-        update();
-    }
-
-    public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
-        if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = new BufferedInputStream(
-                    Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                final byte[] data = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                    outputStream.write(data, 0, count);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        setReloadSettings(reloadSettings);
-        yamlEditor = new YamlEditor(getFile());
-        parser = new YamlParser(yamlEditor);
-
-        update();
-    }
-
-    public Yaml(final File file, final File resourcefile) {
-        if (isYaml(file)) {
-            if (create(file)) {
-                try (BufferedInputStream configInputStream = new BufferedInputStream(
-                        Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream(resourcefile.getName()))); FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                    final byte[] data = new byte[BUFFER_SIZE];
-                    int count;
-                    while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            yamlEditor = new YamlEditor(getFile());
-            parser = new YamlParser(yamlEditor);
-
-            update();
-        } else {
-            yamlEditor = null;
-            parser = null;
-        }
-    }
-
-    public Yaml(final String name, final String path, final BufferedInputStream resourceStream) {
-        if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                final byte[] data = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                    outputStream.write(data, 0, count);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        yamlEditor = new YamlEditor(getFile());
-        parser = new YamlParser(yamlEditor);
-
-        update();
-    }
-
-    public Yaml(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
-        if (create(name, path, FileType.YAML)) {
-            try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                final byte[] data = new byte[BUFFER_SIZE];
-                int count;
-                while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                    outputStream.write(data, 0, count);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        setReloadSettings(reloadSettings);
-        yamlEditor = new YamlEditor(getFile());
-        parser = new YamlParser(yamlEditor);
-
-        update();
-    }
-
-    public Yaml(final File file, final BufferedInputStream resourceStream) {
-        if (isYaml(file)) {
-            if (create(file)) {
-                try (BufferedInputStream configInputStream = resourceStream; FileOutputStream outputStream = new FileOutputStream(this.getFile())) {
-                    final byte[] data = new byte[BUFFER_SIZE];
-                    int count;
-                    while ((count = configInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
-                        outputStream.write(data, 0, count);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            yamlEditor = new YamlEditor(getFile());
-            parser = new YamlParser(yamlEditor);
-
-            update();
-        } else {
-            yamlEditor = null;
-            parser = null;
-        }
-    }
 
     protected final boolean isYaml(final String fileName) {
         return (fileName.lastIndexOf(".") > 0 ? fileName.substring(fileName.lastIndexOf(".") + 1) : "").equals("yml");
