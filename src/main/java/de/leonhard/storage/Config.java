@@ -24,7 +24,6 @@ public class Config extends Yaml {
 		super(name, path, inputStream, reloadSettings);
 	}
 
-
 	@Override
 	public void set(final String key, final Object value) {
 		super.set(key, value, getConfigSettings());

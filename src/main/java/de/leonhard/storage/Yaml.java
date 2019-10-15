@@ -40,22 +40,17 @@ public class Yaml extends FlatFile implements StorageBase {
 
 	public Yaml(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
 		create(name, path, FileType.YAML);
+
+		if (inputStream != null) {
+			Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		}
 		yamlEditor = new YamlEditor(file);
 		parser = new YamlParser(yamlEditor);
 		update();
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
-		if (inputStream == null) {
-			return;
-		}
-		try {
-			Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			System.err.println("Exception while creating YAML + '" + file.getName() + "'.");
-			System.err.println("Path: '" + file.getAbsolutePath() + "'.");
-			e.printStackTrace();
-		}
+
 	}
 
 
@@ -138,7 +133,11 @@ public class Yaml extends FlatFile implements StorageBase {
 		YamlReader reader = null;
 		try {
 			reader = new YamlReader(new FileReader(getFile()));// Needed?
-			fileData = new FileData((Map<String, Object>) reader.read());
+			Map<String, Object> map = (Map<String, Object>) reader.read();
+			if (map == null) {
+				map = new HashMap<>();
+			}
+			fileData = new FileData(map);
 		} catch (IOException e) {
 			System.err.println("Exception while reloading yaml");
 			e.printStackTrace();

@@ -2,7 +2,10 @@ package de.leonhard.storage.internal.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +20,15 @@ public class FileUtils {
 		return getAndMake(new File(path, name));
 	}
 
+
+	public static void copy(final InputStream inputStream, final Path destination) {
+		try {
+			Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
+		} catch (final Exception exception) {
+			System.err.println("Exception while copying to + '" + destination.toAbsolutePath() + "'");
+			exception.printStackTrace();
+		}
+	}
 
 	public static File getAndMake(final File file) {
 		try {
