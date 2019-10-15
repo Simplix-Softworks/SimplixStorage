@@ -5,133 +5,140 @@ import de.leonhard.storage.internal.enums.ReloadSettings;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class Config extends Yaml {
-    private List<String> header;
+	private List<String> header;
 
-    public Config(String name, String path, ReloadSettings reloadSettings) {
-        super(name, path, reloadSettings);
-    }
+	public Config(String name, String path, ReloadSettings reloadSettings) {
+		super(name, path, reloadSettings);
+	}
 
-    public Config(String name, String path) {
-        super(name, path);
-    }
+	public Config(String name, String path) {
+		super(name, path);
+	}
 
-    public Config(String name, String path, FileInputStream fileInputStream) {
-        super(name, path, fileInputStream);
-    }
+	public Config(String name, String path, FileInputStream fileInputStream) {
+		super(name, path, fileInputStream);
+	}
 
-    public Config(String name, String path, FileInputStream fileInputStream, ReloadSettings reloadSettings) {
-        super(name, path, fileInputStream, reloadSettings);
-    }
-
-
-    @Override
-    public void set(final String key, final Object value) {
-        super.set(key, value, getConfigSettings());
-    }
-
-    @Override
-    public void setDefault(final String key, final Object value) {
-        if (!contains(key)) {
-            set(key, value, getConfigSettings());
-        }
-    }
-
-    @Override
-    public <T> T getOrSetDefault(final String path, T def) {
-        reload();
-        if (!contains(path)) {
-            set(path, def, getConfigSettings());
-            return def;
-        } else {
-            Object obj = get(path); //
-            if (obj instanceof String && def instanceof Integer)
-                obj = Integer.parseInt((String) obj);
-            if (obj instanceof String && def instanceof Double)
-                obj = Double.parseDouble((String) obj);
-            if (obj instanceof String && def instanceof Float)
-                obj = Double.parseDouble((String) obj);
-            return (T) obj;
-        }
-    }
+	public Config(String name, String path, InputStream inputStream, ReloadSettings reloadSettings) {
+		super(name, path, inputStream, reloadSettings);
+	}
 
 
-    public List<String> getHeader() {
+	@Override
+	public void set(final String key, final Object value) {
+		super.set(key, value, getConfigSettings());
+	}
 
-        if (getConfigSettings().equals(ConfigSettings.skipComments))
-            return new ArrayList<>();
+	@Override
+	public void setDefault(final String key, final Object value) {
+		if (!contains(key)) {
+			set(key, value, getConfigSettings());
+		}
+	}
 
-        if (!shouldReload())
-            return header;
-        try {
-            return getYamlEditor().readHeader();
-        } catch (IOException e) {
-            System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
+	@Override
+	public <T> T getOrSetDefault(final String path, T def) {
+		reload();
+		if (!contains(path)) {
+			set(path, def, getConfigSettings());
+			return def;
+		} else {
+			Object obj = get(path); //
+			if (obj instanceof String && def instanceof Integer) {
+				obj = Integer.parseInt((String) obj);
+			}
+			if (obj instanceof String && def instanceof Double) {
+				obj = Double.parseDouble((String) obj);
+			}
+			if (obj instanceof String && def instanceof Float) {
+				obj = Double.parseDouble((String) obj);
+			}
+			return (T) obj;
+		}
+	}
 
-    @SuppressWarnings("unused")
-    public void setHeader(List<String> header) {
-        List<String> tmp = new ArrayList<>();
-        //Updating the values to have a comments, if someone forgets to set them
-        for (final String line : header) {
-            if (!line.startsWith("#")) {
-                tmp.add("#" + line);
-            } else {
-                tmp.add(line);
-            }
-        }
-        this.header = tmp;
 
-        if (getFile().length() == 0) {
-            try {
-                getYamlEditor().write(this.header);
-            } catch (IOException e) {
-                System.err.println("Error while setting header of '" + getName() + "'");
-                e.printStackTrace();
-            }
-            return;
-        }
+	@Override
+	public List<String> getHeader() {
 
-        try {
-            final List<String> lines = getYamlEditor().read();
+		if (getConfigSettings().equals(ConfigSettings.skipComments)) {
+			return new ArrayList<>();
+		}
 
-            final List<String> oldHeader = getYamlEditor().readHeader();
-            final List<String> footer = getYamlEditor().readFooter();
-            lines.removeAll(oldHeader);
-            lines.removeAll(footer);
+		if (!shouldReload()) {
+			return header;
+		}
+		try {
+			return getYamlEditor().readHeader();
+		} catch (IOException e) {
+			System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}
 
-            lines.addAll(header);
+	@SuppressWarnings("unused")
+	public void setHeader(List<String> header) {
+		List<String> tmp = new ArrayList<>();
+		//Updating the values to have a comments, if someone forgets to set them
+		for (final String line : header) {
+			if (!line.startsWith("#")) {
+				tmp.add("#" + line);
+			} else {
+				tmp.add(line);
+			}
+		}
+		this.header = tmp;
 
-            lines.addAll(footer);
+		if (getFile().length() == 0) {
+			try {
+				getYamlEditor().write(this.header);
+			} catch (IOException e) {
+				System.err.println("Error while setting header of '" + getName() + "'");
+				e.printStackTrace();
+			}
+			return;
+		}
 
-            getYamlEditor().write(lines);
-        } catch (final IOException e) {
-            System.err.println("Exception while modifying header of '" + getName() + "'");
-            e.printStackTrace();
-        }
-    }
+		try {
+			final List<String> lines = getYamlEditor().read();
 
-    protected Config getConfigInstance() {
-        return this;
-    }
+			final List<String> oldHeader = getYamlEditor().readHeader();
+			final List<String> footer = getYamlEditor().readFooter();
+			lines.removeAll(oldHeader);
+			lines.removeAll(footer);
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj == null || this.getClass() != obj.getClass()) {
-            return false;
-        } else {
-            Config config = (Config) obj;
-            return this.header.equals(config.header)
-                    && super.equals(config.getYamlInstance());
-        }
-    }
+			lines.addAll(header);
+
+			lines.addAll(footer);
+
+			getYamlEditor().write(lines);
+		} catch (final IOException e) {
+			System.err.println("Exception while modifying header of '" + getName() + "'");
+			e.printStackTrace();
+		}
+	}
+
+	protected Config getConfigInstance() {
+		return this;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			Config config = (Config) obj;
+			return this.header.equals(config.header)
+					&& super.equals(config.getYamlInstance());
+		}
+	}
 }
