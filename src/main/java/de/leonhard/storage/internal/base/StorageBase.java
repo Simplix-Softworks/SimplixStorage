@@ -29,7 +29,6 @@ public interface StorageBase {
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your file
 	 */
-
 	void set(String key, Object value);
 
 	/**
@@ -38,7 +37,6 @@ public interface StorageBase {
 	 * @param key Key to check
 	 * @return Returned value
 	 */
-
 	boolean contains(String key);
 
 	Object get(String key);
@@ -49,7 +47,6 @@ public interface StorageBase {
 	 * @param key Path to String in file
 	 * @return Returns the value
 	 */
-
 	default String getString(final String key) {
 		if (!contains(key)) {
 			return "";
@@ -64,7 +61,6 @@ public interface StorageBase {
 	 * @param key Path to long in file
 	 * @return String from file
 	 */
-
 	default long getLong(final String key) {
 		if (!contains(key)) {
 			return 0L;
@@ -79,7 +75,6 @@ public interface StorageBase {
 	 * @param key Path to int in file
 	 * @return Int from file
 	 */
-
 	default int getInt(final String key) {
 		if (!contains(key)) {
 			return 0;
@@ -94,7 +89,6 @@ public interface StorageBase {
 	 * @param key Path to byte in file
 	 * @return Byte from file
 	 */
-
 	default byte getByte(final String key) {
 		if (!contains(key)) {
 			return 0;
@@ -109,7 +103,6 @@ public interface StorageBase {
 	 * @param key Path to boolean in file
 	 * @return Boolean from file
 	 */
-
 	default boolean getBoolean(final String key) {
 		if (!contains(key)) {
 			return false;
@@ -124,7 +117,6 @@ public interface StorageBase {
 	 * @param key Path to float in file
 	 * @return Float from file
 	 */
-
 	default float getFloat(final String key) {
 		if (!contains(key)) {
 			return 0F;
@@ -139,7 +131,6 @@ public interface StorageBase {
 	 * @param key Path to double in the file
 	 * @return Double from file
 	 */
-
 	default double getDouble(final String key) {
 		if (!contains(key)) {
 			return 0D;
@@ -154,7 +145,6 @@ public interface StorageBase {
 	 * @param key Path to StringList in file
 	 * @return List
 	 */
-
 	default List<?> getList(final String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
@@ -169,7 +159,6 @@ public interface StorageBase {
 	 * @param key Path to String List in file
 	 * @return List
 	 */
-
 	default List<String> getStringList(final String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
@@ -184,7 +173,6 @@ public interface StorageBase {
 	 * @param key Path to Integer-List in file
 	 * @return Integer-List
 	 */
-
 	default List<Integer> getIntegerList(final String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
@@ -199,7 +187,6 @@ public interface StorageBase {
 	 * @param key Path to Byte-List from file
 	 * @return Byte-List
 	 */
-
 	default List<Byte> getByteList(final String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
@@ -214,7 +201,6 @@ public interface StorageBase {
 	 * @param key Path to Long-List in file
 	 * @return Long-List
 	 */
-
 	default List<Long> getLongList(final String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
@@ -229,7 +215,6 @@ public interface StorageBase {
 	 * @param key Path to Map-List in file
 	 * @return Map
 	 */
-
 	default Map getMap(final String key) {
 		return (Map) get(key);
 	}
@@ -241,7 +226,6 @@ public interface StorageBase {
 	 * @param key   Key to set the value
 	 * @param value Value to set
 	 */
-
 	default void setDefault(String key, Object value) {
 		if (!contains(key)) {
 			set(key, value);
@@ -255,14 +239,14 @@ public interface StorageBase {
 		} else {
 			Object obj = get(path); //
 			if (obj instanceof String && def instanceof Integer) {
-                obj = Integer.parseInt((String) obj);
-            } else if (obj instanceof String && def instanceof Double) {
-                obj = Double.parseDouble((String) obj);
-            } else if (obj instanceof String && def instanceof Float) {
-                obj = Double.parseDouble((String) obj);
-            } else if (obj instanceof String && def instanceof Boolean) {
-                return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
-            }
+				obj = Integer.parseInt((String) obj);
+			} else if (obj instanceof String && def instanceof Double) {
+				obj = Double.parseDouble((String) obj);
+			} else if (obj instanceof String && def instanceof Float) {
+				obj = Double.parseDouble((String) obj);
+			} else if (obj instanceof String && def instanceof Boolean) {
+				return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
+			}
 			return (T) obj;
 		}
 	}

@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * An extended HashMap, to easily use the nested HashMaps created by reading the Configuration files.
  */
+@SuppressWarnings("unused")
 public class FileData {
 
 	private final HashMap<String, Object> localMap;
@@ -24,13 +25,6 @@ public class FileData {
 		localMap = new HashMap<>(map);
 	}
 
-	public FileData() {
-		this.localMap = new HashMap<>();
-	}
-
-	public FileData(final JSONObject jsonObject) {
-		this(jsonObject.toMap());
-	}
 
 	/**
 	 * Method to get the object assign to a key from a FileData Object.
@@ -46,7 +40,7 @@ public class FileData {
 	private synchronized Object get(final Map<String, Object> map, final String[] key, final int id) {
 		if (id < key.length - 1) {
 			if (map.get(key[id]) instanceof Map) {
-				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+				@SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
 				return get(tempMap, key, id + 1);
 			} else {
 				return null;
@@ -71,6 +65,7 @@ public class FileData {
 	private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
 		if (id < key.length) {
 			Map<String, Object> tempMap = new HashMap<>(map);
+			//noinspection unchecked
 			Map<String, Object> childMap = map.containsKey(key[id]) ? (map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>()) : new HashMap<>();
 			tempMap.put(key[id], insert(childMap, key, value, id + 1));
 			return tempMap;
@@ -94,6 +89,7 @@ public class FileData {
 	private synchronized boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
 		if (id < key.length - 1) {
 			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
+				//noinspection unchecked
 				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
 				return containsKey(tempMap, key, id + 1);
 			} else {
@@ -147,6 +143,7 @@ public class FileData {
 	 * @return the keySet of the given layer or an empty set if the key does not exist.
 	 */
 	public synchronized Set<String> singleLayerKeySet(final String key) {
+		//noinspection unchecked
 		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
 	}
 
@@ -167,6 +164,7 @@ public class FileData {
 	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
 	 */
 	public synchronized Set<String> keySet(final String key) {
+		//noinspection unchecked
 		return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
 	}
 
@@ -174,6 +172,7 @@ public class FileData {
 		Set<String> localSet = new HashSet<>();
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
+				//noinspection unchecked
 				for (String tempKey : keySet((Map<String, Object>) map.get(key))) {
 					localSet.add(key + "." + tempKey);
 				}
@@ -204,11 +203,21 @@ public class FileData {
 		return get(key) instanceof Map ? ((Map) get(key)).size() : 0;
 	}
 
+	/**
+	 * Get the size of the local map.
+	 *
+	 * @return the size of all layers of localMap combined.
+	 */
 	public synchronized int size() {
 		return localMap.size();
 	}
 
-
+	/**
+	 * get the size of all sublayers of the given key combined.
+	 *
+	 * @param key the key of the layer
+	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
+	 */
 	public synchronized int size(final String key) {
 		return localMap.size();
 	}
@@ -217,30 +226,30 @@ public class FileData {
 		int size = map.size();
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
+				//noinspection unchecked
 				size += size((Map<String, Object>) map.get(key));
 			}
 		}
 		return size;
 	}
 
-	/**
-	 * Get localMap.
-	 *
-	 * @return localMap.
-	 * @throws IllegalStateException() Whether localMap is null.
-	 */
-	public synchronized Map<String, Object> toMap() {
-		if (localMap == null) {
-			throw new IllegalStateException("Couldn't get null");
-		}
-		return localMap;
-	}
-
-
 	public JSONObject toJsonObject() {
 		return JsonUtils.getJsonFromMap(localMap);
 	}
 
+	/**
+	 * Get localMap.
+	 *
+	 * @return localMap.
+	 * @throws IllegalStateException() if localMap is null.
+	 */
+	public synchronized Map<String, Object> toMap() {
+		if (localMap == null) {
+			throw new IllegalStateException("Couldn't get null");
+		} else {
+			return localMap;
+		}
+	}
 
 	@Override
 	public synchronized boolean equals(final Object obj) {
@@ -259,6 +268,11 @@ public class FileData {
 		return this.localMap.hashCode();
 	}
 
+	/**
+	 * convert FileData to string.
+	 *
+	 * @return the String value of localMap.
+	 */
 	@Override
 	public synchronized String toString() {
 		return this.localMap.toString();
