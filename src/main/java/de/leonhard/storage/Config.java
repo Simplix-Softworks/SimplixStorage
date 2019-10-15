@@ -12,16 +12,16 @@ import java.util.List;
 public class Config extends Yaml {
 	private List<String> header;
 
-	public Config(String name, String path, ReloadSettings reloadSettings) {
-		super(name, path, reloadSettings);
-	}
-
 	public Config(String name, String path) {
 		super(name, path);
 	}
 
 	public Config(String name, String path, InputStream inputStream) {
 		super(name, path, inputStream);
+	}
+
+	public Config(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
+		super(name, path, inputStream, reloadSettings);
 	}
 
 
