@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.leonhard</groupId>
+    <artifactId>lightningstorage</artifactId>
+    <version>2.5.6</version>
+    <name>LightningStorage</name>
+    <description>Store data in a better way</description>
+    <url>https://github.com/JavaFactoryDev/lightningstorage</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>JavaFactoryDev</id>
+            <name>Leonhard Solbach</name>
+            <email>JavaFactoryDev@gmail.com</email>
+            <url>https://github.com/JavaFactoryDev</url>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+            <timezone>Germany</timezone>
+        </developer>
+
+        <developer>
+            <id>Zeanon</id>
+            <name>Zeanon</name>
+            <email>thezeanon@gmail.com</email>
+            <url>https://github.com/Zeanon</url>
+            <roles>
+                <role>Refactoring</role>
+                <role>Performance improvements</role>
+            </roles>
+            <timezone>Germany</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/JavaFactoryDev/lightningstorage.git</connection>
+        <developerConnection>scm:git:ssh://github.com/JavaFactoryDev/lightningstorage.git</developerConnection>
+        <url>//github.com/JavaFactoryDev/lightningstorage</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <defaultGoal>clean package -U</defaultGoal>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.4</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.1</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-scm-publish-plugin</artifactId>
+                    <version>1.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.json</pattern>
+                            <shadedPattern>de.leonhard.storage.shaded.json</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.esotericsoftware</pattern>
+                            <shadedPattern>de.leonhard.storage.shaded.esotericsoftware</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.electronwill</pattern>
+                            <shadedPattern>de.leonhard.storage.shaded.electronwill</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>yamlbeans</id>
+            <url>https://mvnrepository.com/artifact/com.esotericsoftware.yamlbeans/yamlbeans</url>
+        </repository>
+        <repository>
+            <id>org.json</id>
+            <url>https://mvnrepository.com/artifact/org.json/json</url>
+        </repository>
+        <repository>
+            <id>TheWarKing-Public</id>
+            <url>http://thewarking.de:8081/repository/Storage/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>de.leonhard</groupId>
+            <artifactId>toml</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware.yamlbeans</groupId>
+            <artifactId>yamlbeans</artifactId>
+            <version>1.08</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180813</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

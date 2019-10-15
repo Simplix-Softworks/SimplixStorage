@@ -1,0 +1,26 @@
+target/
+dependency-reduced-pom.xml
+
+# Eclipse
+bin/
+.settings
+.project
+.classpath
+
+# IntelliJ
+out/
+.idea/
+*.iml
+
+# Misc
+.DS_Store
+/.vscode/
+TODO.txt
+Würde .factorypath löschen
+.github
+.git
+LightningStorageWallpaper.png
+LICENSE
+README.md
+
+!/src/
