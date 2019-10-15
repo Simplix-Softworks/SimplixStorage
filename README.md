@@ -1,6 +1,6 @@
 
 # lightningstorage
-lightningstorage - A Library to store data a better way.
+lightningstorage - A Library to store data in a better way.
 
 
 
