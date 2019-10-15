@@ -233,6 +233,7 @@ public class FileData {
 
     /**
      * Get localMap.
+     *
      * @return localMap.
      * @throws IllegalStateException() if localMap is null.
      */
@@ -260,10 +261,11 @@ public class FileData {
     public synchronized int hashCode() {
         return this.localMap.hashCode();
     }
-    
+
 
     /**
      * convert FileData to string.
+     *
      * @return the String value of localMap.
      */
     @Override
