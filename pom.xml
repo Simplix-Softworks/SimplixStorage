@@ -5,8 +5,8 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>lightningstorage</artifactId>
-    <packaging>pom</packaging>
     <version>2.5.6</version>
+    <packaging>jar</packaging>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/lightningstorage</url>
