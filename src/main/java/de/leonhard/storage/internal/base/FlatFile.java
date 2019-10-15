@@ -13,8 +13,8 @@ import java.io.IOException;
 @Getter
 public abstract class FlatFile implements Comparable<FlatFile> {
     @Setter
+    protected File file;
     private ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
-    private File file;
     private FileType fileType;
     private long lastModified;
 

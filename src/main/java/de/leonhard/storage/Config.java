@@ -5,6 +5,7 @@ import de.leonhard.storage.internal.enums.ReloadSettings;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,64 +14,20 @@ import java.util.List;
 public class Config extends Yaml {
     private List<String> header;
 
-    public Config(final String name, final String path) {
-        super(name, path);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final String name, final String path, final ReloadSettings reloadSettings) {
+    public Config(String name, String path, ReloadSettings reloadSettings) {
         super(name, path, reloadSettings);
-        setConfigSettings(ConfigSettings.preserveComments);
     }
 
-    public Config(final File file) {
-        super(file);
-        setConfigSettings(ConfigSettings.preserveComments);
+    public Config(String name, String path) {
+        super(name, path);
     }
 
-    public Config(final String name, final String path, final String resourcefile) {
-        super(name, path, resourcefile);
-        setConfigSettings(ConfigSettings.preserveComments);
+    public Config(String name, String path, FileInputStream fileInputStream) {
+        super(name, path, fileInputStream);
     }
 
-    public Config(final String name, final String path, final ReloadSettings reloadSettings, final String resourcefile) {
-        super(name, path, reloadSettings, resourcefile);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final File file, final String resourcefile) {
-        super(file, resourcefile);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final String name, final String path, final File resourcefile) {
-        super(name, path, resourcefile);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final String name, final String path, final ReloadSettings reloadSettings, final File resourcefile) {
-        super(name, path, reloadSettings, resourcefile);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final File file, final File resourcefile) {
-        super(file, resourcefile);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final String name, final String path, final BufferedInputStream resourceStream) {
-        super(name, path, resourceStream);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final String name, final String path, final ReloadSettings reloadSettings, final BufferedInputStream resourceStream) {
-        super(name, path, reloadSettings, resourceStream);
-        setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    public Config(final File file, final BufferedInputStream resourceStream) {
-        super(file, resourceStream);
-        setConfigSettings(ConfigSettings.preserveComments);
+    public Config(String name, String path, FileInputStream fileInputStream, ReloadSettings reloadSettings) {
+        super(name, path, fileInputStream, reloadSettings);
     }
 
 
