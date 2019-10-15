@@ -189,7 +189,7 @@ public class Json extends FlatFile implements StorageBase {
 	@Override
 	public void update() {
 		final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
-		jsonObject = new JSONObject(tokener);
+		fileData = new FileData(new JSONObject(tokener));
 	}
 
 	@Override
