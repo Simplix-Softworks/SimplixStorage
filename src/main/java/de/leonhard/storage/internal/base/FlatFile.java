@@ -27,13 +27,7 @@ public abstract class FlatFile implements Comparable<FlatFile> {
      * @param fileType .yml/.json  Uses the Enum FileType
      * @return true if file was created.
      */
-    protected final synchronized void create(final String name, final String path, final FileType fileType) throws IOException {
-
-        if (path == null || path.isEmpty()) {
-            file = new File(name + fileType.getExtension());
-            file.createNewFile();
-            return;
-        }
+    protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
         this.fileType = fileType;
         file = new File(path, name + "." + fileType);
         if (file.exists()) {
@@ -54,11 +48,29 @@ public abstract class FlatFile implements Comparable<FlatFile> {
             lastModified = System.currentTimeMillis();
             return true;
         }
-        lastModified = System.currentTimeMillis();
     }
 
-    protected final synchronized void load(final File file) {
+    protected final synchronized boolean create(final File file) {
+        this.fileType = FileType.getFileType(file);
         this.file = file;
+        if (this.file.exists()) {
+            lastModified = System.currentTimeMillis();
+            return false;
+        } else {
+            try {
+                if (this.file.getAbsoluteFile().getParentFile().exists() || file.getAbsoluteFile().getParentFile().mkdirs()) {
+                    if (!this.file.createNewFile()) {
+                        throw new IOException();
+                    }
+                }
+            } catch (IOException ex) {
+                System.err.println("Exception while creating File '" + file.getName() + "'");
+                System.err.println("Path: '" + file.getAbsolutePath() + "'");
+                ex.printStackTrace();
+            }
+            lastModified = System.currentTimeMillis();
+            return true;
+        }
     }
 
     public final boolean shouldReload() {
