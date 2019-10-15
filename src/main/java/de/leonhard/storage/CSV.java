@@ -10,7 +10,7 @@ import java.util.Set;
 @SuppressWarnings("unused")
 class CSV extends FlatFile implements StorageBase {
     @Override
-    public Object get(String key) {
+    public Object get(final String key) {
         return null;
     }
 
@@ -21,7 +21,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Returns the value
      */
     @Override
-    public String getString(String key) {
+    public String getString(final String key) {
         return null;
     }
 
@@ -32,7 +32,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return String from file
      */
     @Override
-    public long getLong(String key) {
+    public long getLong(final String key) {
         return 0;
     }
 
@@ -43,7 +43,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Int from file
      */
     @Override
-    public int getInt(String key) {
+    public int getInt(final String key) {
         return 0;
     }
 
@@ -54,7 +54,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Byte from file
      */
     @Override
-    public byte getByte(String key) {
+    public byte getByte(final String key) {
         return 0;
     }
 
@@ -65,7 +65,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Boolean from file
      */
     @Override
-    public boolean getBoolean(String key) {
+    public boolean getBoolean(final String key) {
         return false;
     }
 
@@ -76,7 +76,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Float from file
      */
     @Override
-    public float getFloat(String key) {
+    public float getFloat(final String key) {
         return 0;
     }
 
@@ -87,7 +87,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Double from file
      */
     @Override
-    public double getDouble(String key) {
+    public double getDouble(final String key) {
         return 0;
     }
 
@@ -98,7 +98,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return List
      */
     @Override
-    public List<?> getList(String key) {
+    public List<?> getList(final String key) {
         return null;
     }
 
@@ -109,7 +109,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return List
      */
     @Override
-    public List<String> getStringList(String key) {
+    public List<String> getStringList(final String key) {
         return null;
     }
 
@@ -120,7 +120,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Integer-List
      */
     @Override
-    public List<Integer> getIntegerList(String key) {
+    public List<Integer> getIntegerList(final String key) {
         return null;
     }
 
@@ -131,7 +131,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Byte-List
      */
     @Override
-    public List<Byte> getByteList(String key) {
+    public List<Byte> getByteList(final String key) {
         return null;
     }
 
@@ -142,7 +142,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Long-List
      */
     @Override
-    public List<Long> getLongList(String key) {
+    public List<Long> getLongList(final String key) {
         return null;
     }
 
@@ -153,7 +153,7 @@ class CSV extends FlatFile implements StorageBase {
      * @return Map
      */
     @Override
-    public Map getMap(String key) {
+    public Map getMap(final String key) {
         return null;
     }
 
@@ -164,8 +164,8 @@ class CSV extends FlatFile implements StorageBase {
      * @param value The value you want to set in your file
      */
     @Override
-    public void set(String key, Object value) {
-
+    public void set(final String key, final Object value) {
+        //TODO
     }
 
     /**
@@ -175,31 +175,52 @@ class CSV extends FlatFile implements StorageBase {
      * @return Returned value
      */
     @Override
-    public boolean contains(String key) {
+    public boolean contains(final String key) {
         return false;
     }
 
     /**
-     * Sets a value to the file if the file doesn't already contain the value (Not mix up with Bukkit addDefault)
+     * Sets a value to the file if the file doesn't already contain the value
+     * (Not mix up with Bukkit addDefault)
      *
      * @param key   Key to set the value
      * @param value Value to set
      */
     @Override
-    public void setDefault(String key, Object value) {
-
+    public void setDefault(final String key, final Object value) {
+        //TODO
     }
 
     @Override
-    public <T> T getOrSetDefault(String path, T def) {
+    public <T> T getOrSetDefault(final String path, final T def) {
         return null;
     }
 
-//    @Override
-//    public void remove(String key) {
-//
-//    }
+    //added method for later implementation
+    @Override
+    public void update() {
+        //TODO
+    }
 
+    //added method for later implementation
+    @Override
+    public void remove(final String key) {
+        //TODO
+    }
+
+    //added method for later implementation
+    @Override
+    public Set<String> singleLayerKeySet() {
+        return null;
+    }
+
+    //added method for later implementation
+    @Override
+    public Set<String> singleLayerKeySet(final String key) {
+        return null;
+    }
+
+    //added method for later implementation
     @Override
     public Set<String> keySet() {
         return null;
