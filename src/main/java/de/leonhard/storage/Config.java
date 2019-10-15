@@ -20,7 +20,6 @@ public class Config extends Yaml {
 
     public Config(String name, String path, InputStream inputStream) {
         super(name, path, inputStream);
-        getFileData().insert("this.is.a.test", false);
         this.setConfigSettings(ConfigSettings.preserveComments);
     }
 

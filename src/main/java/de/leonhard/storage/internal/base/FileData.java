@@ -21,11 +21,11 @@ public class FileData {
     }
 
     public FileData(final Map<String, Object> map) {
-        localMap = new HashMap<>(map);
+        this.localMap = new HashMap<>(map);
     }
 
     public FileData(final JSONObject jsonObject) {
-        localMap = new HashMap<>(jsonObject.toMap());
+        this.localMap = new HashMap<>(jsonObject.toMap());
     }
 
 
@@ -62,14 +62,23 @@ public class FileData {
      */
     public synchronized void insert(final String key, final Object value) {
         final String[] parts = key.split("\\.");
-        localMap.put(parts[0], insert(localMap, parts, value, 1));
+        //noinspection unchecked
+        localMap.put(parts[0], localMap.containsKey(parts[0])
+                ? (localMap.get(parts[0]) instanceof Map
+                ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
+                : insert(new HashMap<>(), parts, value, 1))
+                : insert(new HashMap<>(), parts, value, 1));
     }
 
     private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             Map<String, Object> tempMap = new HashMap<>(map);
             //noinspection unchecked
-            Map<String, Object> childMap = map.containsKey(key[id]) ? (map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>()) : new HashMap<>();
+            Map<String, Object> childMap = map.containsKey(key[id])
+                    ? (map.get(key[id]) instanceof Map
+                    ? (Map<String, Object>) map.get(key[id])
+                    : new HashMap<>())
+                    : new HashMap<>();
             tempMap.put(key[id], insert(childMap, key, value, id + 1));
             return tempMap;
         } else {
@@ -238,7 +247,11 @@ public class FileData {
 
 
     public Map<String, Object> toMap() {
-        return localMap;
+        if (localMap != null) {
+            return localMap;
+        } else {
+            return new HashMap<>();
+        }
     }
 
     public JSONObject toJsonObject() {
