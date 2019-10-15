@@ -21,7 +21,6 @@ public class Primitive {
                 return Double.parseDouble((String) obj);
             else
                 return Double.parseDouble(obj.toString());
-
         }
     }
 

@@ -42,16 +42,11 @@ public class YamlParser {
         for (final String key : parsed.keySet()) {
             int i = 0;
             for (final String line : parsed.get(key)) {
-                if (line.isEmpty())
-                    continue;
                 if (updated.contains(key + " ")) {
                     updated.add(updated.indexOf(key + " ") + i, line);
-                    continue;
-                }
-                if (updated.contains(" " + key)) {
+                } else if (updated.contains(" " + key)) {
                     updated.add(updated.indexOf(" " + key) + i, line);
                 }
-
             }
         }
         return updated;

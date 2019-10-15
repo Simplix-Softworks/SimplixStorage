@@ -93,32 +93,32 @@ public class Config extends Yaml {
             set(path, def, getConfigSettings());
             return def;
         } else {
-            Object obj = get(path); //
-            if (obj instanceof String && def instanceof Integer)
-                obj = Integer.parseInt((String) obj);
-            if (obj instanceof String && def instanceof Double)
-                obj = Double.parseDouble((String) obj);
+            Object obj = get(path);
             if (obj instanceof String && def instanceof Float)
                 obj = Double.parseDouble((String) obj);
+            else if (obj instanceof String && def instanceof Double)
+                obj = Double.parseDouble((String) obj);
+            else if (obj instanceof String && def instanceof Integer)
+                obj = Integer.parseInt((String) obj);
             return (T) obj;
         }
     }
 
 
     public List<String> getHeader() {
-
-        if (getConfigSettings().equals(ConfigSettings.skipComments))
+        if (getConfigSettings().equals(ConfigSettings.skipComments)) {
             return new ArrayList<>();
-
-        if (!shouldReload())
+        } else if (!shouldReload()) {
             return header;
-        try {
-            return getYamlEditor().readHeader();
-        } catch (IOException e) {
-            System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
-            e.printStackTrace();
+        } else {
+            try {
+                return getYamlEditor().readHeader();
+            } catch (IOException e) {
+                System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
+                e.printStackTrace();
+            }
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     @SuppressWarnings("unused")

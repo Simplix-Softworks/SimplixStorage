@@ -227,8 +227,9 @@ public class Json extends FlatFile implements StorageBase {
 
                 jsonObject = new JSONObject(data.toMap());
                 try {
-                    if (old.toString().equals(jsonObject.toString()) && getFile().length() != 0)
+                    if (old.toString().equals(jsonObject.toString()) && getFile().length() != 0) {
                         return;
+                    }
 
                     write(jsonObject);
 

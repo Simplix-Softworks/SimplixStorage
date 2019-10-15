@@ -281,8 +281,9 @@ public class Yaml extends FlatFile implements StorageBase {
                     final List<String> footer = yamlEditor.readFooter();
                     write(fileData.toMap());
                     header.addAll(yamlEditor.read());
-                    if (!header.containsAll(footer))
+                    if (!header.containsAll(footer)) {
                         header.addAll(footer);
+                    }
                     yamlEditor.write(parser.parseComments(unEdited, header));
                     return;
                 }
