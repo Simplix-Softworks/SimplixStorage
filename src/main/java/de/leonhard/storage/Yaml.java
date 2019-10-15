@@ -10,12 +10,11 @@ import de.leonhard.storage.internal.editor.YamlParser;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.utils.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
@@ -42,7 +41,7 @@ public class Yaml extends FlatFile implements StorageBase {
 		create(name, path, FileType.YAML);
 
 		if (inputStream != null) {
-			Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			FileUtils.copy(inputStream, file.toPath());
 		}
 		yamlEditor = new YamlEditor(file);
 		parser = new YamlParser(yamlEditor);
@@ -50,7 +49,6 @@ public class Yaml extends FlatFile implements StorageBase {
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
-
 	}
 
 
