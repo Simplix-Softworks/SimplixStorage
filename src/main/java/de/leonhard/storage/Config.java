@@ -3,10 +3,10 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 
-import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "unused"})
@@ -93,34 +93,35 @@ public class Config extends Yaml {
             set(path, def, getConfigSettings());
             return def;
         } else {
-            Object obj = get(path);
+            Object obj = get(path); //
+            if (obj instanceof String && def instanceof Integer)
+                obj = Integer.parseInt((String) obj);
+            if (obj instanceof String && def instanceof Double)
+                obj = Double.parseDouble((String) obj);
             if (obj instanceof String && def instanceof Float)
                 obj = Double.parseDouble((String) obj);
-            else if (obj instanceof String && def instanceof Double)
-                obj = Double.parseDouble((String) obj);
-            else if (obj instanceof String && def instanceof Integer)
-                obj = Integer.parseInt((String) obj);
             return (T) obj;
         }
     }
 
 
     public List<String> getHeader() {
-        if (getConfigSettings().equals(ConfigSettings.skipComments)) {
+
+        if (getConfigSettings().equals(ConfigSettings.skipComments))
             return new ArrayList<>();
-        } else if (!shouldReload()) {
+
+        if (!shouldReload())
             return header;
-        } else {
-            try {
-                return getYamlEditor().readHeader();
-            } catch (IOException e) {
-                System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
-                e.printStackTrace();
-            }
-            return new ArrayList<>();
+        try {
+            return getYamlEditor().readHeader();
+        } catch (IOException e) {
+            System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
+            e.printStackTrace();
         }
+        return new ArrayList<>();
     }
 
+    @SuppressWarnings("unused")
     public void setHeader(List<String> header) {
         List<String> tmp = new ArrayList<>();
         //Updating the values to have a comments, if someone forgets to set them
@@ -131,11 +132,7 @@ public class Config extends Yaml {
                 tmp.add(line);
             }
         }
-        header = tmp;
-        tmp = null;
-        this.header = header;
-
-        header.forEach(System.out::println);
+        this.header = tmp;
 
         if (getFile().length() == 0) {
             try {
@@ -155,13 +152,7 @@ public class Config extends Yaml {
             lines.removeAll(oldHeader);
             lines.removeAll(footer);
 
-            Collections.reverse(lines);
-
-
-            Collections.reverse(lines);
-
             lines.addAll(header);
-
 
             lines.addAll(footer);
 
@@ -170,6 +161,7 @@ public class Config extends Yaml {
             System.err.println("Exception while modifying header of '" + getName() + "'");
             e.printStackTrace();
         }
+    }
 
     protected Config getConfigInstance() {
         return this;
@@ -187,5 +179,4 @@ public class Config extends Yaml {
                     && super.equals(config.getYamlInstance());
         }
     }
-
 }
