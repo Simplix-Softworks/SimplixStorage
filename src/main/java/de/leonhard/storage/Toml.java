@@ -27,8 +27,8 @@ public class Toml extends FlatFile implements StorageBase {
     }
 
     public Toml(final String name, final String path, final ReloadSettings reloadSettings) {
-        this(name, path);
-        this.reloadSettings = reloadSettings;
+        create(name, path, FileType.YAML);
+        update();
     }
 
     public Toml(final File file) {
@@ -37,24 +37,21 @@ public class Toml extends FlatFile implements StorageBase {
     }
 
     /**
-     * Set an object to your file
+     * Set a object to your file
      *
      * @param key   The key your value should be associated with
      * @param value The value you want to set in your file
      */
 
     @Override
-    public void set(final String key, Object value) {
+    public void set(final String key, final Object value) {
         reload();
 
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-        final String old = data.toString();
+        final String old = fileData.toString();
 
-        if (finalKey.contains("."))
-            data = Utils.stringToMap(finalKey, value, data);
-        else
-            data.put(finalKey, value);
+        fileData.insert(finalKey, value);
 
         if (old.equals(fileData.toString())) {
             return;
@@ -69,9 +66,9 @@ public class Toml extends FlatFile implements StorageBase {
     }
 
     @Override
-    public Object get(String key) {
+    public Object get(final String key) {
         reload();
-        return Utils.get(key, data);
+        return fileData.get(key);
     }
 
     /**
@@ -83,8 +80,7 @@ public class Toml extends FlatFile implements StorageBase {
     @Override
     public boolean contains(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        reload();
-        return Utils.contains(finalKey, data);
+        return fileData.containsKey(finalKey);
     }
 
     public void write(final Map<String, Object> data) {
@@ -107,14 +103,32 @@ public class Toml extends FlatFile implements StorageBase {
     }
 
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> singleLayerKeySet() {
         reload();
-        return data.keySet();
+        return fileData.singleLayerKeySet();
+    }
+
+    @Override
+    public Set<String> singleLayerKeySet(final String key) {
+        reload();
+        return fileData.singleLayerKeySet(key);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        reload();
+        return fileData.keySet();
+    }
+
+    @Override
+    public Set<String> keySet(final String key) {
+        reload();
+        return fileData.keySet(key);
     }
 
     /**
-     * Reloads the file when needed see {@link ReloadSettings}
-     * for deeper information
+     * Reloads the file when needed see {@link ReloadSettings} for deeper
+     * information
      */
     private void reload() {
         if (shouldReload()) {
@@ -123,18 +137,12 @@ public class Toml extends FlatFile implements StorageBase {
     }
 
     @Override
-    public void removeKey(final String key) {
-        data.remove(key);
-        write(data);
-    }
-
     public void remove(final String key) {
         String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        final Map<String, Object> old = data;
 
-        data = Utils.remove(old, finalKey);
+        fileData.remove(finalKey);
 
-        write(data);
+        write(fileData.toMap());
     }
 
     @Override
