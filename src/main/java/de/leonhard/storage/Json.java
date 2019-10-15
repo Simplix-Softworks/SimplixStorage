@@ -24,16 +24,15 @@ public class Json extends FlatFile implements StorageBase {
 	@Setter
 	private String pathPrefix;
 	private FileData fileData;
-	private JSONObject jsonObject;
 
 
 	public Json(final String name, final String path) {
 		try {
 			create(name, path, FileType.JSON);
 			if (getFile().length() == 0) {
-				jsonObject = new JSONObject();
+
 				Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
-				writer.write(jsonObject.toString(2));
+				writer.write(new JSONObject().toString(2));
 				writer.close();
 			}
 
@@ -86,9 +85,9 @@ public class Json extends FlatFile implements StorageBase {
 		}
 
 		if (key.contains(".")) {
-			return new FileData(jsonObject.toMap()).containsKey(key) ? new FileData(jsonObject.toMap()).get(key) : null;
+			return new FileData(fileData.toMap()).containsKey(key) ? new FileData(fileData.toMap()).get(key) : null;
 		}
-		return jsonObject.has(key) ? jsonObject.get(key) : null;
+		return fileData.containsKey(key) ? fileData.get(key) : null;
 	}
 
 	/**
@@ -122,7 +121,7 @@ public class Json extends FlatFile implements StorageBase {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) jsonObject.get(key);
+			return (Map<?, ?>) fileData.get(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		}
@@ -137,36 +136,21 @@ public class Json extends FlatFile implements StorageBase {
 
 			reload();
 
-			if (finalKey.contains(".")) {
+			FileData old = new FileData(fileData.toMap());
 
-				JSONObject old = this.jsonObject;
 
-				final FileData data = new FileData(jsonObject.toMap());
+			fileData.insert(key, value);
 
-				data.insert(finalKey, value);
 
-				jsonObject = new JSONObject(data.toMap());
-				try {
-					if (old.toString().equals(jsonObject.toString()) && getFile().length() != 0) {
-						return;
-					}
-
-					write(jsonObject);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return;
-			}
-			jsonObject.put(finalKey, value);
 			try {
-				Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
-				writer.write(jsonObject.toString(2));
-				writer.close();
+				if (old.toString().equals(fileData.toString()) && getFile().length() != 0) {
+					return;
+				}
+				write(fileData.toJsonObject());
 			} catch (IOException e) {
-				System.err.println("Couldn' t set " + finalKey + " " + value);
 				e.printStackTrace();
 			}
+
 		}
 	}
 
@@ -195,30 +179,30 @@ public class Json extends FlatFile implements StorageBase {
 	@Override
 	public Set<String> singleLayerKeySet() {
 		reload();
-		return new FileData(jsonObject.toMap()).singleLayerKeySet();
+		return new FileData(fileData.toMap()).singleLayerKeySet();
 	}
 
 	@Override
 	public Set<String> singleLayerKeySet(final String key) {
 		reload();
-		return new FileData(jsonObject.toMap()).singleLayerKeySet(key);
+		return new FileData(fileData.toMap()).singleLayerKeySet(key);
 	}
 
 	@Override
 	public Set<String> keySet() {
 		reload();
-		return new FileData(jsonObject.toMap()).keySet();
+		return new FileData(fileData.toMap()).keySet();
 	}
 
 	@Override
 	public Set<String> keySet(final String key) {
 		reload();
-		return new FileData(jsonObject.toMap()).keySet(key);
+		return new FileData(fileData.toMap()).keySet(key);
 	}
 
 	private boolean has(final String key) {
 		reload();
-		return new FileData(jsonObject.toMap()).containsKey(key);
+		return new FileData(fileData.toMap()).containsKey(key);
 	}
 
 	@Override
@@ -231,12 +215,12 @@ public class Json extends FlatFile implements StorageBase {
 	public void remove(final String key) {
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		final Map obj = jsonObject.toMap();
+		final Map obj = fileData.toMap();
 		obj.remove(finalKey);
 
-		jsonObject = new JSONObject(obj);
+		fileData = new FileData(new JSONObject(obj));
 		try {
-			write(jsonObject);
+			write(fileData.toJsonObject());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -250,7 +234,7 @@ public class Json extends FlatFile implements StorageBase {
 			return false;
 		} else {
 			Json json = (Json) obj;
-			return this.jsonObject.equals(json.jsonObject)
+			return this.fileData.equals(json.fileData)
 					&& this.pathPrefix.equals(json.pathPrefix)
 					&& super.equals(json.getFlatFileInstance());
 		}

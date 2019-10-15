@@ -230,6 +230,9 @@ public class FileData {
 	 * @throws IllegalStateException() Whether localMap is null.
 	 */
 	public synchronized Map<String, Object> toMap() {
+		if (localMap == null) {
+			throw new IllegalStateException("Couldn't get null");
+		}
 		return localMap;
 	}
 
