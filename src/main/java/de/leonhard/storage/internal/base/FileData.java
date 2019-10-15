@@ -237,11 +237,6 @@ public class FileData {
     }
 
 
-    /**
-     * Get local map.
-     *
-     * @return localMap.
-     */
     public Map<String, Object> toMap() {
         return localMap;
     }
@@ -249,6 +244,7 @@ public class FileData {
     public JSONObject toJsonObject() {
         return JsonUtils.getJsonFromMap(localMap);
     }
+
 
     @Override
     public boolean equals(final Object obj) {
