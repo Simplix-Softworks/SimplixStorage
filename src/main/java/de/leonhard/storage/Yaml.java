@@ -14,10 +14,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
+@SuppressWarnings({"unused", "WeakerAccess", "unchecked"})
 @Getter
 public class Yaml extends FlatFile implements StorageBase {
     @Setter
@@ -267,11 +266,12 @@ public class Yaml extends FlatFile implements StorageBase {
 
         synchronized (this) {
 
-            String old = yamlObject.toString();
-            yamlObject = Utils.stringToMap(key, value, yamlObject);
+            String old = fileData.toString();
+            fileData.insert(finalKey, value);
 
-            if (old.equals(yamlObject.toString()) && yamlObject != null)
+            if (fileData != null && old.equals(fileData.toString())) {
                 return;
+            }
 
             try {
                 if (configSettings.equals(ConfigSettings.preserveComments)) {
@@ -281,18 +281,15 @@ public class Yaml extends FlatFile implements StorageBase {
                     final List<String> footer = yamlEditor.readFooter();
                     write(fileData.toMap());
                     header.addAll(yamlEditor.read());
-                    if (!header.containsAll(footer)) {
+                    if (!header.containsAll(footer))
                         header.addAll(footer);
-                    }
                     yamlEditor.write(parser.parseComments(unEdited, header));
                     return;
                 }
-                write(yamlObject);
-
+                write(Objects.requireNonNull(fileData).toMap());
             } catch (final IOException e) {
                 System.err.println("Error while writing '" + getName() + "'");
             }
-            old = null;
         }
     }
 
@@ -306,22 +303,20 @@ public class Yaml extends FlatFile implements StorageBase {
     public Object get(final String key) {
         reload();
         String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-        return Utils.get(finalKey, yamlObject);
+        return fileData.get(key);
     }
 
     @Override
-    public boolean contains(String key) {
+    public boolean contains(final String key) {
+        String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
         reload();
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        return has(key);
+        return fileData.containsKey(tempKey);
     }
 
     protected void reload() {
         if (shouldReload()) {
             update();
         }
-
-        return yamlObject.containsKey(key);
     }
 
     @Override
@@ -335,8 +330,9 @@ public class Yaml extends FlatFile implements StorageBase {
             e.printStackTrace();
         } finally {
             try {
-                if (reader != null) reader.close();
-                if (yamlObject == null) yamlObject = new HashMap<>();
+                if (reader != null) {
+                    reader.close();
+                }
             } catch (IOException e) {
                 System.err.println("Exception while closing file");
                 e.printStackTrace();
@@ -355,42 +351,40 @@ public class Yaml extends FlatFile implements StorageBase {
     }
 
     @Override
-    public void removeKey(final String key) {
+    public void remove(final String key) {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        if (finalKey.contains(".")) {
-            remove(key);
-            return;
-        }
 
-        final Map obj = yamlObject;
-        obj.remove(key);
+        fileData.remove(finalKey);
 
         try {
-            write(yamlObject);
+            write(fileData.toMap());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public Set<String> getKeySet() {
+    public Set<String> singleLayerKeySet() {
         reload();
-        return yamlObject.keySet();
+        return fileData.singleLayerKeySet();
     }
 
-    public void remove(final String key) {
-        final String finalKey = (pathPrefix == null || pathPrefix.isEmpty()) ? key : pathPrefix + "." + key;
-        if (!finalKey.contains(".")) {
-            removeKey(key);
-            return;
-        }
-        final Map<String, Object> old = yamlObject;
-        yamlObject = Utils.remove(old, finalKey);
-        try {
-            write(yamlObject);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public Set<String> singleLayerKeySet(final String key) {
+        reload();
+        return fileData.singleLayerKeySet(key);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        reload();
+        return fileData.keySet();
+    }
+
+    @Override
+    public Set<String> keySet(final String key) {
+        reload();
+        return fileData.keySet(key);
     }
 
     protected final Yaml getYamlInstance() {
