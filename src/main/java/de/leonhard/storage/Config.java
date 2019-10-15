@@ -3,7 +3,6 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -21,12 +20,8 @@ public class Config extends Yaml {
 		super(name, path);
 	}
 
-	public Config(String name, String path, FileInputStream fileInputStream) {
-		super(name, path, fileInputStream);
-	}
-
-	public Config(String name, String path, InputStream inputStream, ReloadSettings reloadSettings) {
-		super(name, path, inputStream, reloadSettings);
+	public Config(String name, String path, InputStream inputStream) {
+		super(name, path, inputStream);
 	}
 
 

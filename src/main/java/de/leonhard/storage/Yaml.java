@@ -30,16 +30,12 @@ public class Yaml extends FlatFile implements StorageBase {
 	private FileData fileData;
 
 
-	public Yaml(final String name, final String path, final ReloadSettings reloadSettings) {
-		this(name, path, null, reloadSettings);
-	}
-
 	public Yaml(final String name, final String path) {
 		this(name, path, null, null);
 	}
 
-	public Yaml(final String name, final String path, final FileInputStream fileInputStream) {
-		this(name, path, fileInputStream, null);
+	public Yaml(final String name, final String path, final InputStream inputStream) {
+		this(name, path, inputStream, null);
 	}
 
 	public Yaml(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
