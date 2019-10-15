@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
-import java.io.IOException;
 
 @SuppressWarnings("WeakerAccess")
 @Getter
@@ -28,35 +27,22 @@ public abstract class FlatFile implements Comparable<FlatFile> {
      */
     protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
         this.fileType = fileType;
-        file = new File(path, name + "." + fileType);
-        if (file.exists()) {
-            lastModified = System.currentTimeMillis();
-            return false;
-        } else {
-            FileUtils.getAndMake(file);
-            lastModified = System.currentTimeMillis();
-            return true;
-        }
+        this.file = new File(path, name + "." + fileType);
+        return generateFile(file);
     }
 
     protected final synchronized boolean create(final File file) {
         this.fileType = FileType.getFileType(file);
         this.file = file;
-        if (this.file.exists()) {
+        return generateFile(file);
+    }
+
+    private boolean generateFile(File file) {
+        if (file.exists()) {
             lastModified = System.currentTimeMillis();
             return false;
         } else {
-            try {
-                if (this.file.getAbsoluteFile().getParentFile().exists() || file.getAbsoluteFile().getParentFile().mkdirs()) {
-                    if (!this.file.createNewFile()) {
-                        throw new IOException();
-                    }
-                }
-            } catch (IOException ex) {
-                System.err.println("Exception while creating File '" + file.getName() + "'");
-                System.err.println("Path: '" + file.getAbsolutePath() + "'");
-                ex.printStackTrace();
-            }
+            FileUtils.getAndMake(file);
             lastModified = System.currentTimeMillis();
             return true;
         }
