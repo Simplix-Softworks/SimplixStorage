@@ -69,8 +69,4 @@ public class Primitive {
                 return Byte.parseByte(obj.toString());
         }
     }
-
-	/* public static <T> T get(final Object object, final T type) {
-	
-	} */
 }
