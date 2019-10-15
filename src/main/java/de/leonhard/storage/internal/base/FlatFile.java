@@ -18,26 +18,26 @@ public abstract class FlatFile implements Comparable<FlatFile> {
     protected FileType fileType;
     private long lastModified;
 
-	/**
-	 * Creates an empty .yml or .json file.
-	 *
-	 * @param name     Name of the file
-	 * @param path     Absolute path where the file should be created
-	 * @param fileType .yml/.json  Uses the Enum FileType
-	 * @return true if file was created.
-	 */
-	protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
-		this.fileType = fileType;
-		file = new File(path, name + "." + fileType);
-		if (file.exists()) {
-			lastModified = System.currentTimeMillis();
-			return false;
-		} else {
-			FileUtils.getAndMake(file);
-			lastModified = System.currentTimeMillis();
-			return true;
-		}
-	}
+    /**
+     * Creates an empty .yml or .json file.
+     *
+     * @param name     Name of the file
+     * @param path     Absolute path where the file should be created
+     * @param fileType .yml/.json  Uses the Enum FileType
+     * @return true if file was created.
+     */
+    protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
+        this.fileType = fileType;
+        file = new File(path, name + "." + fileType);
+        if (file.exists()) {
+            lastModified = System.currentTimeMillis();
+            return false;
+        } else {
+            FileUtils.getAndMake(file);
+            lastModified = System.currentTimeMillis();
+            return true;
+        }
+    }
 
     protected final synchronized boolean create(final File file) {
         this.fileType = FileType.getFileType(file);
