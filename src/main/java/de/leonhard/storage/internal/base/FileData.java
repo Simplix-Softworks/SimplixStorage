@@ -5,15 +5,30 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An extended HashMap, to easily use the nested HashMaps created by reading the Configuration files.
+ */
+@SuppressWarnings("unused")
 public class FileData {
 
     private HashMap<String, Object> localMap;
 
+    /**
+     * Constructor for FileData
+     *
+     * @param map the the class utilizes.
+     */
     public FileData(final Map<String, Object> map) {
         localMap = new HashMap<>(map);
     }
 
 
+    /**
+     * Method to get the object assign to a key from a FileData Object.
+     *
+     * @param key the key to look for.
+     * @return the value assigned to the given key or null if the key does not exist.
+     */
     public synchronized Object get(final String key) {
         final String[] parts = key.split("\\.");
         return get(localMap, parts, 0);
@@ -33,6 +48,12 @@ public class FileData {
     }
 
 
+    /**
+     * Method to assign a value to a key.
+     *
+     * @param key   the key to be used.
+     * @param value the value to be assigned to the key.
+     */
     public synchronized void insert(final String key, final Object value) {
         final String[] parts = key.split("\\.");
         localMap.put(parts[0], insert(localMap, parts, value, 1));
@@ -51,6 +72,12 @@ public class FileData {
     }
 
 
+    /**
+     * Check whether the map contains a certain key.
+     *
+     * @param key the key to be looked for.
+     * @return true if the key exists, otherwise false.
+     */
     public synchronized boolean containsKey(final String key) {
         String[] parts = key.split("\\.");
         return containsKey(localMap, parts, 0);
@@ -71,6 +98,11 @@ public class FileData {
     }
 
 
+    /**
+     * Remove a key with its assigned value from the map if given key exists.
+     *
+     * @param key the key to be removed from the map.
+     */
     public synchronized void remove(final String key) {
         if (containsKey(key)) {
             final String[] parts = key.split("\\.");
@@ -92,33 +124,45 @@ public class FileData {
     }
 
 
+    /**
+     * get the keySet of a single layer of the map.
+     *
+     * @return the keySet of the top layer of localMap.
+     */
     public synchronized Set<String> singleLayerKeySet() {
         return localMap.keySet();
     }
 
+    /**
+     * get the keySet of a single layer of the map.
+     *
+     * @param key the key of the layer.
+     * @return the keySet of the given layer or an empty set if the key does not exist.
+     */
     public synchronized Set<String> singleLayerKeySet(final String key) {
-        if (get(key) instanceof Map) {
-            //noinspection unchecked
-            return ((Map<String, Object>) get(key)).keySet();
-        } else {
-            return new HashSet<>();
-        }
+        //noinspection unchecked
+        return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
     }
 
 
+    /**
+     * get the keySet of all layers of the map combined.
+     *
+     * @return the keySet of all layers of localMap combined (Format: key.subkey).
+     */
     public synchronized Set<String> keySet() {
         return keySet(localMap);
     }
 
+    /**
+     * get the keySet of all sublayers of the given key combined.
+     *
+     * @param key the key of the layer
+     * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
+     */
     public synchronized Set<String> keySet(final String key) {
-        if (get(key) instanceof Map) {
-            //noinspection unchecked
-            Map tempMap = (Map<String, Object>) get(key);
-            //noinspection unchecked
-            return keySet(tempMap);
-        } else {
-            return new HashSet<>();
-        }
+        //noinspection unchecked
+        return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
     }
 
     private synchronized Set<String> keySet(final Map<String, Object> map) {
@@ -136,6 +180,62 @@ public class FileData {
         return localSet;
     }
 
+
+    /**
+     * Get the size of a single layer of the map.
+     *
+     * @return the size of the top layer of localMap.
+     */
+    public synchronized int singleLayerSize() {
+        return localMap.size();
+    }
+
+    /**
+     * get the size of a single layer of the map.
+     *
+     * @param key the key of the layer.
+     * @return the size of the given layer or 0 if the key does not exist.
+     */
+    public synchronized int singleLayerSize(final String key) {
+        return get(key) instanceof Map ? ((Map) get(key)).size() : 0;
+    }
+
+    /**
+     * Get the size of the local map.
+     *
+     * @return the size of all layers of localMap combined.
+     */
+    public synchronized int size() {
+        return localMap.size();
+    }
+
+    /**
+     * get the size of all sublayers of the given key combined.
+     *
+     * @param key the key of the layer
+     * @return the size of all sublayers of the given key or 0 if the key does not exist.
+     */
+    public synchronized int size(final String key) {
+        return localMap.size();
+    }
+
+    private synchronized int size(final Map<String, Object> map) {
+        int size = map.size();
+        for (String key : map.keySet()) {
+            if (map.get(key) instanceof Map) {
+                //noinspection unchecked
+                size += size((Map<String, Object>) map.get(key));
+            }
+        }
+        return size;
+    }
+
+
+    /**
+     * Get localMap.
+     * @return localMap.
+     * @throws IllegalStateException() if localMap is null.
+     */
     public synchronized Map<String, Object> toMap() {
         if (localMap == null) {
             throw new IllegalStateException("Couldn't get null");
@@ -161,6 +261,10 @@ public class FileData {
         return this.localMap.hashCode();
     }
 
+    /**
+     * convert FileData to string.
+     * @return the String value of localMap.
+     */
     @Override
     public synchronized String toString() {
         return this.localMap.toString();

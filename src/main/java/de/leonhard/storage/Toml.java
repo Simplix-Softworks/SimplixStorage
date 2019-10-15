@@ -53,8 +53,9 @@ public class Toml extends FlatFile implements StorageBase {
 
         fileData.insert(finalKey, value);
 
-        if (old.equals(fileData.toString()))
+        if (old.equals(fileData.toString())) {
             return;
+        }
 
         try {
             com.electronwill.toml.Toml.write(fileData.toMap(), getFile());

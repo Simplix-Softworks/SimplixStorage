@@ -161,8 +161,9 @@ public class Json extends FlatFile implements StorageBase {
     }
 
     private Object getObject(final String key) {
-        if (!has(key))
+        if (!has(key)) {
             return null;
+        }
 
         if (key.contains(".")) {
             return new FileData(jsonObject.toMap()).containsKey(key) ? new FileData(jsonObject.toMap()).get(key) : null;
@@ -190,8 +191,9 @@ public class Json extends FlatFile implements StorageBase {
     private Map getMapWithoutPath(final String key) {
         reload();
 
-        if (!has(key))
+        if (!has(key)) {
             return new HashMap<>();
+        }
 
         Object map;
         try {

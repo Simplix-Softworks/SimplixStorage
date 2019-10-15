@@ -51,9 +51,11 @@ public interface StorageBase {
      */
 
     default String getString(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return "";
-        return get(key).toString();
+        } else {
+            return get(key).toString();
+        }
     }
 
     /**
@@ -64,9 +66,11 @@ public interface StorageBase {
      */
 
     default long getLong(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return 0L;
-        return Primitive.LONG.getLong(get(key));
+        } else {
+            return Primitive.LONG.getLong(get(key));
+        }
     }
 
     /**
@@ -77,9 +81,11 @@ public interface StorageBase {
      */
 
     default int getInt(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return 0;
-        return Primitive.INTEGER.getInt(get(key));
+        } else {
+            return Primitive.INTEGER.getInt(get(key));
+        }
     }
 
     /**
@@ -90,9 +96,11 @@ public interface StorageBase {
      */
 
     default byte getByte(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return 0;
-        return Primitive.BYTE.getByte(get(key));
+        } else {
+            return Primitive.BYTE.getByte(get(key));
+        }
     }
 
     /**
@@ -103,9 +111,11 @@ public interface StorageBase {
      */
 
     default boolean getBoolean(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return false;
-        return get(key).toString().equalsIgnoreCase("true");
+        } else {
+            return get(key).toString().equalsIgnoreCase("true");
+        }
     }
 
     /**
@@ -116,9 +126,11 @@ public interface StorageBase {
      */
 
     default float getFloat(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return 0F;
-        return Primitive.FLOAT.getFloat(get(key));
+        } else {
+            return Primitive.FLOAT.getFloat(get(key));
+        }
     }
 
     /**
@@ -129,9 +141,11 @@ public interface StorageBase {
      */
 
     default double getDouble(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return 0D;
-        return Primitive.DOUBLE.getDouble(get(key));
+        } else {
+            return Primitive.DOUBLE.getDouble(get(key));
+        }
     }
 
     /**
@@ -142,9 +156,11 @@ public interface StorageBase {
      */
 
     default List<?> getList(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return new ArrayList<>();
-        return (List<?>) get(key);
+        } else {
+            return (List<?>) get(key);
+        }
     }
 
     /**
@@ -155,9 +171,11 @@ public interface StorageBase {
      */
 
     default List<String> getStringList(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return new ArrayList<>();
-        return (List<String>) get(key);
+        } else {
+            return (List<String>) get(key);
+        }
     }
 
     /**
@@ -168,9 +186,11 @@ public interface StorageBase {
      */
 
     default List<Integer> getIntegerList(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return new ArrayList<>();
-        return (List<Integer>) get(key);
+        } else {
+            return (List<Integer>) get(key);
+        }
     }
 
     /**
@@ -181,9 +201,11 @@ public interface StorageBase {
      */
 
     default List<Byte> getByteList(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return new ArrayList<>();
-        return (List<Byte>) get(key);
+        } else {
+            return (List<Byte>) get(key);
+        }
     }
 
     /**
@@ -194,9 +216,11 @@ public interface StorageBase {
      */
 
     default List<Long> getLongList(final String key) {
-        if (!contains(key))
+        if (!contains(key)) {
             return new ArrayList<>();
-        return (List<Long>) get(key);
+        } else {
+            return (List<Long>) get(key);
+        }
     }
 
     /**
@@ -219,9 +243,9 @@ public interface StorageBase {
      */
 
     default void setDefault(String key, Object value) {
-        if (contains(key))
-            return;
-        set(key, value);
+        if (!contains(key)) {
+            set(key, value);
+        }
     }
 
     default <T> T getOrSetDefault(String path, T def) {

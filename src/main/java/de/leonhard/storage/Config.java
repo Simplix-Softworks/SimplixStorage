@@ -126,10 +126,11 @@ public class Config extends Yaml {
         List<String> tmp = new ArrayList<>();
         //Updating the values to have a comments, if someone forgets to set them
         for (final String line : header) {
-            if (!line.startsWith("#"))
+            if (!line.startsWith("#")) {
                 tmp.add("#" + line);
-            else
+            } else {
                 tmp.add(line);
+            }
         }
         this.header = tmp;
 
