@@ -57,22 +57,7 @@ public class YamlParser {
         return updated;
     }
 
-    private boolean contains(final List<String> list, final String toFind) {
-        for (final String toCheck : list) {
-            if (toCheck.startsWith("#"))
-                continue;
-            if (toCheck.equals(toFind)) {
-                System.out.println("The value '" + toCheck + "' is equal to '" + toFind + "'.");
-                return true;
-            } else {
-                System.out.println("The value '" + toCheck + "' is not equal to '" + toFind + "'.");
-            }
-        }
-        return false;
-    }
-
     private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
-
         List<String> storage = new ArrayList<>();
         final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
         final Map<String, List<String>> result = new HashMap<>();
@@ -92,14 +77,15 @@ public class YamlParser {
 
         final List<String> keysToRemove = new ArrayList<>();
         for (final String line : result.keySet()) {
-            if (result.get(line).equals(new ArrayList<>()))
+            if (result.get(line).equals(new ArrayList<>())) {
                 keysToRemove.add(line);
+            }
         }
 
-        for (final String key : keysToRemove)
+        for (final String key : keysToRemove) {
             result.remove(key);
+        }
 
         return result;
-
     }
 }
