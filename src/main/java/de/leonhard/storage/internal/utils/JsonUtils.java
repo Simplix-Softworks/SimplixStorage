@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
+@SuppressWarnings("WeakerAccess")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtils {
 
@@ -20,35 +21,29 @@ public class JsonUtils {
         return retMap;
     }
 
-
     public static Map<String, Object> toMap(JSONObject object) throws JSONException {
         Map<String, Object> map = new HashMap<>();
 
         Iterator<String> keysItr = object.keys();
-        while (keysItr.hasNext()) {
-            String key = keysItr.next();
-            Object value = object.get(key);
-
-            if (value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            } else if (value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            map.put(key, value);
-        }
+        keysItr.forEachRemaining(key -> map.put(key, getValue(object.get(key))));
         return map;
+    }
+
+    private static Object getValue(Object o) {
+        if (o instanceof JSONArray) {
+            return toList((JSONArray) o);
+        } else if (o instanceof JSONObject) {
+            return toMap((JSONObject) o);
+        } else {
+            return o;
+        }
+
     }
 
     public static List<Object> toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
-            Object value = array.get(i);
-            if (value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            } else if (value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            list.add(value);
+            list.add(getValue(array.get(i)));
         }
         return list;
     }
