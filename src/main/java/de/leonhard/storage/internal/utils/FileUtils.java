@@ -20,6 +20,17 @@ public class FileUtils {
 		return getAndMake(new File(path, name));
 	}
 
+	public static InputStream createNewInputStream(final File file) {
+		try {
+			return Files.newInputStream(file.toPath());
+		} catch (IOException e) {
+			System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
+			System.err.println("At: '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException("InputStream would be null");
+		}
+	}
+
 
 	public static void copy(final InputStream inputStream, final Path destination) {
 		try {

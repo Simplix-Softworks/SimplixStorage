@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.base;
 
-import org.json.JSONException;
+import de.leonhard.storage.internal.utils.JsonUtils;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -24,6 +24,9 @@ public class FileData {
 		localMap = new HashMap<>(map);
 	}
 
+	public FileData() {
+		this.localMap = new HashMap<>();
+	}
 
 	/**
 	 * Method to get the object assign to a key from a FileData Object.
@@ -228,20 +231,9 @@ public class FileData {
 
 
 	public JSONObject toJsonObject() {
-		return getJsonFromMap(localMap);
+		return JsonUtils.getJsonFromMap(localMap);
 	}
 
-	private JSONObject getJsonFromMap(Map<String, Object> map) throws JSONException {
-		JSONObject jsonData = new JSONObject();
-		for (String key : map.keySet()) {
-			Object value = map.get(key);
-			if (value instanceof Map<?, ?>) {
-				value = getJsonFromMap((Map<String, Object>) value);
-			}
-			jsonData.put(key, value);
-		}
-		return jsonData;
-	}
 
 	@Override
 	public synchronized boolean equals(final Object obj) {

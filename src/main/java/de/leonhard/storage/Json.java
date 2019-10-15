@@ -4,6 +4,7 @@ import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.StorageBase;
 import de.leonhard.storage.internal.enums.FileType;
+import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.JsonUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -23,14 +23,13 @@ import java.util.Set;
 public class Json extends FlatFile implements StorageBase {
 	@Setter
 	private String pathPrefix;
+	private FileData fileData;
 	private JSONObject jsonObject;
 
 
 	public Json(final String name, final String path) {
 		try {
 			create(name, path, FileType.JSON);
-			final InputStream inputStream = Files.newInputStream(file.toPath());
-
 			if (getFile().length() == 0) {
 				jsonObject = new JSONObject();
 				Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
@@ -38,11 +37,7 @@ public class Json extends FlatFile implements StorageBase {
 				writer.close();
 			}
 
-			final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(inputStream));
-			jsonObject = new JSONObject(tokener);
-
-			inputStream.close();
-
+			update();
 		} catch (final Exception ex) {
 			System.err.println("Error creating JSON '" + file.getName() + "'");
 			System.err.println("In '" + file.getAbsolutePath() + "'");
@@ -193,14 +188,7 @@ public class Json extends FlatFile implements StorageBase {
 
 	@Override
 	public void update() {
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(getFile());
-		} catch (FileNotFoundException | NullPointerException e) {
-			System.err.println("Exception while reading Json");
-			e.printStackTrace();
-		}
-		final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(fis));
+		final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
 		jsonObject = new JSONObject(tokener);
 	}
 

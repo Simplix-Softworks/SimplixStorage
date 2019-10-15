@@ -39,10 +39,12 @@ public class Yaml extends FlatFile implements StorageBase {
 
 	public Yaml(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
 		create(name, path, FileType.YAML);
-
-		if (inputStream != null) {
-			FileUtils.copy(inputStream, file.toPath());
+		if (file.length() == 0) {
+			if (inputStream != null) {
+				FileUtils.copy(inputStream, file.toPath());
+			}
 		}
+
 		yamlEditor = new YamlEditor(file);
 		parser = new YamlParser(yamlEditor);
 		update();
@@ -51,8 +53,7 @@ public class Yaml extends FlatFile implements StorageBase {
 		}
 	}
 
-
-	protected final boolean isYaml(final String fileName) {
+	public static boolean isYaml(final String fileName) {
 		return (fileName.lastIndexOf(".") > 0 ? fileName.substring(fileName.lastIndexOf(".") + 1) : "").equals("yml");
 	}
 
@@ -80,19 +81,18 @@ public class Yaml extends FlatFile implements StorageBase {
 			}
 
 			try {
-				if (configSettings.equals(ConfigSettings.preserveComments)) {
-
-					final List<String> unEdited = yamlEditor.read();
-					final List<String> header = yamlEditor.readHeader();
-					final List<String> footer = yamlEditor.readFooter();
-					write(fileData.toMap());
-					header.addAll(yamlEditor.read());
-					if (!header.containsAll(footer)) {
-						header.addAll(footer);
-					}
-					yamlEditor.write(parser.parseComments(unEdited, header));
+				if (!ConfigSettings.preserveComments.equals(configSettings)) {
 					return;
 				}
+				final List<String> unEdited = yamlEditor.read();
+				final List<String> header = yamlEditor.readHeader();
+				final List<String> footer = yamlEditor.readFooter();
+				write(fileData.toMap());
+				header.addAll(yamlEditor.read());
+				if (!header.containsAll(footer)) {
+					header.addAll(footer);
+				}
+				yamlEditor.write(parser.parseComments(unEdited, header));
 				write(Objects.requireNonNull(fileData).toMap());
 			} catch (final IOException e) {
 				System.err.println("Error while writing '" + getName() + "'");
