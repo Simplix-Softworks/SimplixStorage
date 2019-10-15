@@ -13,7 +13,10 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @SuppressWarnings({"Duplicates", "unused", "WeakerAccess", "unchecked"})
 @Getter
@@ -21,7 +24,6 @@ public class Json extends FlatFile implements StorageBase {
     @Setter
     private String pathPrefix;
     private JSONObject jsonObject;
-
 
     /**
      * Creates a .json file where you can put your data in.
@@ -53,6 +55,8 @@ public class Json extends FlatFile implements StorageBase {
             jsonObject = new JSONObject(tokener);
 
             fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (Exception ex) {
             System.err.println(
                     "Error while creating file - Maybe wrong format - Try deleting the file " + Objects.requireNonNull(getFile()).getName());
@@ -127,8 +131,8 @@ public class Json extends FlatFile implements StorageBase {
     }
 
     /**
-     * Sets a value to the json if the file doesn't already contain the value (Not
-     * mix up with Bukkit addDefault) Uses {@link JSONObject}
+     * Sets a value to the json if the file doesn't already contain the value
+     * (Not mix up with Bukkit addDefault) Uses {@link JSONObject}
      *
      * @param key   Key to set the value
      * @param value Value to set
@@ -175,11 +179,13 @@ public class Json extends FlatFile implements StorageBase {
      */
 
     @Override
-    public Map getMap(String key) {
-        if (!contains(key))
+    public Map getMap(final String key) {
+        String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        if (!contains(tempKey)) {
             return new HashMap();
-        key = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        return getMapWithoutPath(key);
+        } else {
+            return getMapWithoutPath(tempKey);
+        }
     }
 
     private Map getMapWithoutPath(final String key) {
@@ -221,16 +227,13 @@ public class Json extends FlatFile implements StorageBase {
 
                 jsonObject = new JSONObject(data.toMap());
                 try {
-                    if (old.toString().equals(jsonObject.toString()) && getFile().length() != 0) {
+                    if (old.toString().equals(jsonObject.toString()) && getFile().length() != 0)
                         return;
-                    }
 
                     write(jsonObject);
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                } finally {
-                    old = null;
                 }
                 return;
             }
@@ -251,7 +254,6 @@ public class Json extends FlatFile implements StorageBase {
         writer.write(object.toString(3));
         writer.close();
     }
-
 
     @Override
     public <T> T getOrSetDefault(final String path, T def) {
@@ -294,7 +296,8 @@ public class Json extends FlatFile implements StorageBase {
         return new FileData(jsonObject.toMap()).keySet();
     }
 
-    public Set<String> getKeySet(String key) {
+    @Override
+    public Set<String> keySet(final String key) {
         reload();
         return new FileData(jsonObject.toMap()).keySet(key);
     }
@@ -311,7 +314,7 @@ public class Json extends FlatFile implements StorageBase {
     }
 
     @Override
-    public void removeKey(final String key) {
+    public void remove(final String key) {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
         final Map obj = jsonObject.toMap();
