@@ -9,86 +9,84 @@ import de.leonhard.storage.internal.enums.ReloadSettings;
 import java.io.File;
 import java.util.Set;
 
-@SuppressWarnings("unused")
 public class LightningFile extends FlatFile implements StorageBase {
 
-    private FileData fileData;
+	private FileData fileData;
 
-    public LightningFile(final String name, final String path) {
-        create(name, path, FileType.LS);
-        setReloadSettings(ReloadSettings.INTELLIGENT);
-    }
+	public LightningFile(final String name, final String path) {
+		create(name, path, FileType.LS);
+	}
 
-    public LightningFile(final String name, final String path, final ReloadSettings reloadSettings) {
-        setReloadSettings(reloadSettings);
-    }
+	public LightningFile(final String name, final String path, final ReloadSettings reloadSettings) {
+		this.reloadSettings = reloadSettings;
+	}
 
-    LightningFile(final File file) {
-        create(file);
-    }
+	LightningFile(final File file) {
+		create(file);
+	}
 
-    //added method for later implementation
-    @Override
-    public void update() {
-        //TODO
-    }
+	//added method for later implementation
+	@Override
+	public void update() {
+		//TODO
+	}
 
-    //added method for later implementation
-    @Override
-    public Set<String> singleLayerKeySet() {
-        return null;
-    }
+	//added method for later implementation
+	@Override
+	public Set<String> singleLayerKeySet() {
+		return null;
+	}
 
-    //added method for later implementation
-    @Override
-    public Set<String> singleLayerKeySet(final String key) {
-        return null;
-    }
+	//added method for later implementation
+	@Override
+	public Set<String> singleLayerKeySet(final String key) {
+		return null;
+	}
 
-    //added method for later implementation
-    @Override
-    public Set<String> keySet() {
-        return null;
-    }
+	//added method for later implementation
+	@Override
+	public Set<String> keySet() {
+		return null;
+	}
 
-    //added method for later implementation
-    @Override
-    public Set<String> keySet(final String key) {
-        return null;
-    }
+	//added method for later implementation
+	@Override
+	public Set<String> keySet(final String key) {
+		return null;
+	}
 
-    //added method for later implementation
-    @Override
-    public void remove(final String key) {
-        //TODO
-    }
+	//added method for later implementation
+	@Override
+	public void remove(final String key) {
+		//TODO
+	}
 
-    //added method for later implementation
-    @Override
-    public void set(final String key, final Object value) {
-        //TODO
-    }
+	//added method for later implementation
+	@Override
+	public void set(final String key, final Object value) {
+		//TODO
+	}
 
-    @Override
-    public boolean contains(final String key) {
-        return false;
-    }
+	@Override
+	public boolean contains(final String key) {
+		return false;
+	}
 
-    @Override
-    public Object get(final String key) {
-        return null;
-    }
+	@Override
+	public Object get(final String key) {
+		return null;
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj == null || this.getClass() != obj.getClass()) {
-            return false;
-        } else {
-            LightningFile lightningFile = (LightningFile) obj;
-            return this.fileData.equals(lightningFile.fileData)
-                    && super.equals(lightningFile.getFlatFileInstance());
-        }
-    }
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			LightningFile lightningFile = (LightningFile) obj;
+			return this.fileData.equals(lightningFile.fileData)
+					&& super.equals(lightningFile.getFlatFileInstance());
+		}
+	}
 }
