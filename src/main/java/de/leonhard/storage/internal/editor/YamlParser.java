@@ -4,28 +4,29 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class YamlParser {
 
     final private YamlEditor yamlEditor;
     final private File file;
-
 
     public YamlParser(final YamlEditor yamlEditor) {
         this.yamlEditor = yamlEditor;
         this.file = yamlEditor.getFile();
     }
 
-
     /**
      * Method to assign a comment to a key
      *
      * @return
+     * @throws IOException
      */
-
+    @SuppressWarnings("JavaDoc")
     private Map<String, List<String>> assignCommentsToKey() throws IOException {
         return assignCommentsToKey(yamlEditor.read());
     }
 
+    @SuppressWarnings("UnusedAssignment")
     public List<String> parseComments(final List<String> comments, final List<String> updated) {
         final List<String> keys;
         final Map<String, List<String>> parsed;
@@ -41,16 +42,20 @@ public class YamlParser {
         for (final String key : parsed.keySet()) {
             int i = 0;
             for (final String line : parsed.get(key)) {
+                if (line.isEmpty())
+                    continue;
                 if (updated.contains(key + " ")) {
                     updated.add(updated.indexOf(key + " ") + i, line);
-                } else if (updated.contains(" " + key)) {
+                    continue;
+                }
+                if (updated.contains(" " + key)) {
                     updated.add(updated.indexOf(" " + key) + i, line);
                 }
+
             }
         }
         return updated;
     }
-
 
     private boolean contains(final List<String> list, final String toFind) {
         for (final String toCheck : list) {
@@ -72,11 +77,10 @@ public class YamlParser {
         final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
         final Map<String, List<String>> result = new HashMap<>();
 
-        //Loop over the remaining lines
-        int i = 0;
-        Collections.reverse(lines);//Reverse -> Should start from the end
+        // Loop over the remaining lines
+        Collections.reverse(lines);// Reverse -> Should start from the end
         for (final String line : lines) {
-            if (line.replaceAll("\\s+", "").startsWith("#") || line.isEmpty()) { //Replacing the whitespaces
+            if (line.replaceAll("\\s+", "").startsWith("#") || line.isEmpty()) { // Replacing the whitespaces
                 storage.add(line);
                 continue;
             }
@@ -84,7 +88,7 @@ public class YamlParser {
             storage = new ArrayList<>();
         }
 
-        //Removing keys without comments
+        // Removing keys without comments
 
         final List<String> keysToRemove = new ArrayList<>();
         for (final String line : result.keySet()) {
