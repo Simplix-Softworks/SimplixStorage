@@ -84,23 +84,23 @@ public class LightningFile extends FlatFile implements StorageBase {
 		}
 	}
 
-	private void write(Map<String, Object> map, String indentationString) {
-		for (String localKey : map.keySet()) {
-			if (localKey.startsWith("#")) {
-				writer.println(indentationString + "  " + localKey);
-			} else if (map.get(localKey) instanceof Map) {
-				writer.println(indentationString + "  " + localKey + " " + "{");
-				//noinspection unchecked
-				write((Map<String, Object>) map.get(localKey), indentationString + "  ");
-			} else {
-				writer.println(indentationString + "  " + localKey + " = " + map.get(localKey));
-			}
-		}
-		writer.println(indentationString + "}");
-	}
+    private void write(Map<String, Object> map, String indentationString) {
+        for (String localKey : map.keySet()) {
+            if (localKey.startsWith("#")) {
+                writer.println(indentationString + "  " + localKey);
+            } else if (map.get(localKey) instanceof Map) {
+                writer.println(indentationString + "  " + localKey + " " + "{");
+                //noinspection unchecked
+                write((Map<String, Object>) map.get(localKey), indentationString + "  ");
+            } else {
+                writer.println(indentationString + "  " + localKey + " = " + map.get(localKey));
+            }
+        }
+        writer.println(indentationString + "}");
+    }
 
 	@SuppressWarnings("Duplicates")
-	public Map<String, Object> read() throws IOException {
+	private Map<String, Object> read() throws IOException {
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 		List<String> lines = FileUtils.readAllLines(this.file);
