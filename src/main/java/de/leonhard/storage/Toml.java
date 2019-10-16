@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Getter
+@SuppressWarnings("unchecked")
 public class Toml extends FlatFile {
 	@Setter
 	private String pathPrefix;
@@ -88,7 +89,8 @@ public class Toml extends FlatFile {
 		}
 	}
 
-	private void update() {
+	@Override
+	protected void update() {
 		try {
 			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
 		} catch (IOException e) {

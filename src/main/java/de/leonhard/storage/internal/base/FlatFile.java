@@ -49,6 +49,14 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+	@Override
+	public void reload() {
+		if (shouldReload()) {
+			update();
+		}
+	}
+
+	protected abstract void update();
 
 	@Override
 	public Set<String> singleLayerKeySet() {

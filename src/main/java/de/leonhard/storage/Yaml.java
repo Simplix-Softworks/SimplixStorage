@@ -18,6 +18,7 @@ import java.io.*;
 import java.util.*;
 
 @Getter
+@SuppressWarnings("unchecked")
 public class Yaml extends FlatFile implements StorageBase {
 	private final YamlEditor yamlEditor;
 	private final YamlParser parser;
@@ -119,13 +120,7 @@ public class Yaml extends FlatFile implements StorageBase {
 	}
 
 	@Override
-	public void reload() {
-		if (shouldReload()) {
-			update();
-		}
-	}
-
-	public void update() {
+	protected void update() {
 		YamlReader reader = null;
 		try {
 			reader = new YamlReader(new FileReader(getFile()));// Needed?

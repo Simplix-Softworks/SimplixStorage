@@ -195,7 +195,8 @@ class CSV extends FlatFile {
 	}
 
 	//added method for later implementation
-	private void update() {
+	@Override
+	protected void update() {
 		//TODO
 	}
 

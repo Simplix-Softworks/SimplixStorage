@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Getter
+@SuppressWarnings("unchecked")
 public class Json extends FlatFile implements StorageBase {
 	@Setter
 	private String pathPrefix;
@@ -60,13 +61,6 @@ public class Json extends FlatFile implements StorageBase {
 			return;
 		}
 		set(key, value);
-	}
-
-	@Override
-	public void reload() {
-		if (shouldReload()) {
-			update();
-		}
 	}
 
 	@Override
@@ -168,15 +162,15 @@ public class Json extends FlatFile implements StorageBase {
 		}
 	}
 
-	private void update() {
-		final JSONTokener tokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
-		fileData = new FileData(new JSONObject(tokener));
+	@Override
+	protected void update() {
+		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
+		fileData = new FileData(new JSONObject(jsonTokener));
 	}
-
 
 	private boolean has(final String key) {
 		reload();
-		return new FileData(fileData.toMap()).containsKey(key);
+		return fileData.containsKey(key);
 	}
 
 	@Override
