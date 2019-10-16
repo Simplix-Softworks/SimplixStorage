@@ -7,14 +7,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.util.Set;
 
 @Getter
-public abstract class FlatFile implements Comparable<FlatFile> {
+public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Setter
 	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+	protected FileData fileData = new FileData();
 	protected File file;
 	protected FileType fileType;
-	protected FileData fileData;
 	private long lastModified;
 
 	/**
@@ -46,6 +47,31 @@ public abstract class FlatFile implements Comparable<FlatFile> {
 			lastModified = System.currentTimeMillis();
 			return true;
 		}
+	}
+
+
+	@Override
+	public Set<String> singleLayerKeySet() {
+		reload();
+		return fileData.singleLayerKeySet();
+	}
+
+	@Override
+	public Set<String> singleLayerKeySet(final String key) {
+		reload();
+		return fileData.singleLayerKeySet(key);
+	}
+
+	@Override
+	public Set<String> keySet() {
+		reload();
+		return fileData.keySet();
+	}
+
+	@Override
+	public Set<String> keySet(final String key) {
+		reload();
+		return fileData.keySet(key);
 	}
 
 	public final boolean shouldReload() {
