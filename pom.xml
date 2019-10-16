@@ -6,7 +6,6 @@
     <groupId>de.leonhard</groupId>
     <artifactId>lightningstorage</artifactId>
     <version>2.5.0</version>
-    <packaging>jar</packaging>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/lightningstorage</url>
@@ -103,10 +102,26 @@
                     </relocations>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifestEntries>
+                            <Manifest-Version>${project.version}</Manifest-Version>
+                            <Built-By>${project.name} Development Team</Built-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -146,21 +161,31 @@
         </repository>
     </repositories>
     <dependencies>
+        <!-- TOML -->
         <dependency>
             <groupId>de.leonhard</groupId>
             <artifactId>toml</artifactId>
             <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
+
+        <!-- YAML -->
         <dependency>
             <groupId>com.esotericsoftware.yamlbeans</groupId>
             <artifactId>yamlbeans</artifactId>
             <version>1.08</version>
+            <scope>compile</scope>
         </dependency>
+
+        <!-- JSON -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20180813</version>
+            <scope>compile</scope>
         </dependency>
+
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

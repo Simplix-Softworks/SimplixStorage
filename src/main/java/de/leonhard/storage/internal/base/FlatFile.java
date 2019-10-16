@@ -37,7 +37,7 @@ public abstract class FlatFile implements Comparable<FlatFile> {
         return generateFile(file);
     }
 
-    private boolean generateFile(File file) {
+    private synchronized boolean generateFile(File file) {
         if (file.exists()) {
             lastModified = System.currentTimeMillis();
             return false;
@@ -91,7 +91,7 @@ public abstract class FlatFile implements Comparable<FlatFile> {
     }
 
     @Override
-    public synchronized int compareTo(@SuppressWarnings("NullableProblems") final FlatFile flatFile) {
+    public synchronized int compareTo(final FlatFile flatFile) {
         return this.file.compareTo(flatFile.file);
     }
 

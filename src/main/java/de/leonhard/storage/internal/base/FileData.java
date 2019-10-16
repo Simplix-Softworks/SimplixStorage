@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An extended HashMap, to easily use the nested HashMaps created by reading the Configuration files.
+ * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration files.
  */
 @SuppressWarnings("unused")
 public class FileData {
@@ -65,9 +65,9 @@ public class FileData {
         //noinspection unchecked
         localMap.put(parts[0],
                 localMap.containsKey(parts[0])
-                && localMap.get(parts[0]) instanceof Map
-                ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-                : insert(new HashMap<>(), parts, value, 1);
+                        && localMap.get(parts[0]) instanceof Map
+                        ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
+                        : insert(new HashMap<>(), parts, value, 1));
     }
 
     private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
@@ -76,9 +76,9 @@ public class FileData {
             //noinspection unchecked
             Map<String, Object> childMap =
                     map.containsKey(key[id])
-                    && (map.get(key[id]) instanceof Map
-                    ? Map<String, Object>) map.get(key[id])
-                    : new HashMap<>();
+                            && map.get(key[id]) instanceof Map
+                            ? (Map<String, Object>) map.get(key[id])
+                            : new HashMap<>();
             tempMap.put(key[id], insert(childMap, key, value, id + 1));
             return tempMap;
         } else {
@@ -282,7 +282,7 @@ public class FileData {
      * @return the String value of localMap.
      */
     @Override
-    public synchronized String toString() {
+    public String toString() {
         return this.localMap.toString();
     }
 }

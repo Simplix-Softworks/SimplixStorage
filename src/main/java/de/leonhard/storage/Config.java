@@ -64,7 +64,6 @@ public class Config extends Yaml {
 
     @Override
     public List<String> getHeader() {
-
         if (getConfigSettings().equals(ConfigSettings.skipComments)) {
             return new ArrayList<>();
         }
@@ -123,7 +122,7 @@ public class Config extends Yaml {
         }
     }
 
-    protected Config getConfigInstance() {
+    protected final Config getConfigInstance() {
         return this;
     }
 

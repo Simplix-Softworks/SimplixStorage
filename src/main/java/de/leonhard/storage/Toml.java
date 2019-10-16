@@ -145,6 +145,10 @@ public class Toml extends FlatFile implements StorageBase {
         write(fileData.toMap());
     }
 
+    protected final Toml getTomlInstance() {
+        return this;
+    }
+
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {

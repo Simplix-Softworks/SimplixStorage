@@ -33,15 +33,6 @@ public class FileUtils {
     }
 
 
-    public static void copy(final InputStream inputStream, final Path destination) {
-        try {
-            Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
-        } catch (final Exception exception) {
-            System.err.println("Exception while copying to + '" + destination.toAbsolutePath() + "'");
-            exception.printStackTrace();
-        }
-    }
-
     public static void writeToFile(final File file, final InputStream inputStream) {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             if (!file.exists()) {
@@ -54,6 +45,7 @@ public class FileUtils {
                 }
             }
         } catch (IOException e) {
+            System.err.println("Exception while copying to + '" + file.getAbsolutePath() + "'");
             e.printStackTrace();
         }
     }

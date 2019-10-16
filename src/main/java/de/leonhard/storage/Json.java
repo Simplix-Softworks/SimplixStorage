@@ -226,6 +226,9 @@ public class Json extends FlatFile implements StorageBase {
         }
     }
 
+    protected final Json getJsonInstance() {
+        return this;
+    }
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {
