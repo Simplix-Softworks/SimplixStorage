@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 @Getter
 public class LightningFile extends FlatFile implements StorageBase {
     @Setter
