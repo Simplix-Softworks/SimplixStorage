@@ -17,7 +17,7 @@ import lombok.Setter;
 import java.io.*;
 import java.util.*;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 @Getter
 public class Yaml extends FlatFile implements StorageBase {
     private final YamlEditor yamlEditor;
