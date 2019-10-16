@@ -7,6 +7,7 @@ import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Synchronized;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +35,14 @@ public class Toml extends FlatFile {
 	}
 
 	/**
-	 * Set a object to your file
+	 * Set an object to your file
 	 *
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your file
 	 */
 
 	@Override
+	@Synchronized
 	public void set(final String key, final Object value) {
 		reload();
 
