@@ -9,10 +9,7 @@ import de.leonhard.storage.internal.utils.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +37,11 @@ public class LightningFile extends FlatFile implements StorageBase {
     //added method for later implementation
     @Override
     public void update() {
-        //TODO
+        try {
+            this.fileData = new FileData(read());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //added method for later implementation
@@ -88,78 +89,169 @@ public class LightningFile extends FlatFile implements StorageBase {
             }
             try {
                 writer = new PrintWriter(file);
-                write(fileData.toMap(), "");
+                Map<String, Object> map = fileData.toMap();
+                for (String localKey : map.keySet()) {
+                    if (localKey.startsWith("#")) {
+                        writer.println("  " + localKey);
+                    } else if (map.get(localKey) instanceof Map) {
+                        writer.println(key + " " + "{");
+                        //noinspection unchecked
+                        write((Map<String, Object>) map.get(localKey), "  ");
+                    } else {
+                        writer.println("  " +  localKey + " = " + map.get(localKey));
+                    }
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void write(Map<String, Object> map, String indentation) {
-        writer.println(indentation + "{");
+    private void write(Map<String, Object> map, String indentationString) {
         for (String key : map.keySet()) {
-            if (map.get(key) instanceof Map) {
+            if (key.startsWith("#")) {
+               writer.println(indentationString + "  " + key);
+            } else if (map.get(key) instanceof Map) {
+                writer.println(indentationString + key + " " + "{");
                 //noinspection unchecked
-                write((Map<String, Object>) map.get(key), indentation + "  ");
+                write((Map<String, Object>) map.get(key), indentationString + "  ");
             } else {
-                writer.println(indentation + key + " = " + map.get(key));
+                writer.println(indentationString + "  " +  key + " = " + map.get(key));
             }
         }
-        writer.println(indentation + "}");
+        writer.println(indentationString + "}");
     }
 
-    private void read() {
-        try {
-            HashMap<String, Object> map = new HashMap<>();
-            String[] lines = FileUtils.readAllLines(this.file).toArray(new String[0]);
-            for (int i = 0; i < lines.length; i++) {
-                while (lines[i].startsWith(" ")) {
-                    lines[i] = lines[i].substring(1);
+    private Map<String, Object> read() throws IOException {
+        Map<String, Object> tempMap = new HashMap<>();
+        String tempKey = null;
+        List<String> lines = FileUtils.readAllLines(this.file);
+        while (lines.size() > 0) {
+            while (lines.get(0).startsWith(" ")) {
+                lines.set(0, lines.get(0).substring(1));
+            }
+            while (lines.get(0).endsWith(" ")) {
+                lines.set(0, lines.get(0).substring(0, lines.get(0).length() - 1));
+            }
+
+            if (lines.get(0).contains("}")) {
+                throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+            } else if (lines.get(0).startsWith("#")) {
+                tempMap.put(lines.get(0), null);
+            } else if (lines.get(0).endsWith("{")) {
+                if (!lines.get(0).equals("{")) {
+                    tempKey = lines.get(0).replace("{", "");
+                    while (tempKey.endsWith(" ")) {
+                        tempKey = tempKey.substring(0, tempKey.length() - 1);
+                    }
+                } else if (tempKey == null) {
+                    throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
                 }
-                while (lines[i].endsWith(" ")) {
-                    lines[i] = lines[i].substring(0, lines.length - 1);
+                lines.remove(0);
+                tempMap.put(tempKey, read(lines));
+            } else {
+                if (lines.get(0).contains(" = ")) {
+                    String[] line = lines.get(0).split(" = ");
+                    lines.remove(0);
+                    tempMap.put(line[0], line[1]);
+                } else {
+                    if (lines.get(1).contains("{")) {
+                        tempKey = lines.get(0);
+                    } else {
+                        throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                    }
                 }
-                if (lines[i].endsWith("{")) {
+            }
+        }
+            /*for (int i = 0; i < lines.size(); i++) {
+                while (lines.get(i).startsWith(" ")) {
+                    lines.set(i, lines.get(i).substring(1));
+                }
+                while (lines.get(i).endsWith(" ")) {
+                    lines.set (i, lines.get(i).substring(0, lines.get(i).length() - 1));
+                }
+                if (lines.get(i).endsWith("{")) {
                     HashMap<String, Object> tempmap = new HashMap<>();
-                    String key = lines[i];
+                    String key = lines.get(i);
                     i = read(tempmap, lines, i);
                     map.put(key.replace("{", ""), tempmap);
                 } else {
-                    String[] line = lines[i].split(" = ");
+                    String[] line = lines.get(i).split(" = ");
                     map.put(line[0], line[1]);
                 }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            }*/
+        return tempMap;
     }
 
-    private int read(HashMap<String, Object> map, String[] lines, int id) {
-        for (int i = id; i < lines.length; i++) {
-            while (lines[i].startsWith(" ")) {
-                lines[i] = lines[i].substring(1);
+    private Map<String, Object> read(List<String> lines) throws InvalidObjectException {
+        Map<String, Object> tempMap = new HashMap<>();
+        String tempKey = null;
+        while (lines.size() > 0) {
+            while (lines.get(0).startsWith(" ")) {
+                lines.set(0, lines.get(0).substring(1));
             }
-            while (lines[i].endsWith(" ")) {
-                lines[i] = lines[i].substring(0, lines.length - 1);
+            while (lines.get(0).endsWith(" ")) {
+                lines.set(0, lines.get(0).substring(0, lines.get(0).length() - 1));
             }
-            if (lines[i].endsWith("{")) {
+
+            if (lines.get(0).equals("}")) {
+                return tempMap;
+            } else if (lines.get(0).contains("}")) {
+                throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+            } else if (lines.get(0).startsWith("#")) {
+                tempMap.put(lines.get(0), null);
+            } else if (lines.get(0).endsWith("{")) {
+                if (!lines.get(0).equals("{")) {
+                    tempKey = lines.get(0).replace("{", "");
+                    while (tempKey.endsWith(" ")) {
+                        tempKey = tempKey.substring(0, tempKey.length() - 1);
+                    }
+                } else if (tempKey == null) {
+                    throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                }
+                lines.remove(0);
+                tempMap.put(tempKey, read(lines));
+            } else {
+                if (lines.get(0).contains(" = ")) {
+                    String[] line = lines.get(0).split(" = ");
+                    lines.remove(0);
+                    tempMap.put(line[0], line[1]);
+                } else {
+                    if (lines.get(1).contains("{")) {
+                        tempKey = lines.get(0);
+                    } else {
+                        throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                    }
+                }
+            }
+        }
+        return tempMap;
+        /*for (int i = id; i < lines.size(); i++) {
+            while (lines.get(i).startsWith(" ")) {
+                lines.set(i, lines.get(i).substring(1));
+            }
+            while (lines.get(i).endsWith(" ")) {
+                lines.set(i, lines.get(i).substring(0, lines.get(i).length() - 1));
+            }
+            if (lines.get(i).endsWith("{")) {
                 HashMap<String, Object> tempmap = new HashMap<>();
                 String key;
-                if (lines[i].equals("{")) {
-                    key = lines[i - 1];
+                if (lines.get(i).equals("{")) {
+                    key = lines.get(i - 1);
                 } else {
-                    key = lines[i].replace("{", "");
+                    key = lines.get(i).replace("{", "");
                 }
                 i = read(tempmap, lines, i);
                 map.put(key, tempmap);
-            } else if (lines[i].equals("}")) {
+            } else if (lines.get(i).equals("}")) {
                 return i;
             } else {
-                String[] line = lines[i].split(" = ");
+                String[] line = lines.get(i).split(" = ");
                 map.put(line[0], line[1]);
             }
         }
-        return lines.length - 1;
+        return lines.size() - 1;
+         */
     }
 
     @Override
