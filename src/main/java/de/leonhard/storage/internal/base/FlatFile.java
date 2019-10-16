@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -17,6 +21,12 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	protected File file;
 	protected FileType fileType;
 	private long lastModified;
+
+
+	/**
+	 * Reread the content of our flat file
+	 */
+	protected abstract void update();
 
 	/**
 	 * Creates an empty .yml or .json file.
@@ -49,14 +59,12 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-	@Override
 	public void reload() {
 		if (shouldReload()) {
 			update();
 		}
 	}
 
-	protected abstract void update();
 
 	@Override
 	public Set<String> singleLayerKeySet() {
@@ -92,7 +100,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-	public boolean hasChanged() {
+	private boolean hasChanged() {
 		return FileUtils.hasChanged(file, lastModified);
 	}
 
@@ -104,23 +112,17 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return file.getAbsolutePath();
 	}
 
-	protected final FlatFile getFlatFileInstance() {
-		return this;
+	public void replace(final CharSequence target, final CharSequence replacement) throws IOException {
+		final List<String> lines = Files.readAllLines(file.toPath());
+		final List<String> result = new ArrayList<>();
+		for (String line : lines) {
+			result.add(line.replace(target, replacement));
+		}
+		Files.write(file.toPath(), result);
 	}
 
-	@Override
-	public synchronized boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			FlatFile flatFile = (FlatFile) obj;
-			return this.file.equals(flatFile.file)
-					&& this.lastModified == flatFile.lastModified
-					&& reloadSettings.equals(flatFile.reloadSettings)
-					&& fileType.equals(flatFile.fileType);
-		}
+	protected final FlatFile getFlatFileInstance() {
+		return this;
 	}
 
 	@Override
@@ -136,5 +138,20 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Override
 	public synchronized String toString() {
 		return this.file.getAbsolutePath();
+	}
+
+	@Override
+	public synchronized boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			FlatFile flatFile = (FlatFile) obj;
+			return this.file.equals(flatFile.file)
+					&& this.lastModified == flatFile.lastModified
+					&& reloadSettings.equals(flatFile.reloadSettings)
+					&& fileType.equals(flatFile.fileType);
+		}
 	}
 }

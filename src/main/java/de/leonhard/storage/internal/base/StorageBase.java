@@ -9,8 +9,6 @@ import java.util.Set;
 
 public interface StorageBase {
 
-	void reload();
-
 	Set<String> singleLayerKeySet();
 
 	Set<String> singleLayerKeySet(String key);
