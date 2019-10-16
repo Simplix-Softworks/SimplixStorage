@@ -88,7 +88,7 @@ public class LightningFile extends FlatFile implements StorageBase {
             if (localKey.startsWith("#")) {
                 writer.println(indentationString + "  " + localKey);
             } else if (map.get(localKey) instanceof Map) {
-                writer.println(indentationString + localKey + " " + "{");
+                writer.println(indentationString + "  " + localKey + " " + "{");
                 //noinspection unchecked
                 write((Map<String, Object>) map.get(localKey), indentationString + "  ");
             } else {
