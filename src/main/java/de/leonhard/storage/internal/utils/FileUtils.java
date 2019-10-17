@@ -15,10 +15,6 @@ public class FileUtils {
         return timeStamp < file.lastModified();
     }
 
-    public static File getAndMake(final String name, final String path) {
-        return getAndMake(new File(path, name));
-    }
-
     public static InputStream createNewInputStream(final File file) {
         try {
             return Files.newInputStream(file.toPath());
@@ -31,7 +27,7 @@ public class FileUtils {
     }
 
 
-    public static void writeToFile(final File file, final InputStream inputStream) {
+    public static synchronized void writeToFile(final File file, final InputStream inputStream) {
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             if (!file.exists()) {
                 Files.copy(inputStream, file.toPath());
@@ -49,7 +45,7 @@ public class FileUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static File getAndMake(final File file) {
+    public static void createFile(final File file) {
         try {
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
@@ -57,14 +53,12 @@ public class FileUtils {
             if (!file.exists()) {
                 file.createNewFile();
             }
-
         } catch (IOException ioException) {
             System.err.println("Error while creating file '" + file.getName() + "'.");
             System.err.println("Path: '" + file.getAbsolutePath() + "'");
             ioException.printStackTrace();
             throw new IllegalStateException();
         }
-        return file;
     }
 
     public static List<String> readAllLines(final File file) throws IOException {

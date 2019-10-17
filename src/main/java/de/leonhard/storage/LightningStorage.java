@@ -21,11 +21,11 @@ public class LightningStorage {
     private ReloadSettings reloadSettings;
 
 
-    public static LightningStorage newBuilder(final File file) {
+    public static LightningStorage dataFile(final File file) {
         return new LightningStorage(file);
     }
 
-    public static LightningStorage newBuilder(final String name, final String path) {
+    public static LightningStorage dataFile(final String name, final String path) {
         return new LightningStorage(new File(path, FileTypeUtils.addExtension(name, FileType.YAML)));
     }
 
