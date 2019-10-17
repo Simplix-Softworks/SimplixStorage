@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration files.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class FileData {
 
     private final HashMap<String, Object> localMap;

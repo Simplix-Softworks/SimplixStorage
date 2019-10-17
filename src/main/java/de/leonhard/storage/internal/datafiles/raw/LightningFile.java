@@ -1,13 +1,14 @@
-package de.leonhard.storage;
+package de.leonhard.storage.internal.datafiles.raw;
 
 import de.leonhard.storage.internal.base.FileData;
+import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.StorageBase;
+import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
+import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
+import de.leonhard.storage.internal.base.exceptions.LightningFileReadException;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import de.leonhard.storage.internal.utils.FileUtils;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.*;
 import java.util.HashMap;
@@ -15,23 +16,24 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-@Getter
-public class LightningFile extends FlatFile implements StorageBase {
-    @Setter
-    private String pathPrefix;
+public class LightningFile extends FlatFile {
     private PrintWriter writer;
 
-    public LightningFile(final String name, final String path) {
-        create(name, path, FileType.LS);
-    }
+    public LightningFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+        if (FileTypeUtils.isType(file, FileType.LIGHTNING)) {
+            if (create(file)) {
+                if (inputStream != null) {
+                    FileUtils.writeToFile(this.file, inputStream);
+                }
+            }
 
-    public LightningFile(final String name, final String path, final ReloadSettings reloadSettings) {
-        create(name, path, FileType.LS);
-        this.reloadSettings = reloadSettings;
-    }
-
-    public LightningFile(final File file) {
-        create(file);
+            update();
+            if (reloadSettings != null) {
+                setReloadSettings(reloadSettings);
+            }
+        } else {
+            throw new InvalidFileTypeException("The given file if of no valid filetype.");
+        }
     }
 
 
@@ -39,20 +41,25 @@ public class LightningFile extends FlatFile implements StorageBase {
     protected void update() {
         try {
             this.fileData = new FileData(read());
-        } catch (IOException e) {
+        } catch (IOException | LightningFileReadException e) {
+            System.err.println("Exception while reading LightningFile");
             e.printStackTrace();
         }
     }
 
-    //added method for later implementation
+
     @Override
-    public void remove(final String key) {
-        //TODO
+    public synchronized void remove(final String key) {
+        final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+        fileData.remove(finalKey);
+
+        write(fileData.toMap());
     }
 
-    //added method for later implementation
+
     @Override
-    public void set(final String key, final Object value) {
+    public synchronized void set(final String key, final Object value) {
         final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
         synchronized (this) {
@@ -60,29 +67,31 @@ public class LightningFile extends FlatFile implements StorageBase {
             String old = fileData.toString();
             fileData.insert(finalKey, value);
 
-            if (fileData != null && old.equals(fileData.toString())) {
-                return;
+            if (!old.equals(fileData.toString())) {
+                write(fileData.toMap());
             }
-            try {
-                writer = new PrintWriter(file);
-                Map<String, Object> map = fileData.toMap();
-                for (String localKey : map.keySet()) {
-                    if (localKey.startsWith("#") && map.get(localKey) == null) {
-                        writer.println(localKey);
-                    } else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == null) {
-                        writer.println("");
-                    } else if (map.get(localKey) instanceof Map) {
-                        writer.println(localKey + " " + "{");
-                        //noinspection unchecked
-                        write((Map<String, Object>) map.get(localKey), "");
-                    } else {
-                        writer.println(localKey + " = " + map.get(localKey));
-                    }
+        }
+    }
+
+    private void write(Map<String, Object> map) {
+        try {
+            writer = new PrintWriter(file);
+            for (String localKey : map.keySet()) {
+                if (localKey.startsWith("#") && map.get(localKey) == null) {
+                    writer.println(localKey);
+                } else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == null) {
+                    writer.println("");
+                } else if (map.get(localKey) instanceof Map) {
+                    writer.println(localKey + " " + "{");
+                    //noinspection unchecked
+                    write((Map<String, Object>) map.get(localKey), "");
+                } else {
+                    writer.println(localKey + " = " + map.get(localKey));
                 }
-                writer.flush();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
+            writer.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -104,7 +113,7 @@ public class LightningFile extends FlatFile implements StorageBase {
     }
 
     @SuppressWarnings("Duplicates")
-    Map<String, Object> read() throws IOException {
+    Map<String, Object> read() throws LightningFileReadException, IOException {
         List<String> lines = FileUtils.readAllLines(this.file);
         Map<String, Object> tempMap = new HashMap<>();
         String tempKey = null;
@@ -118,7 +127,7 @@ public class LightningFile extends FlatFile implements StorageBase {
             }
 
             if (lines.get(0).contains("}")) {
-                throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                throw new LightningFileReadException("Block closed without being opened");
             } else if (lines.get(0).isEmpty()) {
                 tempMap.put("{=}emptyline" + lines.size(), null);
                 lines.remove(0);
@@ -132,7 +141,7 @@ public class LightningFile extends FlatFile implements StorageBase {
                         tempKey = tempKey.substring(0, tempKey.length() - 1);
                     }
                 } else if (tempKey == null) {
-                    throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                    throw new LightningFileReadException("Key must not be null");
                 }
                 lines.remove(0);
                 tempMap.put(tempKey, read(lines));
@@ -146,7 +155,7 @@ public class LightningFile extends FlatFile implements StorageBase {
                         tempKey = lines.get(0);
                         lines.remove(0);
                     } else {
-                        throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                        throw new LightningFileReadException("Key does not contain value or block");
                     }
                 }
             }
@@ -155,7 +164,7 @@ public class LightningFile extends FlatFile implements StorageBase {
     }
 
     @SuppressWarnings("Duplicates")
-    private Map<String, Object> read(List<String> lines) throws InvalidObjectException {
+    private Map<String, Object> read(List<String> lines) throws LightningFileReadException {
         Map<String, Object> tempMap = new HashMap<>();
         String tempKey = null;
         while (lines.size() > 0) {
@@ -171,7 +180,7 @@ public class LightningFile extends FlatFile implements StorageBase {
                 lines.remove(0);
                 return tempMap;
             } else if (lines.get(0).contains("}")) {
-                throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                throw new LightningFileReadException("Block closed without being opened");
             } else if (lines.get(0).isEmpty()) {
                 tempMap.put("{=}emptyline", null);
                 lines.remove(0);
@@ -185,7 +194,7 @@ public class LightningFile extends FlatFile implements StorageBase {
                         tempKey = tempKey.substring(0, tempKey.length() - 1);
                     }
                 } else if (tempKey == null) {
-                    throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                    throw new LightningFileReadException("Key must not be null");
                 }
                 lines.remove(0);
                 tempMap.put(tempKey, read(lines));
@@ -198,7 +207,7 @@ public class LightningFile extends FlatFile implements StorageBase {
                     if (lines.get(1).contains("{")) {
                         tempKey = lines.get(0);
                     } else {
-                        throw new InvalidObjectException("I MUST GEN NEW EXCEPTION");
+                        throw new LightningFileReadException("Key does not contain value or block");
                     }
                 }
             }
@@ -207,13 +216,10 @@ public class LightningFile extends FlatFile implements StorageBase {
     }
 
     @Override
-    public boolean contains(final String key) {
-        return false;
-    }
-
-    @Override
     public Object get(final String key) {
-        return null;
+        reload();
+        String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+        return fileData.get(finalKey);
     }
 
     @Override
@@ -224,8 +230,7 @@ public class LightningFile extends FlatFile implements StorageBase {
             return false;
         } else {
             LightningFile lightningFile = (LightningFile) obj;
-            return this.fileData.equals(lightningFile.fileData)
-                    && super.equals(lightningFile.getFlatFileInstance());
+            return super.equals(lightningFile.getFlatFileInstance());
         }
     }
 }

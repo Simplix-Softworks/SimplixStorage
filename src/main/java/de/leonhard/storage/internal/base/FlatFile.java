@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -17,6 +18,8 @@ import java.util.Set;
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
     @Setter
+    protected String pathPrefix;
+    @Setter
     protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
     protected FileData fileData = new FileData();
     protected File file;
@@ -32,19 +35,11 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
     /**
      * Creates an empty .yml or .json file.
      *
-     * @param name     Name of the file
-     * @param path     Absolute path where the file should be created
-     * @param fileType .yml/.json  Uses the Enum FileType
+     * @param file the file to be created.
      * @return true if file was created.
      */
-    protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
-        this.fileType = fileType;
-        this.file = new File(path, name + "." + fileType);
-        return generateFile(file);
-    }
-
     protected final synchronized boolean create(final File file) {
-        this.fileType = FileType.getFileType(file);
+        this.fileType = FileTypeUtils.getFileType(file);
         this.file = file;
         return generateFile(file);
     }
@@ -61,9 +56,30 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
     }
 
     public void reload() {
-        if (shouldReload()) {
-            update();
+        try {
+            if (shouldReload()) {
+                update();
+            }
+        } catch (InvalidSettingException e) {
+            e.printStackTrace();
         }
+    }
+
+    public void reload(boolean force) {
+        try {
+            if (shouldReload() || force) {
+                update();
+            }
+        } catch (InvalidSettingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean hasKey(final String key) {
+        String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+        reload();
+        return fileData.containsKey(tempKey);
     }
 
 
@@ -91,13 +107,15 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
         return fileData.keySet(key);
     }
 
-    protected final boolean shouldReload() {
+    protected boolean shouldReload() throws InvalidSettingException {
         if (reloadSettings.equals(ReloadSettings.AUTOMATICALLY)) {
             return true;
         } else if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
             return hasChanged();
-        } else {
+        } else if (reloadSettings.equals(ReloadSettings.MANUALLY)) {
             return false;
+        } else {
+            throw new InvalidSettingException("No proper ReloadSetting");
         }
     }
 
@@ -149,10 +167,12 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
             return false;
         } else {
             FlatFile flatFile = (FlatFile) obj;
-            return this.file.equals(flatFile.file)
-                    && this.lastModified == flatFile.lastModified
+            return this.pathPrefix.equals(flatFile.pathPrefix)
                     && reloadSettings.equals(flatFile.reloadSettings)
-                    && fileType.equals(flatFile.fileType);
+                    && this.fileData.equals(flatFile.fileData)
+                    && this.file.equals(flatFile.file)
+                    && fileType.equals(flatFile.fileType)
+                    && this.lastModified == flatFile.lastModified;
         }
     }
 }

@@ -1,75 +1,39 @@
-package de.leonhard.storage;
+package de.leonhard.storage.internal.datafiles.config;
 
+import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
+import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
+import de.leonhard.storage.internal.datafiles.raw.YamlFile;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"unchecked", "unused"})
-public class Config extends Yaml {
+@SuppressWarnings({"unused"})
+public class YamlConfig extends YamlFile {
 
     private List<String> header;
 
-    public Config(String name, String path) {
-        super(name, path);
+    public YamlConfig(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+        super(file, inputStream, reloadSettings);
         this.setConfigSettings(ConfigSettings.preserveComments);
     }
 
-    public Config(String name, String path, InputStream inputStream) {
-        super(name, path, inputStream);
-        this.setConfigSettings(ConfigSettings.preserveComments);
-    }
 
-    public Config(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
-        super(name, path, inputStream, reloadSettings);
-        this.setConfigSettings(ConfigSettings.preserveComments);
-    }
-
-    @Override
-    public void set(final String key, final Object value) {
-        super.set(key, value, getConfigSettings());
-    }
-
-    @Override
-    public void setDefault(final String key, final Object value) {
-        if (!contains(key)) {
-            set(key, value, getConfigSettings());
-        }
-    }
-
-    @Override
-    public <T> T getOrSetDefault(final String path, T def) {
-        reload();
-        if (!contains(path)) {
-            set(path, def, getConfigSettings());
-            return def;
-        } else {
-            Object obj = get(path); //
-            if (obj instanceof String && def instanceof Integer) {
-                obj = Integer.parseInt((String) obj);
-            }
-            if (obj instanceof String && def instanceof Double) {
-                obj = Double.parseDouble((String) obj);
-            }
-            if (obj instanceof String && def instanceof Float) {
-                obj = Double.parseDouble((String) obj);
-            }
-            return (T) obj;
-        }
-    }
-
-
-    @Override
     public List<String> getHeader() {
         if (getConfigSettings().equals(ConfigSettings.skipComments)) {
             return new ArrayList<>();
         }
 
-        if (!shouldReload()) {
-            return header;
+        try {
+            if (!shouldReload()) {
+                return header;
+            }
+        } catch (InvalidSettingException e) {
+            e.printStackTrace();
         }
         try {
             return getYamlEditor().readHeader();
@@ -122,7 +86,8 @@ public class Config extends Yaml {
         }
     }
 
-    protected final Config getConfigInstance() {
+
+    protected final YamlConfig getConfigInstance() {
         return this;
     }
 
@@ -133,7 +98,7 @@ public class Config extends Yaml {
         } else if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         } else {
-            Config config = (Config) obj;
+            YamlConfig config = (YamlConfig) obj;
             return this.header.equals(config.header)
                     && super.equals(config.getYamlInstance());
         }
