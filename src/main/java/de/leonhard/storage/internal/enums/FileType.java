@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.enums;
 
-
 public enum FileType {
 
 	JSON("json"),

@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -40,18 +39,6 @@ public class TomlFile extends FlatFile {
 		} catch (IOException e) {
 			System.err.println("Exception while reading '" + getName() + "'");
 			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			TomlFile toml = (TomlFile) obj;
-			return super.equals(toml.getFlatFileInstance());
 		}
 	}
 
@@ -103,5 +90,17 @@ public class TomlFile extends FlatFile {
 
 	protected final TomlFile getTomlInstance() {
 		return this;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			TomlFile toml = (TomlFile) obj;
+			return super.equals(toml.getFlatFileInstance());
+		}
 	}
 }

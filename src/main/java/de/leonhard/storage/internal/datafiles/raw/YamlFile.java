@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.FileData;
@@ -73,19 +72,6 @@ public class YamlFile extends FlatFile {
 				System.err.println("Exception while closing file");
 				e.printStackTrace();
 			}
-		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			YamlFile yaml = (YamlFile) obj;
-			return this.configSettings.equals(yaml.configSettings)
-				   && super.equals(yaml.getFlatFileInstance());
 		}
 	}
 
@@ -183,5 +169,18 @@ public class YamlFile extends FlatFile {
 
 	protected final YamlFile getYamlInstance() {
 		return this;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			YamlFile yaml = (YamlFile) obj;
+			return this.configSettings.equals(yaml.configSettings)
+				   && super.equals(yaml.getFlatFileInstance());
+		}
 	}
 }

@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.utils;
 
-
 public class Primitive {
 
 	public static class LONG {

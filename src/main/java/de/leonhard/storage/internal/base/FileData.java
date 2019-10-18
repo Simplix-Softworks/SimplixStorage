@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.base;
 
-
 import de.leonhard.storage.internal.utils.JsonUtils;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -261,11 +260,6 @@ public class FileData {
 	}
 
 	@Override
-	public int hashCode() {
-		return this.localMap.hashCode();
-	}
-
-	@Override
 	public boolean equals(final Object obj) {
 		if (obj == this) {
 			return true;
@@ -275,6 +269,11 @@ public class FileData {
 			FileData fileData = (FileData) obj;
 			return this.localMap.equals(fileData.localMap);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return this.localMap.hashCode();
 	}
 
 	/**

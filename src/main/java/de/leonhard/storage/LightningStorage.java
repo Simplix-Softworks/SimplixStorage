@@ -1,6 +1,5 @@
 package de.leonhard.storage;
 
-
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.config.JsonConfig;

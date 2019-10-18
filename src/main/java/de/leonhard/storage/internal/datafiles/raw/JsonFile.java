@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -42,18 +41,6 @@ public class JsonFile extends FlatFile {
 	protected void update() {
 		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
 		fileData = new FileData(new JSONObject(jsonTokener));
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			JsonFile json = (JsonFile) obj;
-			return super.equals(json.getFlatFileInstance());
-		}
 	}
 
 	@Override
@@ -184,5 +171,17 @@ public class JsonFile extends FlatFile {
 
 	protected final JsonFile getJsonInstance() {
 		return this;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			JsonFile json = (JsonFile) obj;
+			return super.equals(json.getFlatFileInstance());
+		}
 	}
 }

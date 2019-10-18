@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.config;
 
-
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.enums.ReloadSettings;

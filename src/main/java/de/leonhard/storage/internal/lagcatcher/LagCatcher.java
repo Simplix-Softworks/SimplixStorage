@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.lagcatcher;
 
-
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;

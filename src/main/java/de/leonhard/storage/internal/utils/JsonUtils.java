@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.utils;
 
-
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.base;
 
-
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
@@ -140,16 +139,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public synchronized int compareTo(final FlatFile flatFile) {
-		return this.file.compareTo(flatFile.file);
-	}
-
-	@Override
-	public synchronized int hashCode() {
-		return this.file.hashCode();
-	}
-
-	@Override
 	public synchronized boolean equals(final Object obj) {
 		if (obj == this) {
 			return true;
@@ -164,6 +153,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 				   && fileType.equals(flatFile.fileType)
 				   && this.lastModified == flatFile.lastModified;
 		}
+	}
+
+	@Override
+	public synchronized int hashCode() {
+		return this.file.hashCode();
+	}
+
+	@Override
+	public synchronized int compareTo(final FlatFile flatFile) {
+		return this.file.compareTo(flatFile.file);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -44,18 +43,6 @@ public class LightningFile extends FlatFile {
 		} catch (IOException | LightningFileReadException e) {
 			System.err.println("Exception while reading LightningFile");
 			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			LightningFile lightningFile = (LightningFile) obj;
-			return super.equals(lightningFile.getFlatFileInstance());
 		}
 	}
 
@@ -165,8 +152,8 @@ public class LightningFile extends FlatFile {
 			} else {
 				if (lines.get(0).contains(" = ")) {
 					String[] line = lines.get(0).split(" = ");
-					lines.remove(0);
 					tempMap.put(line[0], line[1]);
+					lines.remove(0);
 				} else {
 					if (lines.get(1).contains("{")) {
 						tempKey = lines.get(0);
@@ -184,6 +171,7 @@ public class LightningFile extends FlatFile {
 	private Map<String, Object> read(List<String> lines) throws LightningFileReadException {
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
+
 		while (lines.size() > 0) {
 			lines.set(0, lines.get(0).substring(0, lines.get(0).length() - 1));
 			while (lines.get(0).startsWith(" ")) {
@@ -218,8 +206,8 @@ public class LightningFile extends FlatFile {
 			} else {
 				if (lines.get(0).contains(" = ")) {
 					String[] line = lines.get(0).split(" = ");
-					lines.remove(0);
 					tempMap.put(line[0], line[1]);
+					lines.remove(0);
 				} else {
 					if (lines.get(1).contains("{")) {
 						tempKey = lines.get(0);
@@ -230,5 +218,17 @@ public class LightningFile extends FlatFile {
 			}
 		}
 		return tempMap;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			LightningFile lightningFile = (LightningFile) obj;
+			return super.equals(lightningFile.getFlatFileInstance());
+		}
 	}
 }

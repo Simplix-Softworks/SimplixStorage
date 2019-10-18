@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.base;
 
-
 import de.leonhard.storage.internal.enums.FileType;
 import java.io.File;
 

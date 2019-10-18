@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
@@ -67,18 +66,6 @@ public class CSVFile extends FlatFile {
 	@Override
 	public void reload() {
 
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			CSVFile csv = (CSVFile) obj;
-			return super.equals(csv.getFlatFileInstance());
-		}
 	}
 
 	//added method for later implementation
@@ -261,5 +248,17 @@ public class CSVFile extends FlatFile {
 	@Override
 	public <T> T getOrSetDefault(final String path, final T def) {
 		return null;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			CSVFile csv = (CSVFile) obj;
+			return super.equals(csv.getFlatFileInstance());
+		}
 	}
 }
