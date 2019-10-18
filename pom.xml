@@ -5,7 +5,7 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>lightningstorage</artifactId>
-    <version>2.5.6</version>
+    <version>2.5.7</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/LightningStorage</url>
@@ -150,6 +150,21 @@
         <repository>
             <id>TheWarKing-Public</id>
             <url>http://thewarking.de:8081/repository/Storage/</url>
+        </repository>
+
+        <repository>
+            <id>YamlBeans</id>
+            <url>https://mvnrepository.com/artifact/com.esotericsoftware.yamlbeans/yamlbeans</url>
+        </repository>
+
+        <repository>
+            <id>Json</id>
+            <url>https://mvnrepository.com/artifact/org.json/json</url>
+        </repository>
+
+        <repository>
+            <id>CSV</id>
+            <url>https://mvnrepository.com/artifact/org.apache.commons/commons-csv</url>
         </repository>
     </repositories>
 
