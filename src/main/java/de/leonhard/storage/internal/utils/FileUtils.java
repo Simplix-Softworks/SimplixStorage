@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +72,6 @@ public class FileUtils {
     public static List<String> readAllLines(final File file) throws IOException {
         final byte[] fileBytes = Files.readAllBytes(file.toPath());
         final String asString = new String(fileBytes);
-        return new ArrayList<>(Arrays.asList(asString.split("\\n")));
+        return new ArrayList<>(Arrays.asList(asString.split("\n")));
     }
 }
