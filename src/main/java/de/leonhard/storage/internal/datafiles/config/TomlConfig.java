@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 
 public class TomlConfig extends TomlFile {
+
 	public TomlConfig(File file, InputStream inputStream, ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		super(file, inputStream, reloadSettings);
 	}

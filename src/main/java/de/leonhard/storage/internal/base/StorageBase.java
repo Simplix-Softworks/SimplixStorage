@@ -10,27 +10,17 @@ import java.util.Set;
 @SuppressWarnings({"unused", "unchecked"})
 public interface StorageBase {
 
-	Set<String> singleLayerKeySet();
-
-	Set<String> singleLayerKeySet(String key);
-
-	Set<String> keySet();
-
-	Set<String> keySet(String key);
-
-	void remove(final String key);
-
 	/**
-	 * Get a String from a file
+	 * Get a boolean from a file
 	 *
-	 * @param key Path to String in file
-	 * @return Returns the value
+	 * @param key Path to boolean in file
+	 * @return Boolean from file
 	 */
-	default String getString(final String key) {
+	default boolean getBoolean(final String key) {
 		if (!hasKey(key)) {
-			return "";
+			return false;
 		} else {
-			return get(key).toString();
+			return get(key).toString().equalsIgnoreCase("true");
 		}
 	}
 
@@ -43,34 +33,6 @@ public interface StorageBase {
 	boolean hasKey(String key);
 
 	Object get(String key);
-
-	/**
-	 * Gets a long from a file by key
-	 *
-	 * @param key Path to long in file
-	 * @return String from file
-	 */
-	default long getLong(final String key) {
-		if (!hasKey(key)) {
-			return 0L;
-		} else {
-			return Primitive.LONG.getLong(get(key));
-		}
-	}
-
-	/**
-	 * Gets an int from a file
-	 *
-	 * @param key Path to int in file
-	 * @return Int from file
-	 */
-	default int getInt(final String key) {
-		if (!hasKey(key)) {
-			return 0;
-		} else {
-			return Primitive.INTEGER.getInt(get(key));
-		}
-	}
 
 	/**
 	 * Get a byte from a file
@@ -87,30 +49,16 @@ public interface StorageBase {
 	}
 
 	/**
-	 * Get a boolean from a file
+	 * Get a Byte-List from a file
 	 *
-	 * @param key Path to boolean in file
-	 * @return Boolean from file
+	 * @param key Path to Byte-List from file
+	 * @return Byte-List
 	 */
-	default boolean getBoolean(final String key) {
+	default List<Byte> getByteList(final String key) {
 		if (!hasKey(key)) {
-			return false;
+			return new ArrayList<>();
 		} else {
-			return get(key).toString().equalsIgnoreCase("true");
-		}
-	}
-
-	/**
-	 * Get a float from a file
-	 *
-	 * @param key Path to float in file
-	 * @return Float from file
-	 */
-	default float getFloat(final String key) {
-		if (!hasKey(key)) {
-			return 0F;
-		} else {
-			return Primitive.FLOAT.getFloat(get(key));
+			return (List<Byte>) get(key);
 		}
 	}
 
@@ -129,30 +77,30 @@ public interface StorageBase {
 	}
 
 	/**
-	 * Get a List from a file
+	 * Get a float from a file
 	 *
-	 * @param key Path to StringList in file
-	 * @return List
+	 * @param key Path to float in file
+	 * @return Float from file
 	 */
-	default List<?> getList(final String key) {
+	default float getFloat(final String key) {
 		if (!hasKey(key)) {
-			return new ArrayList<>();
+			return 0F;
 		} else {
-			return (List<?>) get(key);
+			return Primitive.FLOAT.getFloat(get(key));
 		}
 	}
 
 	/**
-	 * Get String List
+	 * Gets an int from a file
 	 *
-	 * @param key Path to String List in file
-	 * @return List
+	 * @param key Path to int in file
+	 * @return Int from file
 	 */
-	default List<String> getStringList(final String key) {
+	default int getInt(final String key) {
 		if (!hasKey(key)) {
-			return new ArrayList<>();
+			return 0;
 		} else {
-			return (List<String>) get(key);
+			return Primitive.INTEGER.getInt(get(key));
 		}
 	}
 
@@ -171,16 +119,30 @@ public interface StorageBase {
 	}
 
 	/**
-	 * Get a Byte-List from a file
+	 * Get a List from a file
 	 *
-	 * @param key Path to Byte-List from file
-	 * @return Byte-List
+	 * @param key Path to StringList in file
+	 * @return List
 	 */
-	default List<Byte> getByteList(final String key) {
+	default List<?> getList(final String key) {
 		if (!hasKey(key)) {
 			return new ArrayList<>();
 		} else {
-			return (List<Byte>) get(key);
+			return (List<?>) get(key);
+		}
+	}
+
+	/**
+	 * Gets a long from a file by key
+	 *
+	 * @param key Path to long in file
+	 * @return String from file
+	 */
+	default long getLong(final String key) {
+		if (!hasKey(key)) {
+			return 0L;
+		} else {
+			return Primitive.LONG.getLong(get(key));
 		}
 	}
 
@@ -208,27 +170,6 @@ public interface StorageBase {
 		return (Map) get(key);
 	}
 
-	/**
-	 * Sets a value to the file if the file doesn't already contain the value
-	 * (Not mix up with Bukkit addDefault)
-	 *
-	 * @param key   Key to set the value
-	 * @param value Value to set
-	 */
-	default void setDefault(String key, Object value) {
-		if (!hasKey(key)) {
-			set(key, value);
-		}
-	}
-
-	/**
-	 * Set an object to your file
-	 *
-	 * @param key   The key your value should be associated with
-	 * @param value The value you want to set in your file
-	 */
-	void set(String key, Object value);
-
 	default <T> T getOrSetDefault(String path, T def) {
 		if (!hasKey(path)) {
 			set(path, def);
@@ -248,4 +189,63 @@ public interface StorageBase {
 			return (T) obj;
 		}
 	}
+
+	/**
+	 * Set an object to your file
+	 *
+	 * @param key   The key your value should be associated with
+	 * @param value The value you want to set in your file
+	 */
+	void set(String key, Object value);
+
+	/**
+	 * Get a String from a file
+	 *
+	 * @param key Path to String in file
+	 * @return Returns the value
+	 */
+	default String getString(final String key) {
+		if (!hasKey(key)) {
+			return "";
+		} else {
+			return get(key).toString();
+		}
+	}
+
+	/**
+	 * Get String List
+	 *
+	 * @param key Path to String List in file
+	 * @return List
+	 */
+	default List<String> getStringList(final String key) {
+		if (!hasKey(key)) {
+			return new ArrayList<>();
+		} else {
+			return (List<String>) get(key);
+		}
+	}
+
+	Set<String> keySet();
+
+	Set<String> keySet(String key);
+
+	void remove(final String key);
+
+	/**
+	 * Sets a value to the file if the file doesn't already contain the value
+	 * (Not mix up with Bukkit addDefault)
+	 *
+	 * @param key   Key to set the value
+	 * @param value Value to set
+	 */
+	default void setDefault(String key, Object value) {
+		if (!hasKey(key)) {
+			set(key, value);
+		}
+	}
+
+	Set<String> singleLayerKeySet();
+
+	Set<String> singleLayerKeySet(String key);
 }

@@ -12,38 +12,6 @@ import java.util.List;
 
 public class FileUtils {
 
-	public static boolean hasChanged(final File file, final long timeStamp) {
-		return timeStamp < file.lastModified();
-	}
-
-	public static InputStream createNewInputStream(final File file) {
-		try {
-			return Files.newInputStream(file.toPath());
-		} catch (IOException e) {
-			System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
-			System.err.println("At: '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException("InputStream would be null");
-		}
-	}
-
-
-	public static synchronized void writeToFile(final File file, final InputStream inputStream) {
-		try (FileOutputStream outputStream = new FileOutputStream(file)) {
-			if (!file.exists()) {
-				Files.copy(inputStream, file.toPath());
-			} else {
-				final byte[] data = new byte[8192];
-				int count;
-				while ((count = inputStream.read(data, 0, 8192)) != -1) {
-					outputStream.write(data, 0, count);
-				}
-			}
-		} catch (IOException e) {
-			System.err.println("Exception while copying to + '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-		}
-	}
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void createFile(final File file) {
@@ -62,9 +30,41 @@ public class FileUtils {
 		}
 	}
 
+	public static InputStream createNewInputStream(final File file) {
+		try {
+			return Files.newInputStream(file.toPath());
+		} catch (IOException e) {
+			System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
+			System.err.println("At: '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException("InputStream would be null");
+		}
+	}
+
+	public static boolean hasChanged(final File file, final long timeStamp) {
+		return timeStamp < file.lastModified();
+	}
+
 	public static List<String> readAllLines(final File file) throws IOException {
 		final byte[] fileBytes = Files.readAllBytes(file.toPath());
 		final String asString = new String(fileBytes);
 		return new ArrayList<>(Arrays.asList(asString.split("\\n")));
+	}
+
+	public static synchronized void writeToFile(final File file, final InputStream inputStream) {
+		try (FileOutputStream outputStream = new FileOutputStream(file)) {
+			if (!file.exists()) {
+				Files.copy(inputStream, file.toPath());
+			} else {
+				final byte[] data = new byte[8192];
+				int count;
+				while ((count = inputStream.read(data, 0, 8192)) != -1) {
+					outputStream.write(data, 0, count);
+				}
+			}
+		} catch (IOException e) {
+			System.err.println("Exception while copying to + '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+		}
 	}
 }

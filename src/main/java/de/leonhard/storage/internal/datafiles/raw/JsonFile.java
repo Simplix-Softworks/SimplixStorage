@@ -20,6 +20,7 @@ import org.json.JSONTokener;
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonFile extends FlatFile {
 
+
 	public JsonFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.JSON)) {
 			if (create(file)) {
@@ -43,29 +44,6 @@ public class JsonFile extends FlatFile {
 		fileData = new FileData(new JSONObject(jsonTokener));
 	}
 
-	@Override
-	public synchronized void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-		final Map obj = fileData.toMap();
-		obj.remove(finalKey);
-
-		fileData = new FileData(new JSONObject(obj));
-		try {
-			write(fileData.toJsonObject());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public Object get(final String key) {
-
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-		return getObject(finalKey);
-	}
-
 	/**
 	 * Gets a Map by key Although used to get nested objects {@link JsonFile}
 	 *
@@ -81,60 +59,6 @@ public class JsonFile extends FlatFile {
 		} else {
 			return getMapWithoutPath(tempKey);
 		}
-	}
-
-	/**
-	 * Sets a value to the json if the file doesn't already contain the value
-	 * (Not mix up with Bukkit addDefault) Uses {@link JSONObject}
-	 *
-	 * @param key   Key to set the value
-	 * @param value Value to set
-	 */
-
-	@Override
-	public void setDefault(String key, Object value) {
-		if (hasKey(key)) {
-			return;
-		}
-		set(key, value);
-	}
-
-	@Override
-	public synchronized void set(final String key, final Object value) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-		synchronized (this) {
-
-			reload();
-
-			String old = fileData.toString();
-			fileData.insert(finalKey, value);
-
-
-			if (!old.equals(fileData.toString())) {
-				try {
-					write(new JSONObject(fileData.toMap()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	@Override
-	public <T> T getOrSetDefault(final String path, T def) {
-		if (!hasKey(path)) {
-			set(path, def);
-			return def;
-		} else {
-			return (T) get(path);
-		}
-	}
-
-	private void write(final JSONObject object) throws IOException {
-		Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
-		writer.write(object.toString(3));
-		writer.close();
 	}
 
 	private Map getMapWithoutPath(final String key) {
@@ -167,6 +91,83 @@ public class JsonFile extends FlatFile {
 			return new FileData(fileData.toMap()).containsKey(key) ? new FileData(fileData.toMap()).get(key) : null;
 		}
 		return fileData.containsKey(key) ? fileData.get(key) : null;
+	}
+
+	@Override
+	public <T> T getOrSetDefault(final String path, T def) {
+		if (!hasKey(path)) {
+			set(path, def);
+			return def;
+		} else {
+			return (T) get(path);
+		}
+	}
+
+	@Override
+	public synchronized void set(final String key, final Object value) {
+		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+		synchronized (this) {
+
+			reload();
+
+			String old = fileData.toString();
+			fileData.insert(finalKey, value);
+
+
+			if (!old.equals(fileData.toString())) {
+				try {
+					write(new JSONObject(fileData.toMap()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	@Override
+	public Object get(final String key) {
+
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+		return getObject(finalKey);
+	}
+
+	private void write(final JSONObject object) throws IOException {
+		Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
+		writer.write(object.toString(3));
+		writer.close();
+	}
+
+	@Override
+	public synchronized void remove(final String key) {
+		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+		final Map obj = fileData.toMap();
+		obj.remove(finalKey);
+
+		fileData = new FileData(new JSONObject(obj));
+		try {
+			write(fileData.toJsonObject());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Sets a value to the json if the file doesn't already contain the value
+	 * (Not mix up with Bukkit addDefault) Uses {@link JSONObject}
+	 *
+	 * @param key   Key to set the value
+	 * @param value Value to set
+	 */
+
+	@Override
+	public void setDefault(String key, Object value) {
+		if (hasKey(key)) {
+			return;
+		}
+		set(key, value);
 	}
 
 	protected final JsonFile getJsonInstance() {

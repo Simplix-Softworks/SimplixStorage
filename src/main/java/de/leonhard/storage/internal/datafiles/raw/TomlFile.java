@@ -15,6 +15,7 @@ import java.io.InputStream;
 @SuppressWarnings({"unused"})
 public class TomlFile extends FlatFile {
 
+
 	public TomlFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.TOML)) {
 			if (create(file)) {
@@ -38,20 +39,6 @@ public class TomlFile extends FlatFile {
 			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
 		} catch (IOException e) {
 			System.err.println("Exception while reading '" + getName() + "'");
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public synchronized void remove(final String key) {
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-		fileData.remove(finalKey);
-
-		try {
-			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
-		} catch (IOException e) {
-			System.err.println("Exception while writing to Toml file '" + getName() + "'");
 			e.printStackTrace();
 		}
 	}
@@ -85,6 +72,20 @@ public class TomlFile extends FlatFile {
 				System.err.println("Exception while writing to Toml file '" + getName() + "'");
 				e.printStackTrace();
 			}
+		}
+	}
+
+	@Override
+	public synchronized void remove(final String key) {
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+		fileData.remove(finalKey);
+
+		try {
+			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+		} catch (IOException e) {
+			System.err.println("Exception while writing to Toml file '" + getName() + "'");
+			e.printStackTrace();
 		}
 	}
 

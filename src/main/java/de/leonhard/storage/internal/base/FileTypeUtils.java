@@ -7,6 +7,11 @@ import java.io.File;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class FileTypeUtils {
 
+
+	public static String addExtension(String path, FileType fileType) {
+		return path + "." + fileType;
+	}
+
 	public static boolean isType(final File file, final FileType fileType) {
 		return getFileType(file).equals(fileType);
 	}
@@ -37,9 +42,5 @@ public class FileTypeUtils {
 
 	public static String getExtension(String path) {
 		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
-	}
-
-	public static String addExtension(String path, FileType fileType) {
-		return path + "." + fileType;
 	}
 }

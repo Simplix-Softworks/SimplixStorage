@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 
 public class LightningConfig extends LightningFile {
+
 	public LightningConfig(File file, InputStream inputStream, ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		super(file, inputStream, reloadSettings);
 	}

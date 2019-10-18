@@ -24,12 +24,13 @@ import lombok.Setter;
 @SuppressWarnings({"unchecked", "unused"})
 public class YamlFile extends FlatFile {
 	@Getter
-	private final YamlEditor yamlEditor;
-	@Getter
 	private final YamlParser parser;
+	@Getter
+	private final YamlEditor yamlEditor;
 	@Getter
 	@Setter
 	private ConfigSettings configSettings = ConfigSettings.skipComments;
+
 
 	public YamlFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.YAML)) {
@@ -73,38 +74,6 @@ public class YamlFile extends FlatFile {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public synchronized void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-		fileData.remove(finalKey);
-
-		try {
-			write(fileData.toMap());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public Object get(final String key) {
-		reload();
-		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-		return fileData.get(finalKey);
-	}
-
-	@Override
-	public void setDefault(final String key, final Object value) {
-		if (!hasKey(key)) {
-			set(key, value, getConfigSettings());
-		}
-	}
-
-	@Override
-	public void set(final String key, final Object value) {
-		set(key, value, this.configSettings);
 	}
 
 	@Override
@@ -161,10 +130,42 @@ public class YamlFile extends FlatFile {
 		}
 	}
 
+	@Override
+	public Object get(final String key) {
+		reload();
+		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+		return fileData.get(finalKey);
+	}
+
 	private void write(final Map data) throws IOException {
 		YamlWriter writer = new YamlWriter(new FileWriter(getFile()));
 		writer.write(data);
 		writer.close();
+	}
+
+	@Override
+	public synchronized void remove(final String key) {
+		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+		fileData.remove(finalKey);
+
+		try {
+			write(fileData.toMap());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void set(final String key, final Object value) {
+		set(key, value, this.configSettings);
+	}
+
+	@Override
+	public void setDefault(final String key, final Object value) {
+		if (!hasKey(key)) {
+			set(key, value, getConfigSettings());
+		}
 	}
 
 	protected final YamlFile getYamlInstance() {

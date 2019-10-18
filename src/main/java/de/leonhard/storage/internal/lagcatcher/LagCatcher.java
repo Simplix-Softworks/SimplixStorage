@@ -15,6 +15,20 @@ public class LagCatcher {
 	private static final HashMap<String, Long> startTimes = new HashMap<>();
 	private static final HashMap<String, Long> stopTimes = new HashMap<>();
 
+
+	public static void runMultipleTimes(final int cycles, final Runnable runnable) {
+		long nanosTook = 0L;
+		for (int i = 0; i < cycles; ++i) {
+			final long nanoTime = System.nanoTime();
+			runnable.run();
+			nanosTook = System.nanoTime() - nanoTime;
+		}
+		System.out.println((Object) ("Average time: " + TimeUnit.NANOSECONDS.toMicros(nanosTook / cycles)
+									 + " micros - " + TimeUnit.NANOSECONDS.toMillis(nanosTook / cycles) + " ms."));
+		System.out.println((Object) ("Test took: " + TimeUnit.NANOSECONDS.toMicros(nanosTook) + " micros " +
+									 "- " + TimeUnit.NANOSECONDS.toMillis(nanosTook) + " ms"));
+	}
+
 	public static void start(final String name) {
 		if (LagCatcher.startTimes.containsKey(name)) {
 			throw new IllegalStateException(("Test is already running for '" + name + '\''));
@@ -53,18 +67,5 @@ public class LagCatcher {
 			LagCatcher.stopTimes.remove(name);
 			LagCatcher.startTimes.remove(name);
 		}
-	}
-
-	public static void runMultipleTimes(final int cycles, final Runnable runnable) {
-		long nanosTook = 0L;
-		for (int i = 0; i < cycles; ++i) {
-			final long nanoTime = System.nanoTime();
-			runnable.run();
-			nanosTook = System.nanoTime() - nanoTime;
-		}
-		System.out.println((Object) ("Average time: " + TimeUnit.NANOSECONDS.toMicros(nanosTook / cycles)
-									 + " micros - " + TimeUnit.NANOSECONDS.toMillis(nanosTook / cycles) + " ms."));
-		System.out.println((Object) ("Test took: " + TimeUnit.NANOSECONDS.toMicros(nanosTook) + " micros " +
-									 "- " + TimeUnit.NANOSECONDS.toMillis(nanosTook) + " ms"));
 	}
 }

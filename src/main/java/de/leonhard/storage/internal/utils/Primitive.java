@@ -2,18 +2,17 @@ package de.leonhard.storage.internal.utils;
 
 public class Primitive {
 
-	public static class LONG {
-		public static long getLong(Object obj) {
+	public static class BYTE {
+		public static byte getByte(Object obj) {
 			if (obj instanceof Number) {
-				return ((Number) obj).longValue();
+				return ((Number) obj).byteValue();
 			} else if (obj instanceof String) {
-				return Long.parseLong((String) obj);
+				return Byte.parseByte(obj.toString());
 			} else {
-				return Long.parseLong(obj.toString());
+				return Byte.parseByte(obj.toString());
 			}
 		}
 	}
-
 	public static class DOUBLE {
 		public static double getDouble(Object obj) {
 			if (obj instanceof Number) {
@@ -27,6 +26,7 @@ public class Primitive {
 	}
 
 	public static class FLOAT {
+
 		public static float getFloat(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).floatValue();
@@ -39,6 +39,7 @@ public class Primitive {
 	}
 
 	public static class INTEGER {
+
 		public static int getInt(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).intValue();
@@ -49,9 +50,21 @@ public class Primitive {
 			}
 		}
 	}
+	public static class LONG {
 
+		public static long getLong(Object obj) {
+			if (obj instanceof Number) {
+				return ((Number) obj).longValue();
+			} else if (obj instanceof String) {
+				return Long.parseLong((String) obj);
+			} else {
+				return Long.parseLong(obj.toString());
+			}
+		}
+	}
 	@SuppressWarnings("unused")
 	public static class SHORT {
+
 		public static short getShort(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).shortValue();
@@ -59,18 +72,6 @@ public class Primitive {
 				return Short.parseShort((String) obj);
 			} else {
 				return Short.parseShort(obj.toString());
-			}
-		}
-	}
-
-	public static class BYTE {
-		public static byte getByte(Object obj) {
-			if (obj instanceof Number) {
-				return ((Number) obj).byteValue();
-			} else if (obj instanceof String) {
-				return Byte.parseByte(obj.toString());
-			} else {
-				return Byte.parseByte(obj.toString());
 			}
 		}
 	}

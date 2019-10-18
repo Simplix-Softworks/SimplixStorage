@@ -17,11 +17,11 @@ public class YamlConfig extends YamlFile {
 
 	private List<String> header;
 
+
 	public YamlConfig(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		super(file, inputStream, reloadSettings);
 		this.setConfigSettings(ConfigSettings.preserveComments);
 	}
-
 
 	public List<String> getHeader() {
 		if (getConfigSettings().equals(ConfigSettings.skipComments)) {
@@ -85,7 +85,6 @@ public class YamlConfig extends YamlFile {
 			e.printStackTrace();
 		}
 	}
-
 
 	protected final YamlConfig getConfigInstance() {
 		return this;

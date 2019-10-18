@@ -31,6 +31,17 @@ public class FileData {
 
 
 	/**
+	 * Check whether the map contains a certain key.
+	 *
+	 * @param key the key to be looked for.
+	 * @return true if the key exists, otherwise false.
+	 */
+	public boolean containsKey(final String key) {
+		String[] parts = key.split("\\.");
+		return containsKey(localMap, parts, 0);
+	}
+
+	/**
 	 * Method to get the object assign to a key from a FileData Object.
 	 *
 	 * @param key the key to look for.
@@ -40,20 +51,6 @@ public class FileData {
 		final String[] parts = key.split("\\.");
 		return get(localMap, parts, 0);
 	}
-
-	private Object get(final Map<String, Object> map, final String[] key, final int id) {
-		if (id < key.length - 1) {
-			if (map.get(key[id]) instanceof Map) {
-				@SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
-				return get(tempMap, key, id + 1);
-			} else {
-				return null;
-			}
-		} else {
-			return map.get(key[id]);
-		}
-	}
-
 
 	/**
 	 * Method to assign a value to a key.
@@ -70,96 +67,6 @@ public class FileData {
 					 ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
 					 : insert(new HashMap<>(), parts, value, 1));
 	}
-
-	private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
-		if (id < key.length) {
-			Map<String, Object> tempMap = new HashMap<>(map);
-			//noinspection unchecked
-			Map<String, Object> childMap =
-					map.containsKey(key[id])
-					&& map.get(key[id]) instanceof Map
-					? (Map<String, Object>) map.get(key[id])
-					: new HashMap<>();
-			tempMap.put(key[id], insert(childMap, key, value, id + 1));
-			return tempMap;
-		} else {
-			return value;
-		}
-	}
-
-
-	/**
-	 * Check whether the map contains a certain key.
-	 *
-	 * @param key the key to be looked for.
-	 * @return true if the key exists, otherwise false.
-	 */
-	public boolean containsKey(final String key) {
-		String[] parts = key.split("\\.");
-		return containsKey(localMap, parts, 0);
-	}
-
-	private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
-		if (id < key.length - 1) {
-			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
-				//noinspection unchecked
-				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
-				return containsKey(tempMap, key, id + 1);
-			} else {
-				return false;
-			}
-		} else {
-			return map.containsKey(key[id]);
-		}
-	}
-
-
-	/**
-	 * Remove a key with its assigned value from the map if given key exists.
-	 *
-	 * @param key the key to be removed from the map.
-	 */
-	public synchronized void remove(final String key) {
-		if (containsKey(key)) {
-			final String[] parts = key.split("\\.");
-			remove(localMap, parts, 0);
-		}
-	}
-
-	private synchronized void remove(final Map<String, Object> map, final String[] key, final int id) {
-		Map tempMap = map;
-		for (int i = 0; i < key.length - (1 + id); i++) {
-			if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
-				tempMap = (Map) tempMap.get(key[i]);
-			}
-		}
-		if (tempMap.keySet().size() <= 1) {
-			map.remove(key[key.length - (1 + id)]);
-			remove(map, key, id + 1);
-		}
-	}
-
-
-	/**
-	 * get the keySet of a single layer of the map.
-	 *
-	 * @return the keySet of the top layer of localMap.
-	 */
-	public Set<String> singleLayerKeySet() {
-		return localMap.keySet();
-	}
-
-	/**
-	 * get the keySet of a single layer of the map.
-	 *
-	 * @param key the key of the layer.
-	 * @return the keySet of the given layer or an empty set if the key does not exist.
-	 */
-	public Set<String> singleLayerKeySet(final String key) {
-		//noinspection unchecked
-		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
-	}
-
 
 	/**
 	 * get the keySet of all layers of the map combined.
@@ -181,21 +88,37 @@ public class FileData {
 		return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
 	}
 
-	private Set<String> keySet(final Map<String, Object> map) {
-		Set<String> localSet = new HashSet<>();
-		for (String key : map.keySet()) {
-			if (map.get(key) instanceof Map) {
-				//noinspection unchecked
-				for (String tempKey : keySet((Map<String, Object>) map.get(key))) {
-					localSet.add(key + "." + tempKey);
-				}
-			} else {
-				localSet.add(key);
-			}
+	/**
+	 * Remove a key with its assigned value from the map if given key exists.
+	 *
+	 * @param key the key to be removed from the map.
+	 */
+	public synchronized void remove(final String key) {
+		if (containsKey(key)) {
+			final String[] parts = key.split("\\.");
+			remove(localMap, parts, 0);
 		}
-		return localSet;
 	}
 
+	/**
+	 * get the keySet of a single layer of the map.
+	 *
+	 * @return the keySet of the top layer of localMap.
+	 */
+	public Set<String> singleLayerKeySet() {
+		return localMap.keySet();
+	}
+
+	/**
+	 * get the keySet of a single layer of the map.
+	 *
+	 * @param key the key of the layer.
+	 * @return the keySet of the given layer or an empty set if the key does not exist.
+	 */
+	public Set<String> singleLayerKeySet(final String key) {
+		//noinspection unchecked
+		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
+	}
 
 	/**
 	 * Get the size of a single layer of the map.
@@ -235,17 +158,9 @@ public class FileData {
 		return localMap.size();
 	}
 
-	private int size(final Map<String, Object> map) {
-		int size = map.size();
-		for (String key : map.keySet()) {
-			if (map.get(key) instanceof Map) {
-				//noinspection unchecked
-				size += size((Map<String, Object>) map.get(key));
-			}
-		}
-		return size;
+	public JSONObject toJsonObject() {
+		return JsonUtils.getJsonFromMap(localMap);
 	}
-
 
 	public Map<String, Object> toMap() {
 		if (localMap != null) {
@@ -255,8 +170,86 @@ public class FileData {
 		}
 	}
 
-	public JSONObject toJsonObject() {
-		return JsonUtils.getJsonFromMap(localMap);
+	private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
+		if (id < key.length - 1) {
+			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
+				//noinspection unchecked
+				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+				return containsKey(tempMap, key, id + 1);
+			} else {
+				return false;
+			}
+		} else {
+			return map.containsKey(key[id]);
+		}
+	}
+
+	private Object get(final Map<String, Object> map, final String[] key, final int id) {
+		if (id < key.length - 1) {
+			if (map.get(key[id]) instanceof Map) {
+				@SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+				return get(tempMap, key, id + 1);
+			} else {
+				return null;
+			}
+		} else {
+			return map.get(key[id]);
+		}
+	}
+
+	private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
+		if (id < key.length) {
+			Map<String, Object> tempMap = new HashMap<>(map);
+			//noinspection unchecked
+			Map<String, Object> childMap =
+					map.containsKey(key[id])
+					&& map.get(key[id]) instanceof Map
+					? (Map<String, Object>) map.get(key[id])
+					: new HashMap<>();
+			tempMap.put(key[id], insert(childMap, key, value, id + 1));
+			return tempMap;
+		} else {
+			return value;
+		}
+	}
+
+	private Set<String> keySet(final Map<String, Object> map) {
+		Set<String> localSet = new HashSet<>();
+		for (String key : map.keySet()) {
+			if (map.get(key) instanceof Map) {
+				//noinspection unchecked
+				for (String tempKey : keySet((Map<String, Object>) map.get(key))) {
+					localSet.add(key + "." + tempKey);
+				}
+			} else {
+				localSet.add(key);
+			}
+		}
+		return localSet;
+	}
+
+	private synchronized void remove(final Map<String, Object> map, final String[] key, final int id) {
+		Map tempMap = map;
+		for (int i = 0; i < key.length - (1 + id); i++) {
+			if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
+				tempMap = (Map) tempMap.get(key[i]);
+			}
+		}
+		if (tempMap.keySet().size() <= 1) {
+			map.remove(key[key.length - (1 + id)]);
+			remove(map, key, id + 1);
+		}
+	}
+
+	private int size(final Map<String, Object> map) {
+		int size = map.size();
+		for (String key : map.keySet()) {
+			if (map.get(key) instanceof Map) {
+				//noinspection unchecked
+				size += size((Map<String, Object>) map.get(key));
+			}
+		}
+		return size;
 	}
 
 	@Override

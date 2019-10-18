@@ -16,6 +16,7 @@ import java.util.Set;
 @SuppressWarnings({"unused"})
 public class CSVFile extends FlatFile {
 
+
 	public CSVFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.CSV)) {
 			if (create(file)) {
@@ -41,18 +42,6 @@ public class CSVFile extends FlatFile {
 
 	//added method for later implementation
 	@Override
-	public Set<String> singleLayerKeySet() {
-		return null;
-	}
-
-	//added method for later implementation
-	@Override
-	public Set<String> singleLayerKeySet(final String key) {
-		return null;
-	}
-
-	//added method for later implementation
-	@Override
 	public Set<String> keySet() {
 		return null;
 	}
@@ -63,26 +52,27 @@ public class CSVFile extends FlatFile {
 		return null;
 	}
 
+	//added method for later implementation
 	@Override
-	public void reload() {
-
+	public Set<String> singleLayerKeySet() {
+		return null;
 	}
 
 	//added method for later implementation
 	@Override
-	public synchronized void remove(final String key) {
-		//TODO
+	public Set<String> singleLayerKeySet(final String key) {
+		return null;
 	}
 
 	/**
-	 * Get a String from a file
+	 * Get a boolean from a file
 	 *
-	 * @param key Path to String in file
-	 * @return Returns the value
+	 * @param key Path to boolean in file
+	 * @return Boolean from file
 	 */
 	@Override
-	public String getString(final String key) {
-		return null;
+	public boolean getBoolean(final String key) {
+		return false;
 	}
 
 	@Override
@@ -91,13 +81,46 @@ public class CSVFile extends FlatFile {
 	}
 
 	/**
-	 * Gets a long from a file by key
+	 * Get a byte from a file
 	 *
-	 * @param key Path to long in file
-	 * @return String from file
+	 * @param key Path to byte in file
+	 * @return Byte from file
 	 */
 	@Override
-	public long getLong(final String key) {
+	public byte getByte(final String key) {
+		return 0;
+	}
+
+	/**
+	 * Get a Byte-List from a file
+	 *
+	 * @param key Path to Byte-List from file
+	 * @return Byte-List
+	 */
+	@Override
+	public List<Byte> getByteList(final String key) {
+		return null;
+	}
+
+	/**
+	 * Get a double from a file
+	 *
+	 * @param key Path to double in file
+	 * @return Double from file
+	 */
+	@Override
+	public double getDouble(final String key) {
+		return 0;
+	}
+
+	/**
+	 * Get a float from a file
+	 *
+	 * @param key Path to float in file
+	 * @return Float from file
+	 */
+	@Override
+	public float getFloat(final String key) {
 		return 0;
 	}
 
@@ -113,47 +136,14 @@ public class CSVFile extends FlatFile {
 	}
 
 	/**
-	 * Get a byte from a file
+	 * Get a IntegerList from a file
 	 *
-	 * @param key Path to byte in file
-	 * @return Byte from file
+	 * @param key Path to Integer-List in file
+	 * @return Integer-List
 	 */
 	@Override
-	public byte getByte(final String key) {
-		return 0;
-	}
-
-	/**
-	 * Get a boolean from a file
-	 *
-	 * @param key Path to boolean in file
-	 * @return Boolean from file
-	 */
-	@Override
-	public boolean getBoolean(final String key) {
-		return false;
-	}
-
-	/**
-	 * Get a float from a file
-	 *
-	 * @param key Path to float in file
-	 * @return Float from file
-	 */
-	@Override
-	public float getFloat(final String key) {
-		return 0;
-	}
-
-	/**
-	 * Get a double from a file
-	 *
-	 * @param key Path to double in file
-	 * @return Double from file
-	 */
-	@Override
-	public double getDouble(final String key) {
-		return 0;
+	public List<Integer> getIntegerList(final String key) {
+		return null;
 	}
 
 	/**
@@ -168,36 +158,14 @@ public class CSVFile extends FlatFile {
 	}
 
 	/**
-	 * Get String List
+	 * Gets a long from a file by key
 	 *
-	 * @param key Path to String List in file
-	 * @return List
+	 * @param key Path to long in file
+	 * @return String from file
 	 */
 	@Override
-	public List<String> getStringList(final String key) {
-		return null;
-	}
-
-	/**
-	 * Get a IntegerList from a file
-	 *
-	 * @param key Path to Integer-List in file
-	 * @return Integer-List
-	 */
-	@Override
-	public List<Integer> getIntegerList(final String key) {
-		return null;
-	}
-
-	/**
-	 * Get a Byte-List from a file
-	 *
-	 * @param key Path to Byte-List from file
-	 * @return Byte-List
-	 */
-	@Override
-	public List<Byte> getByteList(final String key) {
-		return null;
+	public long getLong(final String key) {
+		return 0;
 	}
 
 	/**
@@ -222,16 +190,9 @@ public class CSVFile extends FlatFile {
 		return null;
 	}
 
-	/**
-	 * Sets a value to the file if the file doesn't already contain the value
-	 * (Not mix up with Bukkit addDefault)
-	 *
-	 * @param key   Key to set the value
-	 * @param value Value to set
-	 */
 	@Override
-	public void setDefault(final String key, final Object value) {
-		//TODO
+	public <T> T getOrSetDefault(final String path, final T def) {
+		return null;
 	}
 
 	/**
@@ -245,9 +206,49 @@ public class CSVFile extends FlatFile {
 		//TODO
 	}
 
+	/**
+	 * Get a String from a file
+	 *
+	 * @param key Path to String in file
+	 * @return Returns the value
+	 */
 	@Override
-	public <T> T getOrSetDefault(final String path, final T def) {
+	public String getString(final String key) {
 		return null;
+	}
+
+	/**
+	 * Get String List
+	 *
+	 * @param key Path to String List in file
+	 * @return List
+	 */
+	@Override
+	public List<String> getStringList(final String key) {
+		return null;
+	}
+
+	//added method for later implementation
+	@Override
+	public synchronized void remove(final String key) {
+		//TODO
+	}
+
+	/**
+	 * Sets a value to the file if the file doesn't already contain the value
+	 * (Not mix up with Bukkit addDefault)
+	 *
+	 * @param key   Key to set the value
+	 * @param value Value to set
+	 */
+	@Override
+	public void setDefault(final String key, final Object value) {
+		//TODO
+	}
+
+	@Override
+	public void reload() {
+
 	}
 
 	@Override

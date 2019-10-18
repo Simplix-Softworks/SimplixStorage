@@ -17,37 +17,33 @@ import lombok.Setter;
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
+	protected File file;
+	protected FileData fileData = new FileData();
+	protected FileType fileType;
 	@Setter
 	protected String pathPrefix;
 	@Setter
 	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
-	protected FileData fileData = new FileData();
-	protected File file;
-	protected FileType fileType;
 	private long lastModified;
 
-	/**
-	 * Creates an empty .yml or .json file.
-	 *
-	 * @param file the file to be created.
-	 * @return true if file was created.
-	 */
-	protected final synchronized boolean create(final File file) {
-		this.fileType = FileTypeUtils.getFileType(file);
-		this.file = file;
-		if (file.exists()) {
-			lastModified = System.currentTimeMillis();
-			return false;
-		} else {
-			FileUtils.createFile(file);
-			lastModified = System.currentTimeMillis();
-			return true;
-		}
+	public final String getFilePath() {
+		return file.getAbsolutePath();
 	}
 
-	public void reload(boolean force) {
+	public final String getName() {
+		return this.file.getName();
+	}
+
+	@Override
+	public boolean hasKey(final String key) {
+		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		reload();
+		return fileData.containsKey(tempKey);
+	}
+
+	public void reload() {
 		try {
-			if (shouldReload() || force) {
+			if (shouldReload()) {
 				update();
 			}
 		} catch (InvalidSettingException e) {
@@ -77,18 +73,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet() {
-		reload();
-		return fileData.singleLayerKeySet();
-	}
-
-	@Override
-	public Set<String> singleLayerKeySet(final String key) {
-		reload();
-		return fileData.singleLayerKeySet(key);
-	}
-
-	@Override
 	public Set<String> keySet() {
 		reload();
 		return fileData.keySet();
@@ -101,28 +85,25 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public boolean hasKey(final String key) {
-		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+	public Set<String> singleLayerKeySet() {
 		reload();
-		return fileData.containsKey(tempKey);
+		return fileData.singleLayerKeySet();
 	}
 
-	public void reload() {
+	@Override
+	public Set<String> singleLayerKeySet(final String key) {
+		reload();
+		return fileData.singleLayerKeySet(key);
+	}
+
+	public void reload(boolean force) {
 		try {
-			if (shouldReload()) {
+			if (shouldReload() || force) {
 				update();
 			}
 		} catch (InvalidSettingException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public final String getName() {
-		return this.file.getName();
-	}
-
-	public final String getFilePath() {
-		return file.getAbsolutePath();
 	}
 
 	public void replace(final CharSequence target, final CharSequence replacement) throws IOException {
@@ -132,6 +113,25 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			result.add(line.replace(target, replacement));
 		}
 		Files.write(file.toPath(), result);
+	}
+
+	/**
+	 * Creates an empty .yml or .json file.
+	 *
+	 * @param file the file to be created.
+	 * @return true if file was created.
+	 */
+	protected final synchronized boolean create(final File file) {
+		this.fileType = FileTypeUtils.getFileType(file);
+		this.file = file;
+		if (file.exists()) {
+			lastModified = System.currentTimeMillis();
+			return false;
+		} else {
+			FileUtils.createFile(file);
+			lastModified = System.currentTimeMillis();
+			return true;
+		}
 	}
 
 	protected final FlatFile getFlatFileInstance() {

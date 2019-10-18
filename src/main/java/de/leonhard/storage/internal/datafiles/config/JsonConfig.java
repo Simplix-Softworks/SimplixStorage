@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 
 public class JsonConfig extends JsonFile {
+
 	public JsonConfig(File file, InputStream inputStream, ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		super(file, inputStream, reloadSettings);
 	}

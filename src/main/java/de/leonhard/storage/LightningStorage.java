@@ -20,7 +20,6 @@ public class LightningStorage {
 	private InputStream inputStream;
 	private ReloadSettings reloadSettings;
 
-
 	private LightningStorage(final File file) {
 		this.file = file;
 	}
@@ -33,24 +32,6 @@ public class LightningStorage {
 		return new LightningStorage(new File(path, FileTypeUtils.addExtension(name, FileType.YAML)));
 	}
 
-	public final LightningStorage fromInputStream(final InputStream inputStream) {
-		this.inputStream = inputStream;
-		return this;
-	}
-
-	public final LightningStorage setReloadSetting(final ReloadSettings reloadSetting) {
-		this.reloadSettings = reloadSetting;
-		return this;
-	}
-
-	public final LightningFile createLightningFile() throws InvalidFileTypeException {
-		return new LightningFile(file, inputStream, reloadSettings);
-	}
-
-	public final LightningConfig createLightningConfig() throws InvalidFileTypeException {
-		return new LightningConfig(file, inputStream, reloadSettings);
-	}
-
 	public final CSVFile createCSV() throws InvalidFileTypeException {
 		return new CSVFile(file, inputStream, reloadSettings);
 	}
@@ -61,6 +42,14 @@ public class LightningStorage {
 
 	public final JsonConfig createJsonConfig() throws InvalidFileTypeException {
 		return new JsonConfig(file, inputStream, reloadSettings);
+	}
+
+	public final LightningConfig createLightningConfig() throws InvalidFileTypeException {
+		return new LightningConfig(file, inputStream, reloadSettings);
+	}
+
+	public final LightningFile createLightningFile() throws InvalidFileTypeException {
+		return new LightningFile(file, inputStream, reloadSettings);
 	}
 
 	public final TomlFile createToml() throws InvalidFileTypeException {
@@ -77,6 +66,16 @@ public class LightningStorage {
 
 	public final YamlConfig createYamlConfig() throws InvalidFileTypeException {
 		return new YamlConfig(file, inputStream, reloadSettings);
+	}
+
+	public final LightningStorage fromInputStream(final InputStream inputStream) {
+		this.inputStream = inputStream;
+		return this;
+	}
+
+	public final LightningStorage setReloadSetting(final ReloadSettings reloadSetting) {
+		this.reloadSettings = reloadSetting;
+		return this;
 	}
 
 	@Override

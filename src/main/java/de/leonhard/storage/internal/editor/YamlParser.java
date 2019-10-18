@@ -8,23 +8,45 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class YamlParser {
 
-	final private YamlEditor yamlEditor;
 	final private File file;
+	final private YamlEditor yamlEditor;
+
 
 	public YamlParser(final YamlEditor yamlEditor) {
 		this.yamlEditor = yamlEditor;
 		this.file = yamlEditor.getFile();
 	}
 
-	/**
-	 * Method to assign a comment to a key
-	 *
-	 * @return
-	 * @throws IOException
-	 */
-	@SuppressWarnings("JavaDoc")
-	private Map<String, List<String>> assignCommentsToKey() throws IOException {
-		return assignCommentsToKey(yamlEditor.read());
+
+	@SuppressWarnings("UnusedAssignment")
+	public List<String> parseComments(final List<String> comments, final List<String> updated) {
+		final List<String> keys;
+		final Map<String, List<String>> parsed;
+		try {
+			keys = yamlEditor.readKeys();
+			parsed = assignCommentsToKey(comments);
+		} catch (final IOException e) {
+			System.err.println("Exception while reading keys from '" + file.getName() + "'");
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+
+		for (final String key : parsed.keySet()) {
+			int i = 0;
+			for (final String line : parsed.get(key)) {
+				if (line.isEmpty()) {
+					continue;
+				}
+				if (updated.contains(key + " ")) {
+					updated.add(updated.indexOf(key + " ") + i, line);
+					continue;
+				}
+				if (updated.contains(" " + key)) {
+					updated.add(updated.indexOf(" " + key) + i, line);
+				}
+			}
+		}
+		return updated;
 	}
 
 	private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
@@ -59,34 +81,14 @@ public class YamlParser {
 		return result;
 	}
 
-	@SuppressWarnings("UnusedAssignment")
-	public List<String> parseComments(final List<String> comments, final List<String> updated) {
-		final List<String> keys;
-		final Map<String, List<String>> parsed;
-		try {
-			keys = yamlEditor.readKeys();
-			parsed = assignCommentsToKey(comments);
-		} catch (final IOException e) {
-			System.err.println("Exception while reading keys from '" + file.getName() + "'");
-			e.printStackTrace();
-			return new ArrayList<>();
-		}
-
-		for (final String key : parsed.keySet()) {
-			int i = 0;
-			for (final String line : parsed.get(key)) {
-				if (line.isEmpty()) {
-					continue;
-				}
-				if (updated.contains(key + " ")) {
-					updated.add(updated.indexOf(key + " ") + i, line);
-					continue;
-				}
-				if (updated.contains(" " + key)) {
-					updated.add(updated.indexOf(" " + key) + i, line);
-				}
-			}
-		}
-		return updated;
+	/**
+	 * Method to assign a comment to a key
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	@SuppressWarnings("JavaDoc")
+	private Map<String, List<String>> assignCommentsToKey() throws IOException {
+		return assignCommentsToKey(yamlEditor.read());
 	}
 }
