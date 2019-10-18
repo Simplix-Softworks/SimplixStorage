@@ -5,10 +5,10 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>lightningstorage</artifactId>
-    <version>2.5.5</version>
+    <version>2.5.6</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
-    <url>https://github.com/JavaFactoryDev/lightningstorage</url>
+    <url>https://github.com/JavaFactoryDev/LightningStorage</url>
 
     <licenses>
         <license>
@@ -43,9 +43,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/JavaFactoryDev/lightningstorage.git</connection>
-        <developerConnection>scm:git:ssh://github.com/JavaFactoryDev/lightningstorage.git</developerConnection>
-        <url>//github.com/JavaFactoryDev/lightningstorage</url>
+        <connection>scm:git:git://github.com/JavaFactoryDev/LightningStorage.git</connection>
+        <developerConnection>scm:git:ssh://github.com/JavaFactoryDev/LightningStorage.git</developerConnection>
+        <url>//github.com/JavaFactoryDev/LightningStorage</url>
     </scm>
 
     <properties>
@@ -148,18 +148,11 @@
 
     <repositories>
         <repository>
-            <id>yamlbeans</id>
-            <url>https://mvnrepository.com/artifact/com.esotericsoftware.yamlbeans/yamlbeans</url>
-        </repository>
-        <repository>
-            <id>org.json</id>
-            <url>https://mvnrepository.com/artifact/org.json/json</url>
-        </repository>
-        <repository>
             <id>TheWarKing-Public</id>
             <url>http://thewarking.de:8081/repository/Storage/</url>
         </repository>
     </repositories>
+
     <dependencies>
         <!-- TOML -->
         <dependency>
@@ -182,6 +175,14 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20180813</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- CSV -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.7</version>
             <scope>compile</scope>
         </dependency>
 
