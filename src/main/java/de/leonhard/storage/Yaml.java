@@ -157,7 +157,6 @@ public class Yaml extends FlatFile implements StorageBase {
 	@Override
 	public void remove(final String key) {
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
 		fileData.remove(finalKey);
 
 		try {
