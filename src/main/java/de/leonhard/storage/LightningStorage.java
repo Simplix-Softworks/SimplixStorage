@@ -24,47 +24,47 @@ public class LightningStorage {
 		this.file = file;
 	}
 
-	public static LightningStorage dataFile(final File file) {
+	public static LightningStorage create(final File file) {
 		return new LightningStorage(file);
 	}
 
-	public static LightningStorage dataFile(final String name, final String path) {
+	public static LightningStorage create(final String name, final String path) {
 		return new LightningStorage(new File(path, FileTypeUtils.addExtension(name, FileType.YAML)));
 	}
 
-	public final CSVFile createCSV() throws InvalidFileTypeException {
+	public final CSVFile asCSV() throws InvalidFileTypeException {
 		return new CSVFile(file, inputStream, reloadSettings);
 	}
 
-	public final JsonFile createJson() throws InvalidFileTypeException {
+	public final JsonFile asJson() throws InvalidFileTypeException {
 		return new JsonFile(file, inputStream, reloadSettings);
 	}
 
-	public final JsonConfig createJsonConfig() throws InvalidFileTypeException {
+	public final JsonConfig asJsonConfig() throws InvalidFileTypeException {
 		return new JsonConfig(file, inputStream, reloadSettings);
 	}
 
-	public final LightningConfig createLightningConfig() throws InvalidFileTypeException {
+	public final LightningConfig asLightningConfig() throws InvalidFileTypeException {
 		return new LightningConfig(file, inputStream, reloadSettings);
 	}
 
-	public final LightningFile createLightningFile() throws InvalidFileTypeException {
+	public final LightningFile asLightningFile() throws InvalidFileTypeException {
 		return new LightningFile(file, inputStream, reloadSettings);
 	}
 
-	public final TomlFile createToml() throws InvalidFileTypeException {
+	public final TomlFile asToml() throws InvalidFileTypeException {
 		return new TomlFile(file, inputStream, reloadSettings);
 	}
 
-	public final TomlConfig createTomlConfig() throws InvalidFileTypeException {
+	public final TomlConfig asTomlConfig() throws InvalidFileTypeException {
 		return new TomlConfig(file, inputStream, reloadSettings);
 	}
 
-	public final YamlFile createYaml() throws InvalidFileTypeException {
+	public final YamlFile asYaml() throws InvalidFileTypeException {
 		return new YamlFile(file, inputStream, reloadSettings);
 	}
 
-	public final YamlConfig createYamlConfig() throws InvalidFileTypeException {
+	public final YamlConfig asYamlConfig() throws InvalidFileTypeException {
 		return new YamlConfig(file, inputStream, reloadSettings);
 	}
 
