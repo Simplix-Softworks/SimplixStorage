@@ -12,6 +12,7 @@ Utility Class to benchmark
 @SuppressWarnings("WeakerAccess")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LagCatcher {
+
 	private static final HashMap<String, Long> startTimes = new HashMap<>();
 	private static final HashMap<String, Long> stopTimes = new HashMap<>();
 

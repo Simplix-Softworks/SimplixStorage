@@ -3,6 +3,7 @@ package de.leonhard.storage.internal.utils;
 public class Primitive {
 
 	public static class BYTE {
+
 		public static byte getByte(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).byteValue();
@@ -14,6 +15,7 @@ public class Primitive {
 		}
 	}
 	public static class DOUBLE {
+
 		public static double getDouble(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).longValue();

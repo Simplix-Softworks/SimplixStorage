@@ -17,6 +17,7 @@ import lombok.Setter;
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
+
 	protected File file;
 	protected FileData fileData = new FileData();
 	protected FileType fileType;
