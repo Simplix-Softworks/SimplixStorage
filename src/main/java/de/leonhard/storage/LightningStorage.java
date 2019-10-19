@@ -49,7 +49,7 @@ public class LightningStorage {
 		return this;
 	}
 
-	public final LightningStorage setReloadSetting(final ReloadSettings reloadSetting) {
+	public final LightningStorage withCustomReloadSetting(final ReloadSettings reloadSetting) {
 		this.reloadSettings = reloadSetting;
 		return this;
 	}
