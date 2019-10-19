@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.utils;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Primitive {
 
 	public static class BYTE {
