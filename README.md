@@ -52,7 +52,7 @@ It is much faster than yaml files and is therefore better suited for storing
 
 #### Yaml:
 Yaml files are not as fast as json files, but they are easier 
-to read and are therefore more suitable than configuration files, 
+to read and are therefore more suitable as configuration files, 
 as you often find them in bukkit plugins in the form of "config.yml".
 
 More file formats will be supported soon
