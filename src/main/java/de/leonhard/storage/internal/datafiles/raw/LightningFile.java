@@ -9,9 +9,7 @@ import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -72,9 +70,9 @@ public class LightningFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			this.fileData = new FileData(read());
+			this.fileData = new FileData(this.read());
 		} catch (IOException | LightningFileReadException e) {
-			System.err.println("Exception while reading LightningFile");
+			System.err.println("Error while reading '" + file.getName() + "'");
 			e.printStackTrace();
 		}
 	}
@@ -85,34 +83,37 @@ public class LightningFile extends FlatFile {
 	}
 
 
-	@SuppressWarnings("Duplicates")
 	private Map<String, Object> read() throws LightningFileReadException, IOException {
-		List<String> lines = Files.readAllLines(this.file.toPath());
+		BufferedReader reader = new BufferedReader(new FileReader(this.file));
+		String line = reader.readLine();
+
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
-		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
-			lines.remove(0);
+		int blankLine = -1;
+		while (line != null) {
+			String tempLine = line.trim();
+			line = reader.readLine();
 
 			if (tempLine.contains("}")) {
 				throw new LightningFileReadException("Block closed without being opened");
-			} else if (tempLine.isEmpty()) {
-				tempMap.put("{=}emptyline" + lines.size(), null);
+			} else if (tempLine.isEmpty() || !tempLine.matches("\\S")) {
+				blankLine++;
+				tempMap.put("{=}emptyline" + blankLine, null);
 			} else if (tempLine.startsWith("#")) {
 				tempMap.put(tempLine, null);
 			} else if (tempLine.endsWith("{")) {
-				if (!tempLine.equals("{")) {
-					tempKey = tempLine.replace("{", "").trim();
-				} else if (tempKey == null) {
+				if (tempLine.equals("{") && tempKey == null) {
 					throw new LightningFileReadException("Key must not be null");
+				} else {
+					tempKey = tempLine.replace("{", "").trim();
 				}
-				tempMap.put(tempKey, read(lines));
+				tempMap.put(tempKey, read(line, blankLine, reader));
 			} else {
 				if (tempLine.contains(" = ")) {
-					String[] line = tempLine.split(" = ");
-					tempMap.put(line[0], line[1]);
+					String[] localLine = tempLine.split(" = ");
+					tempMap.put(localLine[0], localLine[1]);
 				} else {
-					if (lines.get(1).contains("{")) {
+					if (line.trim().equals("{")) {
 						tempKey = tempLine;
 					} else {
 						throw new LightningFileReadException("Key does not contain value or block");
@@ -120,39 +121,40 @@ public class LightningFile extends FlatFile {
 				}
 			}
 		}
+		reader.close();
 		return tempMap;
 	}
 
-	@SuppressWarnings("Duplicates")
-	private Map<String, Object> read(List<String> lines) throws LightningFileReadException {
+	private Map<String, Object> read(String line, int blankLine, final BufferedReader reader) throws LightningFileReadException, IOException {
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 
-		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
-			lines.remove(0);
+		while (line != null) {
+			String tempLine = line.trim();
+			line = reader.readLine();
 
 			if (tempLine.equals("}")) {
 				return tempMap;
 			} else if (tempLine.contains("}")) {
 				throw new LightningFileReadException("Block closed without being opened");
-			} else if (tempLine.isEmpty()) {
-				tempMap.put("{=}emptyline", null);
+			} else if (tempLine.isEmpty() || !tempLine.matches("\\S")) {
+				blankLine++;
+				tempMap.put("{=}emptyline" + blankLine, null);
 			} else if (tempLine.startsWith("#")) {
 				tempMap.put(tempLine, null);
 			} else if (tempLine.endsWith("{")) {
-				if (!tempLine.equals("{")) {
-					tempKey = tempLine.replace("{", "").trim();
-				} else if (tempKey == null) {
+				if (tempLine.equals("{") && tempKey == null) {
 					throw new LightningFileReadException("Key must not be null");
+				} else {
+					tempKey = tempLine.replace("{", "").trim();
 				}
-				tempMap.put(tempKey, read(lines));
+				tempMap.put(tempKey, read(line, blankLine, reader));
 			} else {
 				if (tempLine.contains(" = ")) {
-					String[] line = tempLine.split(" = ");
-					tempMap.put(line[0], line[1]);
+					String[] localLine = tempLine.split(" = ");
+					tempMap.put(localLine[0], localLine[1]);
 				} else {
-					if (lines.get(1).contains("{")) {
+					if (line.trim().equals("{")) {
 						tempKey = tempLine;
 					} else {
 						throw new LightningFileReadException("Key does not contain value or block");
@@ -160,13 +162,14 @@ public class LightningFile extends FlatFile {
 				}
 			}
 		}
-		return tempMap;
+		reader.close();
+		throw new LightningFileReadException("Block does not close");
 	}
 
 
 	private void write() {
 		try (PrintWriter writer = new PrintWriter(this.file)) {
-			Map<String, Object> map = fileData.toMap();
+			Map<String, Object> map = this.fileData.toMap();
 			for (String localKey : map.keySet()) {
 				if (localKey.startsWith("#") && map.get(localKey) == null) {
 					writer.println(localKey);
@@ -182,12 +185,12 @@ public class LightningFile extends FlatFile {
 			}
 			writer.flush();
 		} catch (FileNotFoundException e) {
-			System.err.println("Error while writing to '" + file.getName() + "'");
+			System.err.println("Error while writing to '" + this.file.getName() + "'");
 			e.printStackTrace();
 		}
 	}
 
-	private void write(Map<String, Object> map, String indentationString, PrintWriter writer) {
+	private void write(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
 		for (String localKey : map.keySet()) {
 			if (localKey.startsWith("#") && map.get(localKey) == null) {
 				writer.println(indentationString + "  " + localKey);

@@ -21,11 +21,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	protected File file;
 	protected FileData fileData = new FileData();
 	protected FileType fileType;
+
 	@Setter
 	private String pathPrefix;
 	@Setter
 	private ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
 	private long lastModified;
+
 
 	public final String getFilePath() {
 		return this.file.getAbsolutePath();
@@ -35,6 +37,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this.file.getName();
 	}
 
+
 	@Override
 	public boolean hasKey(final String key) {
 		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -42,7 +45,10 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return fileData.containsKey(tempKey);
 	}
 
-	protected void update() {
+	/**
+	 * Checks if the File needs to be reloaded and does so if true.
+	 */
+	protected final void update() {
 		try {
 			if (shouldReload()) {
 				reload();
@@ -64,6 +70,11 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+	/**
+	 * Returns if the File has changed since the last check.
+	 *
+	 * @return true if it has changed.
+	 */
 	public final boolean hasChanged() {
 		return FileUtils.hasChanged(file, lastModified);
 	}
@@ -107,7 +118,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	/**
-	 * Creates an empty .yml or .json file.
+	 * Creates an empty file.
 	 *
 	 * @param file the file to be created.
 	 * @return true if file was created.
@@ -130,6 +141,21 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
+	public synchronized int hashCode() {
+		return this.file.hashCode();
+	}
+
+	@Override
+	public synchronized int compareTo(final FlatFile flatFile) {
+		return this.file.compareTo(flatFile.file);
+	}
+
+	@Override
+	public synchronized String toString() {
+		return this.file.getAbsolutePath();
+	}
+
+	@Override
 	public synchronized boolean equals(final Object obj) {
 		if (obj == this) {
 			return true;
@@ -144,20 +170,5 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 				   && fileType.equals(flatFile.fileType)
 				   && this.lastModified == flatFile.lastModified;
 		}
-	}
-
-	@Override
-	public synchronized int hashCode() {
-		return this.file.hashCode();
-	}
-
-	@Override
-	public synchronized int compareTo(final FlatFile flatFile) {
-		return this.file.compareTo(flatFile.file);
-	}
-
-	@Override
-	public synchronized String toString() {
-		return this.file.getAbsolutePath();
 	}
 }

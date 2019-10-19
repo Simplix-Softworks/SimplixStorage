@@ -9,22 +9,30 @@ import org.json.JSONObject;
 
 
 /**
- * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration files.
+ * An extended HashMap, to easily process the nested HashMaps or JsonObjects created by reading the Configuration files.
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class FileData {
 
 	private final HashMap<String, Object> localMap;
 
-
+	/**
+	 * Creates an empty FileData Object.
+	 */
 	public FileData() {
 		this.localMap = new HashMap<>();
 	}
 
+	/**
+	 * @param map the HashMap to be processed.
+	 */
 	public FileData(final Map<String, Object> map) {
 		this.localMap = new HashMap<>(map);
 	}
 
+	/**
+	 * @param jsonObject the JsonObject to be processed.
+	 */
 	public FileData(final JSONObject jsonObject) {
 		this.localMap = new HashMap<>(jsonObject.toMap());
 	}
@@ -158,10 +166,20 @@ public class FileData {
 		return localMap.size();
 	}
 
+	/**
+	 * Convert FileData to a JsonObject.
+	 *
+	 * @return JsonObject from localMap.
+	 */
 	public JSONObject toJsonObject() {
 		return JsonUtils.getJsonFromMap(localMap);
 	}
 
+	/**
+	 * Convert FileData to a nested HashMap.
+	 *
+	 * @return localMap.
+	 */
 	public Map<String, Object> toMap() {
 		if (localMap != null) {
 			return localMap;
@@ -169,6 +187,7 @@ public class FileData {
 			return new HashMap<>();
 		}
 	}
+
 
 	private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
 		if (id < key.length - 1) {
@@ -253,18 +272,6 @@ public class FileData {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			FileData fileData = (FileData) obj;
-			return this.localMap.equals(fileData.localMap);
-		}
-	}
-
-	@Override
 	public int hashCode() {
 		return this.localMap.hashCode();
 	}
@@ -277,5 +284,17 @@ public class FileData {
 	@Override
 	public String toString() {
 		return this.localMap.toString();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			FileData fileData = (FileData) obj;
+			return this.localMap.equals(fileData.localMap);
+		}
 	}
 }

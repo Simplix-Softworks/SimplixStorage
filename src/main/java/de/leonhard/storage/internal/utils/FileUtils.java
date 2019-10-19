@@ -1,9 +1,6 @@
 package de.leonhard.storage.internal.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +52,7 @@ public class FileUtils {
 	}
 
 	public static synchronized void writeToFile(final File file, final InputStream inputStream) {
-		try (FileOutputStream outputStream = new FileOutputStream(file)) {
+		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());
 			} else {

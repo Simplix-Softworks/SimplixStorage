@@ -25,7 +25,7 @@ public interface StorageBase {
 	}
 
 	/**
-	 * Checks wheter a key exists in the file
+	 * Checks whether a key exists in the file
 	 *
 	 * @param key Key to check
 	 * @return Returned value
@@ -230,6 +230,10 @@ public interface StorageBase {
 
 	Set<String> keySet(String key);
 
+	Set<String> singleLayerKeySet();
+
+	Set<String> singleLayerKeySet(String key);
+
 	void remove(final String key);
 
 	/**
@@ -244,8 +248,4 @@ public interface StorageBase {
 			set(key, value);
 		}
 	}
-
-	Set<String> singleLayerKeySet();
-
-	Set<String> singleLayerKeySet(String key);
 }
