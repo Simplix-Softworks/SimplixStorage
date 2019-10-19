@@ -84,10 +84,9 @@ public class YamlParser {
 	/**
 	 * Method to assign a comment to a key
 	 *
-	 * @return
-	 * @throws IOException
+	 * @return Nested Map with Comments assigned to the corresponding keys
+	 * @throws IOException if file could not be read
 	 */
-	@SuppressWarnings("JavaDoc")
 	private Map<String, List<String>> assignCommentsToKey() throws IOException {
 		return assignCommentsToKey(yamlEditor.read());
 	}

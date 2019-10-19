@@ -15,7 +15,6 @@ import java.io.InputStream;
 @SuppressWarnings({"unused"})
 public class TomlFile extends FlatFile {
 
-
 	public TomlFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.TOML)) {
 			if (create(file)) {

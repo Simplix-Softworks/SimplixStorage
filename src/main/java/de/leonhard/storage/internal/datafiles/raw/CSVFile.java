@@ -16,7 +16,6 @@ import java.util.Set;
 @SuppressWarnings({"unused"})
 public class CSVFile extends FlatFile {
 
-
 	public CSVFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.CSV)) {
 			if (create(file)) {

@@ -22,12 +22,12 @@ import lombok.Setter;
 
 
 @SuppressWarnings({"unchecked", "unused"})
+@Getter
 public class YamlFile extends FlatFile {
-	@Getter
+
 	private final YamlParser parser;
-	@Getter
 	private final YamlEditor yamlEditor;
-	@Getter
+	private YamlReader reader;
 	@Setter
 	private ConfigSettings configSettings = ConfigSettings.skipComments;
 
@@ -53,7 +53,6 @@ public class YamlFile extends FlatFile {
 
 	@Override
 	public void reload() {
-		YamlReader reader = null;
 		try {
 			reader = new YamlReader(new FileReader(getFile()));
 			Map<String, Object> map = (Map<String, Object>) reader.read();

@@ -20,7 +20,6 @@ import org.json.JSONTokener;
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonFile extends FlatFile {
 
-
 	public JsonFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.JSON)) {
 			if (create(file)) {

@@ -17,8 +17,6 @@ import java.util.Map;
 
 @SuppressWarnings({"unused"})
 public class LightningFile extends FlatFile {
-	private PrintWriter writer;
-
 
 	public LightningFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.LIGHTNING)) {
@@ -56,7 +54,7 @@ public class LightningFile extends FlatFile {
 		fileData.insert(finalKey, value);
 
 		if (!oldData.equals(fileData.toString())) {
-			write(fileData.toMap());
+			write();
 		}
 	}
 
@@ -68,7 +66,7 @@ public class LightningFile extends FlatFile {
 
 		fileData.remove(finalKey);
 
-		write(fileData.toMap());
+		write();
 	}
 
 	@Override
@@ -166,9 +164,9 @@ public class LightningFile extends FlatFile {
 	}
 
 
-	private void write(Map<String, Object> map) {
-		try {
-			writer = new PrintWriter(file);
+	private void write() {
+		try (PrintWriter writer = new PrintWriter(this.file)) {
+			Map<String, Object> map = fileData.toMap();
 			for (String localKey : map.keySet()) {
 				if (localKey.startsWith("#") && map.get(localKey) == null) {
 					writer.println(localKey);
@@ -177,18 +175,19 @@ public class LightningFile extends FlatFile {
 				} else if (map.get(localKey) instanceof Map) {
 					writer.println(localKey + " " + "{");
 					//noinspection unchecked
-					write((Map<String, Object>) map.get(localKey), "");
+					write((Map<String, Object>) map.get(localKey), "", writer);
 				} else {
 					writer.println(localKey + " = " + map.get(localKey));
 				}
 			}
 			writer.flush();
 		} catch (FileNotFoundException e) {
+			System.err.println("Error while writing to '" + file.getName() + "'");
 			e.printStackTrace();
 		}
 	}
 
-	private void write(Map<String, Object> map, String indentationString) {
+	private void write(Map<String, Object> map, String indentationString, PrintWriter writer) {
 		for (String localKey : map.keySet()) {
 			if (localKey.startsWith("#") && map.get(localKey) == null) {
 				writer.println(indentationString + "  " + localKey);
@@ -197,7 +196,7 @@ public class LightningFile extends FlatFile {
 			} else if (map.get(localKey) instanceof Map) {
 				writer.println(indentationString + "  " + localKey + " " + "{");
 				//noinspection unchecked
-				write((Map<String, Object>) map.get(localKey), indentationString + "  ");
+				write((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
 			} else {
 				writer.println(indentationString + "  " + localKey + " = " + map.get(localKey));
 			}
