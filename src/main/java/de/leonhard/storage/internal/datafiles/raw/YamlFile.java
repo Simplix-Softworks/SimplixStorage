@@ -42,7 +42,7 @@ public class YamlFile extends FlatFile {
 
 			yamlEditor = new YamlEditor(this.file);
 			parser = new YamlParser(yamlEditor);
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
@@ -52,10 +52,10 @@ public class YamlFile extends FlatFile {
 	}
 
 	@Override
-	protected void update() {
+	public void reload() {
 		YamlReader reader = null;
 		try {
-			reader = new YamlReader(new FileReader(getFile()));// Needed?
+			reader = new YamlReader(new FileReader(getFile()));
 			Map<String, Object> map = (Map<String, Object>) reader.read();
 			if (map == null) {
 				map = new HashMap<>();
@@ -78,7 +78,7 @@ public class YamlFile extends FlatFile {
 
 	@Override
 	public <T> T getOrSetDefault(final String path, T def) {
-		reload();
+		update();
 		if (!hasKey(path)) {
 			set(path, def, getConfigSettings());
 			return def;
@@ -97,44 +97,35 @@ public class YamlFile extends FlatFile {
 		}
 	}
 
+	@SuppressWarnings("Duplicates")
 	public synchronized void set(final String key, final Object value, final ConfigSettings configSettings) {
-		reload();
-
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		synchronized (this) {
+		reload();
 
-			String old = fileData.toString();
-			fileData.insert(finalKey, value);
+		String oldData = fileData.toString();
+		fileData.insert(finalKey, value);
 
-			if (!old.equals(fileData.toString())) {
-				try {
-					if (!ConfigSettings.preserveComments.equals(configSettings)) {
-						write(Objects.requireNonNull(fileData).toMap());
-						return;
-					}
-					final List<String> unEdited = yamlEditor.read();
-					final List<String> header = yamlEditor.readHeader();
-					final List<String> footer = yamlEditor.readFooter();
-					write(fileData.toMap());
-					header.addAll(yamlEditor.read());
-					if (!header.containsAll(footer)) {
-						header.addAll(footer);
-					}
-					yamlEditor.write(parser.parseComments(unEdited, header));
+		if (!oldData.equals(fileData.toString())) {
+			try {
+				if (!ConfigSettings.preserveComments.equals(configSettings)) {
 					write(Objects.requireNonNull(fileData).toMap());
-				} catch (final IOException e) {
-					System.err.println("Error while writing '" + getName() + "'");
+					return;
 				}
+				final List<String> unEdited = yamlEditor.read();
+				final List<String> header = yamlEditor.readHeader();
+				final List<String> footer = yamlEditor.readFooter();
+				write(fileData.toMap());
+				header.addAll(yamlEditor.read());
+				if (!header.containsAll(footer)) {
+					header.addAll(footer);
+				}
+				yamlEditor.write(parser.parseComments(unEdited, header));
+				write(Objects.requireNonNull(fileData).toMap());
+			} catch (final IOException e) {
+				System.err.println("Error while writing '" + getName() + "'");
 			}
 		}
-	}
-
-	@Override
-	public Object get(final String key) {
-		reload();
-		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-		return fileData.get(finalKey);
 	}
 
 	private void write(final Map data) throws IOException {
@@ -144,8 +135,17 @@ public class YamlFile extends FlatFile {
 	}
 
 	@Override
+	public Object get(final String key) {
+		update();
+		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+		return fileData.get(finalKey);
+	}
+
+	@Override
 	public synchronized void remove(final String key) {
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+		reload();
 
 		fileData.remove(finalKey);
 

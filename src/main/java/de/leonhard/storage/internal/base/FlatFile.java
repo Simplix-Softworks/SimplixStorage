@@ -37,14 +37,14 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Override
 	public boolean hasKey(final String key) {
 		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		reload();
+		update();
 		return fileData.containsKey(tempKey);
 	}
 
-	public void reload() {
+	protected void update() {
 		try {
 			if (shouldReload()) {
-				update();
+				reload();
 			}
 		} catch (InvalidSettingException e) {
 			e.printStackTrace();
@@ -63,47 +63,37 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-	/**
-	 * Reread the content of our flat file
-	 */
-	protected abstract void update();
-
 	public final boolean hasChanged() {
 		return FileUtils.hasChanged(file, lastModified);
 	}
 
+	/**
+	 * Reread the content of our flat file
+	 */
+	public abstract void reload();
+
 	@Override
 	public Set<String> keySet() {
-		reload();
+		update();
 		return fileData.keySet();
 	}
 
 	@Override
 	public Set<String> keySet(final String key) {
-		reload();
+		update();
 		return fileData.keySet(key);
 	}
 
 	@Override
 	public Set<String> singleLayerKeySet() {
-		reload();
+		update();
 		return fileData.singleLayerKeySet();
 	}
 
 	@Override
 	public Set<String> singleLayerKeySet(final String key) {
-		reload();
+		update();
 		return fileData.singleLayerKeySet(key);
-	}
-
-	public void reload(boolean force) {
-		try {
-			if (shouldReload() || force) {
-				update();
-			}
-		} catch (InvalidSettingException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void replace(final CharSequence target, final CharSequence replacement) throws IOException {

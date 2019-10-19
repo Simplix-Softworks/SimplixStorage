@@ -24,7 +24,7 @@ public class TomlFile extends FlatFile {
 				}
 			}
 
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
@@ -34,7 +34,7 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	protected void update() {
+	public void reload() {
 		try {
 			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
 		} catch (IOException e) {
@@ -45,7 +45,7 @@ public class TomlFile extends FlatFile {
 
 	@Override
 	public Object get(final String key) {
-		reload();
+		update();
 		return fileData.get(key);
 	}
 
@@ -55,17 +55,17 @@ public class TomlFile extends FlatFile {
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your file
 	 */
+	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(final String key, final Object value) {
-		reload();
-
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		final String old = fileData.toString();
+		reload();
 
+		String oldData = fileData.toString();
 		fileData.insert(finalKey, value);
 
-		if (!old.equals(fileData.toString())) {
+		if (!oldData.equals(fileData.toString())) {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
@@ -77,7 +77,9 @@ public class TomlFile extends FlatFile {
 
 	@Override
 	public synchronized void remove(final String key) {
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+
+		reload();
 
 		fileData.remove(finalKey);
 

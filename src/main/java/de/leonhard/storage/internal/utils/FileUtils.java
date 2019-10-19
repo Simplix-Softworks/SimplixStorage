@@ -16,7 +16,7 @@ public class FileUtils {
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void createFile(final File file) {
 		try {
-			if (!file.getParentFile().exists()) {
+			if (file.getParentFile() != null && !file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
 			if (!file.exists()) {

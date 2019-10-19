@@ -25,7 +25,7 @@ public class CSVFile extends FlatFile {
 				}
 			}
 
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
@@ -36,7 +36,7 @@ public class CSVFile extends FlatFile {
 
 	//added method for later implementation
 	@Override
-	protected void update() {
+	public void reload() {
 		//TODO
 	}
 
@@ -244,11 +244,6 @@ public class CSVFile extends FlatFile {
 	@Override
 	public void setDefault(final String key, final Object value) {
 		//TODO
-	}
-
-	@Override
-	public void reload() {
-
 	}
 
 	@Override

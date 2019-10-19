@@ -29,7 +29,7 @@ public class JsonFile extends FlatFile {
 				}
 			}
 
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
@@ -39,7 +39,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	protected void update() {
+	public void reload() {
 		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
 		fileData = new FileData(new JSONObject(jsonTokener));
 	}
@@ -62,7 +62,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	private Map getMapWithoutPath(final String key) {
-		reload();
+		update();
 
 		if (!hasKey(key)) {
 			return new HashMap<>();
@@ -103,26 +103,29 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(final String key, final Object value) {
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		synchronized (this) {
+		reload();
 
-			reload();
+		String oldData = fileData.toString();
+		fileData.insert(finalKey, value);
 
-			String old = fileData.toString();
-			fileData.insert(finalKey, value);
-
-
-			if (!old.equals(fileData.toString())) {
-				try {
-					write(new JSONObject(fileData.toMap()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		if (!oldData.equals(fileData.toString())) {
+			try {
+				write(new JSONObject(fileData.toMap()));
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
+	}
+
+	private void write(final JSONObject object) throws IOException {
+		Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
+		writer.write(object.toString(3));
+		writer.close();
 	}
 
 	@Override
@@ -133,20 +136,13 @@ public class JsonFile extends FlatFile {
 		return getObject(finalKey);
 	}
 
-	private void write(final JSONObject object) throws IOException {
-		Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
-		writer.write(object.toString(3));
-		writer.close();
-	}
-
 	@Override
 	public synchronized void remove(final String key) {
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		final Map obj = fileData.toMap();
-		obj.remove(finalKey);
+		reload();
 
-		fileData = new FileData(new JSONObject(obj));
+		fileData.remove(finalKey);
 		try {
 			write(fileData.toJsonObject());
 		} catch (IOException e) {
