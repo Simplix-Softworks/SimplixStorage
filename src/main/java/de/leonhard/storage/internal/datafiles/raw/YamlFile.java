@@ -54,7 +54,7 @@ public class YamlFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			reader = new YamlReader(new FileReader(getFile()));
+			reader = new YamlReader(new FileReader(this.file));
 			Map<String, Object> map = (Map<String, Object>) reader.read();
 			if (map == null) {
 				map = new HashMap<>();
@@ -98,7 +98,7 @@ public class YamlFile extends FlatFile {
 
 	@SuppressWarnings("Duplicates")
 	public synchronized void set(final String key, final Object value, final ConfigSettings configSettings) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 
@@ -128,7 +128,7 @@ public class YamlFile extends FlatFile {
 	}
 
 	private void write(final Map data) throws IOException {
-		YamlWriter writer = new YamlWriter(new FileWriter(getFile()));
+		YamlWriter writer = new YamlWriter(new FileWriter(this.file));
 		writer.write(data);
 		writer.close();
 	}
@@ -136,13 +136,13 @@ public class YamlFile extends FlatFile {
 	@Override
 	public Object get(final String key) {
 		update();
-		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
 	}
 
 	@Override
 	public synchronized void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 

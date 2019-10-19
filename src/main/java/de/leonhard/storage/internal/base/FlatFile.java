@@ -22,13 +22,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	protected FileData fileData = new FileData();
 	protected FileType fileType;
 	@Setter
-	protected String pathPrefix;
+	private String pathPrefix;
 	@Setter
-	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+	private ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
 	private long lastModified;
 
 	public final String getFilePath() {
-		return file.getAbsolutePath();
+		return this.file.getAbsolutePath();
 	}
 
 	public final String getName() {

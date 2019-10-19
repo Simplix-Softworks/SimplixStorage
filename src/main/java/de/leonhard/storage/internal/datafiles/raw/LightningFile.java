@@ -39,14 +39,14 @@ public class LightningFile extends FlatFile {
 	@Override
 	public Object get(final String key) {
 		update();
-		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
 	}
 
 	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(final String key, final Object value) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 
@@ -60,7 +60,7 @@ public class LightningFile extends FlatFile {
 
 	@Override
 	public synchronized void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 

@@ -52,7 +52,7 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public Map getMap(final String key) {
-		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		String tempKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		if (!hasKey(tempKey)) {
 			return new HashMap();
 		} else {
@@ -105,7 +105,7 @@ public class JsonFile extends FlatFile {
 	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(final String key, final Object value) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 
@@ -130,14 +130,14 @@ public class JsonFile extends FlatFile {
 	@Override
 	public Object get(final String key) {
 
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		return getObject(finalKey);
 	}
 
 	@Override
 	public synchronized void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 

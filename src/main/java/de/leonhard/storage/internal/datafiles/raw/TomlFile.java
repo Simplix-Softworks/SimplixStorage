@@ -57,7 +57,7 @@ public class TomlFile extends FlatFile {
 	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(final String key, final Object value) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 
@@ -76,7 +76,7 @@ public class TomlFile extends FlatFile {
 
 	@Override
 	public synchronized void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		reload();
 
