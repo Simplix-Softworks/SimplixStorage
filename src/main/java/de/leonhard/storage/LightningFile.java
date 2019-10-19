@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class LightningFile extends FlatFile {
+class LightningFile extends FlatFile {
 	@Getter
 	@Setter
 	private String pathPrefix;
