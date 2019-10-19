@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 /*
 Utility Class to benchmark
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LagCatcher {
 
