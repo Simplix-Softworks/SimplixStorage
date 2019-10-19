@@ -5,6 +5,7 @@ import java.io.File;
 
 
 @SuppressWarnings({"WeakerAccess", "unused"})
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileTypeUtils {
 
 
