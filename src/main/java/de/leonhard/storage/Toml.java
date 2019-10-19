@@ -1,12 +1,11 @@
 package de.leonhard.storage;
 
 
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.FileData;
+import de.leonhard.storage.internal.FileType;
+import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.settings.ReloadSettings;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.Synchronized;
 
 import java.io.File;
@@ -16,8 +15,6 @@ import java.util.Map;
 @Getter
 @SuppressWarnings("unchecked")
 public class Toml extends FlatFile {
-	@Setter
-	private String pathPrefix;
 
 	public Toml(final String name, final String path) {
 		create(name, path, FileType.TOML);

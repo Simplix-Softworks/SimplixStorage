@@ -1,6 +1,6 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.FlatFile;
 
 import java.util.List;
 import java.util.Map;
@@ -190,7 +190,7 @@ class CSV extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(final String path, final T def) {
+	public <T> T getOrSetDefault(final String key, final T def) {
 		return null;
 	}
 

@@ -2,14 +2,14 @@ package de.leonhard.storage;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.StorageBase;
+import de.leonhard.storage.internal.FileData;
+import de.leonhard.storage.internal.FileType;
+import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.StorageBase;
 import de.leonhard.storage.internal.editor.YamlEditor;
 import de.leonhard.storage.internal.editor.YamlParser;
-import de.leonhard.storage.internal.enums.ConfigSettings;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.settings.ConfigSettings;
+import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.internal.utils.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +23,7 @@ public class Yaml extends FlatFile implements StorageBase {
 	private final YamlEditor yamlEditor;
 	private final YamlParser parser;
 	@Setter
-	private String pathPrefix;
-	@Setter
-	private ConfigSettings configSettings = ConfigSettings.skipComments;
+	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
 
 	public Yaml(final String name, final String path) {
@@ -79,7 +77,7 @@ public class Yaml extends FlatFile implements StorageBase {
 			}
 
 			try {
-				if (!ConfigSettings.preserveComments.equals(configSettings)) {
+				if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
 					write(Objects.requireNonNull(fileData).toMap());
 					return;
 				}

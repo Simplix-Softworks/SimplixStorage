@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.base;
+package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.utils.Primitive;
 
@@ -36,6 +36,13 @@ public interface StorageBase {
 	boolean contains(String key);
 
 	Object get(String key);
+
+	default <T> T get(final String key, final T def) {
+		if (!contains(key)) {
+			return def;
+		}
+		return Primitive.getFromDef(get(key), def);
+	}
 
 	/**
 	 * Get a String from a file
@@ -228,22 +235,12 @@ public interface StorageBase {
 		}
 	}
 
-	default <T> T getOrSetDefault(String path, T def) {
-		if (!contains(path)) {
-			set(path, def);
+	default <T> T getOrSetDefault(String key, T def) {
+		if (!contains(key)) {
+			set(key, def);
 			return def;
 		} else {
-			Object obj = get(path); //
-			if (obj instanceof String && def instanceof Integer) {
-				obj = Integer.parseInt((String) obj);
-			} else if (obj instanceof String && def instanceof Double) {
-				obj = Double.parseDouble((String) obj);
-			} else if (obj instanceof String && def instanceof Float) {
-				obj = Double.parseDouble((String) obj);
-			} else if (obj instanceof String && def instanceof Boolean) {
-				return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
-			}
-			return (T) obj;
+			return Primitive.getFromDef(get(key), def);
 		}
 	}
 }

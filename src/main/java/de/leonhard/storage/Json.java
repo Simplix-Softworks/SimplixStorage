@@ -1,13 +1,12 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.StorageBase;
-import de.leonhard.storage.internal.enums.FileType;
+import de.leonhard.storage.internal.FileData;
+import de.leonhard.storage.internal.FileType;
+import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.StorageBase;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.JsonUtils;
 import lombok.Getter;
-import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -20,9 +19,6 @@ import java.util.Objects;
 @Getter
 @SuppressWarnings("unchecked")
 public class Json extends FlatFile implements StorageBase {
-	@Setter
-	private String pathPrefix;
-
 
 	public Json(final String name, final String path) {
 		try {
@@ -153,12 +149,12 @@ public class Json extends FlatFile implements StorageBase {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(final String path, T def) {
-		if (!contains(path)) {
-			set(path, def);
+	public <T> T getOrSetDefault(final String key, T def) {
+		if (!contains(key)) {
+			set(key, def);
 			return def;
 		} else {
-			return (T) get(path);
+			return (T) get(key);
 		}
 	}
 
