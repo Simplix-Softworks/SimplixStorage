@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtils {
 
 
