@@ -1,13 +1,13 @@
 package de.leonhard.storage.internal;
 
-import de.leonhard.storage.internal.utils.Primitive;
+import de.leonhard.storage.utils.Primitive;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface StorageBase {
+public interface IStorage {
 
 	Set<String> singleLayerKeySet();
 

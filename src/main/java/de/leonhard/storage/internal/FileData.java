@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal;
 
-import de.leonhard.storage.internal.utils.JsonUtils;
+import de.leonhard.storage.utils.JsonUtils;
 import org.json.JSONObject;
 
 import java.util.HashMap;

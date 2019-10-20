@@ -5,26 +5,26 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.StorageBase;
+import de.leonhard.storage.internal.IStorage;
 import de.leonhard.storage.internal.editor.YamlEditor;
 import de.leonhard.storage.internal.editor.YamlParser;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.internal.utils.FileUtils;
+import de.leonhard.storage.utils.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Synchronized;
 
 import java.io.*;
 import java.util.*;
 
 @Getter
 @SuppressWarnings("unchecked")
-public class Yaml extends FlatFile implements StorageBase {
+public class Yaml extends FlatFile implements IStorage {
 	private final YamlEditor yamlEditor;
 	private final YamlParser parser;
 	@Setter
 	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
-
 
 	public Yaml(final String name, final String path) {
 		this(name, path, null, null);
@@ -62,38 +62,37 @@ public class Yaml extends FlatFile implements StorageBase {
 		set(key, value, this.configSettings);
 	}
 
+	@Synchronized
 	public void set(final String key, final Object value, final ConfigSettings configSettings) {
 		reload();
 
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		synchronized (this) {
 
-			String old = fileData.toString();
-			fileData.insert(finalKey, value);
+		String old = fileData.toString();
+		fileData.insert(finalKey, value);
 
-			if (fileData != null && old.equals(fileData.toString())) {
+		if (fileData != null && old.equals(fileData.toString())) {
+			return;
+		}
+
+		try {
+			if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+				write(Objects.requireNonNull(fileData).toMap());
 				return;
 			}
-
-			try {
-				if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-					write(Objects.requireNonNull(fileData).toMap());
-					return;
-				}
-				final List<String> unEdited = yamlEditor.read();
-				final List<String> header = yamlEditor.readHeader();
-				final List<String> footer = yamlEditor.readFooter();
-				write(fileData.toMap());
-				header.addAll(yamlEditor.read());
-				if (!header.containsAll(footer)) {
-					header.addAll(footer);
-				}
-				yamlEditor.write(parser.parseComments(unEdited, header));
-				write(Objects.requireNonNull(fileData).toMap());
-			} catch (final IOException e) {
-				System.err.println("Error while writing '" + getName() + "'");
+			final List<String> unEdited = yamlEditor.read();
+			final List<String> header = yamlEditor.readHeader();
+			final List<String> footer = yamlEditor.readFooter();
+			write(fileData.toMap());
+			header.addAll(yamlEditor.read());
+			if (!header.containsAll(footer)) {
+				header.addAll(footer);
 			}
+			yamlEditor.write(parser.parseComments(unEdited, header));
+			write(Objects.requireNonNull(fileData).toMap());
+		} catch (final IOException e) {
+			System.err.println("Error while writing '" + getName() + "'");
 		}
 	}
 

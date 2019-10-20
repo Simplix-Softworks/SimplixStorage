@@ -4,7 +4,7 @@ import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.internal.utils.FileUtils;
+import de.leonhard.storage.utils.FileUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ public class LightningFile extends FlatFile {
 				FileUtils.writeToFile(this.file, inputStream);
 			}
 		}
-
 
 		update();
 		if (reloadSettings != null) {

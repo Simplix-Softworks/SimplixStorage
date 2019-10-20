@@ -1,5 +1,8 @@
 package de.leonhard.storage.internal;
 
+import de.leonhard.storage.utils.FileUtils;
+import lombok.Getter;
+
 import java.io.File;
 
 public enum FileType {
@@ -10,21 +13,19 @@ public enum FileType {
 	LS("ls");
 
 
+	@Getter
 	private final String extension;
 
 	FileType(String extension) {
 		this.extension = extension;
 	}
 
-	public static String getExtension(String path) {
-		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
+
+	public static FileType fromFile(final File file) {
+		return fromExtension(FileUtils.getExtension(file));
 	}
 
-	public static String getExtension(File file) {
-		return getExtension(file.getName());
-	}
-
-	public static FileType getFileType(String type) {
+	public static FileType fromExtension(String type) {
 		if (type.equalsIgnoreCase("json")) {
 			return JSON;
 		} else if (type.equalsIgnoreCase("yml")) {
@@ -40,8 +41,8 @@ public enum FileType {
 		}
 	}
 
-	public static FileType getFileType(File file) {
-		return getFileType(getExtension(file));
+	public static FileType fromExtension(File file) {
+		return fromExtension(FileUtils.getExtension(file));
 	}
 
 	@Override

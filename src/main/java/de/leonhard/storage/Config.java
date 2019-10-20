@@ -15,17 +15,17 @@ public class Config extends Yaml {
 
 	public Config(String name, String path) {
 		super(name, path);
-		this.setConfigSettings(ConfigSettings.PRES);
+		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}
 
 	public Config(String name, String path, InputStream inputStream) {
 		super(name, path, inputStream);
-		this.setConfigSettings(ConfigSettings.PRES);
+		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}
 
 	public Config(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
 		super(name, path, inputStream, reloadSettings);
-		this.setConfigSettings(ConfigSettings.PRES);
+		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}
 
 	@Override

@@ -3,9 +3,10 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.StorageBase;
-import de.leonhard.storage.internal.utils.FileUtils;
-import de.leonhard.storage.internal.utils.JsonUtils;
+import de.leonhard.storage.internal.IStorage;
+import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.utils.JsonUtils;
 import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,28 +19,34 @@ import java.util.Objects;
 
 @Getter
 @SuppressWarnings("unchecked")
-public class Json extends FlatFile implements StorageBase {
+public class Json extends FlatFile implements IStorage {
+
 
 	public Json(final String name, final String path) {
-		try {
-			create(name, path, FileType.JSON);
-			if (getFile().length() == 0) {
+		this(name, path, null);
+	}
 
+	public Json(final String name, final String path, final ReloadSettings reloadSettings) {
+		if (create(FileUtils.replaceExtensions(name), path, FileType.JSON) || file.length() == 0) {
+			try {
 				Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
 				writer.write(new JSONObject().toString(2));
 				writer.close();
+			} catch (final Exception ex) {
+				System.err.println("Error creating JSON '" + file.getName() + "'");
+				System.err.println("In '" + file.getAbsolutePath() + "'");
+				ex.printStackTrace();
 			}
-
-			update();
-		} catch (final Exception ex) {
-			System.err.println("Error creating JSON '" + file.getName() + "'");
-			System.err.println("In '" + file.getAbsolutePath() + "'");
-			ex.printStackTrace();
 		}
+		if (reloadSettings != null) {
+			this.reloadSettings = reloadSettings;
+		}
+		update();
 	}
 
 	public Json(final File file) {
-		this(file.getName().replace(".yml", ""), file.getAbsolutePath());
+		create(file);
+		update();
 	}
 
 

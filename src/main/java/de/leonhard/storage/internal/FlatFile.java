@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.internal.utils.FileUtils;
+import de.leonhard.storage.utils.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
+public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	@Setter
 	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
 	protected FileData fileData = new FileData();
@@ -39,17 +39,21 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
 		this.fileType = fileType;
-		this.file = new File(path, name + "." + fileType);
-		return generateFile(file);
+		if (path == null || path.isEmpty()) {
+			this.file = new File(name + "." + fileType.getExtension());
+		} else {
+			this.file = new File(path, FileUtils.replaceExtensions(name) + fileType.getExtension());
+		}
+		return createFile(this.file);
 	}
 
 	protected final synchronized boolean create(final File file) {
-		this.fileType = FileType.getFileType(file);
+		this.fileType = FileType.fromExtension(file);
 		this.file = file;
-		return generateFile(file);
+		return createFile(file);
 	}
 
-	private synchronized boolean generateFile(File file) {
+	private synchronized boolean createFile(final File file) {
 		if (file.exists()) {
 			lastModified = System.currentTimeMillis();
 			return false;
