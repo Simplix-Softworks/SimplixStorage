@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.base;
+package de.leonhard.storage.internal.base.interfaces;
 
 import de.leonhard.storage.internal.utils.Primitive;
 import java.util.ArrayList;
@@ -170,6 +170,7 @@ public interface StorageBase {
 		return (Map) get(key);
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	default <T> T getOrSetDefault(String path, T def) {
 		if (!hasKey(path)) {
 			set(path, def);

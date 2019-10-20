@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.enums;
+package de.leonhard.storage.internal.base.enums;
 
 public enum ConfigSetting {
 

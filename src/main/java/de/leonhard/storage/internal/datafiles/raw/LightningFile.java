@@ -1,15 +1,15 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.data.SortedData;
+import de.leonhard.storage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.internal.base.enums.FileType;
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.base.exceptions.LightningFileReadException;
-import de.leonhard.storage.internal.editor.LightningFileEditor;
-import de.leonhard.storage.internal.enums.ConfigSetting;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.datafiles.editor.LightningFileEditor;
+import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,9 @@ import org.jetbrains.annotations.Nullable;
 public class LightningFile extends FlatFile {
 
 	protected final LightningFileEditor lightningFileEditor;
+	@Getter
+	@Setter
+	protected SortedData fileData;
 	@Getter
 	@Setter
 	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
@@ -49,7 +52,7 @@ public class LightningFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			this.fileData = new FileData(this.lightningFileEditor.readData(this.configSetting));
+			this.fileData = new SortedData(this.lightningFileEditor.readData(this.configSetting));
 		} catch (IOException | LightningFileReadException | InvalidSettingException e) {
 			System.err.println("Error while reading '" + file.getName() + "'");
 			e.printStackTrace();

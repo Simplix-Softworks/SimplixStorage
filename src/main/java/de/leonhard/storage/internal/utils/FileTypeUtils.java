@@ -1,6 +1,6 @@
-package de.leonhard.storage.internal.base;
+package de.leonhard.storage.internal.utils;
 
-import de.leonhard.storage.internal.enums.FileType;
+import de.leonhard.storage.internal.base.enums.FileType;
 import java.io.File;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -50,18 +50,19 @@ public class FileTypeUtils {
 	 * @return the FileType Enum of the give extension or null if no matching Enum exists.
 	 */
 	public static FileType getFileType(String extension) {
-		if (extension.equalsIgnoreCase("json")) {
-			return FileType.JSON;
-		} else if (extension.equalsIgnoreCase("yml")) {
-			return FileType.YAML;
-		} else if (extension.equalsIgnoreCase("toml")) {
-			return FileType.TOML;
-		} else if (extension.equalsIgnoreCase("csv")) {
-			return FileType.CSV;
-		} else if (extension.equalsIgnoreCase("ls")) {
-			return FileType.LIGHTNING;
-		} else {
-			return null;
+		switch (extension) {
+			case "json":
+				return FileType.JSON;
+			case "yml":
+				return FileType.YAML;
+			case "toml":
+				return FileType.TOML;
+			case "CSV":
+				return FileType.CSV;
+			case "ls":
+				return FileType.LIGHTNING;
+			default:
+				return FileType.DEFAULT;
 		}
 	}
 

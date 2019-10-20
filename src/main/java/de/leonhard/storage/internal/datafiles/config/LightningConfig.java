@@ -1,11 +1,11 @@
 package de.leonhard.storage.internal.datafiles.config;
 
+import de.leonhard.storage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
+import de.leonhard.storage.internal.datafiles.editor.LightningFileUtils;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
-import de.leonhard.storage.internal.editor.LightningFileUtils;
-import de.leonhard.storage.internal.enums.ConfigSetting;
-import de.leonhard.storage.internal.enums.ReloadSetting;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +48,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "DuplicatedCode"})
 	public void setHeader(List<String> header) {
 		List<String> tmp = new ArrayList<>();
 		//Updating the values to have a comments, if someone forgets to set them

@@ -1,8 +1,9 @@
-package de.leonhard.storage.internal.base;
+package de.leonhard.storage.internal.base.data;
 
+import de.leonhard.storage.internal.base.interfaces.Data;
 import de.leonhard.storage.internal.utils.JsonUtils;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.json.JSONObject;
@@ -11,32 +12,31 @@ import org.json.JSONObject;
 /**
  * An extended HashMap, to easily process the nested HashMaps or JsonObjects created by reading the Configuration files.
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
-public class FileData {
+@SuppressWarnings("unused")
+public class SortedData implements Data {
 
-	private final HashMap<String, Object> localMap;
+	private final LinkedHashMap<String, Object> localMap;
 
 	/**
 	 * Creates an empty FileData Object.
 	 */
-	public FileData() {
-		this.localMap = new HashMap<>();
+	public SortedData() {
+		this.localMap = new LinkedHashMap<>();
 	}
 
 	/**
 	 * @param map the HashMap to be processed.
 	 */
-	public FileData(final Map<String, Object> map) {
-		this.localMap = new HashMap<>(map);
+	public SortedData(final Map<String, Object> map) {
+		this.localMap = new LinkedHashMap<>(map);
 	}
 
 	/**
 	 * @param jsonObject the JsonObject to be processed.
 	 */
-	public FileData(final JSONObject jsonObject) {
-		this.localMap = new HashMap<>(jsonObject.toMap());
+	public SortedData(final JSONObject jsonObject) {
+		this.localMap = new LinkedHashMap<>(jsonObject.toMap());
 	}
-
 
 	/**
 	 * Check whether the map contains a certain key.
@@ -71,9 +71,9 @@ public class FileData {
 		//noinspection unchecked
 		localMap.put(parts[0],
 					 localMap.containsKey(parts[0])
-					 && localMap.get(parts[0]) instanceof Map
-					 ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-					 : insert(new HashMap<>(), parts, value, 1));
+					 && localMap.get(parts[0]) instanceof LinkedHashMap
+					 ? insert((LinkedHashMap<String, Object>) localMap.get(parts[0]), parts, value, 1)
+					 : insert(new LinkedHashMap<>(), parts, value, 1));
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class FileData {
 	 */
 	public Set<String> keySet(final String key) {
 		//noinspection unchecked
-		return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
+		return get(key) instanceof LinkedHashMap ? keySet((LinkedHashMap<String, Object>) get(key)) : new HashSet<>();
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class FileData {
 	 */
 	public Set<String> singleLayerKeySet(final String key) {
 		//noinspection unchecked
-		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
+		return get(key) instanceof LinkedHashMap ? ((LinkedHashMap<String, Object>) get(key)).keySet() : new HashSet<>();
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class FileData {
 	 * @return the size of the given layer or 0 if the key does not exist.
 	 */
 	public int singleLayerSize(final String key) {
-		return get(key) instanceof Map ? ((Map) get(key)).size() : 0;
+		return get(key) instanceof LinkedHashMap ? ((LinkedHashMap) get(key)).size() : 0;
 	}
 
 	/**
@@ -180,20 +180,20 @@ public class FileData {
 	 *
 	 * @return localMap.
 	 */
-	public Map<String, Object> toMap() {
+	public LinkedHashMap<String, Object> toMap() {
 		if (localMap != null) {
 			return localMap;
 		} else {
-			return new HashMap<>();
+			return new LinkedHashMap<>();
 		}
 	}
 
 
-	private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
+	private boolean containsKey(final LinkedHashMap<String, Object> map, final String[] key, final int id) {
 		if (id < key.length - 1) {
-			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
+			if (map.containsKey(key[id]) && map.get(key[id]) instanceof LinkedHashMap) {
 				//noinspection unchecked
-				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+				LinkedHashMap<String, Object> tempMap = (LinkedHashMap<String, Object>) map.get(key[id]);
 				return containsKey(tempMap, key, id + 1);
 			} else {
 				return false;
@@ -203,10 +203,10 @@ public class FileData {
 		}
 	}
 
-	private Object get(final Map<String, Object> map, final String[] key, final int id) {
+	private Object get(final LinkedHashMap<String, Object> map, final String[] key, final int id) {
 		if (id < key.length - 1) {
-			if (map.get(key[id]) instanceof Map) {
-				@SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+			if (map.get(key[id]) instanceof LinkedHashMap) {
+				@SuppressWarnings("unchecked") LinkedHashMap<String, Object> tempMap = (LinkedHashMap<String, Object>) map.get(key[id]);
 				return get(tempMap, key, id + 1);
 			} else {
 				return null;
@@ -216,15 +216,15 @@ public class FileData {
 		}
 	}
 
-	private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
+	private synchronized Object insert(final LinkedHashMap<String, Object> map, final String[] key, final Object value, final int id) {
 		if (id < key.length) {
-			Map<String, Object> tempMap = new HashMap<>(map);
+			LinkedHashMap<String, Object> tempMap = new LinkedHashMap<>(map);
 			//noinspection unchecked
-			Map<String, Object> childMap =
+			LinkedHashMap<String, Object> childMap =
 					map.containsKey(key[id])
-					&& map.get(key[id]) instanceof Map
-					? (Map<String, Object>) map.get(key[id])
-					: new HashMap<>();
+					&& map.get(key[id]) instanceof LinkedHashMap
+					? (LinkedHashMap<String, Object>) map.get(key[id])
+					: new LinkedHashMap<>();
 			tempMap.put(key[id], insert(childMap, key, value, id + 1));
 			return tempMap;
 		} else {
@@ -232,12 +232,12 @@ public class FileData {
 		}
 	}
 
-	private Set<String> keySet(final Map<String, Object> map) {
+	private Set<String> keySet(final LinkedHashMap<String, Object> map) {
 		Set<String> localSet = new HashSet<>();
 		for (String key : map.keySet()) {
-			if (map.get(key) instanceof Map) {
+			if (map.get(key) instanceof LinkedHashMap) {
 				//noinspection unchecked
-				for (String tempKey : keySet((Map<String, Object>) map.get(key))) {
+				for (String tempKey : keySet((LinkedHashMap<String, Object>) map.get(key))) {
 					localSet.add(key + "." + tempKey);
 				}
 			} else {
@@ -247,11 +247,11 @@ public class FileData {
 		return localSet;
 	}
 
-	private synchronized void remove(final Map<String, Object> map, final String[] key, final int id) {
-		Map tempMap = map;
+	private synchronized void remove(final LinkedHashMap<String, Object> map, final String[] key, final int id) {
+		LinkedHashMap tempMap = map;
 		for (int i = 0; i < key.length - (1 + id); i++) {
-			if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
-				tempMap = (Map) tempMap.get(key[i]);
+			if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof LinkedHashMap) {
+				tempMap = (LinkedHashMap) tempMap.get(key[i]);
 			}
 		}
 		if (tempMap.keySet().size() <= 1) {
@@ -260,12 +260,12 @@ public class FileData {
 		}
 	}
 
-	private int size(final Map<String, Object> map) {
+	private int size(final LinkedHashMap<String, Object> map) {
 		int size = map.size();
 		for (String key : map.keySet()) {
-			if (map.get(key) instanceof Map) {
+			if (map.get(key) instanceof LinkedHashMap) {
 				//noinspection unchecked
-				size += size((Map<String, Object>) map.get(key));
+				size += size((LinkedHashMap<String, Object>) map.get(key));
 			}
 		}
 		return size;
@@ -293,8 +293,8 @@ public class FileData {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			FileData fileData = (FileData) obj;
-			return this.localMap.equals(fileData.localMap);
+			SortedData sortedFileData = (SortedData) obj;
+			return this.localMap.equals(sortedFileData.localMap);
 		}
 	}
 }

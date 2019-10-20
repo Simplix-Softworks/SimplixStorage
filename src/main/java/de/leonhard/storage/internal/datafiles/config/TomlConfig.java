@@ -1,8 +1,8 @@
 package de.leonhard.storage.internal.datafiles.config;
 
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.raw.TomlFile;
-import de.leonhard.storage.internal.enums.ReloadSetting;
 import java.io.File;
 import java.io.InputStream;
 import org.jetbrains.annotations.NotNull;

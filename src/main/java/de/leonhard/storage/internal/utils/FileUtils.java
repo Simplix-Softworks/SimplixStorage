@@ -2,13 +2,11 @@ package de.leonhard.storage.internal.utils;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 
+@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtils {
 
@@ -43,12 +41,6 @@ public class FileUtils {
 
 	public static boolean hasChanged(final File file, final long timeStamp) {
 		return timeStamp < file.lastModified();
-	}
-
-	public static List<String> readAllLines(final File file) throws IOException {
-		final byte[] fileBytes = Files.readAllBytes(file.toPath());
-		final String asString = new String(fileBytes);
-		return new ArrayList<>(Arrays.asList(asString.split("\\n")));
 	}
 
 	public static synchronized void writeToFile(final File file, final InputStream inputStream) {

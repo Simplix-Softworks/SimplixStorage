@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Primitive {
 
+	@SuppressWarnings("DuplicatedCode")
 	public static <T> T getFromDef(Object obj, final T def) {
 		if (obj instanceof String && def instanceof Integer) {
 			obj = Integer.parseInt((String) obj);

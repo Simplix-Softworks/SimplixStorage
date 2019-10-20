@@ -1,8 +1,12 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.base.data.StandardData;
+import de.leonhard.storage.internal.base.enums.FileType;
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.base.interfaces.Data;
+import de.leonhard.storage.internal.base.interfaces.StorageBase;
+import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +23,7 @@ import lombok.Setter;
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected File file;
-	protected FileData fileData = new FileData();
+	protected Data fileData = new StandardData();
 	protected FileType fileType;
 
 	@Setter

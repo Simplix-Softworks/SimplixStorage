@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.editor;
+package de.leonhard.storage.internal.datafiles.editor;
 
 import java.io.IOException;
 import java.util.*;

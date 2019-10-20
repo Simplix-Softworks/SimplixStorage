@@ -2,15 +2,15 @@ package de.leonhard.storage.internal.datafiles.raw;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.data.StandardData;
+import de.leonhard.storage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.internal.base.enums.FileType;
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
-import de.leonhard.storage.internal.editor.YamlEditor;
-import de.leonhard.storage.internal.editor.YamlParser;
-import de.leonhard.storage.internal.enums.ConfigSetting;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.datafiles.editor.YamlEditor;
+import de.leonhard.storage.internal.datafiles.editor.YamlParser;
+import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.*;
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class YamlFile extends FlatFile {
 			if (map == null) {
 				map = new HashMap<>();
 			}
-			fileData = new FileData(map);
+			fileData = new StandardData(map);
 
 			try {
 				reader.close();
@@ -126,9 +126,9 @@ public class YamlFile extends FlatFile {
 		}
 	}
 
-	private void write(final Map data) throws IOException {
+	private void write(final Map fileData) throws IOException {
 		YamlWriter writer = new YamlWriter(new FileWriter(this.file));
-		writer.write(data);
+		writer.write(fileData);
 		writer.close();
 	}
 

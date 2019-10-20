@@ -1,14 +1,14 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.base.FileTypeUtils;
+import de.leonhard.storage.internal.base.enums.FileType;
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.config.JsonConfig;
 import de.leonhard.storage.internal.datafiles.config.LightningConfig;
 import de.leonhard.storage.internal.datafiles.config.TomlConfig;
 import de.leonhard.storage.internal.datafiles.config.YamlConfig;
 import de.leonhard.storage.internal.datafiles.raw.*;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.Valid;
 import java.io.*;
 import org.jetbrains.annotations.NotNull;

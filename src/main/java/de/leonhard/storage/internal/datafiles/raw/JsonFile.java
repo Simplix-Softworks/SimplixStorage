@@ -1,11 +1,11 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.data.StandardData;
+import de.leonhard.storage.internal.base.enums.FileType;
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.JsonUtils;
 import java.io.*;
@@ -42,7 +42,7 @@ public class JsonFile extends FlatFile {
 	@Override
 	public void reload() {
 		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
-		fileData = new FileData(new JSONObject(jsonTokener));
+		fileData = new StandardData(new JSONObject(jsonTokener));
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class JsonFile extends FlatFile {
 		}
 
 		if (key.contains(".")) {
-			return new FileData(fileData.toMap()).containsKey(key) ? new FileData(fileData.toMap()).get(key) : null;
+			return new StandardData(fileData.toMap()).containsKey(key) ? new StandardData(fileData.toMap()).get(key) : null;
 		}
 		return fileData.containsKey(key) ? fileData.get(key) : null;
 	}

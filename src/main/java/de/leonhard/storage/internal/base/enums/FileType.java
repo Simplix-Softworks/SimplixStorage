@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.enums;
+package de.leonhard.storage.internal.base.enums;
 
 public enum FileType {
 
@@ -6,7 +6,8 @@ public enum FileType {
 	YAML("yml"),
 	TOML("toml"),
 	CSV("csv"),
-	LIGHTNING("ls");
+	LIGHTNING("ls"),
+	DEFAULT("");
 
 
 	private String extension;

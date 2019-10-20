@@ -1,11 +1,11 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.data.StandardData;
+import de.leonhard.storage.internal.base.enums.FileType;
+import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
-import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class TomlFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
+			fileData = new StandardData(com.electronwill.toml.Toml.read(getFile()));
 		} catch (IOException e) {
 			System.err.println("Exception while reading '" + getName() + "'");
 			e.printStackTrace();
