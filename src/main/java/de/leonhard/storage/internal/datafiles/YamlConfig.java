@@ -1,8 +1,7 @@
-package de.leonhard.storage.internal.datafiles.config;
+package de.leonhard.storage.internal.datafiles;
 
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
-import de.leonhard.storage.internal.datafiles.raw.YamlFile;
 import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import java.io.File;
@@ -18,13 +17,13 @@ public class YamlConfig extends YamlFile {
 	private List<String> header;
 
 
-	public YamlConfig(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	protected YamlConfig(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		super(file, inputStream, reloadSettings);
-		this.setConfigSettings(ConfigSettings.preserveComments);
+		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}
 
 	public List<String> getHeader() {
-		if (getConfigSettings().equals(ConfigSettings.skipComments)) {
+		if (getConfigSettings().equals(ConfigSettings.SKIP_COMMENTS)) {
 			return new ArrayList<>();
 		}
 

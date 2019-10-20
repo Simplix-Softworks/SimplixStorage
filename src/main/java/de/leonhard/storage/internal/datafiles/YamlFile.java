@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.datafiles.raw;
+package de.leonhard.storage.internal.datafiles;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "WeakerAccess"})
 @Getter
 public class YamlFile extends FlatFile {
 
@@ -29,10 +29,10 @@ public class YamlFile extends FlatFile {
 	private final YamlEditor yamlEditor;
 	private YamlReader reader;
 	@Setter
-	private ConfigSettings configSettings = ConfigSettings.skipComments;
+	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
 
-	public YamlFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	protected YamlFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.YAML)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -42,7 +42,7 @@ public class YamlFile extends FlatFile {
 
 			yamlEditor = new YamlEditor(this.file);
 			parser = new YamlParser(yamlEditor);
-			reload();
+			update();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
@@ -100,14 +100,14 @@ public class YamlFile extends FlatFile {
 	public synchronized void set(final String key, final Object value, final ConfigSettings configSettings) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
-		reload();
+		update();
 
 		String oldData = fileData.toString();
 		fileData.insert(finalKey, value);
 
 		if (!oldData.equals(fileData.toString())) {
 			try {
-				if (!ConfigSettings.preserveComments.equals(configSettings)) {
+				if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
 					write(Objects.requireNonNull(fileData).toMap());
 					return;
 				}
@@ -144,7 +144,7 @@ public class YamlFile extends FlatFile {
 	public synchronized void remove(final String key) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
-		reload();
+		update();
 
 		fileData.remove(finalKey);
 

@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.datafiles.raw;
+package de.leonhard.storage.internal.datafiles;
 
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
@@ -20,7 +20,7 @@ import org.json.JSONTokener;
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonFile extends FlatFile {
 
-	public JsonFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	protected JsonFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.JSON)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -28,7 +28,7 @@ public class JsonFile extends FlatFile {
 				}
 			}
 
-			reload();
+			update();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
@@ -107,7 +107,7 @@ public class JsonFile extends FlatFile {
 	public synchronized void set(final String key, final Object value) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
-		reload();
+		update();
 
 		String oldData = fileData.toString();
 		fileData.insert(finalKey, value);
@@ -139,7 +139,7 @@ public class JsonFile extends FlatFile {
 	public synchronized void remove(final String key) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
-		reload();
+		update();
 
 		fileData.remove(finalKey);
 		try {

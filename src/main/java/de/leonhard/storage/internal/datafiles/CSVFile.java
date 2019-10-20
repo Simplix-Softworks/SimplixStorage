@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.datafiles.raw;
+package de.leonhard.storage.internal.datafiles;
 
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -16,7 +16,7 @@ import java.util.Set;
 @SuppressWarnings({"unused"})
 public class CSVFile extends FlatFile {
 
-	public CSVFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	protected CSVFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.CSV)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -24,7 +24,7 @@ public class CSVFile extends FlatFile {
 				}
 			}
 
-			reload();
+			update();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
