@@ -4,7 +4,7 @@ import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.raw.JsonFile;
 import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.enums.ReloadSetting;
 import java.io.File;
 import java.io.InputStream;
 
@@ -20,8 +20,8 @@ public class Json extends JsonFile {
 		super(new File(path, FileTypeUtils.addExtension(name, FileType.JSON)), null, null);
 	}
 
-	public Json(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
-		super(file, inputStream, reloadSettings);
+	public Json(final File file, final InputStream inputStream, final ReloadSetting reloadSetting) throws InvalidFileTypeException {
+		super(file, inputStream, reloadSetting);
 	}
 
 	public boolean contains(final String key) {

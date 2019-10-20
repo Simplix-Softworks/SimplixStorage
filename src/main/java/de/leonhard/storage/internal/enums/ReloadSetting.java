@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.enums;
 
-public enum ReloadSettings {
+public enum ReloadSetting {
 
 	AUTOMATICALLY,
 	INTELLIGENT,

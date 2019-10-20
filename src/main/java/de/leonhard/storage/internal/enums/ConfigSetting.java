@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.enums;
 
-public enum ConfigSettings {
+public enum ConfigSetting {
 
 	PRESERVE_COMMENTS,
 	SKIP_COMMENTS

@@ -3,15 +3,16 @@ package de.leonhard.storage.internal.datafiles.raw;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.editor.YamlEditor;
 import de.leonhard.storage.internal.editor.YamlParser;
-import de.leonhard.storage.internal.enums.ConfigSettings;
+import de.leonhard.storage.internal.enums.ConfigSetting;
 import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.enums.ReloadSetting;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.*;
 import java.util.HashMap;
@@ -30,10 +31,10 @@ public class YamlFile extends FlatFile {
 	private final YamlEditor yamlEditor;
 	private YamlReader reader;
 	@Setter
-	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
 
 
-	public YamlFile(@NotNull final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.YAML)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -41,11 +42,11 @@ public class YamlFile extends FlatFile {
 				}
 			}
 
-			yamlEditor = new YamlEditor(this.file);
-			parser = new YamlParser(yamlEditor);
+			this.yamlEditor = new YamlEditor(this.file);
+			this.parser = new YamlParser(yamlEditor);
 			reload();
-			if (reloadSettings != null) {
-				setReloadSettings(reloadSettings);
+			if (reloadSetting != null) {
+				setReloadSetting(reloadSetting);
 			}
 		} else {
 			throw new InvalidFileTypeException("The given file if of no valid filetype.");
@@ -80,7 +81,7 @@ public class YamlFile extends FlatFile {
 	public <T> T getOrSetDefault(final String path, T def) {
 		update();
 		if (!hasKey(path)) {
-			set(path, def, getConfigSettings());
+			set(path, def, getConfigSetting());
 			return def;
 		} else {
 			Object obj = get(path); //
@@ -98,7 +99,7 @@ public class YamlFile extends FlatFile {
 	}
 
 	@SuppressWarnings("Duplicates")
-	public synchronized void set(final String key, final Object value, final ConfigSettings configSettings) {
+	public synchronized void set(final String key, final Object value, final ConfigSetting configSetting) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
@@ -108,7 +109,7 @@ public class YamlFile extends FlatFile {
 
 		if (!oldData.equals(fileData.toString())) {
 			try {
-				if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+				if (!ConfigSetting.PRESERVE_COMMENTS.equals(configSetting)) {
 					write(Objects.requireNonNull(fileData).toMap());
 					return;
 				}
@@ -158,13 +159,13 @@ public class YamlFile extends FlatFile {
 
 	@Override
 	public void set(final String key, final Object value) {
-		set(key, value, this.configSettings);
+		set(key, value, this.configSetting);
 	}
 
 	@Override
 	public void setDefault(final String key, final Object value) {
 		if (!hasKey(key)) {
-			set(key, value, getConfigSettings());
+			set(key, value, getConfigSetting());
 		}
 	}
 
@@ -180,7 +181,7 @@ public class YamlFile extends FlatFile {
 			return false;
 		} else {
 			YamlFile yaml = (YamlFile) obj;
-			return this.configSettings.equals(yaml.configSettings)
+			return this.configSetting.equals(yaml.configSetting)
 				   && super.equals(yaml.getFlatFileInstance());
 		}
 	}

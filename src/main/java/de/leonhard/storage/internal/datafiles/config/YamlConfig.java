@@ -1,11 +1,12 @@
 package de.leonhard.storage.internal.datafiles.config;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
-import de.leonhard.storage.internal.enums.ConfigSettings;
-import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.enums.ConfigSetting;
+import de.leonhard.storage.internal.enums.ReloadSetting;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,13 +20,13 @@ public class YamlConfig extends YamlFile {
 	private List<String> header;
 
 
-	public YamlConfig(@NotNull final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
-		super(file, inputStream, reloadSettings);
-		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+	public YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting) throws InvalidFileTypeException {
+		super(file, inputStream, reloadSetting);
+		this.setConfigSetting(ConfigSetting.PRESERVE_COMMENTS);
 	}
 
 	public List<String> getHeader() {
-		if (getConfigSettings().equals(ConfigSettings.SKIP_COMMENTS)) {
+		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
 		}
 
@@ -41,8 +42,8 @@ public class YamlConfig extends YamlFile {
 		} catch (IOException e) {
 			System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
 			e.printStackTrace();
+			return new ArrayList<>();
 		}
-		return new ArrayList<>();
 	}
 
 	@SuppressWarnings("unused")

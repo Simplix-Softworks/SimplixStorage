@@ -2,7 +2,7 @@ package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.enums.ReloadSetting;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@SuppressWarnings({"UnusedReturnValue", "unused"})
+@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
@@ -25,7 +25,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Setter
 	private String pathPrefix;
 	@Setter
-	private ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+	private ReloadSetting reloadSetting = ReloadSetting.INTELLIGENT;
 	private long lastModified;
 
 
@@ -59,11 +59,11 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	protected boolean shouldReload() throws InvalidSettingException {
-		if (reloadSettings.equals(ReloadSettings.AUTOMATICALLY)) {
+		if (reloadSetting.equals(ReloadSetting.AUTOMATICALLY)) {
 			return true;
-		} else if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
+		} else if (reloadSetting.equals(ReloadSetting.INTELLIGENT)) {
 			return hasChanged();
-		} else if (reloadSettings.equals(ReloadSettings.MANUALLY)) {
+		} else if (reloadSetting.equals(ReloadSetting.MANUALLY)) {
 			return false;
 		} else {
 			throw new InvalidSettingException("No proper ReloadSetting");
@@ -164,7 +164,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		} else {
 			FlatFile flatFile = (FlatFile) obj;
 			return this.pathPrefix.equals(flatFile.pathPrefix)
-				   && reloadSettings.equals(flatFile.reloadSettings)
+				   && reloadSetting.equals(flatFile.reloadSetting)
 				   && this.fileData.equals(flatFile.fileData)
 				   && this.file.equals(flatFile.file)
 				   && fileType.equals(flatFile.fileType)

@@ -1,12 +1,13 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.enums.FileType;
-import de.leonhard.storage.internal.enums.ReloadSettings;
+import de.leonhard.storage.internal.enums.ReloadSetting;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.JsonUtils;
 import java.io.*;
@@ -21,7 +22,7 @@ import org.json.JSONTokener;
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonFile extends FlatFile {
 
-	public JsonFile(@NotNull final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.JSON)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -30,8 +31,8 @@ public class JsonFile extends FlatFile {
 			}
 
 			reload();
-			if (reloadSettings != null) {
-				setReloadSettings(reloadSettings);
+			if (reloadSetting != null) {
+				setReloadSetting(reloadSetting);
 			}
 		} else {
 			throw new InvalidFileTypeException("The given file if of no valid filetype.");
