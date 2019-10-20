@@ -103,20 +103,6 @@ public class Yaml extends FlatFile implements IStorage {
 	}
 
 	@Override
-	public Object get(final String key) {
-		reload();
-		String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-		return fileData.get(key);
-	}
-
-	@Override
-	public boolean contains(final String key) {
-		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		reload();
-		return fileData.containsKey(tempKey);
-	}
-
-	@Override
 	protected void update() {
 		YamlReader reader = null;
 		try {
@@ -161,10 +147,6 @@ public class Yaml extends FlatFile implements IStorage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected final Yaml getYamlInstance() {
-		return this;
 	}
 
 	@Override

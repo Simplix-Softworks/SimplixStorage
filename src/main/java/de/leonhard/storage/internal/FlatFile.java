@@ -70,6 +70,24 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 		}
 	}
 
+	@Override
+	public Object get(String key) {
+		reload();
+		final String finalKey = pathPrefix == null ? key : pathPrefix + "." + key;
+		return fileData.get(finalKey);
+	}
+
+	/**
+	 * Checks wheter a key exists in the file
+	 *
+	 * @param key Key to check
+	 * @return Returned value
+	 */
+	@Override
+	public boolean contains(final String key) {
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		return fileData.containsKey(finalKey);
+	}
 
 	@Override
 	public Set<String> singleLayerKeySet() {

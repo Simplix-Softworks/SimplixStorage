@@ -122,10 +122,6 @@ public class Config extends Yaml {
 		}
 	}
 
-	protected final Config getConfigInstance() {
-		return this;
-	}
-
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj == this) {
@@ -133,9 +129,9 @@ public class Config extends Yaml {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			Config config = (Config) obj;
-			return this.header.equals(config.header)
-					&& super.equals(config.getYamlInstance());
+			Yaml config = (Config) obj;
+			return this.header.equals(config.getHeader())
+					&& super.equals(config);
 		}
 	}
 }

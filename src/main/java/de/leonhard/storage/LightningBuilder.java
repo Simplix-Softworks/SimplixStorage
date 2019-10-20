@@ -40,6 +40,12 @@ public class LightningBuilder {
 	}
 
 
+	public LightningBuilder addInputStreamFromResource(final String resource) {
+		this.inputStream = getClass().getClassLoader().getResourceAsStream(resource);
+		Valid.notNull(inputStream, "No inbuild resource '" + resource + "'", "InputStream is null.");
+		return this;
+	}
+
 	public LightningBuilder setName(final String name) {
 		Valid.notNull(name, "Name mustn't be null.");
 		this.name = name;

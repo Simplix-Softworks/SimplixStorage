@@ -21,7 +21,6 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public class Json extends FlatFile implements IStorage {
 
-
 	public Json(final String name, final String path) {
 		this(name, path, null);
 	}
@@ -66,61 +65,31 @@ public class Json extends FlatFile implements IStorage {
 		set(key, value);
 	}
 
-	@Override
-	public Object get(final String key) {
-
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-		return getObject(finalKey);
-	}
-
-	private Object getObject(final String key) {
-		if (!has(key)) {
-			return null;
-		}
-
-		if (key.contains(".")) {
-			return new FileData(fileData.toMap()).containsKey(key) ? new FileData(fileData.toMap()).get(key) : null;
-		}
-		return fileData.containsKey(key) ? fileData.get(key) : null;
-	}
-
 	/**
 	 * Gets a Map by key Although used to get nested objects {@link Json}
 	 *
 	 * @param key Path to Map-List in JSON
 	 * @return Map
 	 */
-
 	@Override
 	public Map getMap(final String key) {
 		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		if (!contains(tempKey)) {
 			return new HashMap();
 		} else {
-			return getMapWithoutPath(tempKey);
+			Object map;
+			try {
+				map = get(key);
+			} catch (JSONException e) {
+				return new HashMap<>();
+			}
+			if (map instanceof Map) {
+				return (Map<?, ?>) fileData.get(key);
+			} else if (map instanceof JSONObject) {
+				return JsonUtils.jsonToMap((JSONObject) map);
+			}
+			throw new IllegalArgumentException("Json does not contain Map: '" + key + "'.");
 		}
-	}
-
-	private Map getMapWithoutPath(final String key) {
-		reload();
-
-		if (!has(key)) {
-			return new HashMap<>();
-		}
-
-		Object map;
-		try {
-			map = getObject(key);
-		} catch (JSONException e) {
-			return new HashMap<>();
-		}
-		if (map instanceof Map) {
-			return (Map<?, ?>) fileData.get(key);
-		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map);
-		}
-		throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
 	}
 
 	@Override
@@ -171,17 +140,6 @@ public class Json extends FlatFile implements IStorage {
 		fileData = new FileData(new JSONObject(jsonTokener));
 	}
 
-	private boolean has(final String key) {
-		reload();
-		return fileData.containsKey(key);
-	}
-
-	@Override
-	public boolean contains(final String key) {
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		return has(finalKey);
-	}
-
 	@Override
 	public void remove(final String key) {
 		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -195,10 +153,6 @@ public class Json extends FlatFile implements IStorage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected final Json getJsonInstance() {
-		return this;
 	}
 
 	@Override

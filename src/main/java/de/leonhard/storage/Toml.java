@@ -61,24 +61,6 @@ public class Toml extends FlatFile {
 		}
 	}
 
-	@Override
-	public Object get(final String key) {
-		reload();
-		return fileData.get(key);
-	}
-
-	/**
-	 * Checks wheter a key exists in the file
-	 *
-	 * @param key Key to check
-	 * @return Returned value
-	 */
-	@Override
-	public boolean contains(final String key) {
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		return fileData.containsKey(finalKey);
-	}
-
 	public void write(final Map<String, Object> data) {
 		try {
 			com.electronwill.toml.Toml.write(data, getFile());
@@ -116,10 +98,6 @@ public class Toml extends FlatFile {
 		fileData.remove(finalKey);
 
 		write(fileData.toMap());
-	}
-
-	protected final Toml getTomlInstance() {
-		return this;
 	}
 
 	@Override
