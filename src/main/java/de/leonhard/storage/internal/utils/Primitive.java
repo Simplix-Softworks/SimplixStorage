@@ -4,19 +4,32 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "unchecked"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Primitive {
 
-	public static class BYTE {
+	public static <T> T getFromDef(Object obj, final T def) {
+		if (obj instanceof String && def instanceof Integer) {
+			obj = Integer.parseInt((String) obj);
+		} else if (obj instanceof String && def instanceof Double) {
+			obj = Double.parseDouble((String) obj);
+		} else if (obj instanceof String && def instanceof Float) {
+			obj = Double.parseDouble((String) obj);
+		} else if (obj instanceof String && def instanceof Boolean) {
+			obj = Boolean.getBoolean((String) obj);
+		}
+		return (T) obj;
+	}
 
-		public static byte getByte(Object obj) {
+	public static class LONG {
+
+		public static long getLong(Object obj) {
 			if (obj instanceof Number) {
-				return ((Number) obj).byteValue();
+				return ((Number) obj).longValue();
 			} else if (obj instanceof String) {
-				return Byte.parseByte(obj.toString());
+				return Long.parseLong((String) obj);
 			} else {
-				return Byte.parseByte(obj.toString());
+				return Long.parseLong(obj.toString());
 			}
 		}
 	}
@@ -60,19 +73,6 @@ public class Primitive {
 		}
 	}
 
-	public static class LONG {
-
-		public static long getLong(Object obj) {
-			if (obj instanceof Number) {
-				return ((Number) obj).longValue();
-			} else if (obj instanceof String) {
-				return Long.parseLong((String) obj);
-			} else {
-				return Long.parseLong(obj.toString());
-			}
-		}
-	}
-
 	public static class SHORT {
 
 		public static short getShort(Object obj) {
@@ -82,6 +82,19 @@ public class Primitive {
 				return Short.parseShort((String) obj);
 			} else {
 				return Short.parseShort(obj.toString());
+			}
+		}
+	}
+
+	public static class BYTE {
+
+		public static byte getByte(Object obj) {
+			if (obj instanceof Number) {
+				return ((Number) obj).byteValue();
+			} else if (obj instanceof String) {
+				return Byte.parseByte(obj.toString());
+			} else {
+				return Byte.parseByte(obj.toString());
 			}
 		}
 	}

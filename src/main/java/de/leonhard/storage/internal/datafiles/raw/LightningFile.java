@@ -1,10 +1,12 @@
-package de.leonhard.storage.internal.datafiles;
+package de.leonhard.storage.internal.datafiles.raw;
 
+import com.sun.istack.internal.NotNull;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.base.exceptions.LightningFileReadException;
+import de.leonhard.storage.internal.enums.ConfigSettings;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -14,12 +16,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @SuppressWarnings({"unused"})
+@Getter
 public class LightningFile extends FlatFile {
 
-	protected LightningFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	@Setter
+	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+
+	public LightningFile(@NotNull final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.LIGHTNING)) {
 			if (create(file)) {
 				if (inputStream != null) {

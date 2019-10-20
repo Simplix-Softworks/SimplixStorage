@@ -1,5 +1,6 @@
-package de.leonhard.storage.internal.datafiles;
+package de.leonhard.storage.internal.datafiles.raw;
 
+import com.sun.istack.internal.NotNull;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -20,7 +21,7 @@ import org.json.JSONTokener;
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonFile extends FlatFile {
 
-	protected JsonFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	public JsonFile(@NotNull final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.JSON)) {
 			if (create(file)) {
 				if (inputStream != null) {

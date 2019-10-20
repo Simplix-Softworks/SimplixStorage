@@ -1,7 +1,8 @@
-package de.leonhard.storage.internal.datafiles;
+package de.leonhard.storage.internal.datafiles.raw;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
+import com.sun.istack.internal.NotNull;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -21,7 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@SuppressWarnings({"unchecked", "unused", "WeakerAccess"})
+@SuppressWarnings({"unchecked", "unused"})
 @Getter
 public class YamlFile extends FlatFile {
 
@@ -32,7 +33,7 @@ public class YamlFile extends FlatFile {
 	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
 
-	protected YamlFile(final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
+	public YamlFile(@NotNull final File file, final InputStream inputStream, final ReloadSettings reloadSettings) throws InvalidFileTypeException {
 		if (FileTypeUtils.isType(file, FileType.YAML)) {
 			if (create(file)) {
 				if (inputStream != null) {

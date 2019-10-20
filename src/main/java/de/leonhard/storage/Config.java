@@ -2,7 +2,7 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
-import de.leonhard.storage.internal.datafiles.YamlConfig;
+import de.leonhard.storage.internal.datafiles.config.YamlConfig;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSettings;
 import java.io.File;
