@@ -67,7 +67,7 @@ public class LightningStorage extends FileBuilder {
 		return asLightningConfig(file, path, name, inputStream, reloadSettings);
 	}
 
-	public final de.leonhard.storage.internal.datafiles.LightningFile asLightningFile() throws InvalidFileTypeException {
+	public final LightningFile asLightningFile() throws InvalidFileTypeException {
 		return asLightningFile(file, path, name, inputStream, reloadSettings);
 	}
 
