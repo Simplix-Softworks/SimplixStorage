@@ -39,6 +39,7 @@ public class LightningBuilder {
 		return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), path);
 	}
 
+
 	public LightningBuilder setName(final String name) {
 		Valid.notNull(name, "Name mustn't be null.");
 		this.name = name;
