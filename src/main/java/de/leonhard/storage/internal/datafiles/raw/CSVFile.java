@@ -1,7 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
@@ -13,6 +11,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused"})
@@ -31,7 +31,7 @@ public class CSVFile extends FlatFile {
 				setReloadSetting(reloadSetting);
 			}
 		} else {
-			throw new InvalidFileTypeException("The given file if of no valid filetype.");
+			throw new InvalidFileTypeException("The given file is no CSV-File");
 		}
 	}
 

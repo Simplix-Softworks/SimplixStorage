@@ -1,14 +1,12 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.base.exceptions.LightningFileReadException;
-import de.leonhard.storage.internal.editor.LightningEditor;
+import de.leonhard.storage.internal.editor.LightningFileEditor;
 import de.leonhard.storage.internal.enums.ConfigSetting;
 import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSetting;
@@ -18,13 +16,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused"})
-@Getter
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LightningFile extends FlatFile {
 
-	private final LightningEditor lightningEditor;
+	protected final LightningFileEditor lightningFileEditor;
+	@Getter
 	@Setter
 	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
 
@@ -36,20 +36,20 @@ public class LightningFile extends FlatFile {
 				}
 			}
 
-			this.lightningEditor = new LightningEditor(this.file);
+			this.lightningFileEditor = new LightningFileEditor(this.file);
 			reload();
 			if (reloadSetting != null) {
 				setReloadSetting(reloadSetting);
 			}
 		} else {
-			throw new InvalidFileTypeException("The given file if of no valid filetype.");
+			throw new InvalidFileTypeException("The given file is no Lightning-File");
 		}
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData = new FileData(this.lightningEditor.read(this.configSetting));
+			this.fileData = new FileData(this.lightningFileEditor.readData(this.configSetting));
 		} catch (IOException | LightningFileReadException | InvalidSettingException e) {
 			System.err.println("Error while reading '" + file.getName() + "'");
 			e.printStackTrace();
@@ -75,7 +75,7 @@ public class LightningFile extends FlatFile {
 
 		if (!oldData.equals(fileData.toString())) {
 			try {
-				this.lightningEditor.write(this.fileData, this.configSetting);
+				this.lightningFileEditor.writeData(this.fileData, this.configSetting);
 			} catch (InvalidSettingException e) {
 				System.err.println("Error while writing to '" + file.getName() + "'");
 				e.printStackTrace();
@@ -92,7 +92,7 @@ public class LightningFile extends FlatFile {
 		fileData.remove(finalKey);
 
 		try {
-			this.lightningEditor.write(this.fileData, this.configSetting);
+			this.lightningFileEditor.writeData(this.fileData, this.configSetting);
 		} catch (InvalidSettingException e) {
 			System.err.println("Error while writing to '" + file.getName() + "'");
 			e.printStackTrace();

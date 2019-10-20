@@ -30,9 +30,9 @@ public class FileUtils {
 		}
 	}
 
-	public static InputStream createNewInputStream(final File file) {
+	public static BufferedInputStream createNewInputStream(final File file) {
 		try {
-			return Files.newInputStream(file.toPath());
+			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
 			System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
 			System.err.println("At: '" + file.getAbsolutePath() + "'");

@@ -1,7 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -12,6 +10,8 @@ import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused"})
@@ -30,7 +30,7 @@ public class TomlFile extends FlatFile {
 				setReloadSetting(reloadSetting);
 			}
 		} else {
-			throw new InvalidFileTypeException("The given file if of no valid filetype.");
+			throw new InvalidFileTypeException("The given file is no TOML-File");
 		}
 	}
 
@@ -92,7 +92,7 @@ public class TomlFile extends FlatFile {
 		}
 	}
 
-	protected final TomlFile getTomlInstance() {
+	protected final TomlFile getTomlFileInstance() {
 		return this;
 	}
 

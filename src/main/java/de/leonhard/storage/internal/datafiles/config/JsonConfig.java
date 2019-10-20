@@ -1,12 +1,12 @@
 package de.leonhard.storage.internal.datafiles.config;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.raw.JsonFile;
 import de.leonhard.storage.internal.enums.ReloadSetting;
 import java.io.File;
 import java.io.InputStream;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class JsonConfig extends JsonFile {

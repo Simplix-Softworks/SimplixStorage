@@ -1,7 +1,5 @@
 package de.leonhard.storage;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.config.JsonConfig;
@@ -13,9 +11,11 @@ import de.leonhard.storage.internal.enums.FileType;
 import de.leonhard.storage.internal.enums.ReloadSetting;
 import de.leonhard.storage.internal.utils.Valid;
 import java.io.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class LightningStorage {
 
 	private final File file;
@@ -64,7 +64,7 @@ public class LightningStorage {
 	// </Builder initialization>
 
 
-	// <additional Builder arguments>
+	// <optional Builder arguments>
 	public final LightningStorage fromInputStream(final InputStream inputStream) {
 		this.inputStream = inputStream;
 		return this;
@@ -84,7 +84,7 @@ public class LightningStorage {
 		this.reloadSetting = reloadSetting;
 		return this;
 	}
-	// </additional Builder arguments>
+	// </optional Builder arguments>
 
 
 	// <Create Datafile>

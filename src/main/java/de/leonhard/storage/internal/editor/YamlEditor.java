@@ -1,9 +1,10 @@
 package de.leonhard.storage.internal.editor;
 
-import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,8 +41,7 @@ public class YamlEditor {
 	}
 
 	public List<String> read() throws IOException {
-//        return Files.readAllLines(file.toPath());
-		return FileUtils.readAllLines(file);
+		return Files.readAllLines(file.toPath());
 	}
 
 	public List<String> readFooter() throws IOException {
@@ -127,9 +127,9 @@ public class YamlEditor {
 	}
 
 	public void write(final List<String> lines) throws IOException {
-		final FileWriter writer = new FileWriter(file);
+		final PrintWriter writer = new PrintWriter(new FileWriter(file));
 		for (final String str : lines) {
-			writer.write(str + "\n");
+			writer.println(str);
 		}
 		writer.close();
 	}

@@ -1,7 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -14,6 +12,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -35,7 +35,7 @@ public class JsonFile extends FlatFile {
 				setReloadSetting(reloadSetting);
 			}
 		} else {
-			throw new InvalidFileTypeException("The given file if of no valid filetype.");
+			throw new InvalidFileTypeException("The given file is no JSON-File");
 		}
 	}
 
@@ -167,7 +167,7 @@ public class JsonFile extends FlatFile {
 		set(key, value);
 	}
 
-	protected final JsonFile getJsonInstance() {
+	protected final JsonFile getJsonFileInstance() {
 		return this;
 	}
 

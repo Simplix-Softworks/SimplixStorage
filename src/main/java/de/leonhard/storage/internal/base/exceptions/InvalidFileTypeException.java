@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.base.exceptions;
 
 @SuppressWarnings("unused")
-public class InvalidFileTypeException extends Exception {
+public class InvalidFileTypeException extends LightningException {
 
 
 	public InvalidFileTypeException(String errorMessage) {

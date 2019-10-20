@@ -2,8 +2,6 @@ package de.leonhard.storage.internal.datafiles.raw;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FileTypeUtils;
 import de.leonhard.storage.internal.base.FlatFile;
@@ -21,15 +19,16 @@ import java.util.Map;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unchecked", "unused"})
-@Getter
 public class YamlFile extends FlatFile {
 
+	protected final YamlEditor yamlEditor;
 	private final YamlParser parser;
-	private final YamlEditor yamlEditor;
-	private YamlReader reader;
+	@Getter
 	@Setter
 	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
 
@@ -49,31 +48,29 @@ public class YamlFile extends FlatFile {
 				setReloadSetting(reloadSetting);
 			}
 		} else {
-			throw new InvalidFileTypeException("The given file if of no valid filetype.");
+			throw new InvalidFileTypeException("The given file is no YAML-File");
 		}
 	}
 
 	@Override
 	public void reload() {
 		try {
-			reader = new YamlReader(new FileReader(this.file));
+			YamlReader reader = new YamlReader(new FileReader(this.file));
 			Map<String, Object> map = (Map<String, Object>) reader.read();
 			if (map == null) {
 				map = new HashMap<>();
 			}
 			fileData = new FileData(map);
-		} catch (IOException e) {
-			System.err.println("Exception while reading yaml");
-			e.printStackTrace();
-		} finally {
+
 			try {
-				if (reader != null) {
-					reader.close();
-				}
+				reader.close();
 			} catch (IOException e) {
 				System.err.println("Exception while closing file");
 				e.printStackTrace();
 			}
+		} catch (IOException e) {
+			System.err.println("Exception while reading yaml");
+			e.printStackTrace();
 		}
 	}
 
@@ -123,7 +120,7 @@ public class YamlFile extends FlatFile {
 				}
 				yamlEditor.write(parser.parseComments(unEdited, header));
 				write(Objects.requireNonNull(fileData).toMap());
-			} catch (final IOException e) {
+			} catch (IOException e) {
 				System.err.println("Error while writing '" + getName() + "'");
 			}
 		}
@@ -169,7 +166,7 @@ public class YamlFile extends FlatFile {
 		}
 	}
 
-	protected final YamlFile getYamlInstance() {
+	protected final YamlFile getYamlFileInstance() {
 		return this;
 	}
 

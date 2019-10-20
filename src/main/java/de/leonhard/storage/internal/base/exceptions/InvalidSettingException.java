@@ -1,8 +1,7 @@
 package de.leonhard.storage.internal.base.exceptions;
 
 @SuppressWarnings("unused")
-public class InvalidSettingException extends Exception {
-
+public class InvalidSettingException extends LightningException {
 
 	public InvalidSettingException(String errorMessage) {
 		super(errorMessage);

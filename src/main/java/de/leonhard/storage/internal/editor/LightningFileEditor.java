@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 
-public class LightningEditor {
+public class LightningFileEditor {
 
 	private final File file;
 
-	public LightningEditor(final File file) {
+	public LightningFileEditor(final File file) {
 		this.file = file;
 	}
 
-	public Map<String, Object> read(final ConfigSetting configSetting) throws LightningFileReadException, IOException, InvalidSettingException {
+	public Map<String, Object> readData(final ConfigSetting configSetting) throws LightningFileReadException, IOException, InvalidSettingException {
 		switch (configSetting) {
 			case PRESERVE_COMMENTS:
 				return initialReadWithComments();
@@ -35,7 +35,7 @@ public class LightningEditor {
 		}
 	}
 
-	public void write(final FileData fileData, final ConfigSetting configSetting) throws InvalidSettingException {
+	public void writeData(final FileData fileData, final ConfigSetting configSetting) throws InvalidSettingException {
 		switch (configSetting) {
 			case PRESERVE_COMMENTS:
 				initalWriteWithComments(fileData);
@@ -46,14 +46,14 @@ public class LightningEditor {
 		}
 	}
 
-
+	@SuppressWarnings("DuplicatedCode")
 	private Map<String, Object> initialReadWithComments() throws LightningFileReadException, IOException {
 		List<String> lines = Files.readAllLines(this.file.toPath());
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 		int blankLine = -1;
 		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
+			String tempLine = lines.get(0).replaceAll("	", " ").trim();
 			lines.remove(0);
 
 			if (tempLine.contains("}")) {
@@ -86,12 +86,13 @@ public class LightningEditor {
 		return tempMap;
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	private Map<String, Object> readWithComments(List<String> lines, int blankLine) throws LightningFileReadException {
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 
 		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
+			String tempLine = lines.get(0).replaceAll("	", " ").trim();
 			lines.remove(0);
 
 			if (tempLine.equals("}")) {
@@ -126,12 +127,13 @@ public class LightningEditor {
 		throw new LightningFileReadException("Block does not close");
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	private Map<String, Object> initialReadWithOutComments() throws LightningFileReadException, IOException {
 		List<String> lines = Files.readAllLines(this.file.toPath());
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
+			String tempLine = lines.get(0).replaceAll("	", " ").trim();
 			lines.remove(0);
 
 			if (tempLine.contains("}")) {
@@ -159,12 +161,13 @@ public class LightningEditor {
 		return tempMap;
 	}
 
+	@SuppressWarnings("DuplicatedCode")
 	private Map<String, Object> readWithOutComments(List<String> lines) throws LightningFileReadException {
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 
 		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
+			String tempLine = lines.get(0).replaceAll("	", " ").trim();
 			lines.remove(0);
 
 			if (tempLine.equals("}")) {
@@ -193,7 +196,6 @@ public class LightningEditor {
 		}
 		throw new LightningFileReadException("Block does not close");
 	}
-
 
 	private void initalWriteWithComments(final FileData fileData) {
 		try (PrintWriter writer = new PrintWriter(this.file)) {

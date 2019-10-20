@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.editor;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -8,13 +7,11 @@ import java.util.*;
 @SuppressWarnings("unused")
 public class YamlParser {
 
-	final private File file;
 	final private YamlEditor yamlEditor;
 
 
 	public YamlParser(final YamlEditor yamlEditor) {
 		this.yamlEditor = yamlEditor;
-		this.file = yamlEditor.getFile();
 	}
 
 
@@ -25,8 +22,8 @@ public class YamlParser {
 		try {
 			keys = yamlEditor.readKeys();
 			parsed = assignCommentsToKey(comments);
-		} catch (final IOException e) {
-			System.err.println("Exception while reading keys from '" + file.getName() + "'");
+		} catch (IOException e) {
+			System.err.println("Exception while reading keys from '" + yamlEditor.getFile().getName() + "'");
 			e.printStackTrace();
 			return new ArrayList<>();
 		}

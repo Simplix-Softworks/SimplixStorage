@@ -1,8 +1,7 @@
 package de.leonhard.storage.internal.base.exceptions;
 
 @SuppressWarnings("unused")
-public class LightningFileReadException extends Exception {
-
+public class LightningFileReadException extends LightningException {
 
 	public LightningFileReadException(String errorMessage) {
 		super(errorMessage);

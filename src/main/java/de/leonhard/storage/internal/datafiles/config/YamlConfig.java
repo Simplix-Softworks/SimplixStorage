@@ -1,7 +1,5 @@
 package de.leonhard.storage.internal.datafiles.config;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
@@ -12,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused"})
@@ -38,7 +38,7 @@ public class YamlConfig extends YamlFile {
 			e.printStackTrace();
 		}
 		try {
-			return getYamlEditor().readHeader();
+			return this.yamlEditor.readHeader();
 		} catch (IOException e) {
 			System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
 			e.printStackTrace();
@@ -61,7 +61,7 @@ public class YamlConfig extends YamlFile {
 
 		if (getFile().length() == 0) {
 			try {
-				getYamlEditor().write(this.header);
+				this.yamlEditor.write(this.header);
 			} catch (IOException e) {
 				System.err.println("Error while setting header of '" + getName() + "'");
 				e.printStackTrace();
@@ -70,10 +70,10 @@ public class YamlConfig extends YamlFile {
 		}
 
 		try {
-			final List<String> lines = getYamlEditor().read();
+			final List<String> lines = this.yamlEditor.read();
 
-			final List<String> oldHeader = getYamlEditor().readHeader();
-			final List<String> footer = getYamlEditor().readFooter();
+			final List<String> oldHeader = this.yamlEditor.readHeader();
+			final List<String> footer = this.yamlEditor.readFooter();
 			lines.removeAll(oldHeader);
 			lines.removeAll(footer);
 
@@ -81,7 +81,7 @@ public class YamlConfig extends YamlFile {
 
 			lines.addAll(footer);
 
-			getYamlEditor().write(lines);
+			this.yamlEditor.write(lines);
 		} catch (final IOException e) {
 			System.err.println("Exception while modifying header of '" + getName() + "'");
 			e.printStackTrace();
@@ -101,7 +101,7 @@ public class YamlConfig extends YamlFile {
 		} else {
 			YamlConfig config = (YamlConfig) obj;
 			return this.header.equals(config.header)
-				   && super.equals(config.getYamlInstance());
+				   && super.equals(config.getYamlFileInstance());
 		}
 	}
 }

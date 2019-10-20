@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
@@ -108,15 +108,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return fileData.singleLayerKeySet(key);
 	}
 
-	public void replace(final CharSequence target, final CharSequence replacement) throws IOException {
-		final List<String> lines = Files.readAllLines(file.toPath());
-		final List<String> result = new ArrayList<>();
-		for (String line : lines) {
-			result.add(line.replace(target, replacement));
-		}
-		Files.write(file.toPath(), result);
-	}
-
 	/**
 	 * Creates an empty file.
 	 *
@@ -138,6 +129,15 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected final FlatFile getFlatFileInstance() {
 		return this;
+	}
+
+	protected void replace(final CharSequence target, final CharSequence replacement) throws IOException {
+		final List<String> lines = Files.readAllLines(file.toPath());
+		final List<String> result = new ArrayList<>();
+		for (String line : lines) {
+			result.add(line.replace(target, replacement));
+		}
+		Files.write(file.toPath(), result);
 	}
 
 	@Override
