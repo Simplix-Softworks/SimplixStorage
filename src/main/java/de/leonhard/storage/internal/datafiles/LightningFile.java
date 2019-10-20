@@ -27,7 +27,7 @@ public class LightningFile extends FlatFile {
 				}
 			}
 
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}

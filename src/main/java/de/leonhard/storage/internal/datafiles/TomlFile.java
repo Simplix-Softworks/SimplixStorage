@@ -23,7 +23,7 @@ public class TomlFile extends FlatFile {
 				}
 			}
 
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}

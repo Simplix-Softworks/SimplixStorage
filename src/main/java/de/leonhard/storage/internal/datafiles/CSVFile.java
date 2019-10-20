@@ -24,7 +24,7 @@ public class CSVFile extends FlatFile {
 				}
 			}
 
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}

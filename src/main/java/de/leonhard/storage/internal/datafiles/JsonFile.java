@@ -28,7 +28,7 @@ public class JsonFile extends FlatFile {
 				}
 			}
 
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}

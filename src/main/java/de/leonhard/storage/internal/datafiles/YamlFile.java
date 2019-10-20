@@ -42,7 +42,7 @@ public class YamlFile extends FlatFile {
 
 			yamlEditor = new YamlEditor(this.file);
 			parser = new YamlParser(yamlEditor);
-			update();
+			reload();
 			if (reloadSettings != null) {
 				setReloadSettings(reloadSettings);
 			}
