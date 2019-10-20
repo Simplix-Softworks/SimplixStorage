@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public class LightningStorage {
 
 	private final File file;
@@ -99,64 +99,64 @@ public class LightningStorage {
 	public final JsonFile asJson() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new JsonFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new JsonFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new JsonFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.JSON)), this.inputStream, this.reloadSetting)
+				  : new JsonFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.JSON)), this.inputStream, this.reloadSetting))
 			   : new JsonFile(this.file, this.inputStream, this.reloadSetting);
 	}
 
 	public final JsonConfig asJsonConfig() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new JsonConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new JsonConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new JsonConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.JSON)), this.inputStream, this.reloadSetting)
+				  : new JsonConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.JSON)), this.inputStream, this.reloadSetting))
 			   : new JsonConfig(this.file, this.inputStream, this.reloadSetting);
 	}
 
 	public final LightningConfig asLightningConfig() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LightningConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new LightningConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new LightningConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.LIGHTNING)), this.inputStream, this.reloadSetting)
+				  : new LightningConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.LIGHTNING)), this.inputStream, this.reloadSetting))
 			   : new LightningConfig(this.file, this.inputStream, this.reloadSetting);
 	}
 
 	public final LightningFile asLightningFile() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LightningFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new LightningFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new LightningFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.LIGHTNING)), this.inputStream, this.reloadSetting)
+				  : new LightningFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.LIGHTNING)), this.inputStream, this.reloadSetting))
 			   : new LightningFile(this.file, this.inputStream, this.reloadSetting);
 	}
 
 	public final TomlFile asToml() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new TomlFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new TomlFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new TomlFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.TOML)), this.inputStream, this.reloadSetting)
+				  : new TomlFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.TOML)), this.inputStream, this.reloadSetting))
 			   : new TomlFile(this.file, this.inputStream, this.reloadSetting);
 	}
 
 	public final TomlConfig asTomlConfig() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new TomlConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new TomlConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new TomlConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.TOML)), this.inputStream, this.reloadSetting)
+				  : new TomlConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.TOML)), this.inputStream, this.reloadSetting))
 			   : new TomlConfig(this.file, this.inputStream, this.reloadSetting);
 	}
 
 	public final YamlFile asYaml() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new YamlFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new YamlFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new YamlFile(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.YAML)), this.inputStream, this.reloadSetting)
+				  : new YamlFile(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.YAML)), this.inputStream, this.reloadSetting))
 			   : new YamlFile(this.file, this.inputStream, this.reloadSetting);
 	}
 
 	public final YamlConfig asYamlConfig() throws InvalidFileTypeException {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new YamlConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting)
-				  : new YamlConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.CSV)), this.inputStream, this.reloadSetting))
+				  ? new YamlConfig(new File(this.path, FileTypeUtils.addExtension(this.name, FileType.YAML)), this.inputStream, this.reloadSetting)
+				  : new YamlConfig(new File(this.directory, FileTypeUtils.addExtension(this.name, FileType.YAML)), this.inputStream, this.reloadSetting))
 			   : new YamlConfig(this.file, this.inputStream, this.reloadSetting);
 	}
 	// </Create Datafile>
