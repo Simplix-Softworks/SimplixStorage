@@ -1,16 +1,17 @@
-package de.leonhard.storage.lightningstorage.editor;
+package de.leonhard.storage.lightningstorage.utils;
 
+import de.leonhard.storage.lightningstorage.editor.YamlEditor;
 import java.io.IOException;
 import java.util.*;
 
 
 @SuppressWarnings("unused")
-public class YamlParser {
+public class YamlConfigUtils {
 
 	final private YamlEditor yamlEditor;
 
 
-	public YamlParser(final YamlEditor yamlEditor) {
+	public YamlConfigUtils(final YamlEditor yamlEditor) {
 		this.yamlEditor = yamlEditor;
 	}
 

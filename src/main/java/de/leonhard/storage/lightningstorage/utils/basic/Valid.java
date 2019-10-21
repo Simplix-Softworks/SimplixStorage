@@ -1,4 +1,4 @@
-package de.leonhard.storage.lightningstorage.utils;
+package de.leonhard.storage.lightningstorage.utils.basic;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

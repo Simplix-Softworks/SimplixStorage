@@ -1,6 +1,6 @@
 package de.leonhard.storage.lightningstorage.internal.base;
 
-import de.leonhard.storage.lightningstorage.utils.Primitive;
+import de.leonhard.storage.lightningstorage.utils.basic.Primitive;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

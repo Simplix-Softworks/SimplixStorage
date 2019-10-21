@@ -1,7 +1,7 @@
 package de.leonhard.storage.lightningstorage.internal.base;
 
-import de.leonhard.storage.lightningstorage.utils.FileTypeUtils;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
+import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

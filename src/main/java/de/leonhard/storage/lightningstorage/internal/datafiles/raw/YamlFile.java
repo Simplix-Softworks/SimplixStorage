@@ -3,10 +3,10 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.lightningstorage.editor.YamlEditor;
-import de.leonhard.storage.lightningstorage.editor.YamlParser;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
+import de.leonhard.storage.lightningstorage.utils.YamlConfigUtils;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class YamlFile extends FlatFile {
 
 	protected final YamlEditor yamlEditor;
-	private final YamlParser parser;
+	private final YamlConfigUtils parser;
 
 	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.YAML);
@@ -40,7 +40,7 @@ public class YamlFile extends FlatFile {
 		}
 
 		this.yamlEditor = new YamlEditor(this.file);
-		this.parser = new YamlParser(yamlEditor);
+		this.parser = new YamlConfigUtils(yamlEditor);
 		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);

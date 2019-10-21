@@ -6,9 +6,9 @@ import de.leonhard.storage.lightningstorage.internal.datafiles.config.LightningC
 import de.leonhard.storage.lightningstorage.internal.datafiles.config.TomlConfig;
 import de.leonhard.storage.lightningstorage.internal.datafiles.config.YamlConfig;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.*;
-import de.leonhard.storage.lightningstorage.utils.FileTypeUtils;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
-import de.leonhard.storage.lightningstorage.utils.Valid;
+import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
+import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;

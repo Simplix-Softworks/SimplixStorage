@@ -1,4 +1,4 @@
-package de.leonhard.storage.lightningstorage.editor;
+package de.leonhard.storage.lightningstorage.utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings({"DuplicatedCode", "WeakerAccess", "unused"})
-public class LightningFileUtils {
+public class LightningConfigUtils {
 
 	private final File file;
 
-	public LightningFileUtils(@NotNull final File file) {
+	public LightningConfigUtils(@NotNull final File file) {
 		this.file = file;
 	}
 
