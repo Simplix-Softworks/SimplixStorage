@@ -1,7 +1,7 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.datafiles.config.YamlConfig;
-import de.leonhard.storage.internal.utils.FileTypeUtils;
+import de.leonhard.storage.lightningstorage.internal.datafiles.config.YamlConfig;
+import de.leonhard.storage.lightningstorage.utils.FileTypeUtils;
 import java.io.File;
 import java.io.InputStream;
 

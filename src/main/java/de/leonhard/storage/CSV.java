@@ -1,6 +1,6 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.datafiles.raw.CSVFile;
+import de.leonhard.storage.lightningstorage.internal.datafiles.raw.CSVFile;
 import java.io.File;
 import java.io.InputStream;
 

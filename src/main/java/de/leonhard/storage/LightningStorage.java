@@ -1,14 +1,14 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.datafiles.config.LightningConfig;
-import de.leonhard.storage.internal.datafiles.config.TomlConfig;
-import de.leonhard.storage.internal.datafiles.config.YamlConfig;
-import de.leonhard.storage.internal.datafiles.raw.*;
-import de.leonhard.storage.internal.utils.FileTypeUtils;
-import de.leonhard.storage.internal.utils.FileUtils;
-import de.leonhard.storage.internal.utils.Valid;
+import de.leonhard.storage.lightningstorage.internal.base.FileData;
+import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.datafiles.config.LightningConfig;
+import de.leonhard.storage.lightningstorage.internal.datafiles.config.TomlConfig;
+import de.leonhard.storage.lightningstorage.internal.datafiles.config.YamlConfig;
+import de.leonhard.storage.lightningstorage.internal.datafiles.raw.*;
+import de.leonhard.storage.lightningstorage.utils.FileTypeUtils;
+import de.leonhard.storage.lightningstorage.utils.FileUtils;
+import de.leonhard.storage.lightningstorage.utils.Valid;
 import java.io.File;
 import java.io.InputStream;
 import org.jetbrains.annotations.NotNull;
