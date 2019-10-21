@@ -2,7 +2,6 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.utils.FileTypeUtils;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -15,28 +14,25 @@ import org.jetbrains.annotations.Nullable;
 public class TomlFile extends FlatFile {
 
 	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
-		if (FileTypeUtils.isType(file, FileType.TOML)) {
-			if (create(file)) {
-				if (inputStream != null) {
-					FileUtils.writeToFile(this.file, inputStream);
-				}
+		super(file, FileType.TOML);
+		if (create()) {
+			if (inputStream != null) {
+				FileUtils.writeToFile(this.file, inputStream);
 			}
+		}
 
-			if (configSetting != null) {
-				setConfigSetting(configSetting);
-			}
-			if (fileDataType != null) {
-				setFileDataType(fileDataType);
-			} else {
-				setFileDataType(FileData.Type.STANDARD);
-			}
-
-			reload();
-			if (reloadSetting != null) {
-				setReloadSetting(reloadSetting);
-			}
+		if (configSetting != null) {
+			setConfigSetting(configSetting);
+		}
+		if (fileDataType != null) {
+			setFileDataType(fileDataType);
 		} else {
-			throw new IllegalStateException("The given file is no TOML-File");
+			setFileDataType(FileData.Type.STANDARD);
+		}
+
+		reload();
+		if (reloadSetting != null) {
+			setReloadSetting(reloadSetting);
 		}
 	}
 

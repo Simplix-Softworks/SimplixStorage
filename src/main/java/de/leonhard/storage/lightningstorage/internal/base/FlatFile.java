@@ -31,6 +31,15 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private long lastModified;
 
 
+	public FlatFile(final File file, final FileType fileType) {
+		if (FileTypeUtils.isType(file, fileType)) {
+			this.fileType = fileType;
+			this.file = file;
+		} else {
+			throw new IllegalStateException("File '" + file.getName() + "' is not of type '" + fileType + "'");
+		}
+	}
+
 	public final String getFilePath() {
 		return this.file.getAbsolutePath();
 	}
@@ -38,7 +47,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	public final String getName() {
 		return this.file.getName();
 	}
-
 
 	@Override
 	public boolean hasKey(final String key) {
@@ -110,18 +118,15 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Creates an empty file.
 	 *
-	 * @param file the file to be created.
 	 * @return true if file was created.
 	 */
-	protected final synchronized boolean create(final File file) {
-		this.fileType = FileTypeUtils.getFileType(file);
-		this.file = file;
-		if (file.exists()) {
-			lastModified = System.currentTimeMillis();
+	protected final synchronized boolean create() {
+		if (this.file.exists()) {
+			this.lastModified = System.currentTimeMillis();
 			return false;
 		} else {
-			FileUtils.createFile(file);
-			lastModified = System.currentTimeMillis();
+			FileUtils.createFile(this.file);
+			this.lastModified = System.currentTimeMillis();
 			return true;
 		}
 	}

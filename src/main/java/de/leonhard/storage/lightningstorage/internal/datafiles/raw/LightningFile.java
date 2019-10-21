@@ -3,7 +3,6 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 import de.leonhard.storage.lightningstorage.editor.LightningFileEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.utils.FileTypeUtils;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -18,28 +17,25 @@ public class LightningFile extends FlatFile {
 	protected final LightningFileEditor lightningFileEditor;
 
 	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
-		if (FileTypeUtils.isType(file, FileType.LIGHTNING)) {
-			if (create(file)) {
-				if (inputStream != null) {
-					FileUtils.writeToFile(this.file, inputStream);
-				}
+		super(file, FileType.LIGHTNING);
+		if (create()) {
+			if (inputStream != null) {
+				FileUtils.writeToFile(this.file, inputStream);
 			}
+		}
 
 
-			if (configSetting != null) {
-				setConfigSetting(configSetting);
-			}
-			if (fileDataType != null) {
-				setFileDataType(fileDataType);
-			}
+		if (configSetting != null) {
+			setConfigSetting(configSetting);
+		}
+		if (fileDataType != null) {
+			setFileDataType(fileDataType);
+		}
 
-			this.lightningFileEditor = new LightningFileEditor(this.file, getConfigSetting(), getFileDataType());
-			reload();
-			if (reloadSetting != null) {
-				setReloadSetting(reloadSetting);
-			}
-		} else {
-			throw new IllegalStateException("The given file is no Lightning-File");
+		this.lightningFileEditor = new LightningFileEditor(this.file, getConfigSetting(), getFileDataType());
+		reload();
+		if (reloadSetting != null) {
+			setReloadSetting(reloadSetting);
 		}
 	}
 

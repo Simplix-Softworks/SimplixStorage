@@ -6,7 +6,6 @@ import de.leonhard.storage.lightningstorage.editor.YamlEditor;
 import de.leonhard.storage.lightningstorage.editor.YamlParser;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.utils.FileTypeUtils;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.*;
 import java.util.HashMap;
@@ -24,30 +23,27 @@ public class YamlFile extends FlatFile {
 	private final YamlParser parser;
 
 	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
-		if (FileTypeUtils.isType(file, FileType.YAML)) {
-			if (create(file)) {
-				if (inputStream != null) {
-					FileUtils.writeToFile(this.file, inputStream);
-				}
+		super(file, FileType.YAML);
+		if (create()) {
+			if (inputStream != null) {
+				FileUtils.writeToFile(this.file, inputStream);
 			}
+		}
 
-			if (configSetting != null) {
-				setConfigSetting(configSetting);
-			}
-			if (fileDataType != null) {
-				setFileDataType(fileDataType);
-			} else {
-				setFileDataType(FileData.Type.STANDARD);
-			}
-
-			this.yamlEditor = new YamlEditor(this.file);
-			this.parser = new YamlParser(yamlEditor);
-			reload();
-			if (reloadSetting != null) {
-				setReloadSetting(reloadSetting);
-			}
+		if (configSetting != null) {
+			setConfigSetting(configSetting);
+		}
+		if (fileDataType != null) {
+			setFileDataType(fileDataType);
 		} else {
-			throw new IllegalStateException("The given file is no YAML-File");
+			setFileDataType(FileData.Type.STANDARD);
+		}
+
+		this.yamlEditor = new YamlEditor(this.file);
+		this.parser = new YamlParser(yamlEditor);
+		reload();
+		if (reloadSetting != null) {
+			setReloadSetting(reloadSetting);
 		}
 	}
 
