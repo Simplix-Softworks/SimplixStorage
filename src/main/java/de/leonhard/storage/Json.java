@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Objects;
 
 @Getter
-@SuppressWarnings("unchecked")
 public class Json extends FlatFile implements IStorage {
 
 	public Json(final String name, final String path) {
@@ -26,7 +25,8 @@ public class Json extends FlatFile implements IStorage {
 	}
 
 	public Json(final String name, final String path, final ReloadSettings reloadSettings) {
-		if (create(FileUtils.replaceExtensions(name), path, FileType.JSON) || file.length() == 0) {
+		super(name, path, FileType.JSON);
+		if (create() || file.length() == 0) {
 			try {
 				Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
 				writer.write(new JSONObject().toString(2));
@@ -44,7 +44,8 @@ public class Json extends FlatFile implements IStorage {
 	}
 
 	public Json(final File file) {
-		create(file);
+		super(file, FileType.JSON);
+		create();
 		update();
 	}
 

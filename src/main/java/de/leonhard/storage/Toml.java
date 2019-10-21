@@ -13,21 +13,23 @@ import java.io.IOException;
 import java.util.Map;
 
 @Getter
-@SuppressWarnings("unchecked")
 public class Toml extends FlatFile {
 
 	public Toml(final String name, final String path) {
-		create(name, path, FileType.TOML);
-		update();
+		this(name, path, null);
 	}
 
 	public Toml(final String name, final String path, final ReloadSettings reloadSettings) {
-		create(name, path, FileType.YAML);
+		super(name, path, FileType.TOML);
+		if (reloadSettings != null) {
+			this.reloadSettings = reloadSettings;
+		}
 		update();
 	}
 
 	public Toml(final File file) {
-		create(file);
+		super(file, FileType.TOML);
+		create();
 		update();
 	}
 

@@ -19,7 +19,6 @@ import java.io.*;
 import java.util.*;
 
 @Getter
-@SuppressWarnings("unchecked")
 public class Yaml extends FlatFile implements IStorage {
 	private final YamlEditor yamlEditor;
 	private final YamlParser parser;
@@ -35,7 +34,8 @@ public class Yaml extends FlatFile implements IStorage {
 	}
 
 	public Yaml(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
-		if (create(name, path, FileType.YAML)) {
+		super(name, path, FileType.YAML);
+		if (create()) {
 			if (inputStream != null) {
 				FileUtils.writeToFile(file, inputStream);
 			}
@@ -43,6 +43,7 @@ public class Yaml extends FlatFile implements IStorage {
 
 		yamlEditor = new YamlEditor(file);
 		parser = new YamlParser(yamlEditor);
+		System.out.println(file.getName());
 		update();
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;

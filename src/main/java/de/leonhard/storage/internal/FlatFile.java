@@ -24,6 +24,22 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	private long lastModified;
 
 
+	public FlatFile(final String name, final String path, final FileType fileType) {
+		this.fileType = fileType;
+		if (path == null || path.isEmpty()) {
+			this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
+		} else {
+			this.file = new File(path, FileUtils.replaceExtensions(name) + fileType.getExtension());
+		}
+	}
+
+	public FlatFile(final File file, final FileType fileType) {
+		if (!fileType.getExtension().equals(FileUtils.getExtension(file))) {
+			throw new IllegalStateException("Invalid FileType for File '" + file.getName() + "'");
+		}
+		this.file = file;
+	}
+
 	/**
 	 * Reread the content of our flat file
 	 */
@@ -32,25 +48,10 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	/**
 	 * Creates an empty .yml or .json file.
 	 *
-	 * @param name     Name of the file
-	 * @param path     Absolute path where the file should be created
-	 * @param fileType .yml/.json  Uses the Enum FileType
 	 * @return true if file was created.
 	 */
-	protected final synchronized boolean create(final String name, final String path, final FileType fileType) {
-		this.fileType = fileType;
-		if (path == null || path.isEmpty()) {
-			this.file = new File(name + "." + fileType.getExtension());
-		} else {
-			this.file = new File(path, FileUtils.replaceExtensions(name) + fileType.getExtension());
-		}
+	protected final synchronized boolean create() {
 		return createFile(this.file);
-	}
-
-	protected final synchronized boolean create(final File file) {
-		this.fileType = FileType.fromExtension(file);
-		this.file = file;
-		return createFile(file);
 	}
 
 	private synchronized boolean createFile(final File file) {
