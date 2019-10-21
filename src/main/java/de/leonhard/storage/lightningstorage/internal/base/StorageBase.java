@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused", "unchecked"})
@@ -16,7 +18,7 @@ public interface StorageBase {
 	 * @param key Path to boolean in file
 	 * @return Boolean from file
 	 */
-	default boolean getBoolean(final String key) {
+	default boolean getBoolean(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return false;
 		} else {
@@ -30,9 +32,9 @@ public interface StorageBase {
 	 * @param key Key to check
 	 * @return Returned value
 	 */
-	boolean hasKey(String key);
+	boolean hasKey(@NotNull String key);
 
-	Object get(String key);
+	Object get(@NotNull String key);
 
 	/**
 	 * Get a byte from a file
@@ -40,7 +42,7 @@ public interface StorageBase {
 	 * @param key Path to byte in file
 	 * @return Byte from file
 	 */
-	default byte getByte(final String key) {
+	default byte getByte(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return 0;
 		} else {
@@ -54,7 +56,7 @@ public interface StorageBase {
 	 * @param key Path to Byte-List from file
 	 * @return Byte-List
 	 */
-	default List<Byte> getByteList(final String key) {
+	default List<Byte> getByteList(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -68,7 +70,7 @@ public interface StorageBase {
 	 * @param key Path to double in the file
 	 * @return Double from file
 	 */
-	default double getDouble(final String key) {
+	default double getDouble(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return 0D;
 		} else {
@@ -82,7 +84,7 @@ public interface StorageBase {
 	 * @param key Path to float in file
 	 * @return Float from file
 	 */
-	default float getFloat(final String key) {
+	default float getFloat(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return 0F;
 		} else {
@@ -96,7 +98,7 @@ public interface StorageBase {
 	 * @param key Path to int in file
 	 * @return Int from file
 	 */
-	default int getInt(final String key) {
+	default int getInt(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return 0;
 		} else {
@@ -110,7 +112,7 @@ public interface StorageBase {
 	 * @param key Path to Integer-List in file
 	 * @return Integer-List
 	 */
-	default List<Integer> getIntegerList(final String key) {
+	default List<Integer> getIntegerList(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -124,7 +126,7 @@ public interface StorageBase {
 	 * @param key Path to StringList in file
 	 * @return List
 	 */
-	default List<?> getList(final String key) {
+	default List<?> getList(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -138,7 +140,7 @@ public interface StorageBase {
 	 * @param key Path to long in file
 	 * @return String from file
 	 */
-	default long getLong(final String key) {
+	default long getLong(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return 0L;
 		} else {
@@ -152,7 +154,7 @@ public interface StorageBase {
 	 * @param key Path to Long-List in file
 	 * @return Long-List
 	 */
-	default List<Long> getLongList(final String key) {
+	default List<Long> getLongList(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -166,12 +168,12 @@ public interface StorageBase {
 	 * @param key Path to Map-List in file
 	 * @return Map
 	 */
-	default Map getMap(final String key) {
+	default Map getMap(@NotNull final String key) {
 		return (Map) get(key);
 	}
 
 	@SuppressWarnings("DuplicatedCode")
-	default <T> T getOrSetDefault(String path, T def) {
+	default <T> T getOrSetDefault(@NotNull final String path, @Nullable final T def) {
 		if (!hasKey(path)) {
 			set(path, def);
 			return def;
@@ -197,7 +199,7 @@ public interface StorageBase {
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your file
 	 */
-	void set(String key, Object value);
+	void set(@NotNull String key, @Nullable Object value);
 
 	/**
 	 * Get a String from a file
@@ -205,7 +207,7 @@ public interface StorageBase {
 	 * @param key Path to String in file
 	 * @return Returns the value
 	 */
-	default String getString(final String key) {
+	default String getString(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return "";
 		} else {
@@ -219,7 +221,7 @@ public interface StorageBase {
 	 * @param key Path to String List in file
 	 * @return List
 	 */
-	default List<String> getStringList(final String key) {
+	default List<String> getStringList(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -229,13 +231,13 @@ public interface StorageBase {
 
 	Set<String> keySet();
 
-	Set<String> keySet(String key);
+	Set<String> keySet(@NotNull final String key);
 
 	Set<String> singleLayerKeySet();
 
-	Set<String> singleLayerKeySet(String key);
+	Set<String> singleLayerKeySet(@NotNull final String key);
 
-	void remove(final String key);
+	void remove(@NotNull final String key);
 
 	/**
 	 * Sets a value to the file if the file doesn't already contain the value
@@ -244,7 +246,7 @@ public interface StorageBase {
 	 * @param key   Key to set the value
 	 * @param value Value to set
 	 */
-	default void setDefault(String key, Object value) {
+	default void setDefault(@NotNull final String key, @Nullable final Object value) {
 		if (!hasKey(key)) {
 			set(key, value);
 		}

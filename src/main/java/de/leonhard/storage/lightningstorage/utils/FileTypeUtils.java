@@ -4,6 +4,7 @@ import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
 import java.io.File;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings({"WeakerAccess", "unused"})
@@ -18,7 +19,7 @@ public class FileTypeUtils {
 	 * @param fileType the FileType to be used.
 	 * @return the path with the give FileType extension.
 	 */
-	public static String addExtension(String path, FlatFile.FileType fileType) {
+	public static String addExtension(@NotNull String path, @NotNull FlatFile.FileType fileType) {
 		return path + "." + fileType;
 	}
 
@@ -29,7 +30,7 @@ public class FileTypeUtils {
 	 * @param fileType the FileType to be checked against.
 	 * @return true if the File is of the given FileType, otherwise false.
 	 */
-	public static boolean isType(final File file, final FlatFile.FileType fileType) {
+	public static boolean isType(@NotNull final File file, @NotNull final FlatFile.FileType fileType) {
 		return getFileType(file) == (fileType);
 	}
 
@@ -39,7 +40,7 @@ public class FileTypeUtils {
 	 * @param file the given File.
 	 * @return the FileType of the File.
 	 */
-	public static FlatFile.FileType getFileType(File file) {
+	public static FlatFile.FileType getFileType(@NotNull File file) {
 		return getFileType(getExtension(file));
 	}
 
@@ -49,7 +50,7 @@ public class FileTypeUtils {
 	 * @param extension the extension to be checked.
 	 * @return the FileType Enum of the give extension or null if no matching Enum exists.
 	 */
-	public static FlatFile.FileType getFileType(String extension) {
+	public static FlatFile.FileType getFileType(@NotNull String extension) {
 		switch (extension) {
 			case "json":
 				return FlatFile.FileType.JSON;
@@ -72,7 +73,7 @@ public class FileTypeUtils {
 	 * @param file the File to be checked.
 	 * @return the extension of the given File.
 	 */
-	public static String getExtension(File file) {
+	public static String getExtension(@NotNull File file) {
 		return getExtension(file.getName());
 	}
 
@@ -82,7 +83,7 @@ public class FileTypeUtils {
 	 * @param path the Path of the File to be checked.
 	 * @return the extension of the given File.
 	 */
-	public static String getExtension(String path) {
+	public static String getExtension(@NotNull String path) {
 		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
 	}
 }

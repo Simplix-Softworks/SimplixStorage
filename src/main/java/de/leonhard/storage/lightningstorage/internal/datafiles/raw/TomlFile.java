@@ -47,7 +47,7 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public Object get(final String key) {
+	public Object get(@NotNull final String key) {
 		update();
 		return fileData.get(key);
 	}
@@ -60,15 +60,14 @@ public class TomlFile extends FlatFile {
 	 */
 	@SuppressWarnings("Duplicates")
 	@Override
-	public synchronized void set(final String key, final Object value) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		String oldData = fileData.toString();
-		fileData.insert(finalKey, value);
+		if (!fileData.get(finalKey).equals(value)) {
+			fileData.insert(finalKey, value);
 
-		if (!oldData.equals(fileData.toString())) {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
@@ -79,7 +78,7 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void remove(final String key) {
+	public synchronized void remove(@NotNull final String key) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();

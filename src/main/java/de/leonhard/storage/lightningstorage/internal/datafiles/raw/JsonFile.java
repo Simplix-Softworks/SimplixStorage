@@ -55,7 +55,7 @@ public class JsonFile extends FlatFile {
 	 */
 
 	@Override
-	public Map getMap(final String key) {
+	public Map getMap(@NotNull final String key) {
 		String tempKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		if (!hasKey(tempKey)) {
 			return new HashMap();
@@ -97,7 +97,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(final String path, T def) {
+	public <T> T getOrSetDefault(@NotNull final String path, T def) {
 		if (!hasKey(path)) {
 			set(path, def);
 			return def;
@@ -108,15 +108,14 @@ public class JsonFile extends FlatFile {
 
 	@SuppressWarnings("Duplicates")
 	@Override
-	public synchronized void set(final String key, final Object value) {
+	public synchronized void set(@NotNull final String key, final Object value) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		String oldData = fileData.toString();
-		fileData.insert(finalKey, value);
+		if (!fileData.get(finalKey).equals(value)) {
+			fileData.insert(finalKey, value);
 
-		if (!oldData.equals(fileData.toString())) {
 			try {
 				write(new JSONObject(fileData.toMap()));
 			} catch (IOException e) {
@@ -132,7 +131,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public Object get(final String key) {
+	public Object get(@NotNull final String key) {
 
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
@@ -140,7 +139,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void remove(final String key) {
+	public synchronized void remove(@NotNull final String key) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
@@ -162,7 +161,7 @@ public class JsonFile extends FlatFile {
 	 */
 
 	@Override
-	public void setDefault(String key, Object value) {
+	public void setDefault(@NotNull final String key, @Nullable final Object value) {
 		if (hasKey(key)) {
 			return;
 		}

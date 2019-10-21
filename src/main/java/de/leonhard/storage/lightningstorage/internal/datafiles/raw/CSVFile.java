@@ -52,7 +52,7 @@ public class CSVFile extends FlatFile {
 
 	//added method for later implementation
 	@Override
-	public Set<String> keySet(final String key) {
+	public Set<String> keySet(@NotNull final String key) {
 		return null;
 	}
 
@@ -64,7 +64,7 @@ public class CSVFile extends FlatFile {
 
 	//added method for later implementation
 	@Override
-	public Set<String> singleLayerKeySet(final String key) {
+	public Set<String> singleLayerKeySet(@NotNull final String key) {
 		return null;
 	}
 
@@ -75,12 +75,12 @@ public class CSVFile extends FlatFile {
 	 * @return Boolean from file
 	 */
 	@Override
-	public boolean getBoolean(final String key) {
+	public boolean getBoolean(@NotNull final String key) {
 		return false;
 	}
 
 	@Override
-	public Object get(final String key) {
+	public Object get(@NotNull final String key) {
 		return null;
 	}
 
@@ -91,7 +91,7 @@ public class CSVFile extends FlatFile {
 	 * @return Byte from file
 	 */
 	@Override
-	public byte getByte(final String key) {
+	public byte getByte(@NotNull final String key) {
 		return 0;
 	}
 
@@ -102,7 +102,7 @@ public class CSVFile extends FlatFile {
 	 * @return Byte-List
 	 */
 	@Override
-	public List<Byte> getByteList(final String key) {
+	public List<Byte> getByteList(@NotNull final String key) {
 		return null;
 	}
 
@@ -113,7 +113,7 @@ public class CSVFile extends FlatFile {
 	 * @return Double from file
 	 */
 	@Override
-	public double getDouble(final String key) {
+	public double getDouble(@NotNull final String key) {
 		return 0;
 	}
 
@@ -124,7 +124,7 @@ public class CSVFile extends FlatFile {
 	 * @return Float from file
 	 */
 	@Override
-	public float getFloat(final String key) {
+	public float getFloat(@NotNull final String key) {
 		return 0;
 	}
 
@@ -135,7 +135,7 @@ public class CSVFile extends FlatFile {
 	 * @return Int from file
 	 */
 	@Override
-	public int getInt(final String key) {
+	public int getInt(@NotNull final String key) {
 		return 0;
 	}
 
@@ -146,7 +146,7 @@ public class CSVFile extends FlatFile {
 	 * @return Integer-List
 	 */
 	@Override
-	public List<Integer> getIntegerList(final String key) {
+	public List<Integer> getIntegerList(@NotNull final String key) {
 		return null;
 	}
 
@@ -157,7 +157,7 @@ public class CSVFile extends FlatFile {
 	 * @return List
 	 */
 	@Override
-	public List<?> getList(final String key) {
+	public List<?> getList(@NotNull final String key) {
 		return null;
 	}
 
@@ -168,7 +168,7 @@ public class CSVFile extends FlatFile {
 	 * @return String from file
 	 */
 	@Override
-	public long getLong(final String key) {
+	public long getLong(@NotNull final String key) {
 		return 0;
 	}
 
@@ -179,7 +179,7 @@ public class CSVFile extends FlatFile {
 	 * @return Long-List
 	 */
 	@Override
-	public List<Long> getLongList(final String key) {
+	public List<Long> getLongList(@NotNull final String key) {
 		return null;
 	}
 
@@ -190,12 +190,12 @@ public class CSVFile extends FlatFile {
 	 * @return Map
 	 */
 	@Override
-	public Map getMap(final String key) {
+	public Map getMap(@NotNull final String key) {
 		return null;
 	}
 
 	@Override
-	public <T> T getOrSetDefault(final String path, final T def) {
+	public <T> T getOrSetDefault(@NotNull final String path, @Nullable final T def) {
 		return null;
 	}
 
@@ -206,7 +206,7 @@ public class CSVFile extends FlatFile {
 	 * @param value The value you want to set in your file
 	 */
 	@Override
-	public synchronized void set(final String key, final Object value) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
 		//TODO
 	}
 
@@ -217,7 +217,7 @@ public class CSVFile extends FlatFile {
 	 * @return Returns the value
 	 */
 	@Override
-	public String getString(final String key) {
+	public String getString(@NotNull final String key) {
 		return null;
 	}
 
@@ -228,13 +228,13 @@ public class CSVFile extends FlatFile {
 	 * @return List
 	 */
 	@Override
-	public List<String> getStringList(final String key) {
+	public List<String> getStringList(@NotNull final String key) {
 		return null;
 	}
 
 	//added method for later implementation
 	@Override
-	public synchronized void remove(final String key) {
+	public synchronized void remove(@NotNull final String key) {
 		//TODO
 	}
 
@@ -246,7 +246,7 @@ public class CSVFile extends FlatFile {
 	 * @param value Value to set
 	 */
 	@Override
-	public void setDefault(final String key, final Object value) {
+	public void setDefault(@NotNull final String key, @Nullable final Object value) {
 		//TODO
 	}
 

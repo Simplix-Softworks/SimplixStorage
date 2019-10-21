@@ -70,7 +70,7 @@ public class YamlFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(final String path, T def) {
+	public <T> T getOrSetDefault(@NotNull final String path, T def) {
 		update();
 		if (!hasKey(path)) {
 			set(path, def, getConfigSetting());
@@ -91,15 +91,14 @@ public class YamlFile extends FlatFile {
 	}
 
 	@SuppressWarnings("Duplicates")
-	public synchronized void set(final String key, final Object value, final ConfigSetting configSetting) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final ConfigSetting configSetting) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		String oldData = fileData.toString();
-		fileData.insert(finalKey, value);
+		if (fileData.get(finalKey).equals(value)) {
+			fileData.insert(finalKey, value);
 
-		if (!oldData.equals(fileData.toString())) {
 			try {
 				if (!ConfigSetting.PRESERVE_COMMENTS.equals(configSetting)) {
 					write(Objects.requireNonNull(fileData).toMap());
@@ -121,21 +120,21 @@ public class YamlFile extends FlatFile {
 		}
 	}
 
-	private void write(final Map fileData) throws IOException {
+	private void write(@NotNull final Map fileData) throws IOException {
 		YamlWriter writer = new YamlWriter(new FileWriter(this.file));
 		writer.write(fileData);
 		writer.close();
 	}
 
 	@Override
-	public Object get(final String key) {
+	public Object get(@NotNull final String key) {
 		update();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
 	}
 
 	@Override
-	public synchronized void remove(final String key) {
+	public synchronized void remove(@NotNull final String key) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
@@ -150,12 +149,12 @@ public class YamlFile extends FlatFile {
 	}
 
 	@Override
-	public void set(final String key, final Object value) {
+	public void set(@NotNull final String key, @Nullable final Object value) {
 		set(key, value, this.getConfigSetting());
 	}
 
 	@Override
-	public void setDefault(final String key, final Object value) {
+	public void setDefault(@NotNull final String key, @Nullable final Object value) {
 		if (!hasKey(key)) {
 			set(key, value, getConfigSetting());
 		}

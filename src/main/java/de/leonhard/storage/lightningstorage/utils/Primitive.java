@@ -2,6 +2,7 @@ package de.leonhard.storage.lightningstorage.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings({"unused", "unchecked"})
@@ -9,22 +10,23 @@ import lombok.NoArgsConstructor;
 public class Primitive {
 
 	@SuppressWarnings("DuplicatedCode")
-	public static <T> T getFromDef(Object obj, final T def) {
+	public static <T> T getFromDef(@NotNull final Object obj, @NotNull final T def) {
+		Object tempObj = obj;
 		if (obj instanceof String && def instanceof Integer) {
-			obj = Integer.parseInt((String) obj);
+			tempObj = Integer.parseInt((String) obj);
 		} else if (obj instanceof String && def instanceof Double) {
-			obj = Double.parseDouble((String) obj);
+			tempObj = Double.parseDouble((String) obj);
 		} else if (obj instanceof String && def instanceof Float) {
-			obj = Double.parseDouble((String) obj);
+			tempObj = Double.parseDouble((String) obj);
 		} else if (obj instanceof String && def instanceof Boolean) {
-			obj = ((String) obj).equalsIgnoreCase("true");
+			tempObj = ((String) obj).equalsIgnoreCase("true");
 		}
-		return (T) obj;
+		return (T) tempObj;
 	}
 
 	public static class LONG {
 
-		public static long getLong(Object obj) {
+		public static long getLong(@NotNull final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).longValue();
 			} else if (obj instanceof String) {
@@ -37,7 +39,7 @@ public class Primitive {
 
 	public static class DOUBLE {
 
-		public static double getDouble(Object obj) {
+		public static double getDouble(@NotNull final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).longValue();
 			} else if (obj instanceof String) {
@@ -50,7 +52,7 @@ public class Primitive {
 
 	public static class FLOAT {
 
-		public static float getFloat(Object obj) {
+		public static float getFloat(@NotNull final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).floatValue();
 			} else if (obj instanceof String) {
@@ -63,7 +65,7 @@ public class Primitive {
 
 	public static class INTEGER {
 
-		public static int getInt(Object obj) {
+		public static int getInt(@NotNull final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).intValue();
 			} else if (obj instanceof String) {
@@ -76,7 +78,7 @@ public class Primitive {
 
 	public static class SHORT {
 
-		public static short getShort(Object obj) {
+		public static short getShort(@NotNull final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).shortValue();
 			} else if (obj instanceof String) {
@@ -89,11 +91,11 @@ public class Primitive {
 
 	public static class BYTE {
 
-		public static byte getByte(Object obj) {
+		public static byte getByte(@NotNull final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).byteValue();
 			} else if (obj instanceof String) {
-				return Byte.parseByte(obj.toString());
+				return Byte.parseByte((String) obj);
 			} else {
 				return Byte.parseByte(obj.toString());
 			}

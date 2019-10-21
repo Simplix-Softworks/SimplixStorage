@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
@@ -31,7 +32,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private long lastModified;
 
 
-	public FlatFile(final File file, final FileType fileType) {
+	public FlatFile(@NotNull final File file, @NotNull final FileType fileType) {
 		if (FileTypeUtils.isType(file, fileType)) {
 			this.fileType = fileType;
 			this.file = file;
@@ -49,7 +50,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public boolean hasKey(final String key) {
+	public boolean hasKey(@NotNull final String key) {
 		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		update();
 		return fileData.containsKey(tempKey);
@@ -98,7 +99,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> keySet(final String key) {
+	public Set<String> keySet(@NotNull final String key) {
 		update();
 		return fileData.keySet(key);
 	}
@@ -110,7 +111,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(final String key) {
+	public Set<String> singleLayerKeySet(@NotNull final String key) {
 		update();
 		return fileData.singleLayerKeySet(key);
 	}
@@ -135,7 +136,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this;
 	}
 
-	protected void replace(final CharSequence target, final CharSequence replacement) throws IOException {
+	protected void replace(@NotNull final CharSequence target, final CharSequence replacement) throws IOException {
 		final List<String> lines = Files.readAllLines(file.toPath());
 		final List<String> result = new ArrayList<>();
 		for (String line : lines) {
@@ -189,7 +190,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		private String extension;
 
-		FileType(String extension) {
+		FileType(@NotNull String extension) {
 			this.extension = extension;
 		}
 

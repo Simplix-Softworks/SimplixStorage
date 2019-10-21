@@ -22,38 +22,15 @@ public class FileData {
 	/**
 	 * @param map the Map to be processed.
 	 */
-	public FileData(final Map<String, Object> map) {
+	public FileData(@NotNull final Map<String, Object> map) {
 		this.localMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 	}
 
 	/**
 	 * @param jsonObject the JsonObject to be processed.
 	 */
-	public FileData(final JSONObject jsonObject) {
+	public FileData(@NotNull final JSONObject jsonObject) {
 		this.localMap = new HashMap<>(jsonObject.toMap());
-	}
-
-
-	/**
-	 * Check whether the map contains a certain key.
-	 *
-	 * @param key the key to be looked for.
-	 * @return true if the key exists, otherwise false.
-	 */
-	public boolean containsKey(final String key) {
-		String[] parts = key.split("\\.");
-		return containsKey(localMap, parts, 0);
-	}
-
-	/**
-	 * Method to get the object assign to a key from a FileData Object.
-	 *
-	 * @param key the key to look for.
-	 * @return the value assigned to the given key or null if the key does not exist.
-	 */
-	public Object get(final String key) {
-		final String[] parts = key.split("\\.");
-		return get(localMap, parts, 0);
 	}
 
 	/**
@@ -62,14 +39,41 @@ public class FileData {
 	 * @param key   the key to be used.
 	 * @param value the value to be assigned to the key.
 	 */
-	public synchronized void insert(final String key, final Object value) {
-		final String[] parts = key.split("\\.");
-		//noinspection unchecked
-		localMap.put(parts[0],
-					 localMap.containsKey(parts[0])
-					 && localMap.get(parts[0]) instanceof Map
-					 ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-					 : insert(new HashMap<>(), parts, value, 1));
+	public synchronized void insert(@NotNull final String key, final Object value) {
+		if (value == null) {
+			remove(key);
+		} else {
+			final String[] parts = key.split("\\.");
+			//noinspection unchecked
+			localMap.put(parts[0],
+						 localMap.containsKey(parts[0])
+						 && localMap.get(parts[0]) instanceof Map
+						 ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
+						 : insert(new HashMap<>(), parts, value, 1));
+		}
+	}
+
+	/**
+	 * Remove a key with its assigned value from the map if given key exists.
+	 *
+	 * @param key the key to be removed from the map.
+	 */
+	public synchronized void remove(@NotNull final String key) {
+		if (containsKey(key)) {
+			final String[] parts = key.split("\\.");
+			remove(localMap, parts, 0);
+		}
+	}
+
+	/**
+	 * Check whether the map contains a certain key.
+	 *
+	 * @param key the key to be looked for.
+	 * @return true if the key exists, otherwise false.
+	 */
+	public boolean containsKey(@NotNull final String key) {
+		String[] parts = key.split("\\.");
+		return containsKey(localMap, parts, 0);
 	}
 
 	/**
@@ -87,21 +91,20 @@ public class FileData {
 	 * @param key the key of the layer
 	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
 	 */
-	public Set<String> keySet(final String key) {
+	public Set<String> keySet(@NotNull final String key) {
 		//noinspection unchecked
 		return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
 	}
 
 	/**
-	 * Remove a key with its assigned value from the map if given key exists.
+	 * Method to get the object assign to a key from a FileData Object.
 	 *
-	 * @param key the key to be removed from the map.
+	 * @param key the key to look for.
+	 * @return the value assigned to the given key or null if the key does not exist.
 	 */
-	public synchronized void remove(final String key) {
-		if (containsKey(key)) {
-			final String[] parts = key.split("\\.");
-			remove(localMap, parts, 0);
-		}
+	public Object get(@NotNull final String key) {
+		final String[] parts = key.split("\\.");
+		return get(localMap, parts, 0);
 	}
 
 	/**
@@ -119,7 +122,7 @@ public class FileData {
 	 * @param key the key of the layer.
 	 * @return the keySet of the given layer or an empty set if the key does not exist.
 	 */
-	public Set<String> singleLayerKeySet(final String key) {
+	public Set<String> singleLayerKeySet(@NotNull final String key) {
 		//noinspection unchecked
 		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
 	}
@@ -139,7 +142,7 @@ public class FileData {
 	 * @param key the key of the layer.
 	 * @return the size of the given layer or 0 if the key does not exist.
 	 */
-	public int singleLayerSize(final String key) {
+	public int singleLayerSize(@NotNull final String key) {
 		return get(key) instanceof Map ? ((Map) get(key)).size() : 0;
 	}
 
@@ -158,7 +161,7 @@ public class FileData {
 	 * @param key the key of the layer
 	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
 	 */
-	public int size(final String key) {
+	public int size(@NotNull final String key) {
 		return localMap.size();
 	}
 

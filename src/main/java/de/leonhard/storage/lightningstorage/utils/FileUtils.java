@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings("unused")
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class FileUtils {
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public static void createFile(final File file) {
+	public static void createFile(@NotNull final File file) {
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
@@ -27,7 +28,7 @@ public class FileUtils {
 		}
 	}
 
-	public static BufferedInputStream createNewInputStream(final File file) {
+	public static BufferedInputStream createNewInputStream(@NotNull final File file) {
 		try {
 			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
@@ -38,11 +39,11 @@ public class FileUtils {
 		}
 	}
 
-	public static boolean hasChanged(final File file, final long timeStamp) {
+	public static boolean hasChanged(@NotNull final File file, final long timeStamp) {
 		return timeStamp < file.lastModified();
 	}
 
-	public static synchronized void writeToFile(final File file, final InputStream inputStream) {
+	public static synchronized void writeToFile(@NotNull final File file, @NotNull final InputStream inputStream) {
 		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());

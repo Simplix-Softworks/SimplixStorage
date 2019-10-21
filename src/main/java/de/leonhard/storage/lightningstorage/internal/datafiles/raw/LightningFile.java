@@ -50,12 +50,12 @@ public class LightningFile extends FlatFile {
 	}
 
 	@Override
-	public void setConfigSetting(final ConfigSetting configSetting) {
+	public void setConfigSetting(@NotNull final ConfigSetting configSetting) {
 		super.setConfigSetting(configSetting);
 	}
 
 	@Override
-	public Object get(final String key) {
+	public Object get(@NotNull final String key) {
 		update();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
@@ -63,15 +63,14 @@ public class LightningFile extends FlatFile {
 
 	@SuppressWarnings("Duplicates")
 	@Override
-	public synchronized void set(final String key, final Object value) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		String oldData = fileData.toString();
-		fileData.insert(finalKey, value);
+		if (!fileData.get(finalKey).equals(value)) {
+			fileData.insert(finalKey, value);
 
-		if (!oldData.equals(fileData.toString())) {
 			try {
 				this.lightningFileEditor.writeData(this.fileData);
 			} catch (IllegalStateException e) {
@@ -82,7 +81,7 @@ public class LightningFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void remove(final String key) {
+	public synchronized void remove(@NotNull final String key) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();

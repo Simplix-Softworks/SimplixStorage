@@ -52,7 +52,7 @@ public class LightningFileEditor {
 		int blankLine = -1;
 		int commentLine = -1;
 		while (lines.size() > 0) {
-			String tempLine = lines.get(0).replaceAll("	", " ").trim();
+			String tempLine = lines.get(0).trim();
 			lines.remove(0);
 
 			if (tempLine.contains("}")) {
@@ -101,7 +101,7 @@ public class LightningFileEditor {
 		String tempKey = null;
 
 		while (lines.size() > 0) {
-			String tempLine = lines.get(0).replaceAll("	", " ").trim();
+			String tempLine = lines.get(0).trim();
 			lines.remove(0);
 
 			if (tempLine.equals("}")) {
@@ -148,7 +148,7 @@ public class LightningFileEditor {
 	private List<String> readList(final List<String> lines) {
 		List<String> localList = this.fileDataType.getNewDataList(this.configSetting, null);
 		while (lines.size() > 0) {
-			String tempLine = lines.get(0).replaceAll("	", " ").trim();
+			String tempLine = lines.get(0).trim();
 			lines.remove(0);
 			if (tempLine.endsWith("]")) {
 				return localList;
