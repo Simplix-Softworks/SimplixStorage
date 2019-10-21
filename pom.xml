@@ -107,7 +107,7 @@
                             <shadedPattern>de.leonhard.storage.shaded.electronwill</shadedPattern>
                         </relocation>
                     </relocations>
-                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
             </plugin>
 

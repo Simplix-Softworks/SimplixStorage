@@ -17,7 +17,7 @@ public class Primitive {
 		} else if (obj instanceof String && def instanceof Float) {
 			obj = Double.parseDouble((String) obj);
 		} else if (obj instanceof String && def instanceof Boolean) {
-			obj = Boolean.getBoolean((String) obj);
+			obj = ((String) obj).equalsIgnoreCase("true");
 		}
 		return (T) obj;
 	}

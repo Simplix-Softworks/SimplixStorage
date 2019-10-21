@@ -20,7 +20,7 @@ public interface StorageBase {
 		if (!hasKey(key)) {
 			return false;
 		} else {
-			return Boolean.getBoolean(get(key).toString());
+			return ((String) get(key)).equalsIgnoreCase("true");
 		}
 	}
 
