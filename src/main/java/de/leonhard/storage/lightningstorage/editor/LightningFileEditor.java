@@ -50,6 +50,7 @@ public class LightningFileEditor {
 
 		String tempKey = null;
 		int blankLine = -1;
+		int commentLine = -1;
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).replaceAll("	", " ").trim();
 			lines.remove(0);
@@ -60,14 +61,15 @@ public class LightningFileEditor {
 				blankLine++;
 				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
-				tempMap.put(tempLine, LineType.COMMENT);
+				commentLine++;
+				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
 				} else if (tempKey == null) {
 					throw new IllegalStateException("Key must not be null");
 				}
-				tempMap.put(tempKey, this.read(lines, blankLine));
+				tempMap.put(tempKey, this.read(lines, blankLine, commentLine));
 			} else {
 				if (tempLine.contains(" = ")) {
 					String[] line = tempLine.split(" = ");
@@ -94,7 +96,7 @@ public class LightningFileEditor {
 	}
 
 	@SuppressWarnings("DuplicatedCode")
-	private Map<String, Object> read(final List<String> lines, int blankLine) {
+	private Map<String, Object> read(final List<String> lines, int blankLine, int commentLine) {
 		Map<String, Object> tempMap = this.fileDataType.getNewDataMap(this.configSetting, null);
 		String tempKey = null;
 
@@ -110,14 +112,14 @@ public class LightningFileEditor {
 				blankLine++;
 				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
-				tempMap.put(tempLine, LineType.COMMENT);
+				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
 				} else if (tempKey == null) {
 					throw new IllegalStateException("Key must not be null");
 				}
-				tempMap.put(tempKey, this.read(lines, blankLine));
+				tempMap.put(tempKey, this.read(lines, blankLine, commentLine));
 			} else {
 				if (tempLine.contains(" = ")) {
 					String[] line = tempLine.split(" = ");
@@ -183,7 +185,7 @@ public class LightningFileEditor {
 
 	private void topLayerWriteWithComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
 		if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
-			writer.print(localKey);
+			writer.print(localKey.substring(0, localKey.lastIndexOf("{=}")));
 		} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
 			writer.print("");
 		} else if (map.get(localKey) instanceof Map) {
@@ -199,7 +201,7 @@ public class LightningFileEditor {
 		for (String localKey : map.keySet()) {
 			writer.println();
 			if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
-				writer.print(indentationString + "  " + localKey);
+				writer.print(indentationString + "  " + localKey.substring(0, localKey.lastIndexOf("{=}")));
 			} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
 				writer.print("");
 			} else {
