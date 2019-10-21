@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileTypeUtils {
 
-
 	/**
 	 * Add a give FileType extension to a String.
 	 *

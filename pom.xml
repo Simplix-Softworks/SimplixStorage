@@ -5,7 +5,7 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>lightningstorage</artifactId>
-    <version>3.0.0-Beta</version>
+    <version>3.0.0-Beta-v2</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/LightningStorage</url>
@@ -236,14 +236,6 @@
             <artifactId>commons-csv</artifactId>
             <version>1.7</version>
             <scope>compile</scope>
-        </dependency>
-
-
-        <!-- Dynamics -->
-        <dependency>
-            <groupId>com.github.alexheretic</groupId>
-            <artifactId>dynamics</artifactId>
-            <version>4.0</version>
         </dependency>
 
         <!-- Lombok -->
