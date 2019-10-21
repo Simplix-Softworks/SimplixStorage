@@ -1,11 +1,6 @@
 package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.internal.base.data.StandardData;
-import de.leonhard.storage.internal.base.enums.FileType;
-import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
-import de.leonhard.storage.internal.base.interfaces.Data;
-import de.leonhard.storage.internal.base.interfaces.StorageBase;
 import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.FileUtils;
 import java.io.File;
@@ -23,13 +18,17 @@ import lombok.Setter;
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected File file;
-	protected Data fileData = new StandardData();
+	protected FileData fileData;
 	protected FileType fileType;
 
 	@Setter
 	private String pathPrefix;
 	@Setter
 	private ReloadSetting reloadSetting = ReloadSetting.INTELLIGENT;
+	@Setter
+	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
+	@Setter
+	private FileData.Type dataType = FileData.Type.AUTOMATIC;
 	private long lastModified;
 
 
@@ -62,12 +61,12 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-	protected boolean shouldReload() throws InvalidSettingException {
-		if (reloadSetting.equals(ReloadSetting.AUTOMATICALLY)) {
+	protected boolean shouldReload() {
+		if (reloadSetting == ReloadSetting.AUTOMATICALLY) {
 			return true;
-		} else if (reloadSetting.equals(ReloadSetting.INTELLIGENT)) {
+		} else if (reloadSetting == ReloadSetting.INTELLIGENT) {
 			return hasChanged();
-		} else if (reloadSetting.equals(ReloadSetting.MANUALLY)) {
+		} else if (reloadSetting == ReloadSetting.MANUALLY) {
 			return false;
 		} else {
 			throw new InvalidSettingException("No proper ReloadSetting");
@@ -168,11 +167,44 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		} else {
 			FlatFile flatFile = (FlatFile) obj;
 			return this.pathPrefix.equals(flatFile.pathPrefix)
-				   && reloadSetting.equals(flatFile.reloadSetting)
+				   && reloadSetting == flatFile.reloadSetting
 				   && this.fileData.equals(flatFile.fileData)
 				   && this.file.equals(flatFile.file)
-				   && fileType.equals(flatFile.fileType)
+				   && fileType == flatFile.fileType
 				   && this.lastModified == flatFile.lastModified;
 		}
+	}
+
+	public enum FileType {
+
+		JSON("json"),
+		YAML("yml"),
+		TOML("toml"),
+		CSV("csv"),
+		LIGHTNING("ls"),
+		DEFAULT("");
+
+
+		private String extension;
+
+		FileType(String extension) {
+			this.extension = extension;
+		}
+
+		@Override
+		public String toString() {
+			return extension;
+		}
+	}
+	public enum ConfigSetting {
+
+		PRESERVE_COMMENTS,
+		SKIP_COMMENTS
+	}
+	public enum ReloadSetting {
+
+		AUTOMATICALLY,
+		INTELLIGENT,
+		MANUALLY
 	}
 }

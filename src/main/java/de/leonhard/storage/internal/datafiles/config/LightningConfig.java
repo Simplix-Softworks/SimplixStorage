@@ -1,8 +1,6 @@
 package de.leonhard.storage.internal.datafiles.config;
 
-import de.leonhard.storage.internal.base.enums.ConfigSetting;
-import de.leonhard.storage.internal.base.enums.ReloadSetting;
-import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
+import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.exceptions.InvalidSettingException;
 import de.leonhard.storage.internal.datafiles.editor.LightningFileUtils;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
@@ -21,8 +19,8 @@ public class LightningConfig extends LightningFile {
 	private final LightningFileUtils lightningFileUtils;
 	private List<String> header;
 
-	public LightningConfig(@NotNull File file, @Nullable InputStream inputStream, @Nullable ReloadSetting reloadSetting) throws InvalidFileTypeException {
-		super(file, inputStream, reloadSetting);
+	public LightningConfig(@NotNull File file, @Nullable InputStream inputStream, @Nullable ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type dataType) {
+		super(file, inputStream, reloadSetting, configSetting, dataType);
 		setConfigSetting(ConfigSetting.PRESERVE_COMMENTS);
 		this.lightningFileUtils = new LightningFileUtils(this.file);
 	}

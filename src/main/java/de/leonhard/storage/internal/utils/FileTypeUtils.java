@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.utils;
 
-import de.leonhard.storage.internal.base.enums.FileType;
+import de.leonhard.storage.internal.base.FlatFile;
 import java.io.File;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class FileTypeUtils {
 	 * @param fileType the FileType to be used.
 	 * @return the path with the give FileType extension.
 	 */
-	public static String addExtension(String path, FileType fileType) {
+	public static String addExtension(String path, FlatFile.FileType fileType) {
 		return path + "." + fileType;
 	}
 
@@ -29,8 +29,8 @@ public class FileTypeUtils {
 	 * @param fileType the FileType to be checked against.
 	 * @return true if the File is of the given FileType, otherwise false.
 	 */
-	public static boolean isType(final File file, final FileType fileType) {
-		return getFileType(file).equals(fileType);
+	public static boolean isType(final File file, final FlatFile.FileType fileType) {
+		return getFileType(file) == (fileType);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class FileTypeUtils {
 	 * @param file the given File.
 	 * @return the FileType of the File.
 	 */
-	public static FileType getFileType(File file) {
+	public static FlatFile.FileType getFileType(File file) {
 		return getFileType(getExtension(file));
 	}
 
@@ -49,20 +49,20 @@ public class FileTypeUtils {
 	 * @param extension the extension to be checked.
 	 * @return the FileType Enum of the give extension or null if no matching Enum exists.
 	 */
-	public static FileType getFileType(String extension) {
+	public static FlatFile.FileType getFileType(String extension) {
 		switch (extension) {
 			case "json":
-				return FileType.JSON;
+				return FlatFile.FileType.JSON;
 			case "yml":
-				return FileType.YAML;
+				return FlatFile.FileType.YAML;
 			case "toml":
-				return FileType.TOML;
+				return FlatFile.FileType.TOML;
 			case "CSV":
-				return FileType.CSV;
+				return FlatFile.FileType.CSV;
 			case "ls":
-				return FileType.LIGHTNING;
+				return FlatFile.FileType.LIGHTNING;
 			default:
-				return FileType.DEFAULT;
+				return FlatFile.FileType.DEFAULT;
 		}
 	}
 

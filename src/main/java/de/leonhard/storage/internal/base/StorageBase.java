@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.base.interfaces;
+package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.utils.Primitive;
 import java.util.ArrayList;

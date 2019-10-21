@@ -2,11 +2,8 @@ package de.leonhard.storage.internal.datafiles.raw;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
+import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.data.StandardData;
-import de.leonhard.storage.internal.base.enums.ConfigSetting;
-import de.leonhard.storage.internal.base.enums.FileType;
-import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.datafiles.editor.YamlEditor;
 import de.leonhard.storage.internal.datafiles.editor.YamlParser;
@@ -17,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,17 +23,18 @@ public class YamlFile extends FlatFile {
 
 	protected final YamlEditor yamlEditor;
 	private final YamlParser parser;
-	@Getter
-	@Setter
-	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
 
 
-	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting) throws InvalidFileTypeException {
+	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type type) {
 		if (FileTypeUtils.isType(file, FileType.YAML)) {
 			if (create(file)) {
 				if (inputStream != null) {
 					FileUtils.writeToFile(this.file, inputStream);
 				}
+			}
+
+			if (configSetting != null) {
+				setConfigSetting(configSetting);
 			}
 
 			this.yamlEditor = new YamlEditor(this.file);
@@ -60,7 +56,7 @@ public class YamlFile extends FlatFile {
 			if (map == null) {
 				map = new HashMap<>();
 			}
-			fileData = new StandardData(map);
+			fileData = new FileData(map);
 
 			try {
 				reader.close();
@@ -156,7 +152,7 @@ public class YamlFile extends FlatFile {
 
 	@Override
 	public void set(final String key, final Object value) {
-		set(key, value, this.configSetting);
+		set(key, value, this.getConfigSetting());
 	}
 
 	@Override
@@ -178,7 +174,7 @@ public class YamlFile extends FlatFile {
 			return false;
 		} else {
 			YamlFile yaml = (YamlFile) obj;
-			return this.configSetting.equals(yaml.configSetting)
+			return this.getConfigSetting().equals(yaml.getConfigSetting())
 				   && super.equals(yaml.getFlatFileInstance());
 		}
 	}

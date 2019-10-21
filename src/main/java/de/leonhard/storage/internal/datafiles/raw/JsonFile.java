@@ -1,9 +1,7 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
+import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.data.StandardData;
-import de.leonhard.storage.internal.base.enums.FileType;
-import de.leonhard.storage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.internal.base.exceptions.InvalidFileTypeException;
 import de.leonhard.storage.internal.utils.FileTypeUtils;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -22,12 +20,16 @@ import org.json.JSONTokener;
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonFile extends FlatFile {
 
-	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting) throws InvalidFileTypeException {
+	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type dataType) {
 		if (FileTypeUtils.isType(file, FileType.JSON)) {
 			if (create(file)) {
 				if (inputStream != null) {
 					FileUtils.writeToFile(this.file, inputStream);
 				}
+			}
+
+			if (configSetting != null) {
+				setConfigSetting(configSetting);
 			}
 
 			reload();
@@ -42,7 +44,7 @@ public class JsonFile extends FlatFile {
 	@Override
 	public void reload() {
 		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
-		fileData = new StandardData(new JSONObject(jsonTokener));
+		fileData = new FileData(new JSONObject(jsonTokener));
 	}
 
 	/**
@@ -89,7 +91,7 @@ public class JsonFile extends FlatFile {
 		}
 
 		if (key.contains(".")) {
-			return new StandardData(fileData.toMap()).containsKey(key) ? new StandardData(fileData.toMap()).get(key) : null;
+			return new FileData(fileData.toMap()).containsKey(key) ? new FileData(fileData.toMap()).get(key) : null;
 		}
 		return fileData.containsKey(key) ? fileData.get(key) : null;
 	}
