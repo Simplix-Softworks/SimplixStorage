@@ -1,6 +1,6 @@
 package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
-import de.leonhard.storage.lightningstorage.editor.LightningFileEditor;
+import de.leonhard.storage.lightningstorage.editor.LightningEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class LightningFile extends FlatFile {
 
-	protected final LightningFileEditor lightningFileEditor;
+	protected final LightningEditor lightningEditor;
 
 	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.LIGHTNING);
@@ -32,7 +32,7 @@ public class LightningFile extends FlatFile {
 			setFileDataType(fileDataType);
 		}
 
-		this.lightningFileEditor = new LightningFileEditor(this.file, getConfigSetting(), getFileDataType());
+		this.lightningEditor = new LightningEditor(this.file, getConfigSetting(), getFileDataType());
 		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);
@@ -42,7 +42,7 @@ public class LightningFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			this.fileData = new FileData(this.lightningFileEditor.readData());
+			this.fileData = new FileData(this.lightningEditor.readData());
 		} catch (IOException e) {
 			System.err.println("Error while reading '" + file.getName() + "'");
 			e.printStackTrace();
@@ -72,7 +72,7 @@ public class LightningFile extends FlatFile {
 			fileData.insert(finalKey, value);
 
 			try {
-				this.lightningFileEditor.writeData(this.fileData);
+				this.lightningEditor.writeData(this.fileData);
 			} catch (IllegalStateException e) {
 				System.err.println("Error while writing to '" + file.getName() + "'");
 				e.printStackTrace();
@@ -90,7 +90,7 @@ public class LightningFile extends FlatFile {
 			fileData.remove(finalKey);
 
 			try {
-				this.lightningFileEditor.writeData(this.fileData);
+				this.lightningEditor.writeData(this.fileData);
 			} catch (IllegalStateException e) {
 				System.err.println("Error while writing to '" + file.getName() + "'");
 				e.printStackTrace();

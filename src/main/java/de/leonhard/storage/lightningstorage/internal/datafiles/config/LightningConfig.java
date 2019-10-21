@@ -2,7 +2,7 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.config;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.LightningFile;
-import de.leonhard.storage.lightningstorage.utils.LightningConfigUtils;
+import de.leonhard.storage.lightningstorage.utils.LightningUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile {
 
-	private final LightningConfigUtils lightningConfigUtils;
+	private final LightningUtils lightningUtils;
 	private List<String> header;
 
 	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, fileDataType);
-		this.lightningConfigUtils = new LightningConfigUtils(this.file);
+		this.lightningUtils = new LightningUtils(this.file);
 	}
 
 	public List<String> getHeader() {
@@ -32,7 +32,7 @@ public class LightningConfig extends LightningFile {
 			return header;
 		}
 		try {
-			return this.lightningConfigUtils.readHeader();
+			return this.lightningUtils.readHeader();
 		} catch (IOException e) {
 			System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
 			e.printStackTrace();
@@ -55,7 +55,7 @@ public class LightningConfig extends LightningFile {
 
 		if (getFile().length() == 0) {
 			try {
-				this.lightningConfigUtils.write(this.header);
+				this.lightningUtils.write(this.header);
 			} catch (IOException e) {
 				System.err.println("Error while setting header of '" + getName() + "'");
 				e.printStackTrace();
@@ -64,10 +64,10 @@ public class LightningConfig extends LightningFile {
 		}
 
 		try {
-			final List<String> lines = this.lightningConfigUtils.read();
+			final List<String> lines = this.lightningUtils.read();
 
-			final List<String> oldHeader = this.lightningConfigUtils.readHeader();
-			final List<String> footer = this.lightningConfigUtils.readFooter();
+			final List<String> oldHeader = this.lightningUtils.readHeader();
+			final List<String> footer = this.lightningUtils.readFooter();
 			lines.removeAll(oldHeader);
 			lines.removeAll(footer);
 
@@ -75,7 +75,7 @@ public class LightningConfig extends LightningFile {
 
 			lines.addAll(footer);
 
-			this.lightningConfigUtils.write(lines);
+			this.lightningUtils.write(lines);
 		} catch (final IOException e) {
 			System.err.println("Exception while modifying header of '" + getName() + "'");
 			e.printStackTrace();

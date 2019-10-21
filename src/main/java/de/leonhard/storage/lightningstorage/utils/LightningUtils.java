@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings({"DuplicatedCode", "WeakerAccess", "unused"})
-public class LightningConfigUtils {
+public class LightningUtils {
 
 	private final File file;
 
-	public LightningConfigUtils(@NotNull final File file) {
+	public LightningUtils(@NotNull final File file) {
 		this.file = file;
 	}
 

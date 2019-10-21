@@ -6,12 +6,12 @@ import java.util.*;
 
 
 @SuppressWarnings("unused")
-public class YamlConfigUtils {
+public class YamlUtils {
 
 	final private YamlEditor yamlEditor;
 
 
-	public YamlConfigUtils(final YamlEditor yamlEditor) {
+	public YamlUtils(final YamlEditor yamlEditor) {
 		this.yamlEditor = yamlEditor;
 	}
 

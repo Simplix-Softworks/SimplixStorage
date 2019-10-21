@@ -6,7 +6,7 @@ import de.leonhard.storage.lightningstorage.editor.YamlEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
-import de.leonhard.storage.lightningstorage.utils.YamlConfigUtils;
+import de.leonhard.storage.lightningstorage.utils.YamlUtils;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class YamlFile extends FlatFile {
 
 	protected final YamlEditor yamlEditor;
-	private final YamlConfigUtils parser;
+	private final YamlUtils parser;
 
 	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.YAML);
@@ -40,7 +40,7 @@ public class YamlFile extends FlatFile {
 		}
 
 		this.yamlEditor = new YamlEditor(this.file);
-		this.parser = new YamlConfigUtils(yamlEditor);
+		this.parser = new YamlUtils(yamlEditor);
 		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);

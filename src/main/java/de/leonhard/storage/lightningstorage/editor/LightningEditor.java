@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings("unused")
-public class LightningFileEditor {
+public class LightningEditor {
 
 	private final File file;
 	@Getter
@@ -27,7 +27,7 @@ public class LightningFileEditor {
 	@Setter
 	private FileData.Type fileDataType;
 
-	public LightningFileEditor(@NotNull final File file, @NotNull final FlatFile.ConfigSetting configSetting, @NotNull final FileData.Type fileDataType) {
+	public LightningEditor(@NotNull final File file, @NotNull final FlatFile.ConfigSetting configSetting, @NotNull final FileData.Type fileDataType) {
 		this.file = file;
 		this.configSetting = configSetting;
 		this.fileDataType = fileDataType;
