@@ -86,13 +86,15 @@ public class LightningFile extends FlatFile {
 
 		update();
 
-		fileData.remove(finalKey);
+		if (fileData.containsKey(finalKey)) {
+			fileData.remove(finalKey);
 
-		try {
-			this.lightningFileEditor.writeData(this.fileData);
-		} catch (IllegalStateException e) {
-			System.err.println("Error while writing to '" + file.getName() + "'");
-			e.printStackTrace();
+			try {
+				this.lightningFileEditor.writeData(this.fileData);
+			} catch (IllegalStateException e) {
+				System.err.println("Error while writing to '" + file.getName() + "'");
+				e.printStackTrace();
+			}
 		}
 	}
 

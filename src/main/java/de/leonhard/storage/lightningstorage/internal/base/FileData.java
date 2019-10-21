@@ -39,7 +39,7 @@ public class FileData {
 	 * @param key   the key to be used.
 	 * @param value the value to be assigned to the key.
 	 */
-	public synchronized void insert(@NotNull final String key, final Object value) {
+	public synchronized void insert(@NotNull final String key, @Nullable final Object value) {
 		if (value == null) {
 			remove(key);
 		} else {
@@ -61,7 +61,7 @@ public class FileData {
 	public synchronized void remove(@NotNull final String key) {
 		if (containsKey(key)) {
 			final String[] parts = key.split("\\.");
-			remove(localMap, parts, 0);
+			removeKey(this.localMap, parts, 0);
 		}
 	}
 
@@ -152,17 +152,7 @@ public class FileData {
 	 * @return the size of all layers of localMap combined.
 	 */
 	public int size() {
-		return localMap.size();
-	}
-
-	/**
-	 * get the size of all sublayers of the given key combined.
-	 *
-	 * @param key the key of the layer
-	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
-	 */
-	public int size(@NotNull final String key) {
-		return localMap.size();
+		return size(localMap);
 	}
 
 	/**
@@ -187,6 +177,36 @@ public class FileData {
 		}
 	}
 
+	/**
+	 * get the size of all sublayers of the given key combined.
+	 *
+	 * @param key the key of the layer
+	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
+	 */
+	public int size(@NotNull final String key) {
+		//noinspection unchecked
+		return containsKey(key) ? size((Map<String, Object>) get(key)) : 0;
+	}
+
+	private Map<String, Object> removeKey(Map<String, Object> map, String[] key, int id) {
+		Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+		if (id < key.length) {
+			if (id == key.length - 1) {
+				tempMap.remove(key[id]);
+				return tempMap;
+			} else {
+				//noinspection unchecked
+				map.put(key[id], removeKey((Map<String, Object>) map.get(key[id]), key, id + 1));
+				//noinspection unchecked
+				if (((Map<String, Object>) map.get(key[id])).isEmpty()) {
+					map.remove(key[id]);
+				}
+				return map;
+			}
+		} else {
+			return null;
+		}
+	}
 
 	private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
 		if (id < key.length - 1) {
@@ -217,13 +237,13 @@ public class FileData {
 
 	private synchronized Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
 		if (id < key.length) {
-			Map<String, Object> tempMap = new HashMap<>(map);
+			Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
 			//noinspection unchecked
 			Map<String, Object> childMap =
 					map.containsKey(key[id])
 					&& map.get(key[id]) instanceof Map
 					? (Map<String, Object>) map.get(key[id])
-					: new HashMap<>();
+					: (map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map));
 			tempMap.put(key[id], insert(childMap, key, value, id + 1));
 			return tempMap;
 		} else {
@@ -244,19 +264,6 @@ public class FileData {
 			}
 		}
 		return localSet;
-	}
-
-	private synchronized void remove(final Map<String, Object> map, final String[] key, final int id) {
-		Map tempMap = map;
-		for (int i = 0; i < key.length - (1 + id); i++) {
-			if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
-				tempMap = (Map) tempMap.get(key[i]);
-			}
-		}
-		if (tempMap.keySet().size() <= 1) {
-			map.remove(key[key.length - (1 + id)]);
-			remove(map, key, id + 1);
-		}
 	}
 
 	private int size(final Map<String, Object> map) {
