@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused"})
 public class CSVFile extends FlatFile {
 
-	public CSVFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type dataType) {
+	public CSVFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		if (FileTypeUtils.isType(file, FileType.CSV)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -27,6 +27,11 @@ public class CSVFile extends FlatFile {
 
 			if (configSetting != null) {
 				setConfigSetting(configSetting);
+			}
+			if (fileDataType != null) {
+				setFileDataType(fileDataType);
+			} else {
+				setFileDataType(FileData.Type.STANDARD);
 			}
 
 			reload();

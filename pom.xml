@@ -60,7 +60,7 @@
     </distributionManagement>
 
     <build>
-        <defaultGoal>clean install -U</defaultGoal>
+        <defaultGoal>clean verify -U</defaultGoal>
         <pluginManagement>
             <plugins>
                 <plugin>

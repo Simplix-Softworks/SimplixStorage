@@ -20,7 +20,7 @@ public class LightningFile extends FlatFile {
 
 	protected final LightningFileEditor lightningFileEditor;
 
-	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type dataType) {
+	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		if (FileTypeUtils.isType(file, FileType.LIGHTNING)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -28,14 +28,15 @@ public class LightningFile extends FlatFile {
 				}
 			}
 
+
 			if (configSetting != null) {
 				setConfigSetting(configSetting);
 			}
-			if (dataType != null) {
-				setDataType(dataType);
+			if (fileDataType != null) {
+				setFileDataType(fileDataType);
 			}
 
-			this.lightningFileEditor = new LightningFileEditor(this.file, getConfigSetting(), getDataType());
+			this.lightningFileEditor = new LightningFileEditor(this.file, getConfigSetting(), getFileDataType());
 			reload();
 			if (reloadSetting != null) {
 				setReloadSetting(reloadSetting);

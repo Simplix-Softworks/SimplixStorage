@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class TomlConfig extends TomlFile {
 
-	public TomlConfig(@NotNull File file, @Nullable InputStream inputStream, @Nullable ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type dataType) {
-		super(file, inputStream, reloadSetting, configSetting, dataType);
+	public TomlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
+		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, fileDataType);
 	}
 }

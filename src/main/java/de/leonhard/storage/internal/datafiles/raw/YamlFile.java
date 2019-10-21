@@ -24,8 +24,7 @@ public class YamlFile extends FlatFile {
 	protected final YamlEditor yamlEditor;
 	private final YamlParser parser;
 
-
-	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type type) {
+	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		if (FileTypeUtils.isType(file, FileType.YAML)) {
 			if (create(file)) {
 				if (inputStream != null) {
@@ -35,6 +34,11 @@ public class YamlFile extends FlatFile {
 
 			if (configSetting != null) {
 				setConfigSetting(configSetting);
+			}
+			if (fileDataType != null) {
+				setFileDataType(fileDataType);
+			} else {
+				setFileDataType(FileData.Type.STANDARD);
 			}
 
 			this.yamlEditor = new YamlEditor(this.file);

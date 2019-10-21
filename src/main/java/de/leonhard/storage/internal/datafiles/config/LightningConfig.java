@@ -19,9 +19,8 @@ public class LightningConfig extends LightningFile {
 	private final LightningFileUtils lightningFileUtils;
 	private List<String> header;
 
-	public LightningConfig(@NotNull File file, @Nullable InputStream inputStream, @Nullable ReloadSetting reloadSetting, @Nullable ConfigSetting configSetting, @Nullable FileData.Type dataType) {
-		super(file, inputStream, reloadSetting, configSetting, dataType);
-		setConfigSetting(ConfigSetting.PRESERVE_COMMENTS);
+	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
+		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, fileDataType);
 		this.lightningFileUtils = new LightningFileUtils(this.file);
 	}
 

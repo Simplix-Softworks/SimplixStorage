@@ -27,12 +27,12 @@ public class LightningFileEditor {
 	private FlatFile.ConfigSetting configSetting;
 	@Getter
 	@Setter
-	private FileData.Type dataType;
+	private FileData.Type fileDataType;
 
-	public LightningFileEditor(@NotNull final File file, @NotNull final FlatFile.ConfigSetting configSetting, @NotNull final FileData.Type dataType) {
+	public LightningFileEditor(@NotNull final File file, @NotNull final FlatFile.ConfigSetting configSetting, @NotNull final FileData.Type fileDataType) {
 		this.file = file;
 		this.configSetting = configSetting;
-		this.dataType = dataType;
+		this.fileDataType = fileDataType;
 	}
 
 	public void writeData(final FileData fileData) {
@@ -48,7 +48,7 @@ public class LightningFileEditor {
 	@SuppressWarnings("DuplicatedCode")
 	public Map<String, Object> readData() throws IOException {
 		List<String> lines = Files.readAllLines(this.file.toPath());
-		Map<String, Object> tempMap = this.dataType.getNewDataMap(this.configSetting, null);
+		Map<String, Object> tempMap = this.fileDataType.getNewDataMap(this.configSetting, null);
 
 		String tempKey = null;
 		int blankLine = -1;
@@ -76,7 +76,7 @@ public class LightningFileEditor {
 					line[0] = line[0].trim();
 					line[1] = line[1].trim();
 					if (line[1].startsWith("[") && line[1].endsWith("]")) {
-						List<String> list = Arrays.asList(line[1].split(", "));
+						List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
 						tempMap.put(line[0], list);
 					} else if (line[1].startsWith("[") && !line[1].endsWith("]")) {
 						tempMap.put(line[0], this.readList(lines));
@@ -97,7 +97,7 @@ public class LightningFileEditor {
 
 	@SuppressWarnings("DuplicatedCode")
 	private Map<String, Object> read(final List<String> lines, int blankLine) {
-		Map<String, Object> tempMap = this.dataType.getNewDataMap(this.configSetting, null);
+		Map<String, Object> tempMap = this.fileDataType.getNewDataMap(this.configSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -126,9 +126,9 @@ public class LightningFileEditor {
 					line[0] = line[0].trim();
 					line[1] = line[1].trim();
 					if (line[1].startsWith("[") && line[1].endsWith("]")) {
-						List<String> list = Arrays.asList(line[1].split(", "));
+						List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
 						tempMap.put(line[0], list);
-					} else if (line[1].startsWith("[") && !line[1].endsWith("]")) {
+					} else if (line[1].startsWith("[")) {
 						tempMap.put(line[0], this.readList(lines));
 					} else {
 						tempMap.put(line[0], line[1]);
@@ -146,7 +146,7 @@ public class LightningFileEditor {
 	}
 
 	private List<String> readList(final List<String> lines) {
-		List<String> localList = this.dataType.getNewDataList(this.configSetting, null);
+		List<String> localList = this.fileDataType.getNewDataList(this.configSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).replaceAll("	", " ").trim();
 			lines.remove(0);
@@ -210,7 +210,7 @@ public class LightningFileEditor {
 					//noinspection unchecked
 					writeWithComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
 				} else if (map.get(localKey) instanceof List) {
-					writer.println(indentationString + "  " + localKey + "[");
+					writer.println(indentationString + "  " + localKey + " = [");
 					//noinspection unchecked
 					this.writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
 				} else {
@@ -251,7 +251,7 @@ public class LightningFileEditor {
 				//noinspection unchecked
 				this.writeWithOutComments((Map<String, Object>) map.get(localKey), "", writer);
 			} else if (map.get(localKey) instanceof List) {
-				writer.println("  " + localKey + "[");
+				writer.println("  " + localKey + " = [");
 				//noinspection unchecked
 				this.writeList((List<String>) map.get(localKey), "  ", writer);
 			} else {
@@ -269,7 +269,7 @@ public class LightningFileEditor {
 					//noinspection unchecked
 					this.writeWithOutComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
 				} else if (map.get(localKey) instanceof List) {
-					writer.println(indentationString + "  " + localKey + "[");
+					writer.println(indentationString + "  " + localKey + " = [");
 					//noinspection unchecked
 					this.writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
 				} else {

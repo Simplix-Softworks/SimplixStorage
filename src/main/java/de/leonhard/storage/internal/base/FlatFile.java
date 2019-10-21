@@ -28,7 +28,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Setter
 	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
 	@Setter
-	private FileData.Type dataType = FileData.Type.AUTOMATIC;
+	private FileData.Type fileDataType = FileData.Type.AUTOMATIC;
 	private long lastModified;
 
 
@@ -175,6 +175,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+
 	public enum FileType {
 
 		JSON("json"),
@@ -196,11 +197,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			return extension;
 		}
 	}
+
 	public enum ConfigSetting {
 
 		PRESERVE_COMMENTS,
 		SKIP_COMMENTS
 	}
+
 	public enum ReloadSetting {
 
 		AUTOMATICALLY,

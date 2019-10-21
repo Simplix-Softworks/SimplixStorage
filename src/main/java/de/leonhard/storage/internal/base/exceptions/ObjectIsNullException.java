@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base.exceptions;
 
+@SuppressWarnings("unused")
 public class ObjectIsNullException extends LightningException {
 
 	public ObjectIsNullException(String errorMessage) {
