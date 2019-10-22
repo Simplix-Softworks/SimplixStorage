@@ -79,7 +79,7 @@ public class LightningStorage {
 	}
 
 	public final LightningStorage fromResource(@Nullable final String resource) {
-		this.inputStream = file == null ? null : new BufferedInputStream(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(resource)));
+		this.inputStream = resource == null ? null : new BufferedInputStream(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(resource)));
 		return this;
 	}
 
