@@ -8,6 +8,7 @@ import de.leonhard.storage.lightningstorage.internal.datafiles.raw.*;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import de.leonhard.storage.lightningstorage.utils.basic.Valid;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
@@ -78,7 +79,7 @@ public class LightningStorage {
 	}
 
 	public final LightningStorage fromResource(@Nullable final String resource) {
-		this.inputStream = file == null ? null : this.getClass().getClassLoader().getResourceAsStream(resource);
+		this.inputStream = file == null ? null : new BufferedInputStream(Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(resource)));
 		return this;
 	}
 

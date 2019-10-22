@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class LightningConfig extends LightningFile {
 
 	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
-		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, fileDataType);
+		super(file, inputStream, reloadSetting, (configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting), fileDataType);
 	}
 
 	public List<String> getHeader() {

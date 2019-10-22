@@ -19,7 +19,7 @@ public class FileTypeUtils {
 	 * @return the path with the give FileType extension.
 	 */
 	public static String addExtension(@NotNull final String path, @NotNull final FlatFile.FileType fileType) {
-		return path + "." + fileType;
+		return (path + "." + fileType);
 	}
 
 	/**
