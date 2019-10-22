@@ -15,8 +15,8 @@ public class FileData {
 	/**
 	 * @param map the Map to be processed.
 	 */
-	public FileData(@NotNull final Map<String, Object> map) {
-		this.localMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);
+	public FileData(@Nullable final Map<String, Object> map) {
+		this.localMap = map != null ? (map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map)) : new HashMap<>();
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class FileData {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

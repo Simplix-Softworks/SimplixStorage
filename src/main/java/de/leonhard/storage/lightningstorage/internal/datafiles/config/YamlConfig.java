@@ -37,7 +37,7 @@ public class YamlConfig extends YamlFile {
 		}
 	}
 
-	public void setHeader(List<String> header) {
+	public void setHeader(@NotNull List<String> header) {
 		List<String> tmp = new ArrayList<>();
 		//Updating the values to have a comments, if someone forgets to set them
 		for (final String line : header) {
@@ -80,7 +80,7 @@ public class YamlConfig extends YamlFile {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

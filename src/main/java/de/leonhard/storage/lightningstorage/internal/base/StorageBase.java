@@ -173,7 +173,7 @@ public interface StorageBase {
 	}
 
 	@SuppressWarnings("DuplicatedCode")
-	default <T> T getOrSetDefault(@NotNull final String path, @Nullable final T def) {
+	default <T> T getOrSetDefault(@NotNull final String path, @NotNull final T def) {
 		if (!hasKey(path)) {
 			set(path, def);
 			return def;

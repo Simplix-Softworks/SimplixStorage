@@ -11,6 +11,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
@@ -136,7 +137,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this;
 	}
 
-	protected void replace(@NotNull final CharSequence target, final CharSequence replacement) throws IOException {
+	protected void replace(@NotNull final CharSequence target, @NotNull final CharSequence replacement) throws IOException {
 		final List<String> lines = Files.readAllLines(file.toPath());
 		final List<String> result = new ArrayList<>();
 		for (String line : lines) {
@@ -161,7 +162,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public synchronized boolean equals(final Object obj) {
+	public synchronized boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -190,7 +191,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		private String extension;
 
-		FileType(@NotNull String extension) {
+		FileType(@NotNull final String extension) {
 			this.extension = extension;
 		}
 

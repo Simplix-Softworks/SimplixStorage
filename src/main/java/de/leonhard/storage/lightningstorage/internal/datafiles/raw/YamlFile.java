@@ -8,7 +8,6 @@ import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.YamlUtils;
 import java.io.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,9 +52,6 @@ public class YamlFile extends FlatFile {
 		try {
 			@Cleanup YamlReader reader = new YamlReader(new FileReader(this.file));
 			Map<String, Object> map = (Map<String, Object>) reader.read();
-			if (map == null) {
-				map = new HashMap<>();
-			}
 			fileData = new FileData(map);
 		} catch (IOException e) {
 			System.err.println("Exception while reading yaml");
@@ -64,7 +60,7 @@ public class YamlFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(@NotNull final String path, T def) {
+	public <T> T getOrSetDefault(@NotNull final String path, @NotNull T def) {
 		update();
 		if (!hasKey(path)) {
 			set(path, def, getConfigSetting());
@@ -158,7 +154,7 @@ public class YamlFile extends FlatFile {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

@@ -192,7 +192,7 @@ public class CSVFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(@NotNull final String path, @Nullable final T def) {
+	public <T> T getOrSetDefault(@NotNull final String path, @NotNull final T def) {
 		return null;
 	}
 
@@ -248,7 +248,7 @@ public class CSVFile extends FlatFile {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

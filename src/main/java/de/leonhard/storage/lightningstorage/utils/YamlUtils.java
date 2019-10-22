@@ -3,6 +3,7 @@ package de.leonhard.storage.lightningstorage.utils;
 import de.leonhard.storage.lightningstorage.editor.YamlEditor;
 import java.io.IOException;
 import java.util.*;
+import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings("unused")
@@ -17,7 +18,7 @@ public class YamlUtils {
 
 
 	@SuppressWarnings("UnusedAssignment")
-	public List<String> parseComments(final List<String> comments, final List<String> updated) {
+	public List<String> parseComments(@NotNull final List<String> comments, @NotNull final List<String> updated) {
 		final List<String> keys;
 		final Map<String, List<String>> parsed;
 		try {
@@ -47,7 +48,7 @@ public class YamlUtils {
 		return updated;
 	}
 
-	private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
+	private Map<String, List<String>> assignCommentsToKey(@NotNull final List<String> fileLines) {
 		List<String> storage = new ArrayList<>();
 		final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
 		final Map<String, List<String>> result = new HashMap<>();

@@ -18,7 +18,7 @@ public class FileTypeUtils {
 	 * @param fileType the FileType to be used.
 	 * @return the path with the give FileType extension.
 	 */
-	public static String addExtension(@NotNull String path, @NotNull FlatFile.FileType fileType) {
+	public static String addExtension(@NotNull final String path, @NotNull final FlatFile.FileType fileType) {
 		return path + "." + fileType;
 	}
 
@@ -39,7 +39,7 @@ public class FileTypeUtils {
 	 * @param file the given File.
 	 * @return the FileType of the File.
 	 */
-	public static FlatFile.FileType getFileType(@NotNull File file) {
+	public static FlatFile.FileType getFileType(@NotNull final File file) {
 		return getFileType(getExtension(file));
 	}
 
@@ -49,7 +49,7 @@ public class FileTypeUtils {
 	 * @param extension the extension to be checked.
 	 * @return the FileType Enum of the give extension or null if no matching Enum exists.
 	 */
-	public static FlatFile.FileType getFileType(@NotNull String extension) {
+	public static FlatFile.FileType getFileType(@NotNull final String extension) {
 		switch (extension) {
 			case "json":
 				return FlatFile.FileType.JSON;
@@ -72,7 +72,7 @@ public class FileTypeUtils {
 	 * @param file the File to be checked.
 	 * @return the extension of the given File.
 	 */
-	public static String getExtension(@NotNull File file) {
+	public static String getExtension(@NotNull final File file) {
 		return getExtension(file.getName());
 	}
 
@@ -82,7 +82,7 @@ public class FileTypeUtils {
 	 * @param path the Path of the File to be checked.
 	 * @return the extension of the given File.
 	 */
-	public static String getExtension(@NotNull String path) {
+	public static String getExtension(@NotNull final String path) {
 		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
 	}
 }

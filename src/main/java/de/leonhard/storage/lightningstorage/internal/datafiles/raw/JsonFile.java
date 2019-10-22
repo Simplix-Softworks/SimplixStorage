@@ -62,7 +62,7 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	private Map getMapWithoutPath(final String key) {
+	private Map getMapWithoutPath(@NotNull final String key) {
 		update();
 
 		if (!hasKey(key)) {
@@ -83,7 +83,7 @@ public class JsonFile extends FlatFile {
 		throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
 	}
 
-	private Object getObject(final String key) {
+	private Object getObject(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return null;
 		}
@@ -95,7 +95,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(@NotNull final String path, T def) {
+	public <T> T getOrSetDefault(@NotNull final String path, @NotNull T def) {
 		if (!hasKey(path)) {
 			set(path, def);
 			return def;
@@ -106,7 +106,7 @@ public class JsonFile extends FlatFile {
 
 	@SuppressWarnings("Duplicates")
 	@Override
-	public synchronized void set(@NotNull final String key, final Object value) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
@@ -170,7 +170,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

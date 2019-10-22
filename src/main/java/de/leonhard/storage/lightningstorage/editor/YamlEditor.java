@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.Cleanup;
+import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings({"unused", "Duplicates", "WeakerAccess"})
@@ -30,7 +31,11 @@ public class YamlEditor {
 		return getCommentsFromLines(read());
 	}
 
-	public static List<String> getCommentsFromLines(final List<String> lines) {
+	public List<String> read() throws IOException {
+		return Files.readAllLines(file.toPath());
+	}
+
+	public static List<String> getCommentsFromLines(@NotNull final List<String> lines) {
 		final List<String> result = new ArrayList<>();
 
 		for (final String line : lines) {
@@ -41,15 +46,11 @@ public class YamlEditor {
 		return result;
 	}
 
-	public List<String> read() throws IOException {
-		return Files.readAllLines(file.toPath());
-	}
-
 	public List<String> readFooter() throws IOException {
 		return getFooterFromLines(read());
 	}
 
-	public static List<String> getFooterFromLines(final List<String> lines) {
+	public static List<String> getFooterFromLines(@NotNull final List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		Collections.reverse(lines);
 		for (final String line : lines) {
@@ -67,7 +68,7 @@ public class YamlEditor {
 		return getHeaderFromLines(read());
 	}
 
-	public static List<String> getHeaderFromLines(final List<String> lines) {
+	public static List<String> getHeaderFromLines(@NotNull final List<String> lines) {
 		final List<String> result = new ArrayList<>();
 
 		for (final String line : lines) {
@@ -83,7 +84,7 @@ public class YamlEditor {
 		return getKeys(read());
 	}
 
-	public static List<String> getKeys(final List<String> lines) {
+	public static List<String> getKeys(@NotNull final List<String> lines) {
 		final List<String> result = new ArrayList<>();
 
 		for (final String line : lines) {
@@ -102,7 +103,7 @@ public class YamlEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
-	public static List<String> getPureCommentsFromLines(final List<String> lines) {
+	public static List<String> getPureCommentsFromLines(@NotNull final List<String> lines) {
 		final List<String> comments = getCommentsFromLines(lines);
 		final List<String> header = getHeaderFromLines(lines);
 		final List<String> footer = getFooterFromLines(lines);
@@ -117,7 +118,7 @@ public class YamlEditor {
 		return getLinesWithoutFooterAndHeaderFromLines(read());
 	}
 
-	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final List<String> lines) {
+	public static List<String> getLinesWithoutFooterAndHeaderFromLines(@NotNull final List<String> lines) {
 		final List<String> header = getHeaderFromLines(lines);
 		final List<String> footer = getFooterFromLines(lines);
 
@@ -127,7 +128,7 @@ public class YamlEditor {
 		return lines;
 	}
 
-	public void write(final List<String> lines) throws IOException {
+	public void write(@NotNull final List<String> lines) throws IOException {
 		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(file));
 		for (String line : lines) {
 			writer.println(line);
