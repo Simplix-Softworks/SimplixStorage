@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.Cleanup;
 
 
 @SuppressWarnings({"unused", "Duplicates", "WeakerAccess"})
@@ -127,10 +128,9 @@ public class YamlEditor {
 	}
 
 	public void write(final List<String> lines) throws IOException {
-		final PrintWriter writer = new PrintWriter(new FileWriter(file));
-		for (final String str : lines) {
-			writer.println(str);
+		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(file));
+		for (String line : lines) {
+			writer.println(line);
 		}
-		writer.close();
 	}
 }

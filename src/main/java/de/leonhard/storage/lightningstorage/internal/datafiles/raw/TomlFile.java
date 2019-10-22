@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused"})
 public class TomlFile extends FlatFile {
 
-	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
+	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.TOML);
 		if (create()) {
 			if (inputStream != null) {
@@ -21,9 +21,6 @@ public class TomlFile extends FlatFile {
 			}
 		}
 
-		if (configSetting != null) {
-			setConfigSetting(configSetting);
-		}
 		if (fileDataType != null) {
 			setFileDataType(fileDataType);
 		} else {

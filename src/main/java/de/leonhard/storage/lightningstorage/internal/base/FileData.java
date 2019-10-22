@@ -13,13 +13,6 @@ public class FileData {
 	private final Map<String, Object> localMap;
 
 	/**
-	 * Creates an empty FileData Object.
-	 */
-	public FileData() {
-		this.localMap = new HashMap<>();
-	}
-
-	/**
 	 * @param map the Map to be processed.
 	 */
 	public FileData(@NotNull final Map<String, Object> map) {
@@ -311,13 +304,13 @@ public class FileData {
 		STANDARD,
 		AUTOMATIC;
 
-		public Map<String, Object> getNewDataMap(@NotNull final FlatFile.ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
+		public Map<String, Object> getNewDataMap(@Nullable final FlatFile.ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
 			if (this == SORTED) {
 				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 			} else if (this == STANDARD) {
 				return map == null ? new HashMap<>() : new HashMap<>(map);
 			} else if (this == AUTOMATIC) {
-				if (configSetting == FlatFile.ConfigSetting.SKIP_COMMENTS) {
+				if (configSetting == null || configSetting == FlatFile.ConfigSetting.SKIP_COMMENTS) {
 					return map == null ? new HashMap<>() : new HashMap<>(map);
 				} else if (configSetting == FlatFile.ConfigSetting.PRESERVE_COMMENTS) {
 					return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
@@ -329,13 +322,13 @@ public class FileData {
 			}
 		}
 
-		public List<String> getNewDataList(@NotNull final FlatFile.ConfigSetting configSetting, @Nullable final List<String> list) {
+		public List<String> getNewDataList(@Nullable final FlatFile.ConfigSetting configSetting, @Nullable final List<String> list) {
 			if (this == SORTED) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);
 			} else if (this == STANDARD) {
 				return list == null ? new ArrayList<>() : new ArrayList<>(list);
 			} else if (this == AUTOMATIC) {
-				if (configSetting == FlatFile.ConfigSetting.SKIP_COMMENTS) {
+				if (configSetting == null || configSetting == FlatFile.ConfigSetting.SKIP_COMMENTS) {
 					return list == null ? new ArrayList<>() : new ArrayList<>(list);
 				} else if (configSetting == FlatFile.ConfigSetting.PRESERVE_COMMENTS) {
 					return list == null ? new LinkedList<>() : new LinkedList<>(list);

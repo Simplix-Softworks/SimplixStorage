@@ -5,16 +5,13 @@ import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"unused"})
 public class LightningFile extends FlatFile {
-
-	protected final LightningEditor lightningEditor;
 
 	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.LIGHTNING);
@@ -32,7 +29,6 @@ public class LightningFile extends FlatFile {
 			setFileDataType(fileDataType);
 		}
 
-		this.lightningEditor = new LightningEditor(this.file, getConfigSetting(), getFileDataType());
 		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);
@@ -41,17 +37,7 @@ public class LightningFile extends FlatFile {
 
 	@Override
 	public void reload() {
-		try {
-			this.fileData = new FileData(this.lightningEditor.readData());
-		} catch (IOException e) {
-			System.err.println("Error while reading '" + file.getName() + "'");
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void setConfigSetting(@NotNull final ConfigSetting configSetting) {
-		super.setConfigSetting(configSetting);
+		this.fileData = new FileData(LightningEditor.readData(this.file, getFileDataType(), getConfigSetting()));
 	}
 
 	@Override
@@ -72,9 +58,9 @@ public class LightningFile extends FlatFile {
 			fileData.insert(finalKey, value);
 
 			try {
-				this.lightningEditor.writeData(this.fileData);
+				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
 			} catch (IllegalStateException e) {
-				System.err.println("Error while writing to '" + file.getName() + "'");
+				System.err.println("Could not write to '" + file.getName() + "'");
 				e.printStackTrace();
 			}
 		}
@@ -90,9 +76,9 @@ public class LightningFile extends FlatFile {
 			fileData.remove(finalKey);
 
 			try {
-				this.lightningEditor.writeData(this.fileData);
+				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
 			} catch (IllegalStateException e) {
-				System.err.println("Error while writing to '" + file.getName() + "'");
+				System.err.println("Could not write to '" + file.getName() + "'");
 				e.printStackTrace();
 			}
 		}

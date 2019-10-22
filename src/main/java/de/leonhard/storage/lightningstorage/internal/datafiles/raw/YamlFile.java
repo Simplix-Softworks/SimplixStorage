@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Cleanup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,19 +51,12 @@ public class YamlFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			YamlReader reader = new YamlReader(new FileReader(this.file));
+			@Cleanup YamlReader reader = new YamlReader(new FileReader(this.file));
 			Map<String, Object> map = (Map<String, Object>) reader.read();
 			if (map == null) {
 				map = new HashMap<>();
 			}
 			fileData = new FileData(map);
-
-			try {
-				reader.close();
-			} catch (IOException e) {
-				System.err.println("Exception while closing file");
-				e.printStackTrace();
-			}
 		} catch (IOException e) {
 			System.err.println("Exception while reading yaml");
 			e.printStackTrace();
@@ -121,9 +115,8 @@ public class YamlFile extends FlatFile {
 	}
 
 	private void write(@NotNull final Map fileData) throws IOException {
-		YamlWriter writer = new YamlWriter(new FileWriter(this.file));
+		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
 		writer.write(fileData);
-		writer.close();
 	}
 
 	@Override

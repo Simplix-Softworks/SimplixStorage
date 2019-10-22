@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import lombok.Cleanup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -18,7 +19,7 @@ import org.json.JSONTokener;
 @SuppressWarnings({"unchecked", "unused"})
 public class JsonFile extends FlatFile {
 
-	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
+	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.JSON);
 		if (create()) {
 			if (inputStream != null) {
@@ -26,9 +27,6 @@ public class JsonFile extends FlatFile {
 			}
 		}
 
-		if (configSetting != null) {
-			setConfigSetting(configSetting);
-		}
 		if (fileDataType != null) {
 			setFileDataType(fileDataType);
 		} else {
@@ -125,9 +123,8 @@ public class JsonFile extends FlatFile {
 	}
 
 	private void write(final JSONObject object) throws IOException {
-		Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
+		@Cleanup Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
 		writer.write(object.toString(3));
-		writer.close();
 	}
 
 	@Override

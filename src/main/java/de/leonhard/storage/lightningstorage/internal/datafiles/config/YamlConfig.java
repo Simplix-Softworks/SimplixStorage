@@ -24,21 +24,19 @@ public class YamlConfig extends YamlFile {
 	public List<String> getHeader() {
 		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
-		}
-
-		if (!shouldReload()) {
+		} else if (!shouldReload()) {
 			return header;
-		}
-		try {
-			return this.yamlEditor.readHeader();
-		} catch (IOException e) {
-			System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
-			e.printStackTrace();
-			return new ArrayList<>();
+		} else {
+			try {
+				return this.yamlEditor.readHeader();
+			} catch (IOException e) {
+				System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
+				e.printStackTrace();
+				return new ArrayList<>();
+			}
 		}
 	}
 
-	@SuppressWarnings({"unused", "DuplicatedCode"})
 	public void setHeader(List<String> header) {
 		List<String> tmp = new ArrayList<>();
 		//Updating the values to have a comments, if someone forgets to set them
@@ -63,22 +61,19 @@ public class YamlConfig extends YamlFile {
 
 		try {
 			final List<String> lines = this.yamlEditor.read();
-
 			final List<String> oldHeader = this.yamlEditor.readHeader();
-			final List<String> footer = this.yamlEditor.readFooter();
+
+			List<String> newLines = this.header;
 			lines.removeAll(oldHeader);
-			lines.removeAll(footer);
+			newLines.addAll(lines);
 
-			lines.addAll(header);
-
-			lines.addAll(footer);
-
-			this.yamlEditor.write(lines);
+			this.yamlEditor.write(newLines);
 		} catch (final IOException e) {
 			System.err.println("Exception while modifying header of '" + getName() + "'");
 			e.printStackTrace();
 		}
 	}
+
 
 	protected final YamlConfig getConfigInstance() {
 		return this;

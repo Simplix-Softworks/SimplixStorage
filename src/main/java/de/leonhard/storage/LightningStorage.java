@@ -3,7 +3,6 @@ package de.leonhard.storage;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
 import de.leonhard.storage.lightningstorage.internal.datafiles.config.LightningConfig;
-import de.leonhard.storage.lightningstorage.internal.datafiles.config.TomlConfig;
 import de.leonhard.storage.lightningstorage.internal.datafiles.config.YamlConfig;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.*;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
@@ -104,17 +103,17 @@ public class LightningStorage {
 	public final CSVFile asCSV() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new CSVFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.CSV)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType)
-				  : new CSVFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.CSV)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType))
-			   : new CSVFile(this.file, this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType);
+				  ? new CSVFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.CSV)), this.inputStream, this.reloadSetting, this.fileDataType)
+				  : new CSVFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.CSV)), this.inputStream, this.reloadSetting, this.fileDataType))
+			   : new CSVFile(this.file, this.inputStream, this.reloadSetting, this.fileDataType);
 	}
 
 	public final JsonFile asJson() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new JsonFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.JSON)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType)
-				  : new JsonFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.JSON)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType))
-			   : new JsonFile(this.file, this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType);
+				  ? new JsonFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.JSON)), this.inputStream, this.reloadSetting, this.fileDataType)
+				  : new JsonFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.JSON)), this.inputStream, this.reloadSetting, this.fileDataType))
+			   : new JsonFile(this.file, this.inputStream, this.reloadSetting, this.fileDataType);
 	}
 
 	public final LightningConfig asLightningConfig() {
@@ -136,17 +135,9 @@ public class LightningStorage {
 	public final TomlFile asToml() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new TomlFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.TOML)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType)
-				  : new TomlFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.TOML)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType))
-			   : new TomlFile(this.file, this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType);
-	}
-
-	public final TomlConfig asTomlConfig() {
-		return this.file == null
-			   ? (this.directory == null
-				  ? new TomlConfig(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.TOML)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType)
-				  : new TomlConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.TOML)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType))
-			   : new TomlConfig(this.file, this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType);
+				  ? new TomlFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.TOML)), this.inputStream, this.reloadSetting, this.fileDataType)
+				  : new TomlFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.TOML)), this.inputStream, this.reloadSetting, this.fileDataType))
+			   : new TomlFile(this.file, this.inputStream, this.reloadSetting, this.fileDataType);
 	}
 
 	public final YamlFile asYaml() {

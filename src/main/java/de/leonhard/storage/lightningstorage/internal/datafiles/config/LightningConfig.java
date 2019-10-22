@@ -1,13 +1,14 @@
 package de.leonhard.storage.lightningstorage.internal.datafiles.config;
 
+import de.leonhard.storage.lightningstorage.editor.LightningEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.lightningstorage.utils.LightningUtils;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,70 +16,99 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile {
 
-	private final LightningUtils lightningUtils;
-	private List<String> header;
-
 	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, fileDataType);
-		this.lightningUtils = new LightningUtils(this.file);
 	}
 
 	public List<String> getHeader() {
+		update();
+
 		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
-		}
-
-		if (!shouldReload()) {
-			return header;
-		}
-		try {
-			return this.lightningUtils.readHeader();
-		} catch (IOException e) {
-			System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
-			e.printStackTrace();
-			return new ArrayList<>();
+		} else {
+			return LightningUtils.getHeader(this.fileData, getFileDataType(), getConfigSetting());
 		}
 	}
 
-	@SuppressWarnings({"unused", "DuplicatedCode"})
-	public void setHeader(@NotNull List<String> header) {
-		List<String> tmp = new ArrayList<>();
-		//Updating the values to have a comments, if someone forgets to set them
-		for (final String line : header) {
-			if (!line.startsWith("#")) {
-				tmp.add("#" + line);
-			} else {
-				tmp.add(line);
+	public void setHeader(@Nullable final List<String> header) {
+		update();
+
+		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
+			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, header, getFileDataType(), getConfigSetting());
+			if (!this.fileData.toMap().equals(tempMap)) {
+				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
 			}
 		}
-		this.header = tmp;
+	}
 
-		if (getFile().length() == 0) {
-			try {
-				this.lightningUtils.write(this.header);
-			} catch (IOException e) {
-				System.err.println("Error while setting header of '" + getName() + "'");
-				e.printStackTrace();
-			}
-			return;
+	public List<String> getFooter() {
+		update();
+
+		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
+			return new ArrayList<>();
+		} else {
+			return LightningUtils.getFooter(fileData, getFileDataType(), getConfigSetting());
 		}
+	}
 
-		try {
-			final List<String> lines = this.lightningUtils.read();
+	public void setFooter(@NotNull final List<String> footer) {
+		update();
 
-			final List<String> oldHeader = this.lightningUtils.readHeader();
-			final List<String> footer = this.lightningUtils.readFooter();
-			lines.removeAll(oldHeader);
-			lines.removeAll(footer);
+		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
+			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, footer, getFileDataType(), getConfigSetting());
+			if (!fileData.toMap().equals(tempMap)) {
+				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
+			}
+		}
+	}
 
-			lines.addAll(header);
+	public List<String> getHeader(@NotNull final String key) {
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
-			lines.addAll(footer);
+		update();
 
-			this.lightningUtils.write(lines);
-		} catch (final IOException e) {
-			System.err.println("Exception while modifying header of '" + getName() + "'");
-			e.printStackTrace();
+		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
+			return new ArrayList<>();
+		} else {
+			return LightningUtils.getHeader(this.fileData, finalKey, getFileDataType(), getConfigSetting());
+		}
+	}
+
+	public void setHeader(@NotNull final String key, @Nullable final List<String> header) {
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+
+		update();
+
+		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
+			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, finalKey, header, getFileDataType(), getConfigSetting());
+			if (!fileData.toMap().equals(tempMap)) {
+				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
+			}
+		}
+	}
+
+	public List<String> getFooter(@NotNull final String key) {
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+
+		update();
+
+		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
+			return new ArrayList<>();
+		} else {
+			return LightningUtils.getFooter(this.fileData, finalKey, getFileDataType(), getConfigSetting());
+		}
+	}
+
+	public void setFooter(@NotNull final String key, @Nullable final List<String> footer) {
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+
+		update();
+
+		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
+			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, finalKey, footer, getFileDataType(), getConfigSetting());
+			if (!fileData.toMap().equals(tempMap)) {
+				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
+			}
 		}
 	}
 
@@ -94,8 +124,7 @@ public class LightningConfig extends LightningFile {
 			return false;
 		} else {
 			LightningConfig config = (LightningConfig) obj;
-			return this.header.equals(config.header)
-				   && super.equals(config.getLightningFileInstance());
+			return super.equals(config.getLightningFileInstance());
 		}
 	}
 }
