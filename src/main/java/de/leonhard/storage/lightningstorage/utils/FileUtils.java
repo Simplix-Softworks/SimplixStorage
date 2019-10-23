@@ -88,6 +88,7 @@ public class FileUtils {
 		} catch (IOException e) {
 			System.err.println("Exception while copying to + '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
+			throw new IllegalStateException("Could not copy the Data to the File");
 		}
 	}
 }
