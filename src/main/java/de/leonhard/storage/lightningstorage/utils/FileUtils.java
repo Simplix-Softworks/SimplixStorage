@@ -13,13 +13,14 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtils {
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void createFile(@NotNull final File file) {
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
+				//noinspection ResultOfMethodCallIgnored
 				file.getParentFile().mkdirs();
 			}
 			if (!file.exists()) {
+				//noinspection ResultOfMethodCallIgnored
 				file.createNewFile();
 			}
 		} catch (IOException e) {

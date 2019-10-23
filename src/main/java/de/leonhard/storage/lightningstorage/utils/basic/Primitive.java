@@ -28,6 +28,7 @@ public class Primitive {
 		return (T) tempObj;
 	}
 
+
 	public static class Boolean {
 
 		public static boolean getBoolean(@NotNull final Object obj) {
@@ -40,6 +41,7 @@ public class Primitive {
 			}
 		}
 	}
+
 
 	public static class LONG {
 
@@ -54,6 +56,7 @@ public class Primitive {
 		}
 	}
 
+
 	public static class DOUBLE {
 
 		public static double getDouble(@NotNull final Object obj) {
@@ -66,6 +69,7 @@ public class Primitive {
 			}
 		}
 	}
+
 
 	public static class FLOAT {
 
@@ -80,6 +84,7 @@ public class Primitive {
 		}
 	}
 
+
 	public static class INTEGER {
 
 		public static int getInt(@NotNull final Object obj) {
@@ -93,6 +98,7 @@ public class Primitive {
 		}
 	}
 
+
 	public static class SHORT {
 
 		public static short getShort(@NotNull final Object obj) {
@@ -105,6 +111,7 @@ public class Primitive {
 			}
 		}
 	}
+
 
 	public static class BYTE {
 

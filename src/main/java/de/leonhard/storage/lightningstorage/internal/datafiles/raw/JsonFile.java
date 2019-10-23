@@ -37,6 +37,7 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
+
 	@Override
 	public void reload() {
 		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));

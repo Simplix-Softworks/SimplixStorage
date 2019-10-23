@@ -33,14 +33,9 @@ public class YamlUtils {
 		for (final String key : parsed.keySet()) {
 			int i = 0;
 			for (final String line : parsed.get(key)) {
-				if (line.isEmpty()) {
-					continue;
-				}
 				if (updated.contains(key + " ")) {
 					updated.add(updated.indexOf(key + " ") + i, line);
-					continue;
-				}
-				if (updated.contains(" " + key)) {
+				} else if (updated.contains(" " + key)) {
 					updated.add(updated.indexOf(" " + key) + i, line);
 				}
 			}
@@ -65,7 +60,6 @@ public class YamlUtils {
 		}
 
 		// Removing keys without comments
-
 		final List<String> keysToRemove = new ArrayList<>();
 		for (final String line : result.keySet()) {
 			if (result.get(line).equals(new ArrayList<>())) {

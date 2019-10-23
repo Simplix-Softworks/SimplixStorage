@@ -33,6 +33,7 @@ public class CSVFile extends FlatFile {
 		}
 	}
 
+
 	//added method for later implementation
 	@Override
 	public void reload() {

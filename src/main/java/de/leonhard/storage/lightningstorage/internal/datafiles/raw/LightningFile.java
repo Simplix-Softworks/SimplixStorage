@@ -63,6 +63,7 @@ public class LightningFile extends FlatFile {
 		}
 	}
 
+
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;

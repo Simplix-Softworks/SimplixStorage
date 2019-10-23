@@ -42,6 +42,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+
 	public final String getFilePath() {
 		return this.file.getAbsolutePath();
 	}

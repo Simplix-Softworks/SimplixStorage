@@ -12,19 +12,14 @@ public class FileData {
 
 	private final Map<String, Object> localMap;
 
-	/**
-	 * @param map the Map to be processed.
-	 */
 	public FileData(@Nullable final Map<String, Object> map) {
 		this.localMap = map != null ? (map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map)) : new HashMap<>();
 	}
 
-	/**
-	 * @param jsonObject the JsonObject to be processed.
-	 */
 	public FileData(@NotNull final JSONObject jsonObject) {
 		this.localMap = new HashMap<>(jsonObject.toMap());
 	}
+
 
 	/**
 	 * Method to assign a value to a key.
@@ -180,6 +175,7 @@ public class FileData {
 		//noinspection unchecked
 		return containsKey(key) ? size((Map<String, Object>) get(key)) : 0;
 	}
+
 
 	private Map<String, Object> removeKey(Map<String, Object> map, String[] key, int id) {
 		Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);

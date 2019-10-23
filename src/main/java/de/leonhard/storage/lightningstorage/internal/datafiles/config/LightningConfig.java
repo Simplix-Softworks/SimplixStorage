@@ -20,6 +20,7 @@ public class LightningConfig extends LightningFile {
 		super(file, inputStream, reloadSetting, (configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting), fileDataType);
 	}
 
+
 	public List<String> getHeader() {
 		update();
 

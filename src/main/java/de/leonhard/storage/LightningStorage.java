@@ -27,6 +27,7 @@ public class LightningStorage {
 	private FlatFile.ConfigSetting configSetting;
 	private FileData.Type fileDataType;
 
+	// <local Constructors>
 	private LightningStorage(@NotNull final File file) {
 		this.file = file;
 		this.directory = null;
@@ -47,6 +48,8 @@ public class LightningStorage {
 		this.name = name;
 		this.path = null;
 	}
+	// </local Constructors>
+
 
 	// <Builder initialization>
 
@@ -229,6 +232,7 @@ public class LightningStorage {
 			   : new YamlConfig(this.file, this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType);
 	}
 	// </Create Datafile>
+
 
 	@Override
 	public String toString() {

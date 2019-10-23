@@ -21,6 +21,7 @@ public class YamlConfig extends YamlFile {
 		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, fileDataType);
 	}
 
+
 	public List<String> getHeader() {
 		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
