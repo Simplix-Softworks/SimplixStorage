@@ -1,9 +1,6 @@
 package de.leonhard.storage.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,22 +18,72 @@ public class FileUtils {
 	}
 
 
-	public static String replaceExtensions(final String fileName) {
+	public static String replaceExtensions(String fileName) {
+		Valid.notNull(fileName, "FileName mustn't be null");
 		if (!fileName.contains(".")) {
 			return fileName;
 		}
 		return fileName.replace(getExtension(fileName), "");
 	}
 
-	public static boolean hasChanged(final File file, final long timeStamp) {
+	public static void copyFolder(File source, File destination) {
+		if (source.isDirectory()) {
+			if (!destination.exists()) {
+				destination.mkdirs();
+			}
+
+			String[] files = source.list();
+
+			for (String file : files) {
+				File srcFile = new File(source, file);
+				File destFile = new File(destination, file);
+
+				copyFolder(srcFile, destFile);
+			}
+		} else {
+			InputStream in = null;
+			OutputStream out = null;
+
+			try {
+				in = new FileInputStream(source);
+				out = new FileOutputStream(destination);
+
+				byte[] buffer = new byte[1024];
+
+				int length;
+				while ((length = in.read(buffer)) > 0) {
+					out.write(buffer, 0, length);
+				}
+			} catch (Exception e) {
+				try {
+					if (in != null) {
+						in.close();
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+					if (out != null) {
+						out.close();
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+
+
+	public static boolean hasChanged(File file, long timeStamp) {
 		return timeStamp < file.lastModified();
 	}
 
-	public static File getAndMake(final String name, final String path) {
+	public static File getAndMake(String name, String path) {
 		return getAndMake(new File(path, name));
 	}
 
-	public static InputStream createNewInputStream(final File file) {
+	public static InputStream createNewInputStream(File file) {
 		try {
 			return Files.newInputStream(file.toPath());
 		} catch (IOException e) {
@@ -47,12 +94,12 @@ public class FileUtils {
 		}
 	}
 
-	public static void writeToFile(final File file, final InputStream inputStream) {
+	public static void writeToFile(File file, InputStream inputStream) {
 		try (FileOutputStream outputStream = new FileOutputStream(file)) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());
 			} else {
-				final byte[] data = new byte[8192];
+				byte[] data = new byte[8192];
 				int count;
 				while ((count = inputStream.read(data, 0, 8192)) != -1) {
 					outputStream.write(data, 0, count);
@@ -64,7 +111,7 @@ public class FileUtils {
 		}
 	}
 
-	public static File getAndMake(final File file) {
+	public static File getAndMake(File file) {
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
@@ -82,9 +129,9 @@ public class FileUtils {
 		return file;
 	}
 
-	public static List<String> readAllLines(final File file) throws IOException {
-		final byte[] fileBytes = Files.readAllBytes(file.toPath());
-		final String asString = new String(fileBytes);
+	public static List<String> readAllLines(File file) throws IOException {
+		byte[] fileBytes = Files.readAllBytes(file.toPath());
+		String asString = new String(fileBytes);
 		return new ArrayList<>(Arrays.asList(asString.split("\n")));
 	}
 }

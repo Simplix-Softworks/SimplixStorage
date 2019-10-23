@@ -25,15 +25,15 @@ public class Yaml extends FlatFile implements IStorage {
 	@Setter
 	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-	public Yaml(final String name, final String path) {
+	public Yaml(String name, String path) {
 		this(name, path, null, null);
 	}
 
-	public Yaml(final String name, final String path, final InputStream inputStream) {
+	public Yaml(String name, String path, InputStream inputStream) {
 		this(name, path, inputStream, null);
 	}
 
-	public Yaml(final String name, final String path, final InputStream inputStream, final ReloadSettings reloadSettings) {
+	public Yaml(String name, String path, InputStream inputStream, ReloadSettings reloadSettings) {
 		super(name, path, FileType.YAML);
 		if (create()) {
 			if (inputStream != null) {
@@ -43,31 +43,30 @@ public class Yaml extends FlatFile implements IStorage {
 
 		yamlEditor = new YamlEditor(file);
 		parser = new YamlParser(yamlEditor);
-		System.out.println(file.getName());
 		update();
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
 	}
 
-	public static boolean isYaml(final String fileName) {
+	public static boolean isYaml(String fileName) {
 		return (fileName.lastIndexOf(".") > 0 ? fileName.substring(fileName.lastIndexOf(".") + 1) : "").equals("yml");
 	}
 
-	protected final boolean isYaml(final File file) {
+	protected final boolean isYaml(File file) {
 		return isYaml(file.getName());
 	}
 
 	@Override
-	public void set(final String key, final Object value) {
+	public void set(String key, Object value) {
 		set(key, value, this.configSettings);
 	}
 
 	@Synchronized
-	public void set(final String key, final Object value, final ConfigSettings configSettings) {
+	public void set(String key, Object value, ConfigSettings configSettings) {
 		reload();
 
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
 		String old = fileData.toString();
@@ -82,9 +81,9 @@ public class Yaml extends FlatFile implements IStorage {
 				write(Objects.requireNonNull(fileData).toMap());
 				return;
 			}
-			final List<String> unEdited = yamlEditor.read();
-			final List<String> header = yamlEditor.readHeader();
-			final List<String> footer = yamlEditor.readFooter();
+			List<String> unEdited = yamlEditor.read();
+			List<String> header = yamlEditor.readHeader();
+			List<String> footer = yamlEditor.readFooter();
 			write(fileData.toMap());
 			header.addAll(yamlEditor.read());
 			if (!header.containsAll(footer)) {
@@ -92,12 +91,12 @@ public class Yaml extends FlatFile implements IStorage {
 			}
 			yamlEditor.write(parser.parseComments(unEdited, header));
 			write(Objects.requireNonNull(fileData).toMap());
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			System.err.println("Error while writing '" + getName() + "'");
 		}
 	}
 
-	public void write(final Map data) throws IOException {
+	public void write(Map data) throws IOException {
 		YamlWriter writer = new YamlWriter(new FileWriter(getFile()));
 		writer.write(data);
 		writer.close();
@@ -139,8 +138,8 @@ public class Yaml extends FlatFile implements IStorage {
 	}
 
 	@Override
-	public void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+	public void remove(String key) {
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		fileData.remove(finalKey);
 
 		try {
@@ -151,7 +150,7 @@ public class Yaml extends FlatFile implements IStorage {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

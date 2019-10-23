@@ -13,18 +13,18 @@ public class LightningEditor {
 
 	private final File file;
 
-	public LightningEditor(final File file) {
+	public LightningEditor(File file) {
 		this.file = file;
 	}
 
 	public List<String> readLines() throws IOException {
-		final byte[] bytes = Files.readAllBytes(file.toPath());
+		byte[] bytes = Files.readAllBytes(file.toPath());
 		return Arrays.asList(new String(bytes).split("\n"));
 	}
 
 	public Map<String, Object> readData() throws IOException {
-		final byte[] bytes = Files.readAllBytes(file.toPath());
-		final Object obj = new String(bytes).replace("\n", "");
+		byte[] bytes = Files.readAllBytes(file.toPath());
+		Object obj = new String(bytes).replace("\n", "");
 		return (Map<String, Object>) obj;
 	}
 
@@ -41,7 +41,6 @@ public class LightningEditor {
 			line = reader.readLine();
 
 			if (tempLine.contains("}")) {
-				System.out.println(file.getName());
 				throw new IllegalStateException("Block closed without being opened");
 			} else if (tempLine.isEmpty() || !tempLine.matches("\\S")) {
 				blankLine++;
@@ -72,7 +71,7 @@ public class LightningEditor {
 		return tempMap;
 	}
 
-	private Map<String, Object> read(String line, int blankLine, final BufferedReader reader) throws IllegalStateException, IOException {
+	private Map<String, Object> read(String line, int blankLine, BufferedReader reader) throws IllegalStateException, IOException {
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 
@@ -114,7 +113,7 @@ public class LightningEditor {
 	}
 
 
-	public void write(final FileData fileData) {
+	public void write(FileData fileData) {
 		try (PrintWriter writer = new PrintWriter(this.file)) {
 			Map<String, Object> map = fileData.toMap();
 			for (String localKey : map.keySet()) {
@@ -136,7 +135,7 @@ public class LightningEditor {
 		}
 	}
 
-	public void write(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
+	public void write(Map<String, Object> map, String indentationString, PrintWriter writer) {
 		for (String localKey : map.keySet()) {
 			if (localKey.startsWith("#") && map.get(localKey) == null) {
 				writer.println(indentationString + "  " + localKey);
