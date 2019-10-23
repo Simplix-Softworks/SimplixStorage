@@ -15,10 +15,8 @@ public class TomlFile extends FlatFile {
 
 	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.TOML);
-		if (create()) {
-			if (inputStream != null) {
-				FileUtils.writeToFile(this.file, inputStream);
-			}
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(this.file, inputStream);
 		}
 
 		if (fileDataType != null) {

@@ -15,10 +15,8 @@ public class LightningFile extends FlatFile {
 
 	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.LIGHTNING);
-		if (create()) {
-			if (inputStream != null) {
-				FileUtils.writeToFile(this.file, inputStream);
-			}
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(this.file, inputStream);
 		}
 
 

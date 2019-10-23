@@ -21,10 +21,8 @@ public class JsonFile extends FlatFile {
 
 	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.JSON);
-		if (create()) {
-			if (inputStream != null) {
-				FileUtils.writeToFile(this.file, inputStream);
-			}
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(this.file, inputStream);
 		}
 
 		if (fileDataType != null) {

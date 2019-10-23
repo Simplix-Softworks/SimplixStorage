@@ -17,10 +17,8 @@ public class CSVFile extends FlatFile {
 
 	public CSVFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.CSV);
-		if (create()) {
-			if (inputStream != null) {
-				FileUtils.writeToFile(this.file, inputStream);
-			}
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(this.file, inputStream);
 		}
 
 		if (fileDataType != null) {

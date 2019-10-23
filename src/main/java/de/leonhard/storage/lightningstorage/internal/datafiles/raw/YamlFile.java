@@ -24,10 +24,8 @@ public class YamlFile extends FlatFile {
 
 	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
 		super(file, FileType.YAML);
-		if (create()) {
-			if (inputStream != null) {
-				FileUtils.writeToFile(this.file, inputStream);
-			}
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(this.file, inputStream);
 		}
 
 		if (configSetting != null) {
