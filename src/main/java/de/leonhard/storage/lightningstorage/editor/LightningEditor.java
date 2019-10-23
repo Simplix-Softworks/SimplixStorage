@@ -19,6 +19,13 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LightningEditor {
 
+	/**
+	 * Write the given Data to a File.
+	 *
+	 * @param file          the File to be written to.
+	 * @param map           a HashMap containing the Data to be written.
+	 * @param configSetting the ConfigSetting to be used.
+	 */
 	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final FlatFile.ConfigSetting configSetting) {
 		if (configSetting == FlatFile.ConfigSetting.PRESERVE_COMMENTS) {
 			initalWriteWithComments(file, map);
@@ -29,6 +36,14 @@ public class LightningEditor {
 		}
 	}
 
+	/**
+	 * Read the Data of a File.
+	 *
+	 * @param file          the File to be read from.
+	 * @param fileDataType  the FileDataType to be used.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a Map containing the Data of the File.
+	 */
 	public static Map<String, Object> readData(@NotNull final File file, @NotNull final FileData.Type fileDataType, @NotNull final FlatFile.ConfigSetting configSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
@@ -42,7 +57,7 @@ public class LightningEditor {
 				lines.remove(0);
 
 				if (tempLine.contains("}")) {
-					throw new IllegalStateException("Block closed without being opened");
+					throw new IllegalStateException("Error at '" + file.getName() + "' -> Block closed without being opened");
 				} else if (tempLine.isEmpty()) {
 					blankLine++;
 					tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
@@ -53,9 +68,9 @@ public class LightningEditor {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
-						throw new IllegalStateException("Key must not be null");
+						throw new IllegalStateException("Error at '" + file.getName() + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, read(lines, blankLine, commentLine, fileDataType, configSetting));
+					tempMap.put(tempKey, read(file.getName(), lines, blankLine, commentLine, fileDataType, configSetting));
 				} else {
 					if (tempLine.contains(" = ")) {
 						String[] line = tempLine.split(" = ");
@@ -65,7 +80,7 @@ public class LightningEditor {
 							List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
 							tempMap.put(line[0], list);
 						} else if (line[1].startsWith("[") && !line[1].endsWith("]")) {
-							tempMap.put(line[0], readList(lines, fileDataType, configSetting));
+							tempMap.put(line[0], readList(file.getName(), lines, fileDataType, configSetting));
 						} else {
 							tempMap.put(line[0], line[1]);
 						}
@@ -73,7 +88,7 @@ public class LightningEditor {
 						if (lines.get(1).contains("{")) {
 							tempKey = tempLine;
 						} else {
-							throw new IllegalStateException("Key does not contain value or block");
+							throw new IllegalStateException("Error at '" + file.getName() + "' -> '" + tempLine + "' does not contain value or block");
 						}
 					}
 				}
@@ -84,7 +99,7 @@ public class LightningEditor {
 		}
 	}
 
-	private static Map<String, Object> read(final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final FlatFile.ConfigSetting configSetting) {
+	private static Map<String, Object> read(final String fileName, final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final FlatFile.ConfigSetting configSetting) {
 		Map<String, Object> tempMap = fileDataType.getNewDataMap(configSetting, null);
 		String tempKey = null;
 
@@ -95,7 +110,7 @@ public class LightningEditor {
 			if (tempLine.equals("}")) {
 				return tempMap;
 			} else if (tempLine.contains("}")) {
-				throw new IllegalStateException("Block closed without being opened");
+				throw new IllegalStateException("Error at '" + fileName + "' -> Block closed without being opened");
 			} else if (tempLine.isEmpty()) {
 				blankLine++;
 				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
@@ -105,9 +120,9 @@ public class LightningEditor {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
 				} else if (tempKey == null) {
-					throw new IllegalStateException("Key must not be null");
+					throw new IllegalStateException("Error at '" + fileName + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, read(lines, blankLine, commentLine, fileDataType, configSetting));
+				tempMap.put(tempKey, read(fileName, lines, blankLine, commentLine, fileDataType, configSetting));
 			} else {
 				if (tempLine.contains(" = ")) {
 					String[] line = tempLine.split(" = ");
@@ -117,7 +132,7 @@ public class LightningEditor {
 						List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
 						tempMap.put(line[0], list);
 					} else if (line[1].startsWith("[")) {
-						tempMap.put(line[0], readList(lines, fileDataType, configSetting));
+						tempMap.put(line[0], readList(fileName, lines, fileDataType, configSetting));
 					} else {
 						tempMap.put(line[0], line[1]);
 					}
@@ -125,15 +140,15 @@ public class LightningEditor {
 					if (lines.get(1).contains("{")) {
 						tempKey = tempLine;
 					} else {
-						throw new IllegalStateException("Key does not contain value or block");
+						throw new IllegalStateException("Error at '" + fileName + "' -> '" + tempLine + "' does not contain value or block");
 					}
 				}
 			}
 		}
-		throw new IllegalStateException("Block does not close");
+		throw new IllegalStateException("Error at '" + fileName + "' -> Block does not close");
 	}
 
-	private static List<String> readList(final List<String> lines, final FileData.Type fileDataType, final FlatFile.ConfigSetting configSetting) {
+	private static List<String> readList(final String fileName, final List<String> lines, final FileData.Type fileDataType, final FlatFile.ConfigSetting configSetting) {
 		List<String> localList = fileDataType.getNewDataList(configSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();
@@ -143,10 +158,10 @@ public class LightningEditor {
 			} else if (tempLine.startsWith("- ")) {
 				localList.add(tempLine.substring(1).trim());
 			} else {
-				throw new IllegalStateException("List not closed properly");
+				throw new IllegalStateException("Error at '" + fileName + "' -> List not closed properly");
 			}
 		}
-		throw new IllegalStateException("List not closed properly");
+		throw new IllegalStateException("Error at '" + fileName + "' -> List not closed properly");
 	}
 
 

@@ -17,6 +17,14 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LightningUtils {
 
+	/**
+	 * Get the Header from a give FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a List containing the Header of the FileData.
+	 */
 	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		List<String> returnList = fileDataType.getNewDataList(configSetting, null);
 		for (String localKey : fileData.singleLayerKeySet()) {
@@ -29,6 +37,15 @@ public class LightningUtils {
 		return returnList;
 	}
 
+	/**
+	 * Set the Header of a FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param header        the Header to be set.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a Map with the given Header.
+	 */
 	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @Nullable final List<String> header, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
 		for (String localKey : tempMap.keySet()) {
@@ -49,6 +66,16 @@ public class LightningUtils {
 		return finalMap;
 	}
 
+	/**
+	 * Set the Header of a FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param key           the Key of the SubBlock the Header shall be set to.
+	 * @param header        the Header to be set.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a Map with the given Header.
+	 */
 	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> header, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
@@ -73,6 +100,14 @@ public class LightningUtils {
 		return fileData.toMap();
 	}
 
+	/**
+	 * Get the Footer from a give FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a List containing the Footer of the FileData.
+	 */
 	public static List<String> getFooter(@NotNull final FileData fileData, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		List<String> returnList = fileDataType.getNewDataList(configSetting, null);
 		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet());
@@ -89,6 +124,15 @@ public class LightningUtils {
 		return returnList;
 	}
 
+	/**
+	 * Set the Footer of a FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param footer        the Footer to be set.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a Map with the given Footer.
+	 */
 	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @Nullable final List<String> footer, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
 		List<String> keyList = new ArrayList<>(tempMap.keySet());
@@ -110,6 +154,16 @@ public class LightningUtils {
 		return finalMap;
 	}
 
+	/**
+	 * Set the Footer of a FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param key           the Key of the SubBlock the Footer shall be set to.
+	 * @param footer        the Header to be set.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a Map with the given Footer.
+	 */
 	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> footer, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
@@ -136,6 +190,15 @@ public class LightningUtils {
 		return fileData.toMap();
 	}
 
+	/**
+	 * Get the Header from a give FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param key           the key of the SubBlock the Header shall be getted from.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a List containing the Header of the SubBlock.
+	 */
 	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final String key, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		List<String> returnList = fileDataType.getNewDataList(configSetting, null);
 		for (String localKey : fileData.singleLayerKeySet(key)) {
@@ -148,6 +211,15 @@ public class LightningUtils {
 		return returnList;
 	}
 
+	/**
+	 * Get the Footer from a give FileData.
+	 *
+	 * @param fileData      the FileData to be used.
+	 * @param key           the key of the SubBlock the Footer shall be getted from.
+	 * @param fileDataType  the FileDataType to be used with the given FileData.
+	 * @param configSetting the ConfigSetting to be used.
+	 * @return a List containing the Footer of the SubBlock.
+	 */
 	public static List<String> getFooter(@NotNull final FileData fileData, final String key, @NotNull final FileData.Type fileDataType, @NotNull FlatFile.ConfigSetting configSetting) {
 		List<String> returnList = fileDataType.getNewDataList(configSetting, null);
 		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet(key));

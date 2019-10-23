@@ -2,19 +2,19 @@ package de.leonhard.storage.lightningstorage.internal.base;
 
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"UnusedReturnValue", "unused"})
+@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
@@ -48,6 +48,42 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	public final String getName() {
 		return this.file.getName();
+	}
+
+	public final synchronized void setFileContentFromStream(@Nullable final InputStream inputStream) {
+		if (inputStream == null) {
+			clear();
+		} else {
+			FileUtils.writeToFile(this.file, inputStream);
+		}
+	}
+
+	/**
+	 * Delete all content of the File.
+	 */
+	public final synchronized void clear() {
+		try {
+			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
+			writer.write("");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public final synchronized void setFileContentFromFile(@Nullable final File file) {
+		if (file == null) {
+			clear();
+		} else {
+			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(file));
+		}
+	}
+
+	public final synchronized void setFileContentFromResource(@Nullable final String resource) {
+		if (resource == null) {
+			clear();
+		} else {
+			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(resource));
+		}
 	}
 
 	@Override
@@ -137,7 +173,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this;
 	}
 
-	protected void replace(@NotNull final CharSequence target, @NotNull final CharSequence replacement) throws IOException {
+	/**
+	 * replaces a give CharSequence with another in the File.
+	 *
+	 * @param target      the CharSequence to be replaced.
+	 * @param replacement the Replacement Sequence.
+	 */
+	protected synchronized void replace(@NotNull final CharSequence target, @NotNull final CharSequence replacement) throws IOException {
 		final List<String> lines = Files.readAllLines(file.toPath());
 		final List<String> result = new ArrayList<>();
 		for (String line : lines) {
@@ -147,22 +189,22 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public synchronized int hashCode() {
+	public int hashCode() {
 		return this.file.hashCode();
 	}
 
 	@Override
-	public synchronized int compareTo(final FlatFile flatFile) {
+	public int compareTo(final FlatFile flatFile) {
 		return this.file.compareTo(flatFile.file);
 	}
 
 	@Override
-	public synchronized String toString() {
+	public String toString() {
 		return this.file.getAbsolutePath();
 	}
 
 	@Override
-	public synchronized boolean equals(@Nullable final Object obj) {
+	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -209,8 +251,17 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	public enum ReloadSetting {
 
+		/**
+		 * reloads every time you try to get something from the config
+		 */
 		AUTOMATICALLY,
+		/**
+		 * reloads only if the File has changed.
+		 */
 		INTELLIGENT,
+		/**
+		 * only reloads if you manually call the reload.
+		 */
 		MANUALLY
 	}
 }

@@ -37,7 +37,7 @@ public class YamlConfig extends YamlFile {
 		}
 	}
 
-	public void setHeader(@NotNull List<String> header) {
+	public void setHeader(@NotNull final List<String> header) {
 		List<String> tmp = new ArrayList<>();
 		//Updating the values to have a comments, if someone forgets to set them
 		for (final String line : header) {

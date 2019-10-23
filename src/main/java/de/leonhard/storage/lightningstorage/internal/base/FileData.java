@@ -275,11 +275,6 @@ public class FileData {
 		return this.localMap.hashCode();
 	}
 
-	/**
-	 * convert FileData to string.
-	 *
-	 * @return the String value of localMap.
-	 */
 	@Override
 	public String toString() {
 		return this.localMap.toString();
@@ -297,13 +292,31 @@ public class FileData {
 		}
 	}
 
-
+	/**
+	 * an Enum defining how the Data should be stored.
+	 */
 	public enum Type {
 
+		/**
+		 * The Data is stored in a LinkedHashMap.
+		 */
 		SORTED,
+		/**
+		 * The Data is stored in a HashMap.
+		 */
 		STANDARD,
+		/**
+		 * the Storage type depends on the ConfigSetting(HashMap for SKIP_COMMENTS, LinkedHashMap for PRESERVE_COMMENTS)
+		 */
 		AUTOMATIC;
 
+		/**
+		 * Get a Map of the proper Type defined by your ConfigSetting.
+		 *
+		 * @param configSetting the ConfigSetting to be used.
+		 * @param map           the Map to be imported from(an empty Map will be returned if @param map is null)
+		 * @return a Map containing the Data of @param map.
+		 */
 		public Map<String, Object> getNewDataMap(@Nullable final FlatFile.ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
 			if (this == SORTED) {
 				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
@@ -322,6 +335,13 @@ public class FileData {
 			}
 		}
 
+		/**
+		 * Get a List of the proper Type defined by your ConfigSetting.
+		 *
+		 * @param configSetting the ConfigSetting to be used.
+		 * @param list          the Map to be imported from(an empty List will be returned if @param list is null)
+		 * @return a List containing the Data of @param list.
+		 */
 		public List<String> getNewDataList(@Nullable final FlatFile.ConfigSetting configSetting, @Nullable final List<String> list) {
 			if (this == SORTED) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);

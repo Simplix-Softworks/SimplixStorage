@@ -19,7 +19,6 @@ public class LightningFile extends FlatFile {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-
 		if (configSetting != null) {
 			setConfigSetting(configSetting);
 		}
