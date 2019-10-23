@@ -22,7 +22,7 @@ public interface StorageBase {
 		if (!hasKey(key)) {
 			return false;
 		} else {
-			return ((String) get(key)).equalsIgnoreCase("true");
+			return Primitive.Boolean.getBoolean(get(key));
 		}
 	}
 

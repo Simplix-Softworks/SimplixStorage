@@ -14,14 +14,31 @@ public class Primitive {
 		Object tempObj = obj;
 		if (obj instanceof String && def instanceof Integer) {
 			tempObj = Integer.parseInt((String) obj);
+		} else if (obj instanceof String && def instanceof Long) {
+			tempObj = Long.parseLong((String) obj);
 		} else if (obj instanceof String && def instanceof Double) {
 			tempObj = Double.parseDouble((String) obj);
 		} else if (obj instanceof String && def instanceof Float) {
 			tempObj = Double.parseDouble((String) obj);
+		} else if (obj instanceof String && def instanceof Short) {
+			tempObj = Short.parseShort((String) obj);
 		} else if (obj instanceof String && def instanceof Boolean) {
 			tempObj = ((String) obj).equalsIgnoreCase("true");
 		}
 		return (T) tempObj;
+	}
+
+	public static class Boolean {
+
+		public static boolean getBoolean(@NotNull final Object obj) {
+			if (obj instanceof java.lang.Boolean) {
+				return (boolean) obj;
+			} else if (obj instanceof String) {
+				return ((String) obj).equalsIgnoreCase("true");
+			} else {
+				return obj.toString().equalsIgnoreCase("true");
+			}
+		}
 	}
 
 	public static class LONG {
