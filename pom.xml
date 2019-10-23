@@ -26,6 +26,7 @@
             <roles>
                 <role>Lead Developer</role>
                 <role>Mutterer</role>
+                <role>Does not know how to document code</role>
             </roles>
             <timezone>Germany</timezone>
         </developer>
