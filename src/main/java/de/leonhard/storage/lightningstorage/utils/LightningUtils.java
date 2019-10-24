@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused", "DuplicatedCode"})
+@SuppressWarnings({"unused"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LightningUtils {
 
@@ -47,6 +47,7 @@ public class LightningUtils {
 	 * @param configSetting the ConfigSetting to be used.
 	 * @return a Map with the given Header.
 	 */
+	@SuppressWarnings("DuplicatedCode")
 	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @Nullable final List<String> header, @NotNull final FileData.Type fileDataType, @NotNull ConfigSetting configSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
 		for (String localKey : tempMap.keySet()) {
@@ -77,6 +78,7 @@ public class LightningUtils {
 	 * @param configSetting the ConfigSetting to be used.
 	 * @return a Map with the given Header.
 	 */
+	@SuppressWarnings("DuplicatedCode")
 	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> header, @NotNull final FileData.Type fileDataType, @NotNull ConfigSetting configSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
@@ -134,6 +136,7 @@ public class LightningUtils {
 	 * @param configSetting the ConfigSetting to be used.
 	 * @return a Map with the given Footer.
 	 */
+	@SuppressWarnings("DuplicatedCode")
 	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @Nullable final List<String> footer, @NotNull final FileData.Type fileDataType, @NotNull ConfigSetting configSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
 		List<String> keyList = new ArrayList<>(tempMap.keySet());
@@ -165,6 +168,7 @@ public class LightningUtils {
 	 * @param configSetting the ConfigSetting to be used.
 	 * @return a Map with the given Footer.
 	 */
+	@SuppressWarnings("DuplicatedCode")
 	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> footer, @NotNull final FileData.Type fileDataType, @NotNull ConfigSetting configSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked

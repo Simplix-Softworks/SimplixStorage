@@ -12,7 +12,7 @@ import lombok.Cleanup;
 import org.jetbrains.annotations.NotNull;
 
 
-@SuppressWarnings({"unused", "Duplicates", "WeakerAccess"})
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class YamlEditor {
 
 	private final File file;

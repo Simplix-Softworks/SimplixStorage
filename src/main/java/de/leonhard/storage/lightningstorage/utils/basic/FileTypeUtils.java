@@ -18,7 +18,7 @@ public class FileTypeUtils {
 	/**
 	 * Add a give FileType extension to a String.
 	 *
-	 * @param path     the path whichnthe extension should be added to.
+	 * @param path     the path which the extension should be added to.
 	 * @param fileType the FileType to be used.
 	 * @return the path with the give FileType extension.
 	 */

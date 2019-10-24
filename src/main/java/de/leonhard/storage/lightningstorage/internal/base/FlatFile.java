@@ -255,7 +255,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		DEFAULT("");
 
 
-		private String extension;
+		private final String extension;
 
 		FileType(@NotNull final String extension) {
 			this.extension = extension;

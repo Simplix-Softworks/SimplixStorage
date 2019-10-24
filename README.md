@@ -34,7 +34,7 @@ Now it is here: **LightningStorage**!
 
 LightningStorage is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
-Like bukkit it has a contains check - for both json and yaml.
+Like bukkit it has a contains check - for both JSON and YAML.
 LightningStorage is licensed under the MIT license, which means that
 you can also **use it in private projects** that are not open source.
 
@@ -45,13 +45,13 @@ At the moment LightningStorage supports two file types:
 
 #### Json:
 A very fast and slim file format.
-It is much faster than yaml files and is therefore better suited for storing
+It is much faster than YAML files and is therefore better suited for storing
  larger amounts of data, such as player data (rank, money, playtime, etc).
 >https://stackoverflow.com/questions/2451732/how-is-it-that-json-serialization-is-so-much-faster-than-yaml-serialization-in-p/2452043#2452043
 
 
 #### Yaml:
-Yaml files are not as fast as json files, but they are easier 
+Yaml files are not as fast as JSON files, but they are easier 
 to read and are therefore more suitable as configuration files, 
 as you often find them in bukkit plugins in the form of "config.yml".
 
@@ -70,24 +70,24 @@ More file formats will be supported soon
 
 ```xml
 <repository>
-     <id>jitpack.io</id>
-     <url>https://jitpack.io</url>
+	 <id>jitpack.io</id>
+	 <url>https://jitpack.io</url>
  </repository>
-```       
+```	   
 
 
 2. Place this in your dependency-section: 
 
 ```xml
-        <dependency>
-	    <groupId>com.github.JavaFactoryDev</groupId>
-	    <artifactId>LightningStorage</artifactId>
-	    <version>2.3.8</version>
+		<dependency>
+		<groupId>com.github.JavaFactoryDev</groupId>
+		<artifactId>LightningStorage</artifactId>
+		<version>2.3.8</version>
 	</dependency>
-```       
-    
+```	   
+	
 
-3. Important! Use a shade plugin to make sure that the libary is shaded into your final .jar file when your
+3. Important! Use a shade plugin to make sure that the library is shaded into your final .jar file when your
 plugin is compiled. 
 The relocation is optional but heavily recommended.
 
@@ -114,7 +114,7 @@ The relocation is optional but heavily recommended.
 		</relocations>
 	</configuration>
 </plugin>
-```       
+```	   
 
 
 **Library's used**

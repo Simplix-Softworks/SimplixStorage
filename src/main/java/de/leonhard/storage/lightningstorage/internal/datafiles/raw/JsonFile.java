@@ -7,7 +7,6 @@ import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.JsonUtils;
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import lombok.Cleanup;
@@ -96,17 +95,6 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(@NotNull final String key, @NotNull T value) {
-		if (!hasKey(key)) {
-			set(key, value);
-			return value;
-		} else {
-			return (T) get(key);
-		}
-	}
-
-	@SuppressWarnings("Duplicates")
-	@Override
 	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
 		if (insert(key, value)) {
 			try {
@@ -126,76 +114,9 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public Object get(@NotNull final String key) {
-
+		update();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-
 		return getObject(finalKey);
-	}
-
-	@Override
-	public boolean getBoolean(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getBoolean(finalKey);
-	}
-
-	@Override
-	public byte getByte(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getByte(finalKey);
-	}
-
-	@Override
-	public List<Byte> getByteList(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getByteList(finalKey);
-	}
-
-	@Override
-	public double getDouble(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getDouble(finalKey);
-	}
-
-	@Override
-	public float getFloat(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getFloat(finalKey);
-	}
-
-	@Override
-	public int getInt(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getInt(finalKey);
-	}
-
-	@Override
-	public List<Integer> getIntegerList(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getIntegerList(finalKey);
-	}
-
-	@Override
-	public List<?> getList(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getList(finalKey);
-	}
-
-	@Override
-	public long getLong(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getLong(finalKey);
-	}
-
-	@Override
-	public List<Long> getLongList(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getLongList(finalKey);
-	}
-
-	@Override
-	public String getString(@NotNull final String key) {
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return super.getString(finalKey);
 	}
 
 	@Override
@@ -212,22 +133,6 @@ public class JsonFile extends FlatFile {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	/**
-	 * Sets a value to the json if the file doesn't already contain the value
-	 * (Not mix up with Bukkit addDefault) Uses {@link JSONObject}
-	 *
-	 * @param key   Key to set the value
-	 * @param value Value to set
-	 */
-
-	@Override
-	public void setDefault(@NotNull final String key, @Nullable final Object value) {
-		if (hasKey(key)) {
-			return;
-		}
-		set(key, value);
 	}
 
 	protected final JsonFile getJsonFileInstance() {

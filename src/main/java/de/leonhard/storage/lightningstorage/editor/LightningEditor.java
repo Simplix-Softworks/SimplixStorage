@@ -29,9 +29,9 @@ public class LightningEditor {
 	 */
 	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final ConfigSetting configSetting) {
 		if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
-			initalWriteWithComments(file, map);
+			initialWriteWithComments(file, map);
 		} else if (configSetting == ConfigSetting.SKIP_COMMENTS) {
-			initalWriteWithOutComments(file, map);
+			initialWriteWithOutComments(file, map);
 		} else {
 			throw new IllegalArgumentException("Illegal ConfigSetting");
 		}
@@ -171,7 +171,7 @@ public class LightningEditor {
 
 	// <Write Data>
 	// <Write Data with Comments>
-	private static void initalWriteWithComments(final File file, final Map<String, Object> map) {
+	private static void initialWriteWithComments(final File file, final Map<String, Object> map) {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
 				Iterator mapIterator = map.keySet().iterator();
@@ -230,7 +230,7 @@ public class LightningEditor {
 	// </Write Data with Comments
 
 	// <Write Data without Comments>
-	private static void initalWriteWithOutComments(final File file, final Map<String, Object> map) {
+	private static void initialWriteWithOutComments(final File file, final Map<String, Object> map) {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
 				Iterator mapIterator = map.keySet().iterator();

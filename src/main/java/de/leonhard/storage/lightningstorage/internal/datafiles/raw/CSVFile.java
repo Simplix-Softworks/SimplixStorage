@@ -129,18 +129,6 @@ public class CSVFile extends FlatFile {
 		//TODO
 	}
 
-	/**
-	 * Sets a value to the file if the file doesn't already contain the value
-	 * (Not mix up with Bukkit addDefault)
-	 *
-	 * @param key   Key to set the value
-	 * @param value Value to set
-	 */
-	@Override
-	public void setDefault(@NotNull final String key, @Nullable final Object value) {
-
-	}
-
 	@Override
 	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {

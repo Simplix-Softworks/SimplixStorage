@@ -139,7 +139,7 @@ public class LightningStorage {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param directory the directoy of the File to be imported from.
+	 * @param directory the directory of the File to be imported from.
 	 * @param name      the name of the File to be imported from.
 	 */
 	public final LightningStorage fromFile(@Nullable final String directory, @Nullable final String name) {
@@ -152,7 +152,7 @@ public class LightningStorage {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param directory the directoy of the File to be imported from.
+	 * @param directory the directory of the File to be imported from.
 	 * @param name      the name of the File to be imported from.
 	 */
 	public final LightningStorage fromFile(@Nullable final File directory, @Nullable final String name) {
@@ -165,7 +165,7 @@ public class LightningStorage {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
-	 * @param directory the directoy of the File to be imported from.
+	 * @param directory the directory of the File to be imported from.
 	 * @param name      the name of the File to be imported from.
 	 */
 	public final LightningStorage fromFile(@Nullable final Path directory, @Nullable final String name) {

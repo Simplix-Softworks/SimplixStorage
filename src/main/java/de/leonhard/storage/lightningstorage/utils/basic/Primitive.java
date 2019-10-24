@@ -5,11 +5,10 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings("unused")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Primitive {
 
-	@SuppressWarnings("DuplicatedCode")
 	public static <T> T getFromDef(@NotNull final Object obj, @NotNull final T def) {
 		Object tempObj = obj;
 		if (obj instanceof String && def instanceof Integer) {
@@ -25,6 +24,7 @@ public class Primitive {
 		} else if (obj instanceof String && def instanceof Boolean) {
 			tempObj = ((String) obj).equalsIgnoreCase("true");
 		}
+		//noinspection unchecked
 		return (T) tempObj;
 	}
 
