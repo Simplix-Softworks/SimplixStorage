@@ -100,8 +100,6 @@ public class LightningEditor {
 		}
 	}
 
-	// <Write Data>
-	// <Write Data with Comments>
 	private static void initalWriteWithComments(final File file, final Map<String, Object> map) {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
@@ -120,7 +118,6 @@ public class LightningEditor {
 		}
 	}
 
-	// <Write Data without Comments>
 	private static void initalWriteWithOutComments(final File file, final Map<String, Object> map) {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
@@ -226,7 +223,6 @@ public class LightningEditor {
 		writer.println();
 		writer.print(indentationString + "}");
 	}
-	// </Write Data with Comments>
 
 	private static List<String> readList(final String filePath, final List<String> lines, final FileData.Type fileDataType, final ConfigSetting configSetting) {
 		List<String> localList = FileTypeUtils.getNewDataList(fileDataType, configSetting, null);
@@ -287,8 +283,6 @@ public class LightningEditor {
 		}
 		writer.print(indentationString + "]");
 	}
-	// </Write Data without Comments>
-	// </Write Data>
 
 
 	@SuppressWarnings("unused")
