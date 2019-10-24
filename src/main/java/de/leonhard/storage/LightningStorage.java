@@ -38,11 +38,11 @@ public class LightningStorage {
 		this.path = null;
 	}
 
-	private LightningStorage(@NotNull final String path, @NotNull final String name) {
+	private LightningStorage(@NotNull final String directory, @NotNull final String name) {
 		this.file = null;
 		this.directory = null;
 		this.name = name;
-		this.path = path;
+		this.path = directory;
 	}
 
 	private LightningStorage(@NotNull final File directory, @NotNull final String name) {
