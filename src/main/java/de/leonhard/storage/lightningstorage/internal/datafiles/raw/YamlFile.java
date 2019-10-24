@@ -5,6 +5,8 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.lightningstorage.editor.YamlEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.YamlUtils;
 import java.io.*;
@@ -98,7 +100,9 @@ public class YamlFile extends FlatFile {
 				yamlEditor.write(parser.parseComments(unEdited, header));
 				write(Objects.requireNonNull(fileData).toMap());
 			} catch (IOException e) {
-				System.err.println("Error while writing '" + getName() + "'");
+				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}

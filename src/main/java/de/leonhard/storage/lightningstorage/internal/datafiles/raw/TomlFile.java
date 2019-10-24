@@ -2,6 +2,7 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
@@ -61,8 +62,9 @@ public class TomlFile extends FlatFile {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
-				System.err.println("Exception while writing to Toml file '" + getName() + "'");
+				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
 				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}
@@ -81,6 +83,7 @@ public class TomlFile extends FlatFile {
 			} catch (IOException e) {
 				System.err.println("Exception while writing to Toml file '" + getName() + "'");
 				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}

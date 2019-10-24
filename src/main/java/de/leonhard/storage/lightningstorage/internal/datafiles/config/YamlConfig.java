@@ -1,6 +1,8 @@
 package de.leonhard.storage.lightningstorage.internal.datafiles.config;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.YamlFile;
 import java.io.File;
 import java.io.IOException;

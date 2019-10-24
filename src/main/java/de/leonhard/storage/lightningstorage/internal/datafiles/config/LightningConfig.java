@@ -2,6 +2,8 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.config;
 
 import de.leonhard.storage.lightningstorage.editor.LightningEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.lightningstorage.utils.LightningUtils;
 import java.io.File;

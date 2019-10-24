@@ -2,6 +2,8 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.internal.datafiles.config.LightningConfig;
 import de.leonhard.storage.lightningstorage.internal.datafiles.config.YamlConfig;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.*;
@@ -10,6 +12,7 @@ import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,8 +26,8 @@ public class LightningStorage {
 	private final String name;
 	private final String path;
 	private InputStream inputStream;
-	private FlatFile.ReloadSetting reloadSetting;
-	private FlatFile.ConfigSetting configSetting;
+	private ReloadSetting reloadSetting;
+	private ConfigSetting configSetting;
 	private FileData.Type fileDataType;
 
 	// <local Constructors>
@@ -66,13 +69,23 @@ public class LightningStorage {
 	/**
 	 * Initiate a File through LightningStorage.
 	 *
-	 * @param path the path to the File to be used.
-	 * @param name the name of the File to be used.
+	 * @param file the File to be used.
 	 */
-	public static LightningStorage create(@NotNull final String path, @NotNull final String name) {
+	public static LightningStorage create(@NotNull final Path file) {
+		Valid.notNull(file, "File must not be null");
+		return new LightningStorage(file.toFile());
+	}
+
+	/**
+	 * Initiate a File through LightningStorage.
+	 *
+	 * @param directory the directory to the File to be used.
+	 * @param name      the name of the File to be used.
+	 */
+	public static LightningStorage create(@NotNull final String directory, @NotNull final String name) {
 		Valid.notNull(name, "Name must not be null");
-		Valid.notNull(path, "Path must not be null");
-		return new LightningStorage(path, name);
+		Valid.notNull(directory, "Directory must not be null");
+		return new LightningStorage(directory, name);
 	}
 
 	/**
@@ -85,6 +98,18 @@ public class LightningStorage {
 		Valid.notNull(name, "Name must not be null");
 		Valid.notNull(directory, "Directory must not be null");
 		return new LightningStorage(directory, name);
+	}
+
+	/**
+	 * Initiate a File through LightningStorage.
+	 *
+	 * @param directory the directory of the File to be used.
+	 * @param name      the name of the File to be used.
+	 */
+	public static LightningStorage create(@NotNull final Path directory, @NotNull final String name) {
+		Valid.notNull(name, "Name must not be null");
+		Valid.notNull(directory, "Directory must not be null");
+		return new LightningStorage(directory.toFile(), name);
 	}
 	// </Builder initialization>
 
@@ -114,6 +139,45 @@ public class LightningStorage {
 	/**
 	 * Import the given Data to the File if said does not exist.
 	 *
+	 * @param directory the directoy of the File to be imported from.
+	 * @param name      the name of the File to be imported from.
+	 */
+	public final LightningStorage fromFile(@Nullable final String directory, @Nullable final String name) {
+		if (name != null) {
+			this.inputStream = FileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
+		}
+		return this;
+	}
+
+	/**
+	 * Import the given Data to the File if said does not exist.
+	 *
+	 * @param directory the directoy of the File to be imported from.
+	 * @param name      the name of the File to be imported from.
+	 */
+	public final LightningStorage fromFile(@Nullable final File directory, @Nullable final String name) {
+		if (name != null) {
+			this.inputStream = FileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory, name));
+		}
+		return this;
+	}
+
+	/**
+	 * Import the given Data to the File if said does not exist.
+	 *
+	 * @param directory the directoy of the File to be imported from.
+	 * @param name      the name of the File to be imported from.
+	 */
+	public final LightningStorage fromFile(@Nullable final Path directory, @Nullable final String name) {
+		if (name != null) {
+			this.inputStream = FileUtils.createNewInputStream(directory == null ? new File(name) : new File(directory.toFile(), name));
+		}
+		return this;
+	}
+
+	/**
+	 * Import the given Data to the File if said does not exist.
+	 *
 	 * @param resource the internal resource to be imported from.
 	 */
 	public final LightningStorage fromResource(@Nullable final String resource) {
@@ -126,7 +190,7 @@ public class LightningStorage {
 	 *
 	 * @param reloadSetting the ReloadSetting to be set(default is INTELLIGENT)
 	 */
-	public final LightningStorage reloadSetting(@Nullable final FlatFile.ReloadSetting reloadSetting) {
+	public final LightningStorage reloadSetting(@Nullable final ReloadSetting reloadSetting) {
 		this.reloadSetting = reloadSetting;
 		return this;
 	}
@@ -136,7 +200,7 @@ public class LightningStorage {
 	 *
 	 * @param configSetting the ConfigSetting to be set(Default for Configs is PRESERVE_COMMENTS, otherwise it's SKIP_COMMENTS)
 	 */
-	public final LightningStorage configSetting(@Nullable FlatFile.ConfigSetting configSetting) {
+	public final LightningStorage configSetting(@Nullable ConfigSetting configSetting) {
 		this.configSetting = configSetting;
 		return this;
 	}

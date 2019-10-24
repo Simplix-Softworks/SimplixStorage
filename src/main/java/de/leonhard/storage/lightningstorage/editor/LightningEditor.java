@@ -1,7 +1,7 @@
 package de.leonhard.storage.lightningstorage.editor;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
-import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,10 +26,10 @@ public class LightningEditor {
 	 * @param map           a HashMap containing the Data to be written.
 	 * @param configSetting the ConfigSetting to be used.
 	 */
-	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final FlatFile.ConfigSetting configSetting) {
-		if (configSetting == FlatFile.ConfigSetting.PRESERVE_COMMENTS) {
+	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final ConfigSetting configSetting) {
+		if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
 			initalWriteWithComments(file, map);
-		} else if (configSetting == FlatFile.ConfigSetting.SKIP_COMMENTS) {
+		} else if (configSetting == ConfigSetting.SKIP_COMMENTS) {
 			initalWriteWithOutComments(file, map);
 		} else {
 			throw new IllegalArgumentException("Illegal ConfigSetting");
@@ -44,7 +44,7 @@ public class LightningEditor {
 	 * @param configSetting the ConfigSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(@NotNull final File file, @NotNull final FileData.Type fileDataType, @NotNull final FlatFile.ConfigSetting configSetting) {
+	public static Map<String, Object> readData(@NotNull final File file, @NotNull final FileData.Type fileDataType, @NotNull final ConfigSetting configSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = fileDataType.getNewDataMap(configSetting, null);
@@ -57,7 +57,7 @@ public class LightningEditor {
 				lines.remove(0);
 
 				if (tempLine.contains("}")) {
-					throw new IllegalStateException("Error at '" + file.getName() + "' -> Block closed without being opened");
+					throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
 				} else if (tempLine.isEmpty()) {
 					blankLine++;
 					tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
@@ -68,9 +68,9 @@ public class LightningEditor {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
-						throw new IllegalStateException("Error at '" + file.getName() + "' -> Key must not be null");
+						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, read(file.getName(), lines, blankLine, commentLine, fileDataType, configSetting));
+					tempMap.put(tempKey, read(file.getAbsolutePath(), lines, blankLine, commentLine, fileDataType, configSetting));
 				} else {
 					if (tempLine.contains(" = ")) {
 						String[] line = tempLine.split(" = ");
@@ -80,7 +80,7 @@ public class LightningEditor {
 							List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
 							tempMap.put(line[0], list);
 						} else if (line[1].startsWith("[") && !line[1].endsWith("]")) {
-							tempMap.put(line[0], readList(file.getName(), lines, fileDataType, configSetting));
+							tempMap.put(line[0], readList(file.getAbsolutePath(), lines, fileDataType, configSetting));
 						} else {
 							tempMap.put(line[0], line[1]);
 						}
@@ -88,82 +88,16 @@ public class LightningEditor {
 						if (lines.get(1).contains("{")) {
 							tempKey = tempLine;
 						} else {
-							throw new IllegalStateException("Error at '" + file.getName() + "' -> '" + tempLine + "' does not contain value or block");
+							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' does not contain value or block");
 						}
 					}
 				}
 			}
 			return tempMap;
 		} catch (IOException e) {
-			throw new IllegalStateException("Could not read '" + file.getName() + "'");
+			throw new IllegalStateException("Could not read '" + file.getAbsolutePath() + "'");
 		}
 	}
-
-	private static Map<String, Object> read(final String fileName, final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final FlatFile.ConfigSetting configSetting) {
-		Map<String, Object> tempMap = fileDataType.getNewDataMap(configSetting, null);
-		String tempKey = null;
-
-		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
-			lines.remove(0);
-
-			if (tempLine.equals("}")) {
-				return tempMap;
-			} else if (tempLine.contains("}")) {
-				throw new IllegalStateException("Error at '" + fileName + "' -> Block closed without being opened");
-			} else if (tempLine.isEmpty()) {
-				blankLine++;
-				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
-			} else if (tempLine.startsWith("#")) {
-				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
-			} else if (tempLine.endsWith("{")) {
-				if (!tempLine.equals("{")) {
-					tempKey = tempLine.replace("{", "").trim();
-				} else if (tempKey == null) {
-					throw new IllegalStateException("Error at '" + fileName + "' -> Key must not be null");
-				}
-				tempMap.put(tempKey, read(fileName, lines, blankLine, commentLine, fileDataType, configSetting));
-			} else {
-				if (tempLine.contains(" = ")) {
-					String[] line = tempLine.split(" = ");
-					line[0] = line[0].trim();
-					line[1] = line[1].trim();
-					if (line[1].startsWith("[") && line[1].endsWith("]")) {
-						List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
-						tempMap.put(line[0], list);
-					} else if (line[1].startsWith("[")) {
-						tempMap.put(line[0], readList(fileName, lines, fileDataType, configSetting));
-					} else {
-						tempMap.put(line[0], line[1]);
-					}
-				} else {
-					if (lines.get(1).contains("{")) {
-						tempKey = tempLine;
-					} else {
-						throw new IllegalStateException("Error at '" + fileName + "' -> '" + tempLine + "' does not contain value or block");
-					}
-				}
-			}
-		}
-		throw new IllegalStateException("Error at '" + fileName + "' -> Block does not close");
-	}
-
-	private static List<String> readList(final String fileName, final List<String> lines, final FileData.Type fileDataType, final FlatFile.ConfigSetting configSetting) {
-		List<String> localList = fileDataType.getNewDataList(configSetting, null);
-		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
-			lines.remove(0);
-			if (tempLine.endsWith("]")) {
-				return localList;
-			} else if (tempLine.startsWith("- ")) {
-				localList.add(tempLine.substring(1).trim());
-			} else {
-				throw new IllegalStateException("Error at '" + fileName + "' -> List not closed properly");
-			}
-		}
-		throw new IllegalStateException("Error at '" + fileName + "' -> List not closed properly");
-	}
-
 
 	// <Write Data>
 	// <Write Data with Comments>
@@ -180,9 +114,77 @@ public class LightningEditor {
 			}
 			writer.flush();
 		} catch (FileNotFoundException e) {
-			System.err.println("Could not write to '" + file.getName() + "'");
+			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
 		}
+	}
+
+	// <Write Data without Comments>
+	private static void initalWriteWithOutComments(final File file, final Map<String, Object> map) {
+		try (PrintWriter writer = new PrintWriter(file)) {
+			if (!map.isEmpty()) {
+				Iterator mapIterator = map.keySet().iterator();
+				topLayerWriteWithOutComments(writer, map, mapIterator.next().toString());
+				//noinspection unchecked
+				mapIterator.forEachRemaining(localKey -> {
+					writer.println();
+					topLayerWriteWithOutComments(writer, map, localKey.toString());
+				});
+			}
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+		}
+	}
+
+	private static Map<String, Object> read(final String filePath, final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final ConfigSetting configSetting) {
+		Map<String, Object> tempMap = fileDataType.getNewDataMap(configSetting, null);
+		String tempKey = null;
+
+		while (lines.size() > 0) {
+			String tempLine = lines.get(0).trim();
+			lines.remove(0);
+
+			if (tempLine.equals("}")) {
+				return tempMap;
+			} else if (tempLine.contains("}")) {
+				throw new IllegalStateException("Error at '" + filePath + "' -> Block closed without being opened");
+			} else if (tempLine.isEmpty()) {
+				blankLine++;
+				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
+			} else if (tempLine.startsWith("#")) {
+				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
+			} else if (tempLine.endsWith("{")) {
+				if (!tempLine.equals("{")) {
+					tempKey = tempLine.replace("{", "").trim();
+				} else if (tempKey == null) {
+					throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
+				}
+				tempMap.put(tempKey, read(filePath, lines, blankLine, commentLine, fileDataType, configSetting));
+			} else {
+				if (tempLine.contains(" = ")) {
+					String[] line = tempLine.split(" = ");
+					line[0] = line[0].trim();
+					line[1] = line[1].trim();
+					if (line[1].startsWith("[") && line[1].endsWith("]")) {
+						List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
+						tempMap.put(line[0], list);
+					} else if (line[1].startsWith("[")) {
+						tempMap.put(line[0], readList(filePath, lines, fileDataType, configSetting));
+					} else {
+						tempMap.put(line[0], line[1]);
+					}
+				} else {
+					if (lines.get(1).contains("{")) {
+						tempKey = tempLine;
+					} else {
+						throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' does not contain value or block");
+					}
+				}
+			}
+		}
+		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
 
 	private static void topLayerWriteWithComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
@@ -225,24 +227,20 @@ public class LightningEditor {
 	}
 	// </Write Data with Comments>
 
-
-	// <Write Data without Comments>
-	private static void initalWriteWithOutComments(final File file, final Map<String, Object> map) {
-		try (PrintWriter writer = new PrintWriter(file)) {
-			if (!map.isEmpty()) {
-				Iterator mapIterator = map.keySet().iterator();
-				topLayerWriteWithOutComments(writer, map, mapIterator.next().toString());
-				//noinspection unchecked
-				mapIterator.forEachRemaining(localKey -> {
-					writer.println();
-					topLayerWriteWithOutComments(writer, map, localKey.toString());
-				});
+	private static List<String> readList(final String filePath, final List<String> lines, final FileData.Type fileDataType, final ConfigSetting configSetting) {
+		List<String> localList = fileDataType.getNewDataList(configSetting, null);
+		while (lines.size() > 0) {
+			String tempLine = lines.get(0).trim();
+			lines.remove(0);
+			if (tempLine.endsWith("]")) {
+				return localList;
+			} else if (tempLine.startsWith("- ")) {
+				localList.add(tempLine.substring(1).trim());
+			} else {
+				throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			System.err.println("Could not write to '" + file.getName() + "'");
-			e.printStackTrace();
 		}
+		throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 	}
 
 	private static void topLayerWriteWithOutComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {

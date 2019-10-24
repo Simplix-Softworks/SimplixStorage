@@ -3,6 +3,8 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 import de.leonhard.storage.lightningstorage.editor.LightningEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
 import java.io.InputStream;
@@ -50,9 +52,10 @@ public class LightningFile extends FlatFile {
 		if (insert(key, value)) {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
-			} catch (IllegalStateException e) {
-				System.err.println("Could not write to '" + file.getName() + "'");
+			} catch (IllegalStateException | IllegalArgumentException e) {
+				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
 				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}
@@ -70,8 +73,9 @@ public class LightningFile extends FlatFile {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
 			} catch (IllegalStateException e) {
-				System.err.println("Could not write to '" + file.getName() + "'");
+				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
 				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package de.leonhard.storage.lightningstorage.internal.base;
 
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
 import de.leonhard.storage.lightningstorage.utils.JsonUtils;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
@@ -313,15 +314,15 @@ public class FileData {
 		 * @param map           the Map to be imported from(an empty Map will be returned if @param map is null)
 		 * @return a Map containing the Data of @param map.
 		 */
-		public Map<String, Object> getNewDataMap(@Nullable final FlatFile.ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
+		public Map<String, Object> getNewDataMap(@Nullable final ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
 			if (this == SORTED) {
 				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 			} else if (this == STANDARD) {
 				return map == null ? new HashMap<>() : new HashMap<>(map);
 			} else if (this == AUTOMATIC) {
-				if (configSetting == null || configSetting == FlatFile.ConfigSetting.SKIP_COMMENTS) {
+				if (configSetting == null || configSetting == ConfigSetting.SKIP_COMMENTS) {
 					return map == null ? new HashMap<>() : new HashMap<>(map);
-				} else if (configSetting == FlatFile.ConfigSetting.PRESERVE_COMMENTS) {
+				} else if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
 					return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 				} else {
 					throw new IllegalStateException("Illegal ConfigSetting");
@@ -338,15 +339,15 @@ public class FileData {
 		 * @param list          the Map to be imported from(an empty List will be returned if @param list is null)
 		 * @return a List containing the Data of @param list.
 		 */
-		public List<String> getNewDataList(@Nullable final FlatFile.ConfigSetting configSetting, @Nullable final List<String> list) {
+		public List<String> getNewDataList(@Nullable final ConfigSetting configSetting, @Nullable final List<String> list) {
 			if (this == SORTED) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);
 			} else if (this == STANDARD) {
 				return list == null ? new ArrayList<>() : new ArrayList<>(list);
 			} else if (this == AUTOMATIC) {
-				if (configSetting == null || configSetting == FlatFile.ConfigSetting.SKIP_COMMENTS) {
+				if (configSetting == null || configSetting == ConfigSetting.SKIP_COMMENTS) {
 					return list == null ? new ArrayList<>() : new ArrayList<>(list);
-				} else if (configSetting == FlatFile.ConfigSetting.PRESERVE_COMMENTS) {
+				} else if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
 					return list == null ? new LinkedList<>() : new LinkedList<>(list);
 				} else {
 					throw new IllegalStateException("Illegal ConfigSetting");

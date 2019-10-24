@@ -2,6 +2,7 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
 import java.io.InputStream;

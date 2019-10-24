@@ -24,8 +24,7 @@ public class FileUtils {
 				file.createNewFile();
 			}
 		} catch (IOException e) {
-			System.err.println("Error while creating file '" + file.getName() + "'.");
-			System.err.println("Path: '" + file.getAbsolutePath() + "'");
+			System.err.println("Error while creating file '" + file.getAbsolutePath() + "'.");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
@@ -41,10 +40,9 @@ public class FileUtils {
 		try {
 			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
-			System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
-			System.err.println("At: '" + file.getAbsolutePath() + "'");
+			System.err.println("Exception while creating InputStream from '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
-			throw new IllegalStateException("InputStream would be null");
+			throw new IllegalStateException();
 		}
 	}
 
@@ -89,7 +87,7 @@ public class FileUtils {
 		} catch (IOException e) {
 			System.err.println("Exception while copying to + '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
-			throw new IllegalStateException("Could not copy the Data to the File");
+			throw new IllegalStateException();
 		}
 	}
 }

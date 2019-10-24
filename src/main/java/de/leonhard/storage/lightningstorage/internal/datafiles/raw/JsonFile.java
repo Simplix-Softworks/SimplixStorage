@@ -2,6 +2,7 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.JsonUtils;
 import java.io.*;
@@ -110,7 +111,9 @@ public class JsonFile extends FlatFile {
 			try {
 				write(new JSONObject(fileData.toMap()));
 			} catch (IOException e) {
+				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
 				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}

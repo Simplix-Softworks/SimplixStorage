@@ -1,5 +1,7 @@
 package de.leonhard.storage.lightningstorage.internal.base;
 
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import java.io.*;
@@ -38,13 +40,21 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			this.fileType = fileType;
 			this.file = file;
 		} else {
-			throw new IllegalStateException("File '" + file.getName() + "' is not of type '" + fileType + "'");
+			throw new IllegalStateException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}
 	}
 
 
-	public final String getFilePath() {
+	public final String getAbsolutePath() {
 		return this.file.getAbsolutePath();
+	}
+
+	public final String getPath() {
+		return this.file.getPath();
+	}
+
+	public final String getCanonicalPath() throws IOException {
+		return this.file.getCanonicalPath();
 	}
 
 	public final String getName() {
@@ -259,27 +269,5 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		public String toString() {
 			return extension;
 		}
-	}
-
-	public enum ConfigSetting {
-
-		PRESERVE_COMMENTS,
-		SKIP_COMMENTS
-	}
-
-	public enum ReloadSetting {
-
-		/**
-		 * reloads every time you try to get something from the config
-		 */
-		AUTOMATICALLY,
-		/**
-		 * reloads only if the File has changed.
-		 */
-		INTELLIGENT,
-		/**
-		 * only reloads if you manually call the reload.
-		 */
-		MANUALLY
 	}
 }
