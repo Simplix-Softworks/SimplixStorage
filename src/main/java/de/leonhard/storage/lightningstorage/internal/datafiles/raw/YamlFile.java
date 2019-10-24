@@ -61,24 +61,43 @@ public class YamlFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(@NotNull final String path, @NotNull T def) {
+	public <T> T getOrSetDefault(@NotNull final String key, @NotNull T value) {
 		update();
-		if (!hasKey(path)) {
-			set(path, def, getConfigSetting());
-			return def;
-		} else {
-			Object obj = get(path); //
-			if (obj instanceof String && def instanceof Integer) {
-				obj = Integer.parseInt((String) obj);
+		return super.getOrSetDefault(key, value);
+	}
+
+	@Override
+	public Object get(@NotNull final String key) {
+		update();
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return fileData.get(finalKey);
+	}
+
+	@Override
+	public synchronized void remove(@NotNull final String key) {
+		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+
+		update();
+
+		if (fileData.containsKey(finalKey)) {
+			fileData.remove(finalKey);
+
+			try {
+				write(fileData.toMap());
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			if (obj instanceof String && def instanceof Double) {
-				obj = Double.parseDouble((String) obj);
-			}
-			if (obj instanceof String && def instanceof Float) {
-				obj = Double.parseDouble((String) obj);
-			}
-			return (T) obj;
 		}
+	}
+
+	private void write(@NotNull final Map fileData) throws IOException {
+		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
+		writer.write(fileData);
+	}
+
+	@Override
+	public void set(@NotNull final String key, @Nullable final Object value) {
+		set(key, value, this.getConfigSetting());
 	}
 
 	@SuppressWarnings("Duplicates")
@@ -107,44 +126,33 @@ public class YamlFile extends FlatFile {
 		}
 	}
 
-	private void write(@NotNull final Map fileData) throws IOException {
-		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
-		writer.write(fileData);
-	}
-
 	@Override
-	public Object get(@NotNull final String key) {
-		update();
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return fileData.get(finalKey);
-	}
-
-	@Override
-	public synchronized void remove(@NotNull final String key) {
+	public void setDefault(@NotNull final String key, @Nullable final Object value) {
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		if (fileData.containsKey(finalKey)) {
-			fileData.remove(finalKey);
-
-			try {
-				write(fileData.toMap());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void set(@NotNull final String key, @Nullable final Object value) {
-		set(key, value, this.getConfigSetting());
-	}
-
-	@Override
-	public void setDefault(@NotNull final String key, @Nullable final Object value) {
 		if (!hasKey(key)) {
-			set(key, value, getConfigSetting());
+			try {
+				if (!ConfigSetting.PRESERVE_COMMENTS.equals(getConfigSetting())) {
+					write(Objects.requireNonNull(fileData).toMap());
+					return;
+				}
+				final List<String> unEdited = yamlEditor.read();
+				final List<String> header = yamlEditor.readHeader();
+				final List<String> footer = yamlEditor.readFooter();
+				write(fileData.toMap());
+				header.addAll(yamlEditor.read());
+				if (!header.containsAll(footer)) {
+					header.addAll(footer);
+				}
+				yamlEditor.write(parser.parseComments(unEdited, header));
+				write(Objects.requireNonNull(fileData).toMap());
+			} catch (IOException e) {
+				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
 		}
 	}
 

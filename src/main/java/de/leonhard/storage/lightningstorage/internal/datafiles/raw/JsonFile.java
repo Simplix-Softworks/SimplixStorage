@@ -95,12 +95,12 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public <T> T getOrSetDefault(@NotNull final String path, @NotNull T def) {
-		if (!hasKey(path)) {
-			set(path, def);
-			return def;
+	public <T> T getOrSetDefault(@NotNull final String key, @NotNull T value) {
+		if (!hasKey(key)) {
+			set(key, value);
+			return value;
 		} else {
-			return (T) get(path);
+			return (T) get(key);
 		}
 	}
 

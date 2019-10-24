@@ -4,7 +4,6 @@ import de.leonhard.storage.lightningstorage.utils.basic.Primitive;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -173,23 +172,26 @@ public interface StorageBase {
 	}
 
 	@SuppressWarnings("DuplicatedCode")
-	default <T> T getOrSetDefault(@NotNull final String path, @NotNull final T def) {
-		if (!hasKey(path)) {
-			set(path, def);
-			return def;
+	default <T> T getOrSetDefault(@NotNull final String key, @NotNull final T value) {
+		if (!hasKey(key)) {
+			set(key, value);
+			return value;
 		} else {
-			Object obj = get(path); //
-			if (obj instanceof String && def instanceof Integer) {
-				obj = Integer.parseInt((String) obj);
-			} else if (obj instanceof String && def instanceof Double) {
-				obj = Double.parseDouble((String) obj);
-			} else if (obj instanceof String && def instanceof Float) {
-				obj = Double.parseDouble((String) obj);
-			} else if (obj instanceof String && def instanceof Boolean) {
-				obj = Boolean.getBoolean((String) obj);
+			Object tempObj = get(key);
+			if (tempObj instanceof String && value instanceof Integer) {
+				tempObj = Integer.parseInt((String) tempObj);
+			} else if (tempObj instanceof String && value instanceof Long) {
+				tempObj = Long.parseLong((String) tempObj);
+			} else if (tempObj instanceof String && value instanceof Double) {
+				tempObj = Double.parseDouble((String) tempObj);
+			} else if (tempObj instanceof String && value instanceof Float) {
+				tempObj = Double.parseDouble((String) tempObj);
+			} else if (tempObj instanceof String && value instanceof Short) {
+				tempObj = Short.parseShort((String) tempObj);
+			} else if (tempObj instanceof String && value instanceof Primitive.Boolean) {
+				tempObj = ((String) tempObj).equalsIgnoreCase("true");
 			}
-			//noinspection unchecked
-			return (T) obj;
+			return (T) tempObj;
 		}
 	}
 
@@ -228,14 +230,6 @@ public interface StorageBase {
 			return (List<String>) get(key);
 		}
 	}
-
-	Set<String> keySet();
-
-	Set<String> keySet(@NotNull final String key);
-
-	Set<String> singleLayerKeySet();
-
-	Set<String> singleLayerKeySet(@NotNull final String key);
 
 	void remove(@NotNull final String key);
 

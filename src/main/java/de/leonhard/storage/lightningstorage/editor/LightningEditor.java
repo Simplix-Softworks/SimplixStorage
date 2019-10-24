@@ -71,7 +71,7 @@ public class LightningEditor {
 					} else if (tempKey == null) {
 						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, read(file.getAbsolutePath(), lines, blankLine, commentLine, fileDataType, configSetting));
+					tempMap.put(tempKey, internalRead(file.getAbsolutePath(), lines, blankLine, commentLine, fileDataType, configSetting));
 				} else {
 					if (tempLine.contains(" = ")) {
 						String[] line = tempLine.split(" = ");
@@ -100,46 +100,9 @@ public class LightningEditor {
 		}
 	}
 
-	// <Write Data>
-	// <Write Data with Comments>
-	private static void initalWriteWithComments(final File file, final Map<String, Object> map) {
-		try (PrintWriter writer = new PrintWriter(file)) {
-			if (!map.isEmpty()) {
-				Iterator mapIterator = map.keySet().iterator();
-				topLayerWriteWithComments(writer, map, mapIterator.next().toString());
-				//noinspection unchecked
-				mapIterator.forEachRemaining(localKey -> {
-					writer.println();
-					topLayerWriteWithComments(writer, map, localKey.toString());
-				});
-			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-		}
-	}
 
-	// <Write Data without Comments>
-	private static void initalWriteWithOutComments(final File file, final Map<String, Object> map) {
-		try (PrintWriter writer = new PrintWriter(file)) {
-			if (!map.isEmpty()) {
-				Iterator mapIterator = map.keySet().iterator();
-				topLayerWriteWithOutComments(writer, map, mapIterator.next().toString());
-				//noinspection unchecked
-				mapIterator.forEachRemaining(localKey -> {
-					writer.println();
-					topLayerWriteWithOutComments(writer, map, localKey.toString());
-				});
-			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-		}
-	}
-
-	private static Map<String, Object> read(final String filePath, final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final ConfigSetting configSetting) {
+	// <Read Data>
+	private static Map<String, Object> internalRead(final String filePath, final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final ConfigSetting configSetting) {
 		Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(fileDataType, configSetting, null);
 		String tempKey = null;
 
@@ -162,7 +125,7 @@ public class LightningEditor {
 				} else if (tempKey == null) {
 					throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, read(filePath, lines, blankLine, commentLine, fileDataType, configSetting));
+				tempMap.put(tempKey, internalRead(filePath, lines, blankLine, commentLine, fileDataType, configSetting));
 			} else {
 				if (tempLine.contains(" = ")) {
 					String[] line = tempLine.split(" = ");
@@ -188,46 +151,6 @@ public class LightningEditor {
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
 
-	private static void topLayerWriteWithComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
-		if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
-			writer.print(localKey.substring(0, localKey.lastIndexOf("{=}")));
-		} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
-			writer.print("");
-		} else if (map.get(localKey) instanceof Map) {
-			writer.print(localKey + " " + "{");
-			//noinspection unchecked
-			writeWithComments((Map<String, Object>) map.get(localKey), "", writer);
-		} else {
-			writer.print(localKey + " = " + map.get(localKey));
-		}
-	}
-
-	private static void writeWithComments(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
-		for (String localKey : map.keySet()) {
-			writer.println();
-			if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
-				writer.print(indentationString + "  " + localKey.substring(0, localKey.lastIndexOf("{=}")));
-			} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
-				writer.print("");
-			} else {
-				if (map.get(localKey) instanceof Map) {
-					writer.print(indentationString + "  " + localKey + " " + "{");
-					//noinspection unchecked
-					writeWithComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
-				} else if (map.get(localKey) instanceof List) {
-					writer.println(indentationString + "  " + localKey + " = [");
-					//noinspection unchecked
-					writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
-				} else {
-					writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
-				}
-			}
-		}
-		writer.println();
-		writer.print(indentationString + "}");
-	}
-	// </Write Data with Comments>
-
 	private static List<String> readList(final String filePath, final List<String> lines, final FileData.Type fileDataType, final ConfigSetting configSetting) {
 		List<String> localList = FileTypeUtils.getNewDataList(fileDataType, configSetting, null);
 		while (lines.size() > 0) {
@@ -243,31 +166,55 @@ public class LightningEditor {
 		}
 		throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 	}
+	// </Read Data>
 
-	private static void topLayerWriteWithOutComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
-		if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
-			if (map.get(localKey) instanceof Map) {
-				writer.print(localKey + " " + "{");
+
+	// <Write Data>
+	// <Write Data with Comments>
+	private static void initalWriteWithComments(final File file, final Map<String, Object> map) {
+		try (PrintWriter writer = new PrintWriter(file)) {
+			if (!map.isEmpty()) {
+				Iterator mapIterator = map.keySet().iterator();
+				topLayerWriteWithComments(writer, map, mapIterator.next().toString());
 				//noinspection unchecked
-				writeWithOutComments((Map<String, Object>) map.get(localKey), "", writer);
-			} else if (map.get(localKey) instanceof List) {
-				writer.println("  " + localKey + " = [");
-				//noinspection unchecked
-				writeList((List<String>) map.get(localKey), "  ", writer);
-			} else {
-				writer.print(localKey + " = " + map.get(localKey));
+				mapIterator.forEachRemaining(localKey -> {
+					writer.println();
+					topLayerWriteWithComments(writer, map, localKey.toString());
+				});
 			}
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
 		}
 	}
 
-	private static void writeWithOutComments(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
+	private static void topLayerWriteWithComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
+		if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
+			writer.print(localKey.substring(0, localKey.lastIndexOf("{=}")));
+		} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
+			writer.print("");
+		} else if (map.get(localKey) instanceof Map) {
+			writer.print(localKey + " " + "{");
+			//noinspection unchecked
+			internalWriteWithComments((Map<String, Object>) map.get(localKey), "", writer);
+		} else {
+			writer.print(localKey + " = " + map.get(localKey));
+		}
+	}
+
+	private static void internalWriteWithComments(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
 		for (String localKey : map.keySet()) {
 			writer.println();
-			if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+			if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
+				writer.print(indentationString + "  " + localKey.substring(0, localKey.lastIndexOf("{=}")));
+			} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
+				writer.print("");
+			} else {
 				if (map.get(localKey) instanceof Map) {
 					writer.print(indentationString + "  " + localKey + " " + "{");
 					//noinspection unchecked
-					writeWithOutComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
+					internalWriteWithComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
 				} else if (map.get(localKey) instanceof List) {
 					writer.println(indentationString + "  " + localKey + " = [");
 					//noinspection unchecked
@@ -280,6 +227,64 @@ public class LightningEditor {
 		writer.println();
 		writer.print(indentationString + "}");
 	}
+	// </Write Data with Comments
+
+	// <Write Data without Comments>
+	private static void initalWriteWithOutComments(final File file, final Map<String, Object> map) {
+		try (PrintWriter writer = new PrintWriter(file)) {
+			if (!map.isEmpty()) {
+				Iterator mapIterator = map.keySet().iterator();
+				topLayerWriteWithOutComments(writer, map, mapIterator.next().toString());
+				//noinspection unchecked
+				mapIterator.forEachRemaining(localKey -> {
+					writer.println();
+					topLayerWriteWithOutComments(writer, map, localKey.toString());
+				});
+			}
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+		}
+	}
+
+	private static void topLayerWriteWithOutComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
+		if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+			if (map.get(localKey) instanceof Map) {
+				writer.print(localKey + " " + "{");
+				//noinspection unchecked
+				internalWriteWithoutComments((Map<String, Object>) map.get(localKey), "", writer);
+			} else if (map.get(localKey) instanceof List) {
+				writer.println("  " + localKey + " = [");
+				//noinspection unchecked
+				writeList((List<String>) map.get(localKey), "  ", writer);
+			} else {
+				writer.print(localKey + " = " + map.get(localKey));
+			}
+		}
+	}
+
+	private static void internalWriteWithoutComments(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
+		for (String localKey : map.keySet()) {
+			writer.println();
+			if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+				if (map.get(localKey) instanceof Map) {
+					writer.print(indentationString + "  " + localKey + " " + "{");
+					//noinspection unchecked
+					internalWriteWithoutComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
+				} else if (map.get(localKey) instanceof List) {
+					writer.println(indentationString + "  " + localKey + " = [");
+					//noinspection unchecked
+					writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
+				} else {
+					writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
+				}
+			}
+		}
+		writer.println();
+		writer.print(indentationString + "}");
+	}
+	// </Write Data without Comments>
 
 	private static void writeList(final List<String> list, final String indentationString, final PrintWriter writer) {
 		for (String line : list) {
@@ -287,7 +292,6 @@ public class LightningEditor {
 		}
 		writer.print(indentationString + "]");
 	}
-	// </Write Data without Comments>
 	// </Write Data>
 
 

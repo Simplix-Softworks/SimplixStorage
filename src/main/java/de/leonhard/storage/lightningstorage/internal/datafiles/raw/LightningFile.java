@@ -60,6 +60,32 @@ public class LightningFile extends FlatFile {
 		}
 	}
 
+	@Override
+	public synchronized void setDefault(@NotNull final String key, @Nullable final Object value) {
+		update();
+
+		final String finalKey = (getPathPrefix() == null) ? key : getPathPrefix() + "." + key;
+
+		if (!hasKey(finalKey)) {
+			try {
+				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
+			} catch (IllegalStateException | IllegalArgumentException e) {
+				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	@Override
+	public <T> T getOrSetDefault(@NotNull final String key, @NotNull T value) {
+		update();
+
+		final String finalKey = (getPathPrefix() == null) ? key : getPathPrefix() + "." + key;
+
+		return super.getOrSetDefault(key, value);
+	}
+
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
