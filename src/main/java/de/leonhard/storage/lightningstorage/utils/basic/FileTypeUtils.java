@@ -97,7 +97,7 @@ public class FileTypeUtils {
 	 * @param map           the Map to be imported from(an empty Map will be returned if @param map is null)
 	 * @return a Map containing the Data of @param map.
 	 */
-	public Map<String, Object> getNewDataMap(@NotNull final FileData.Type dataType, @Nullable final ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
+	public static Map<String, Object> getNewDataMap(@NotNull final FileData.Type dataType, @Nullable final ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
 		if (dataType == FileData.Type.SORTED) {
 			return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 		} else if (dataType == FileData.Type.STANDARD) {
@@ -122,7 +122,7 @@ public class FileTypeUtils {
 	 * @param list          the Map to be imported from(an empty List will be returned if @param list is null)
 	 * @return a List containing the Data of @param list.
 	 */
-	public List<String> getNewDataList(@NotNull final FileData.Type dataType, @Nullable final ConfigSetting configSetting, @Nullable final List<String> list) {
+	public static List<String> getNewDataList(@NotNull final FileData.Type dataType, @Nullable final ConfigSetting configSetting, @Nullable final List<String> list) {
 		if (dataType == FileData.Type.SORTED) {
 			return list == null ? new LinkedList<>() : new LinkedList<>(list);
 		} else if (dataType == FileData.Type.STANDARD) {

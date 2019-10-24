@@ -2,6 +2,7 @@ package de.leonhard.storage.lightningstorage.editor;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class LightningEditor {
 	public static Map<String, Object> readData(@NotNull final File file, @NotNull final FileData.Type fileDataType, @NotNull final ConfigSetting configSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = fileDataType.getNewDataMap(configSetting, null);
+			Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(fileDataType, configSetting, null);
 
 			String tempKey = null;
 			int blankLine = -1;
@@ -139,7 +140,7 @@ public class LightningEditor {
 	}
 
 	private static Map<String, Object> read(final String filePath, final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final ConfigSetting configSetting) {
-		Map<String, Object> tempMap = fileDataType.getNewDataMap(configSetting, null);
+		Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(fileDataType, configSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -228,7 +229,7 @@ public class LightningEditor {
 	// </Write Data with Comments>
 
 	private static List<String> readList(final String filePath, final List<String> lines, final FileData.Type fileDataType, final ConfigSetting configSetting) {
-		List<String> localList = fileDataType.getNewDataList(configSetting, null);
+		List<String> localList = FileTypeUtils.getNewDataList(fileDataType, configSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();
 			lines.remove(0);
