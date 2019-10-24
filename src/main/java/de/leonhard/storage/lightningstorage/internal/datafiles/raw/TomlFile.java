@@ -57,13 +57,7 @@ public class TomlFile extends FlatFile {
 	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-
-		update();
-
-		if (!fileData.get(finalKey).equals(value)) {
-			fileData.insert(finalKey, value);
-
+		if (insert(key, value)) {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
@@ -79,13 +73,15 @@ public class TomlFile extends FlatFile {
 
 		update();
 
-		fileData.remove(finalKey);
+		if (fileData.containsKey(finalKey)) {
+			fileData.remove(finalKey);
 
-		try {
-			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
-		} catch (IOException e) {
-			System.err.println("Exception while writing to Toml file '" + getName() + "'");
-			e.printStackTrace();
+			try {
+				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+			} catch (IOException e) {
+				System.err.println("Exception while writing to Toml file '" + getName() + "'");
+				e.printStackTrace();
+			}
 		}
 	}
 

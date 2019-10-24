@@ -155,6 +155,23 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	/**
+	 * Insert a key-value-pair to the FileData.
+	 *
+	 * @param key   the key to be used.
+	 * @param value the value to be assigned to @param key.
+	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
+	 */
+	protected final boolean insert(@NotNull final String key, @Nullable final Object value) {
+		update();
+
+		final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+
+		String tempData = this.fileData.toString();
+		this.fileData.insert(finalKey, value);
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	/**
 	 * Creates an empty file.
 	 *
 	 * @return true if file was created.

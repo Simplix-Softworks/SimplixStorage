@@ -106,13 +106,7 @@ public class JsonFile extends FlatFile {
 	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-
-		update();
-
-		if (!fileData.get(finalKey).equals(value)) {
-			fileData.insert(finalKey, value);
-
+		if (insert(key, value)) {
 			try {
 				write(new JSONObject(fileData.toMap()));
 			} catch (IOException e) {
@@ -140,11 +134,13 @@ public class JsonFile extends FlatFile {
 
 		update();
 
-		fileData.remove(finalKey);
-		try {
-			write(fileData.toJsonObject());
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (fileData.containsKey(finalKey)) {
+			fileData.remove(finalKey);
+			try {
+				write(fileData.toJsonObject());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

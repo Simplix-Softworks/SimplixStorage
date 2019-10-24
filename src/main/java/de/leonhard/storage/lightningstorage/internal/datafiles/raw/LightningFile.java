@@ -47,13 +47,7 @@ public class LightningFile extends FlatFile {
 	@SuppressWarnings("Duplicates")
 	@Override
 	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-
-		update();
-
-		if (!fileData.get(finalKey).equals(value)) {
-			fileData.insert(finalKey, value);
-
+		if (insert(key, value)) {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
 			} catch (IllegalStateException e) {

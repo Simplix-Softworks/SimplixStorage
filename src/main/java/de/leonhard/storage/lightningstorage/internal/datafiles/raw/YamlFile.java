@@ -81,13 +81,7 @@ public class YamlFile extends FlatFile {
 
 	@SuppressWarnings("Duplicates")
 	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final ConfigSetting configSetting) {
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-
-		update();
-
-		if (fileData.get(finalKey).equals(value)) {
-			fileData.insert(finalKey, value);
-
+		if (insert(key, value)) {
 			try {
 				if (!ConfigSetting.PRESERVE_COMMENTS.equals(configSetting)) {
 					write(Objects.requireNonNull(fileData).toMap());
@@ -127,12 +121,14 @@ public class YamlFile extends FlatFile {
 
 		update();
 
-		fileData.remove(finalKey);
+		if (fileData.containsKey(finalKey)) {
+			fileData.remove(finalKey);
 
-		try {
-			write(fileData.toMap());
-		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				write(fileData.toMap());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
