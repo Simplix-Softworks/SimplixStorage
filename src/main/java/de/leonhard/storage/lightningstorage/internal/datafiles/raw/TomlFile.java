@@ -7,6 +7,8 @@ import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +49,78 @@ public class TomlFile extends FlatFile {
 	public Object get(@NotNull final String key) {
 		update();
 		return fileData.get(key);
+	}
+
+	@Override
+	public boolean getBoolean(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getBoolean(finalKey);
+	}
+
+	@Override
+	public byte getByte(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getByte(finalKey);
+	}
+
+	@Override
+	public List<Byte> getByteList(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getByteList(finalKey);
+	}
+
+	@Override
+	public double getDouble(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getDouble(finalKey);
+	}
+
+	@Override
+	public float getFloat(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getFloat(finalKey);
+	}
+
+	@Override
+	public int getInt(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getInt(finalKey);
+	}
+
+	@Override
+	public List<Integer> getIntegerList(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getIntegerList(finalKey);
+	}
+
+	@Override
+	public List<?> getList(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getList(finalKey);
+	}
+
+	@Override
+	public long getLong(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getLong(finalKey);
+	}
+
+	@Override
+	public List<Long> getLongList(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getLongList(finalKey);
+	}
+
+	@Override
+	public Map getMap(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getMap(finalKey);
+	}
+
+	@Override
+	public String getString(@NotNull final String key) {
+		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		return super.getString(finalKey);
 	}
 
 	/**

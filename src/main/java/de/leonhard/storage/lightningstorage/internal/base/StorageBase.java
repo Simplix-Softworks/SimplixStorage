@@ -2,6 +2,7 @@ package de.leonhard.storage.lightningstorage.internal.base;
 
 import de.leonhard.storage.lightningstorage.utils.basic.Primitive;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -168,7 +169,11 @@ public interface StorageBase {
 	 * @return Map
 	 */
 	default Map getMap(@NotNull final String key) {
-		return (Map) get(key);
+		if (!hasKey(key)) {
+			return new HashMap();
+		} else {
+			return (Map) get(key);
+		}
 	}
 
 	@SuppressWarnings("DuplicatedCode")
