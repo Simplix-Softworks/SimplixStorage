@@ -77,7 +77,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
 			writer.write("");
 		} catch (IOException e) {
+			System.err.println("Could not clear '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
 	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
@@ -38,8 +38,9 @@ public class TomlFile extends FlatFile {
 		try {
 			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
 		} catch (IOException e) {
-			System.err.println("Exception while reading '" + getName() + "'");
+			System.err.println("Exception while reading '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
@@ -62,7 +63,7 @@ public class TomlFile extends FlatFile {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
@@ -81,7 +82,7 @@ public class TomlFile extends FlatFile {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
-				System.err.println("Exception while writing to Toml file '" + getName() + "'");
+				System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}

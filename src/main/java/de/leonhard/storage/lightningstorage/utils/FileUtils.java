@@ -40,7 +40,7 @@ public class FileUtils {
 		try {
 			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
-			System.err.println("Exception while creating InputStream from '" + file.getAbsolutePath() + "'");
+			System.err.println("Error while creating InputStream from '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
@@ -85,7 +85,7 @@ public class FileUtils {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Exception while copying to + '" + file.getAbsolutePath() + "'");
+			System.err.println("Error while copying to + '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}

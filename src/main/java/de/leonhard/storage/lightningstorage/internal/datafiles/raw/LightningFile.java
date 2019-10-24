@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings("unused")
 public class LightningFile extends FlatFile {
 
 	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
@@ -52,7 +52,7 @@ public class LightningFile extends FlatFile {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
-				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
@@ -72,7 +72,7 @@ public class LightningFile extends FlatFile {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
 			} catch (IllegalStateException e) {
-				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}

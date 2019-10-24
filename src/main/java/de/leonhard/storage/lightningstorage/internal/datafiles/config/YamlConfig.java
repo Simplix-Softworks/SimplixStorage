@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings("unused")
 public class YamlConfig extends YamlFile {
 
 	private List<String> header;
@@ -33,7 +33,7 @@ public class YamlConfig extends YamlFile {
 			try {
 				return this.yamlEditor.readHeader();
 			} catch (IOException e) {
-				System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
+				System.err.println("Couldn't get header of '" + this.file.getAbsolutePath() + "'.");
 				e.printStackTrace();
 				return new ArrayList<>();
 			}
@@ -56,7 +56,7 @@ public class YamlConfig extends YamlFile {
 			try {
 				this.yamlEditor.write(this.header);
 			} catch (IOException e) {
-				System.err.println("Error while setting header of '" + getName() + "'");
+				System.err.println("Error while setting header of '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
 			}
 			return;
@@ -72,7 +72,7 @@ public class YamlConfig extends YamlFile {
 
 			this.yamlEditor.write(newLines);
 		} catch (final IOException e) {
-			System.err.println("Exception while modifying header of '" + getName() + "'");
+			System.err.println("Exception while modifying header of '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
 		}
 	}

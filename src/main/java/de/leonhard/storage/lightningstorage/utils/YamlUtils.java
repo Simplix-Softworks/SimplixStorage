@@ -25,7 +25,7 @@ public class YamlUtils {
 			keys = yamlEditor.readKeys();
 			parsed = assignCommentsToKey(comments);
 		} catch (IOException e) {
-			System.err.println("Exception while reading keys from '" + yamlEditor.getFile().getAbsolutePath() + "'");
+			System.err.println("Error while reading keys from '" + yamlEditor.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
 			return new ArrayList<>();
 		}

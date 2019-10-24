@@ -55,8 +55,9 @@ public class YamlFile extends FlatFile {
 			Map<String, Object> map = (Map<String, Object>) reader.read();
 			fileData = new FileData(map);
 		} catch (IOException e) {
-			System.err.println("Exception while reading YAML");
+			System.err.println("Exception while reading '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
@@ -79,7 +80,9 @@ public class YamlFile extends FlatFile {
 			try {
 				write(fileData.toMap());
 			} catch (IOException e) {
+				System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}
@@ -94,7 +97,6 @@ public class YamlFile extends FlatFile {
 		set(key, value, this.getConfigSetting());
 	}
 
-	@SuppressWarnings("DuplicatedCode")
 	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final ConfigSetting configSetting) {
 		if (insert(key, value)) {
 			try {
@@ -113,7 +115,7 @@ public class YamlFile extends FlatFile {
 				yamlEditor.write(parser.parseComments(unEdited, header));
 				write(Objects.requireNonNull(fileData).toMap());
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}

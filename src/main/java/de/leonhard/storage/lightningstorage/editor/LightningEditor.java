@@ -96,7 +96,9 @@ public class LightningEditor {
 			}
 			return tempMap;
 		} catch (IOException e) {
-			throw new IllegalStateException("Could not read '" + file.getAbsolutePath() + "'");
+			System.err.println("Error while reading '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
@@ -186,6 +188,7 @@ public class LightningEditor {
 		} catch (FileNotFoundException e) {
 			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 

@@ -176,7 +176,6 @@ public interface StorageBase {
 		}
 	}
 
-	@SuppressWarnings("DuplicatedCode")
 	default <T> T getOrSetDefault(@NotNull final String key, @NotNull final T value) {
 		if (!hasKey(key)) {
 			set(key, value);

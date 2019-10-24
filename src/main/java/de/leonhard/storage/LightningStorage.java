@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings("unused")
 public class LightningStorage {
 
 	private final File file;

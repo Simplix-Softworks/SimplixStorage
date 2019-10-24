@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
 	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
@@ -100,7 +100,7 @@ public class JsonFile extends FlatFile {
 			try {
 				write(new JSONObject(fileData.toMap()));
 			} catch (IOException e) {
-				System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
@@ -130,7 +130,9 @@ public class JsonFile extends FlatFile {
 			try {
 				write(fileData.toJsonObject());
 			} catch (IOException e) {
+				System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
+				throw new IllegalStateException();
 			}
 		}
 	}
