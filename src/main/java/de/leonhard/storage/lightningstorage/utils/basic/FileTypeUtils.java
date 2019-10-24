@@ -1,10 +1,14 @@
 package de.leonhard.storage.lightningstorage.utils.basic;
 
+import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
+import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
 import java.io.File;
+import java.util.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"WeakerAccess", "unused"})
@@ -84,5 +88,55 @@ public class FileTypeUtils {
 	 */
 	public static String getExtension(@NotNull final String path) {
 		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
+	}
+
+	/**
+	 * Get a Map of the proper Type defined by your ConfigSetting.
+	 *
+	 * @param configSetting the ConfigSetting to be used.
+	 * @param map           the Map to be imported from(an empty Map will be returned if @param map is null)
+	 * @return a Map containing the Data of @param map.
+	 */
+	public Map<String, Object> getNewDataMap(@NotNull final FileData.Type dataType, @Nullable final ConfigSetting configSetting, @Nullable final Map<String, Object> map) {
+		if (dataType == FileData.Type.SORTED) {
+			return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
+		} else if (dataType == FileData.Type.STANDARD) {
+			return map == null ? new HashMap<>() : new HashMap<>(map);
+		} else if (dataType == FileData.Type.AUTOMATIC) {
+			if (configSetting == null || configSetting == ConfigSetting.SKIP_COMMENTS) {
+				return map == null ? new HashMap<>() : new HashMap<>(map);
+			} else if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
+				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
+			} else {
+				throw new IllegalStateException("Illegal ConfigSetting");
+			}
+		} else {
+			throw new IllegalStateException("Illegal DataType");
+		}
+	}
+
+	/**
+	 * Get a List of the proper Type defined by your ConfigSetting.
+	 *
+	 * @param configSetting the ConfigSetting to be used.
+	 * @param list          the Map to be imported from(an empty List will be returned if @param list is null)
+	 * @return a List containing the Data of @param list.
+	 */
+	public List<String> getNewDataList(@NotNull final FileData.Type dataType, @Nullable final ConfigSetting configSetting, @Nullable final List<String> list) {
+		if (dataType == FileData.Type.SORTED) {
+			return list == null ? new LinkedList<>() : new LinkedList<>(list);
+		} else if (dataType == FileData.Type.STANDARD) {
+			return list == null ? new ArrayList<>() : new ArrayList<>(list);
+		} else if (dataType == FileData.Type.AUTOMATIC) {
+			if (configSetting == null || configSetting == ConfigSetting.SKIP_COMMENTS) {
+				return list == null ? new ArrayList<>() : new ArrayList<>(list);
+			} else if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
+				return list == null ? new LinkedList<>() : new LinkedList<>(list);
+			} else {
+				throw new IllegalStateException("Illegal ConfigSetting");
+			}
+		} else {
+			throw new IllegalStateException("Illegal DataType");
+		}
 	}
 }
