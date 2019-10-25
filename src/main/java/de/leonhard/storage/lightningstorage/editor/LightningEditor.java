@@ -174,7 +174,7 @@ public class LightningEditor {
 			lines.remove(0);
 			if (tempLine.endsWith("]")) {
 				return localList;
-			} else if (tempLine.startsWith("- ")) {
+			} else if (tempLine.startsWith("-")) {
 				localList.add(tempLine.substring(1).trim());
 			} else {
 				throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
