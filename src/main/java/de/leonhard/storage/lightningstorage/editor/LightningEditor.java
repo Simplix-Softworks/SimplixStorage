@@ -103,7 +103,7 @@ public class LightningEditor {
 				}
 			}
 			return tempMap;
-		} catch (IOException e) {
+		} catch (IOException | ArrayIndexOutOfBoundsException e) {
 			System.err.println("Error while reading '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
@@ -112,7 +112,7 @@ public class LightningEditor {
 
 
 	// <Read Data>
-	private static Map<String, Object> internalRead(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final ConfigSetting configSetting) {
+	private static Map<String, Object> internalRead(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final ConfigSetting configSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
 		String tempKey = null;
 
