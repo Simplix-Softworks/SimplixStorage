@@ -97,7 +97,7 @@ public class LightningEditor {
 						if (lines.get(1).contains("{")) {
 							tempKey = tempLine;
 						} else {
-							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' does not contain value or block");
+							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' does not contain value or subblock");
 						}
 					}
 				}
@@ -159,7 +159,7 @@ public class LightningEditor {
 					if (lines.get(1).contains("{")) {
 						tempKey = tempLine;
 					} else {
-						throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' does not contain value or block");
+						throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' does not contain value or subblock");
 					}
 				}
 			}
