@@ -172,10 +172,10 @@ public class LightningEditor {
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();
 			lines.remove(0);
-			if (tempLine.endsWith("]")) {
-				return localList;
-			} else if (tempLine.startsWith("-")) {
+			if (tempLine.startsWith("-")) {
 				localList.add(tempLine.substring(1).trim());
+			} else if (tempLine.endsWith("]")) {
+				return localList;
 			} else {
 				throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 			}
