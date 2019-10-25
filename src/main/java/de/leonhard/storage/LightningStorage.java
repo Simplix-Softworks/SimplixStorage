@@ -28,7 +28,7 @@ public class LightningStorage {
 	private final File directory;
 	private final String name;
 	private final String path;
-	private InputStream inputStream;
+	private BufferedInputStream inputStream;
 	private ReloadSetting reloadSetting;
 	private ConfigSetting configSetting;
 	private DataType dataType;
@@ -134,7 +134,7 @@ public class LightningStorage {
 	 *
 	 * @param inputStream the Data to be imported.
 	 */
-	public final LightningStorage fromInputStream(@Nullable final InputStream inputStream) {
+	public final LightningStorage fromInputStream(@Nullable final BufferedInputStream inputStream) {
 		this.inputStream = inputStream;
 		return this;
 	}
