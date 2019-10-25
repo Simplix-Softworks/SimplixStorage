@@ -1,11 +1,12 @@
 package de.leonhard.storage.lightningstorage.internal.datafiles.config;
 
 import de.leonhard.storage.lightningstorage.editor.LightningEditor;
-import de.leonhard.storage.lightningstorage.internal.base.FileData;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.LightningFile;
+import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
+import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.LightningUtils;
+import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -15,11 +16,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Extended LightningFile with added methods for Config purposes
+ */
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile {
 
-	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
-		super(file, inputStream, reloadSetting, (configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting), fileDataType);
+	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final DataType dataType) {
+		super(file, inputStream, reloadSetting, (configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting), dataType);
 	}
 
 
@@ -29,7 +33,7 @@ public class LightningConfig extends LightningFile {
 		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
 		} else {
-			return LightningUtils.getHeader(this.fileData, getFileDataType(), getConfigSetting());
+			return LightningUtils.getHeader(this.fileData, getDataType(), getConfigSetting());
 		}
 	}
 
@@ -37,7 +41,7 @@ public class LightningConfig extends LightningFile {
 		update();
 
 		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
-			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, header, getFileDataType(), getConfigSetting());
+			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, header, getDataType(), getConfigSetting());
 			if (!this.fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
 			}
@@ -50,15 +54,15 @@ public class LightningConfig extends LightningFile {
 		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
 		} else {
-			return LightningUtils.getFooter(fileData, getFileDataType(), getConfigSetting());
+			return LightningUtils.getFooter(fileData, getDataType(), getConfigSetting());
 		}
 	}
 
-	public void setFooter(@NotNull final List<String> footer) {
+	public void setFooter(@Nullable final List<String> footer) {
 		update();
 
 		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
-			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, footer, getFileDataType(), getConfigSetting());
+			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, footer, getDataType(), getConfigSetting());
 			if (!fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
 			}
@@ -66,6 +70,7 @@ public class LightningConfig extends LightningFile {
 	}
 
 	public List<String> getHeader(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
@@ -73,17 +78,18 @@ public class LightningConfig extends LightningFile {
 		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
 		} else {
-			return LightningUtils.getHeader(this.fileData, finalKey, getFileDataType(), getConfigSetting());
+			return LightningUtils.getHeader(this.fileData, finalKey, getDataType(), getConfigSetting());
 		}
 	}
 
 	public void setHeader(@NotNull final String key, @Nullable final List<String> header) {
+		Valid.notNull(key, "Key must not be null");
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
 		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
-			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, finalKey, header, getFileDataType(), getConfigSetting());
+			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, finalKey, header, getDataType(), getConfigSetting());
 			if (!fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
 			}
@@ -91,6 +97,7 @@ public class LightningConfig extends LightningFile {
 	}
 
 	public List<String> getFooter(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
@@ -98,17 +105,18 @@ public class LightningConfig extends LightningFile {
 		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
 			return new ArrayList<>();
 		} else {
-			return LightningUtils.getFooter(this.fileData, finalKey, getFileDataType(), getConfigSetting());
+			return LightningUtils.getFooter(this.fileData, finalKey, getDataType(), getConfigSetting());
 		}
 	}
 
 	public void setFooter(@NotNull final String key, @Nullable final List<String> footer) {
+		Valid.notNull(key, "Key must not be null");
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
 		if (getConfigSetting() != ConfigSetting.SKIP_COMMENTS) {
-			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, finalKey, footer, getFileDataType(), getConfigSetting());
+			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, finalKey, footer, getDataType(), getConfigSetting());
 			if (!fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getConfigSetting());
 			}

@@ -1,8 +1,8 @@
 package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
-import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
+import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import java.io.File;
 import java.io.InputStream;
@@ -12,19 +12,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Class to manage CSV-Type Files
+ */
 @SuppressWarnings("unused")
 public class CSVFile extends FlatFile {
 
-	public CSVFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
+	public CSVFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final DataType dataType) {
 		super(file, FileType.CSV);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (fileDataType != null) {
-			setFileDataType(fileDataType);
+		if (dataType != null) {
+			setDataType(dataType);
 		} else {
-			setFileDataType(FileData.Type.STANDARD);
+			setDataType(DataType.STANDARD);
 		}
 
 		reload();
@@ -127,6 +130,10 @@ public class CSVFile extends FlatFile {
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		//TODO
+	}
+
+	protected final CSVFile getCSVFileInstance() {
+		return this;
 	}
 
 	@Override

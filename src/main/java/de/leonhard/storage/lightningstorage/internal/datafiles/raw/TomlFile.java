@@ -2,8 +2,10 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
+import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
+import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,19 +13,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Class to manager Toml-Type Files
+ */
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
-	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
+	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final DataType dataType) {
 		super(file, FileType.TOML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (fileDataType != null) {
-			setFileDataType(fileDataType);
+		if (dataType != null) {
+			setDataType(dataType);
 		} else {
-			setFileDataType(FileData.Type.STANDARD);
+			setDataType(DataType.STANDARD);
 		}
 
 		reload();
@@ -46,6 +51,7 @@ public class TomlFile extends FlatFile {
 
 	@Override
 	public Object get(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		update();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(key);
@@ -59,6 +65,7 @@ public class TomlFile extends FlatFile {
 	 */
 	@Override
 	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
+		Valid.notNull(key, "Key must not be null");
 		if (insert(key, value)) {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
@@ -72,6 +79,7 @@ public class TomlFile extends FlatFile {
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();

@@ -1,9 +1,10 @@
 package de.leonhard.storage.lightningstorage.internal.datafiles.config;
 
-import de.leonhard.storage.lightningstorage.internal.base.FileData;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.internal.datafiles.raw.YamlFile;
+import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
+import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
+import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +14,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Extended YamlFile with added methods for Config purposes
+ */
 @SuppressWarnings("unused")
 public class YamlConfig extends YamlFile {
 
 	private List<String> header;
 
 
-	public YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
-		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, fileDataType);
+	public YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final DataType dataType) {
+		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, dataType);
 	}
 
 
@@ -41,6 +45,7 @@ public class YamlConfig extends YamlFile {
 	}
 
 	public void setHeader(@NotNull final List<String> header) {
+		Valid.notNull(header, "Key must not be null");
 		List<String> tmp = new ArrayList<>();
 		//Updating the values to have a comments, if someone forgets to set them
 		for (final String line : header) {

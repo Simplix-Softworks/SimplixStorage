@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Basic Interface for the Data Classes
+ */
 @SuppressWarnings({"unused", "unchecked"})
 public interface StorageBase {
 

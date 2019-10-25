@@ -5,10 +5,12 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.lightningstorage.editor.YamlEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
+import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.YamlUtils;
+import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Class to manager Yaml-Type Files
+ */
 @SuppressWarnings({"unchecked", "unused"})
 public class YamlFile extends FlatFile {
 
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils parser;
 
-	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final FileData.Type fileDataType) {
+	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final DataType dataType) {
 		super(file, FileType.YAML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -33,10 +38,10 @@ public class YamlFile extends FlatFile {
 		if (configSetting != null) {
 			setConfigSetting(configSetting);
 		}
-		if (fileDataType != null) {
-			setFileDataType(fileDataType);
+		if (dataType != null) {
+			setDataType(dataType);
 		} else {
-			setFileDataType(FileData.Type.STANDARD);
+			setDataType(DataType.STANDARD);
 		}
 
 		this.yamlEditor = new YamlEditor(this.file);
@@ -63,6 +68,7 @@ public class YamlFile extends FlatFile {
 
 	@Override
 	public Object get(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		update();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
@@ -70,6 +76,7 @@ public class YamlFile extends FlatFile {
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
@@ -102,18 +109,18 @@ public class YamlFile extends FlatFile {
 			try {
 				if (!ConfigSetting.PRESERVE_COMMENTS.equals(configSetting)) {
 					write(Objects.requireNonNull(fileData).toMap());
-					return;
+				} else {
+					final List<String> unEdited = yamlEditor.read();
+					final List<String> header = yamlEditor.readHeader();
+					final List<String> footer = yamlEditor.readFooter();
+					write(fileData.toMap());
+					header.addAll(yamlEditor.read());
+					if (!header.containsAll(footer)) {
+						header.addAll(footer);
+					}
+					yamlEditor.write(parser.parseComments(unEdited, header));
+					write(Objects.requireNonNull(fileData).toMap());
 				}
-				final List<String> unEdited = yamlEditor.read();
-				final List<String> header = yamlEditor.readHeader();
-				final List<String> footer = yamlEditor.readFooter();
-				write(fileData.toMap());
-				header.addAll(yamlEditor.read());
-				if (!header.containsAll(footer)) {
-					header.addAll(footer);
-				}
-				yamlEditor.write(parser.parseComments(unEdited, header));
-				write(Objects.requireNonNull(fileData).toMap());
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
 				e.printStackTrace();

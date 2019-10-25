@@ -1,5 +1,8 @@
-package de.leonhard.storage.lightningstorage.internal.base.enums;
+package de.leonhard.storage.lightningstorage.internal.enums;
 
+/**
+ * an Enum defining the reload behaviour of the Data classes
+ */
 public enum ReloadSetting {
 
 	/**

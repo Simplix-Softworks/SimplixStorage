@@ -1,7 +1,7 @@
 package de.leonhard.storage.lightningstorage.editor;
 
-import de.leonhard.storage.lightningstorage.internal.base.FileData;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
 import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +17,9 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Class for parsing a Lightning-Type File
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LightningEditor {
 
@@ -41,14 +44,14 @@ public class LightningEditor {
 	 * Read the Data of a File.
 	 *
 	 * @param file          the File to be read from.
-	 * @param fileDataType  the FileDataType to be used.
+	 * @param dataType      the FileDataType to be used.
 	 * @param configSetting the ConfigSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(@NotNull final File file, @NotNull final FileData.Type fileDataType, @NotNull final ConfigSetting configSetting) {
+	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(fileDataType, configSetting, null);
+			Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(dataType, configSetting, null);
 
 			String tempKey = null;
 			int blankLine = -1;
@@ -71,7 +74,7 @@ public class LightningEditor {
 					} else if (tempKey == null) {
 						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalRead(file.getAbsolutePath(), lines, blankLine, commentLine, fileDataType, configSetting));
+					tempMap.put(tempKey, internalRead(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, configSetting));
 				} else {
 					if (tempLine.contains(" = ")) {
 						String[] line = tempLine.split(" = ");
@@ -81,7 +84,7 @@ public class LightningEditor {
 							List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
 							tempMap.put(line[0], list);
 						} else if (line[1].startsWith("[") && !line[1].endsWith("]")) {
-							tempMap.put(line[0], readList(file.getAbsolutePath(), lines, fileDataType, configSetting));
+							tempMap.put(line[0], readList(file.getAbsolutePath(), lines, dataType, configSetting));
 						} else {
 							tempMap.put(line[0], line[1]);
 						}
@@ -104,8 +107,8 @@ public class LightningEditor {
 
 
 	// <Read Data>
-	private static Map<String, Object> internalRead(final String filePath, final List<String> lines, int blankLine, int commentLine, final FileData.Type fileDataType, final ConfigSetting configSetting) {
-		Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(fileDataType, configSetting, null);
+	private static Map<String, Object> internalRead(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final ConfigSetting configSetting) {
+		Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(dataType, configSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -127,7 +130,7 @@ public class LightningEditor {
 				} else if (tempKey == null) {
 					throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, internalRead(filePath, lines, blankLine, commentLine, fileDataType, configSetting));
+				tempMap.put(tempKey, internalRead(filePath, lines, blankLine, commentLine, dataType, configSetting));
 			} else {
 				if (tempLine.contains(" = ")) {
 					String[] line = tempLine.split(" = ");
@@ -137,7 +140,7 @@ public class LightningEditor {
 						List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
 						tempMap.put(line[0], list);
 					} else if (line[1].startsWith("[")) {
-						tempMap.put(line[0], readList(filePath, lines, fileDataType, configSetting));
+						tempMap.put(line[0], readList(filePath, lines, dataType, configSetting));
 					} else {
 						tempMap.put(line[0], line[1]);
 					}
@@ -153,8 +156,8 @@ public class LightningEditor {
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
 
-	private static List<String> readList(final String filePath, final List<String> lines, final FileData.Type fileDataType, final ConfigSetting configSetting) {
-		List<String> localList = FileTypeUtils.getNewDataList(fileDataType, configSetting, null);
+	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final ConfigSetting configSetting) {
+		List<String> localList = FileTypeUtils.getNewDataList(dataType, configSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();
 			lines.remove(0);
@@ -177,11 +180,11 @@ public class LightningEditor {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
 				Iterator mapIterator = map.keySet().iterator();
-				topLayerWriteWithComments(writer, map, mapIterator.next().toString());
+				topLayerWriteWithComments(writer, map, (String) mapIterator.next());
 				//noinspection unchecked
 				mapIterator.forEachRemaining(localKey -> {
 					writer.println();
-					topLayerWriteWithComments(writer, map, localKey.toString());
+					topLayerWriteWithComments(writer, map, (String) localKey);
 				});
 			}
 			writer.flush();

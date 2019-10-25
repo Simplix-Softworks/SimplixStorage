@@ -7,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 
+/**
+ * Class to handle the Nested HashMaps used to cache the Data read from the Files
+ */
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class FileData {
 
@@ -286,24 +289,5 @@ public class FileData {
 			FileData fileData = (FileData) obj;
 			return this.localMap.equals(fileData.localMap);
 		}
-	}
-
-	/**
-	 * an Enum defining how the Data should be stored.
-	 */
-	public enum Type {
-
-		/**
-		 * The Data is stored in a LinkedHashMap.
-		 */
-		SORTED,
-		/**
-		 * The Data is stored in a HashMap.
-		 */
-		STANDARD,
-		/**
-		 * the Storage type depends on the ConfigSetting(HashMap for SKIP_COMMENTS, LinkedHashMap for PRESERVE_COMMENTS)
-		 */
-		AUTOMATIC
 	}
 }

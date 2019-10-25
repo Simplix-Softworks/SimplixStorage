@@ -1,13 +1,14 @@
 package de.leonhard.storage.lightningstorage.internal.base;
 
-import de.leonhard.storage.lightningstorage.internal.base.enums.ConfigSetting;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
+import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
+import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Set;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -16,13 +17,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+/**
+ * Basic foundation for the Data Classes
+ */
 @SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected File file;
 	protected FileData fileData;
-	protected FileType fileType;
 
 	@Setter
 	private String pathPrefix;
@@ -31,7 +34,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Setter
 	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
 	@Setter
-	private FileData.Type fileDataType = FileData.Type.AUTOMATIC;
+	private DataType dataType = DataType.AUTOMATIC;
+	private FileType fileType;
 	private long lastModified;
 
 
@@ -53,8 +57,14 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this.file.getPath();
 	}
 
-	public final String getCanonicalPath() throws IOException {
-		return this.file.getCanonicalPath();
+	public final String getCanonicalPath() {
+		try {
+			return this.file.getCanonicalPath();
+		} catch (IOException e) {
+			System.err.println("Could not get Canonical Path of '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
 	}
 
 	public final String getName() {
@@ -66,16 +76,15 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			clear();
 		} else {
 			FileUtils.writeToFile(this.file, inputStream);
+			reload();
 		}
 	}
 
-	/**
-	 * Delete all content of the File.
-	 */
 	public final synchronized void clear() {
 		try {
 			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
 			writer.write("");
+			reload();
 		} catch (IOException e) {
 			System.err.println("Could not clear '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -83,11 +92,17 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+	/**
+	 * Reread the content of our flat file
+	 */
+	public abstract void reload();
+
 	public final synchronized void setFileContentFromFile(@Nullable final File file) {
 		if (file == null) {
 			clear();
 		} else {
 			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(file));
+			reload();
 		}
 	}
 
@@ -96,11 +111,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			clear();
 		} else {
 			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(resource));
+			reload();
 		}
 	}
 
 	@Override
 	public boolean hasKey(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		update();
 		return fileData.containsKey(tempKey);
@@ -137,17 +154,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return FileUtils.hasChanged(file, lastModified);
 	}
 
-	/**
-	 * Reread the content of our flat file
-	 */
-	public abstract void reload();
-
 	public Set<String> keySet() {
 		update();
 		return fileData.keySet();
 	}
 
 	public Set<String> keySet(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		update();
 		return fileData.keySet(key);
 	}
@@ -158,6 +171,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	public Set<String> singleLayerKeySet(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		update();
 		return fileData.singleLayerKeySet(key);
 	}
@@ -170,6 +184,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
 	protected final boolean insert(@NotNull final String key, @Nullable final Object value) {
+		Valid.notNull(key, "Key must not be null");
 		update();
 
 		final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
@@ -206,12 +221,17 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @param replacement the Replacement Sequence.
 	 */
 	protected synchronized void replace(@NotNull final CharSequence target, @NotNull final CharSequence replacement) throws IOException {
-		final List<String> lines = Files.readAllLines(file.toPath());
-		final List<String> result = new ArrayList<>();
-		for (String line : lines) {
-			result.add(line.replace(target, replacement));
-		}
-		Files.write(file.toPath(), result);
+		Valid.notNull(target, "Target must not be null");
+		Valid.notNull(replacement, "Replacement must not be null");
+
+		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
+		PrintWriter writer = new PrintWriter(this.file);
+		writer.print(lines.next());
+		//noinspection unchecked
+		lines.forEachRemaining(line -> {
+			writer.println();
+			writer.print(line);
+		});
 	}
 
 	@Override

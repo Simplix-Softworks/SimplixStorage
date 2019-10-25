@@ -6,6 +6,9 @@ import java.util.*;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Adds several utility Methods for Yaml-Files
+ */
 @SuppressWarnings("unused")
 public class YamlUtils {
 

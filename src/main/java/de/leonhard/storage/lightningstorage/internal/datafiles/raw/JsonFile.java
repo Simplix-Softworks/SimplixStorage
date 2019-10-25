@@ -2,9 +2,11 @@ package de.leonhard.storage.lightningstorage.internal.datafiles.raw;
 
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.internal.base.enums.ReloadSetting;
+import de.leonhard.storage.lightningstorage.internal.enums.DataType;
+import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
 import de.leonhard.storage.lightningstorage.utils.FileUtils;
 import de.leonhard.storage.lightningstorage.utils.JsonUtils;
+import de.leonhard.storage.lightningstorage.utils.basic.Valid;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,19 +19,22 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 
+/**
+ * Class to manager Json-Type Files
+ */
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
-	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final FileData.Type fileDataType) {
+	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final DataType dataType) {
 		super(file, FileType.JSON);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (fileDataType != null) {
-			setFileDataType(fileDataType);
+		if (dataType != null) {
+			setDataType(dataType);
 		} else {
-			setFileDataType(FileData.Type.STANDARD);
+			setDataType(DataType.STANDARD);
 		}
 
 		reload();
@@ -54,6 +59,7 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public Map getMap(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		String tempKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		if (!hasKey(tempKey)) {
 			return new HashMap();
@@ -63,6 +69,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	private Map getMapWithoutPath(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		update();
 
 		if (!hasKey(key)) {
@@ -84,6 +91,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	private Object getObject(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		if (!hasKey(key)) {
 			return null;
 		}
@@ -96,6 +104,7 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
+		Valid.notNull(key, "Key must not be null");
 		if (insert(key, value)) {
 			try {
 				write(new JSONObject(fileData.toMap()));
@@ -114,6 +123,7 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public Object get(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		update();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return getObject(finalKey);
@@ -121,6 +131,7 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
+		Valid.notNull(key, "Key must not be null");
 		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
 		update();
