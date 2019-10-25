@@ -2,13 +2,12 @@ package de.leonhard.storage.lightningstorage.editor;
 
 import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
 import de.leonhard.storage.lightningstorage.internal.enums.DataType;
-import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,7 @@ public class LightningEditor {
 	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(dataType, configSetting, null);
+			Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
 
 			String tempKey = null;
 			int blankLine = -1;
@@ -76,15 +75,21 @@ public class LightningEditor {
 					}
 					tempMap.put(tempKey, internalRead(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, configSetting));
 				} else {
-					if (tempLine.contains(" = ")) {
-						String[] line = tempLine.split(" = ");
+					if (tempLine.contains("=")) {
+						String[] line = tempLine.split("=");
 						line[0] = line[0].trim();
 						line[1] = line[1].trim();
-						if (line[1].startsWith("[") && line[1].endsWith("]")) {
-							List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
-							tempMap.put(line[0], list);
-						} else if (line[1].startsWith("[") && !line[1].endsWith("]")) {
-							tempMap.put(line[0], readList(file.getAbsolutePath(), lines, dataType, configSetting));
+						if (line[1].startsWith("[")) {
+							if (line[1].endsWith("]")) {
+								String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+								List<String> list = new ArrayList<>();
+								for (String value : listArray) {
+									list.add(value.trim());
+								}
+								tempMap.put(line[0], list);
+							} else {
+								tempMap.put(line[0], readList(file.getAbsolutePath(), lines, dataType, configSetting));
+							}
 						} else {
 							tempMap.put(line[0], line[1]);
 						}
@@ -108,7 +113,7 @@ public class LightningEditor {
 
 	// <Read Data>
 	private static Map<String, Object> internalRead(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final ConfigSetting configSetting) {
-		Map<String, Object> tempMap = FileTypeUtils.getNewDataMap(dataType, configSetting, null);
+		Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -132,15 +137,21 @@ public class LightningEditor {
 				}
 				tempMap.put(tempKey, internalRead(filePath, lines, blankLine, commentLine, dataType, configSetting));
 			} else {
-				if (tempLine.contains(" = ")) {
-					String[] line = tempLine.split(" = ");
+				if (tempLine.contains("=")) {
+					String[] line = tempLine.split("=");
 					line[0] = line[0].trim();
 					line[1] = line[1].trim();
-					if (line[1].startsWith("[") && line[1].endsWith("]")) {
-						List<String> list = Arrays.asList(line[1].substring(1, line[1].length() - 1).split(", "));
-						tempMap.put(line[0], list);
-					} else if (line[1].startsWith("[")) {
-						tempMap.put(line[0], readList(filePath, lines, dataType, configSetting));
+					if (line[1].startsWith("[")) {
+						if (line[1].endsWith("]")) {
+							String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+							List<String> list = dataType.getNewDataList(configSetting, null);
+							for (String value : listArray) {
+								list.add(value.trim());
+							}
+							tempMap.put(line[0], list);
+						} else {
+							tempMap.put(line[0], readList(filePath, lines, dataType, configSetting));
+						}
 					} else {
 						tempMap.put(line[0], line[1]);
 					}
@@ -157,7 +168,7 @@ public class LightningEditor {
 	}
 
 	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final ConfigSetting configSetting) {
-		List<String> localList = FileTypeUtils.getNewDataList(dataType, configSetting, null);
+		List<String> localList = dataType.getNewDataList(configSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();
 			lines.remove(0);

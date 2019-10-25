@@ -4,7 +4,6 @@ import de.leonhard.storage.lightningstorage.editor.LightningEditor;
 import de.leonhard.storage.lightningstorage.internal.base.FileData;
 import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
 import de.leonhard.storage.lightningstorage.internal.enums.DataType;
-import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +30,7 @@ public class LightningUtils {
 	 * @return a List containing the Header of the FileData.
 	 */
 	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull ConfigSetting configSetting) {
-		List<String> returnList = FileTypeUtils.getNewDataList(dataType, configSetting, null);
+		List<String> returnList = dataType.getNewDataList(configSetting, null);
 		for (String localKey : fileData.singleLayerKeySet()) {
 			if (fileData.get(localKey) == LightningEditor.LineType.COMMENT) {
 				returnList.add(localKey.substring(0, localKey.lastIndexOf("{=}")));
@@ -61,7 +60,7 @@ public class LightningUtils {
 				break;
 			}
 		}
-		Map<String, Object> finalMap = FileTypeUtils.getNewDataMap(dataType, configSetting, null);
+		Map<String, Object> finalMap = dataType.getNewDataMap(configSetting, null);
 		if (header != null) {
 			int commentLine = -1;
 			for (String comment : header) {
@@ -94,7 +93,7 @@ public class LightningUtils {
 					break;
 				}
 			}
-			Map<String, Object> finalMap = FileTypeUtils.getNewDataMap(dataType, configSetting, null);
+			Map<String, Object> finalMap = dataType.getNewDataMap(configSetting, null);
 			if (header != null) {
 				int commentLine = -1;
 				for (String comment : header) {
@@ -116,7 +115,7 @@ public class LightningUtils {
 	 * @return a List containing the Footer of the FileData.
 	 */
 	public static List<String> getFooter(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull ConfigSetting configSetting) {
-		List<String> returnList = FileTypeUtils.getNewDataList(dataType, configSetting, null);
+		List<String> returnList = dataType.getNewDataList(configSetting, null);
 		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet());
 		Collections.reverse(keyList);
 		for (String localKey : keyList) {
@@ -152,7 +151,7 @@ public class LightningUtils {
 				break;
 			}
 		}
-		Map<String, Object> finalMap = FileTypeUtils.getNewDataMap(dataType, configSetting, tempMap);
+		Map<String, Object> finalMap = dataType.getNewDataMap(configSetting, tempMap);
 		if (footer != null) {
 			int commentLine = -1;
 			for (String comment : footer) {
@@ -186,7 +185,7 @@ public class LightningUtils {
 					break;
 				}
 			}
-			Map<String, Object> finalMap = FileTypeUtils.getNewDataMap(dataType, configSetting, tempMap);
+			Map<String, Object> finalMap = dataType.getNewDataMap(configSetting, tempMap);
 			if (footer != null) {
 				int commentLine = -1;
 				for (String comment : footer) {
@@ -209,7 +208,7 @@ public class LightningUtils {
 	 * @return a List containing the Header of the SubBlock.
 	 */
 	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final String key, @NotNull final DataType dataType, @NotNull ConfigSetting configSetting) {
-		List<String> returnList = FileTypeUtils.getNewDataList(dataType, configSetting, null);
+		List<String> returnList = dataType.getNewDataList(configSetting, null);
 		for (String localKey : fileData.singleLayerKeySet(key)) {
 			if (fileData.get(key + "." + localKey) == LightningEditor.LineType.COMMENT) {
 				returnList.add(localKey.substring(0, localKey.lastIndexOf("{=}")));
@@ -230,7 +229,7 @@ public class LightningUtils {
 	 * @return a List containing the Footer of the SubBlock.
 	 */
 	public static List<String> getFooter(@NotNull final FileData fileData, final String key, @NotNull final DataType dataType, @NotNull ConfigSetting configSetting) {
-		List<String> returnList = FileTypeUtils.getNewDataList(dataType, configSetting, null);
+		List<String> returnList = dataType.getNewDataList(configSetting, null);
 		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet(key));
 		Collections.reverse(keyList);
 		for (String localKey : keyList) {
