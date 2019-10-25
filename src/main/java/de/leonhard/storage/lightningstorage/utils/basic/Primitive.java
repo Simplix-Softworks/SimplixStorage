@@ -21,7 +21,7 @@ public class Primitive {
 			tempObj = Double.parseDouble((String) obj);
 		} else if (obj instanceof String && def instanceof Short) {
 			tempObj = Short.parseShort((String) obj);
-		} else if (obj instanceof String && def instanceof Boolean) {
+		} else if (obj instanceof String && def instanceof java.lang.Boolean) {
 			tempObj = ((String) obj).equalsIgnoreCase("true");
 		}
 		//noinspection unchecked

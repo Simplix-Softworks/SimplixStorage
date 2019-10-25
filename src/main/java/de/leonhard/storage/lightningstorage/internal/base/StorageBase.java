@@ -107,6 +107,20 @@ public interface StorageBase {
 	}
 
 	/**
+	 * Gets a short from a file
+	 *
+	 * @param key Path to int in file
+	 * @return Short from file
+	 */
+	default int getShort(@NotNull final String key) {
+		if (!hasKey(key)) {
+			return 0;
+		} else {
+			return Primitive.SHORT.getShort(get(key));
+		}
+	}
+
+	/**
 	 * Get a IntegerList from a file
 	 *
 	 * @param key Path to Integer-List in file
@@ -217,7 +231,8 @@ public interface StorageBase {
 		if (!hasKey(key)) {
 			return "";
 		} else {
-			return get(key).toString();
+			Object tempObject = get(key);
+			return tempObject instanceof String ? (String) tempObject : tempObject.toString();
 		}
 	}
 

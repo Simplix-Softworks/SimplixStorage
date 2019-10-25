@@ -210,7 +210,7 @@ public class LightningStorage {
 	 *
 	 * @param fileDataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
 	 */
-	public final LightningStorage fileDataType(@Nullable final FileData.Type fileDataType) {
+	public final LightningStorage dataType(@Nullable final FileData.Type fileDataType) {
 		this.fileDataType = fileDataType;
 		return this;
 	}
@@ -222,7 +222,7 @@ public class LightningStorage {
 	/**
 	 * Create a CSV-Type File.
 	 */
-	public final CSVFile asCSV() {
+	public final CSVFile asCSVFile() {
 		return this.file == null
 			   ? (this.directory == null
 				  ? new CSVFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.CSV)), this.inputStream, this.reloadSetting, this.fileDataType)
@@ -233,7 +233,7 @@ public class LightningStorage {
 	/**
 	 * Create a Json-Type File.
 	 */
-	public final JsonFile asJson() {
+	public final JsonFile asJsonFile() {
 		return this.file == null
 			   ? (this.directory == null
 				  ? new JsonFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.JSON)), this.inputStream, this.reloadSetting, this.fileDataType)
@@ -266,7 +266,7 @@ public class LightningStorage {
 	/**
 	 * Create a Toml-Type File.
 	 */
-	public final TomlFile asToml() {
+	public final TomlFile asTomlFile() {
 		return this.file == null
 			   ? (this.directory == null
 				  ? new TomlFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.TOML)), this.inputStream, this.reloadSetting, this.fileDataType)
@@ -277,7 +277,7 @@ public class LightningStorage {
 	/**
 	 * Create a Yaml-Type File.
 	 */
-	public final YamlFile asYaml() {
+	public final YamlFile asYamlFile() {
 		return this.file == null
 			   ? (this.directory == null
 				  ? new YamlFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.configSetting, this.fileDataType)

@@ -51,7 +51,7 @@ public class YamlUtils {
 		// Loop over the remaining lines
 		Collections.reverse(lines);// Reverse -> Should start from the end
 		for (final String line : lines) {
-			if (line.replaceAll("\\s+", "").startsWith("#") || line.isEmpty()) { // Replacing the whitespaces
+			if (line.trim().startsWith("#") || line.isEmpty()) { // Replacing the whitespaces
 				storage.add(line);
 				continue;
 			}
@@ -70,7 +70,6 @@ public class YamlUtils {
 		for (final String key : keysToRemove) {
 			result.remove(key);
 		}
-
 		return result;
 	}
 
