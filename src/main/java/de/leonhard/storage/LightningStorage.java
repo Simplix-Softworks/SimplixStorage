@@ -1,15 +1,15 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.lightningstorage.internal.base.FlatFile;
-import de.leonhard.storage.lightningstorage.internal.datafiles.config.LightningConfig;
-import de.leonhard.storage.lightningstorage.internal.datafiles.config.YamlConfig;
-import de.leonhard.storage.lightningstorage.internal.datafiles.raw.*;
-import de.leonhard.storage.lightningstorage.internal.enums.ConfigSetting;
-import de.leonhard.storage.lightningstorage.internal.enums.DataType;
-import de.leonhard.storage.lightningstorage.internal.enums.ReloadSetting;
-import de.leonhard.storage.lightningstorage.utils.FileUtils;
-import de.leonhard.storage.lightningstorage.utils.basic.FileTypeUtils;
-import de.leonhard.storage.lightningstorage.utils.basic.Valid;
+import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.datafiles.config.LightningConfig;
+import de.leonhard.storage.internal.datafiles.config.YamlConfig;
+import de.leonhard.storage.internal.datafiles.raw.*;
+import de.leonhard.storage.internal.enums.ConfigSetting;
+import de.leonhard.storage.internal.enums.DataType;
+import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.utils.FileUtils;
+import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
+import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.file.Path;
