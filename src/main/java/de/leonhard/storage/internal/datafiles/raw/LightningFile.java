@@ -44,12 +44,27 @@ public class LightningFile extends FlatFile {
 		this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
 	}
 
+	public void reload(@NotNull final ConfigSetting configSetting) {
+		setConfigSetting(configSetting);
+		reload();
+	}
+
+	public Object get(@NotNull final String key, @NotNull final ConfigSetting configSetting) {
+		setConfigSetting(configSetting);
+		return get(key);
+	}
+
 	@Override
 	public Object get(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
+	}
+
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final ConfigSetting configSetting) {
+		setConfigSetting(configSetting);
+		set(key, value);
 	}
 
 	@Override
@@ -66,6 +81,10 @@ public class LightningFile extends FlatFile {
 		}
 	}
 
+	public synchronized void remove(@NotNull final String key, @NotNull final ConfigSetting configSetting) {
+		setConfigSetting(configSetting);
+		remove(key);
+	}
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {

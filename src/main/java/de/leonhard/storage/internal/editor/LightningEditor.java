@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +47,18 @@ public class LightningEditor {
 	 * @return a Map containing the Data of the File.
 	 */
 	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
+		if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
+			return initialReadWithComments(file, dataType, configSetting);
+		} else if (configSetting == ConfigSetting.SKIP_COMMENTS) {
+			return initialReadWithOutComments(file, dataType, configSetting);
+		} else {
+			throw new IllegalArgumentException("Illegal ConfigSetting");
+		}
+	}
+
+	// <Read Data>
+	// <Read Data with Comments>
+	private static Map<String, Object> initialReadWithComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
@@ -73,33 +84,9 @@ public class LightningEditor {
 					} else if (tempKey == null) {
 						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalRead(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, configSetting));
+					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, configSetting));
 				} else {
-					if (tempLine.contains("=")) {
-						String[] line = tempLine.split("=");
-						line[0] = line[0].trim();
-						line[1] = line[1].trim();
-						if (line[1].startsWith("[")) {
-							if (line[1].endsWith("]")) {
-								String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
-								List<String> list = new ArrayList<>();
-								for (String value : listArray) {
-									list.add(value.trim());
-								}
-								tempMap.put(line[0], list);
-							} else {
-								tempMap.put(line[0], readList(file.getAbsolutePath(), lines, dataType, configSetting));
-							}
-						} else {
-							tempMap.put(line[0], line[1]);
-						}
-					} else {
-						if (lines.get(1).contains("{")) {
-							tempKey = tempLine;
-						} else {
-							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' does not contain value or subblock");
-						}
-					}
+					tempKey = readKey(file.getAbsolutePath(), lines, dataType, configSetting, tempMap, tempKey, tempLine);
 				}
 			}
 			return tempMap;
@@ -110,9 +97,7 @@ public class LightningEditor {
 		}
 	}
 
-
-	// <Read Data>
-	private static Map<String, Object> internalRead(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final ConfigSetting configSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final ConfigSetting configSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
 		String tempKey = null;
 
@@ -128,6 +113,7 @@ public class LightningEditor {
 				blankLine++;
 				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
+				commentLine++;
 				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
@@ -135,37 +121,107 @@ public class LightningEditor {
 				} else if (tempKey == null) {
 					throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, internalRead(filePath, lines, blankLine, commentLine, dataType, configSetting));
+				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType, configSetting));
 			} else {
-				if (tempLine.contains("=")) {
-					String[] line = tempLine.split("=");
-					line[0] = line[0].trim();
-					line[1] = line[1].trim();
-					if (line[1].startsWith("[")) {
-						if (line[1].endsWith("]")) {
-							String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
-							List<String> list = dataType.getNewDataList(configSetting, null);
-							for (String value : listArray) {
-								list.add(value.trim());
-							}
-							tempMap.put(line[0], list);
-						} else {
-							tempMap.put(line[0], readList(filePath, lines, dataType, configSetting));
+				tempKey = readKey(filePath, lines, dataType, configSetting, tempMap, tempKey, tempLine);
+			}
+		}
+		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
+	}
+	// </Read Data with Comments>
+
+	// <Read Data without Comments>
+	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
+		try {
+			List<String> lines = Files.readAllLines(file.toPath());
+			Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
+
+			String tempKey = null;
+			while (lines.size() > 0) {
+				String tempLine = lines.get(0).trim();
+				lines.remove(0);
+
+				if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
+					if (tempLine.contains("}")) {
+						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
+					} else if (tempLine.endsWith("{")) {
+						if (!tempLine.equals("{")) {
+							tempKey = tempLine.replace("{", "").trim();
+						} else if (tempKey == null) {
+							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
 						}
+						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, configSetting));
 					} else {
-						tempMap.put(line[0], line[1]);
+						tempKey = readKey(file.getAbsolutePath(), lines, dataType, configSetting, tempMap, tempKey, tempLine);
 					}
+				}
+			}
+			return tempMap;
+		} catch (IOException | ArrayIndexOutOfBoundsException e) {
+			System.err.println("Error while reading '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType, final ConfigSetting configSetting) throws ArrayIndexOutOfBoundsException {
+		Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
+		String tempKey = null;
+
+		while (lines.size() > 0) {
+			String tempLine = lines.get(0).trim();
+			lines.remove(0);
+
+			if (!tempLine.isEmpty() && !tempLine.startsWith("#")) {
+				if (tempLine.equals("}")) {
+					return tempMap;
+				} else if (tempLine.contains("}")) {
+					throw new IllegalStateException("Error at '" + filePath + "' -> Block closed without being opened");
+				} else if (tempLine.endsWith("{")) {
+					if (!tempLine.equals("{")) {
+						tempKey = tempLine.replace("{", "").trim();
+					} else if (tempKey == null) {
+						throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
+					}
+					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType, configSetting));
 				} else {
-					if (lines.get(1).contains("{")) {
-						tempKey = tempLine;
-					} else {
-						throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' does not contain value or subblock");
-					}
+					tempKey = readKey(filePath, lines, dataType, configSetting, tempMap, tempKey, tempLine);
 				}
 			}
 		}
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
+	// </Read without Comments>
+
+	private static String readKey(String filePath, List<String> lines, DataType dataType, ConfigSetting configSetting, Map<String, Object> tempMap, String tempKey, String tempLine) {
+		if (tempLine.contains("=")) {
+			String[] line = tempLine.split("=");
+			line[0] = line[0].trim();
+			line[1] = line[1].trim();
+			if (line[1].startsWith("[")) {
+				if (line[1].endsWith("]")) {
+					String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+					List<String> list = dataType.getNewDataList(configSetting, null);
+					for (String value : listArray) {
+						list.add(value.trim());
+					}
+					tempMap.put(line[0], list);
+				} else {
+					tempMap.put(line[0], readList(filePath, lines, dataType, configSetting));
+				}
+			} else {
+				tempMap.put(line[0], line[1]);
+			}
+		} else {
+			if (lines.get(1).contains("{")) {
+				tempKey = tempLine;
+			} else {
+				throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' does not contain value or subblock");
+			}
+		}
+		return tempKey;
+	}
+
 
 	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final ConfigSetting configSetting) {
 		List<String> localList = dataType.getNewDataList(configSetting, null);

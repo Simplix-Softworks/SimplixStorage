@@ -35,9 +35,9 @@ public interface StorageBase {
 	 * @param key Key to check
 	 * @return Returned value
 	 */
-	boolean hasKey(@NotNull String key);
+	boolean hasKey(@NotNull final String key);
 
-	Object get(@NotNull String key);
+	Object get(@NotNull final String key);
 
 	/**
 	 * Get a byte from a file
@@ -222,7 +222,7 @@ public interface StorageBase {
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your file
 	 */
-	void set(@NotNull String key, @Nullable Object value);
+	void set(@NotNull final String key, @Nullable final Object value);
 
 	/**
 	 * Get a String from a file
