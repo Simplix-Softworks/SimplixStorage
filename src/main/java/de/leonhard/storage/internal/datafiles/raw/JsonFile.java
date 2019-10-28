@@ -36,18 +36,20 @@ public class JsonFile extends FlatFile {
 		} else {
 			setDataType(DataType.STANDARD);
 		}
-
-		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);
 		}
+
+		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
+		fileData = new FileData(new JSONObject(jsonTokener));
+		this.lastLoaded = System.currentTimeMillis();
 	}
 
 
 	@Override
 	public void reload() {
 		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
-		fileData = new FileData(new JSONObject(jsonTokener));
+		fileData.loadData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
@@ -97,9 +99,9 @@ public class JsonFile extends FlatFile {
 			return null;
 		}
 
-		if (key.contains(".")) {
+		/*if (key.contains(".")) {
 			return new FileData(fileData.toMap()).containsKey(key) ? new FileData(fileData.toMap()).get(key) : null;
-		}
+		}*/
 		return fileData.containsKey(key) ? fileData.get(key) : null;
 	}
 

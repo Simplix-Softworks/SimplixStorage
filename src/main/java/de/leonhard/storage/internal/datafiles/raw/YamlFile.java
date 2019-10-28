@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
+import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.FileData;
@@ -43,12 +44,20 @@ public class YamlFile extends FlatFile {
 		} else {
 			setDataType(DataType.STANDARD);
 		}
+		if (reloadSetting != null) {
+			setReloadSetting(reloadSetting);
+		}
 
 		this.yamlEditor = new YamlEditor(this.file);
 		this.parser = new YamlUtils(yamlEditor);
-		reload();
-		if (reloadSetting != null) {
-			setReloadSetting(reloadSetting);
+
+		try {
+			this.fileData = new FileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
+			this.lastLoaded = System.currentTimeMillis();
+		} catch (YamlException | FileNotFoundException e) {
+			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
@@ -56,7 +65,7 @@ public class YamlFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			fileData = new FileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
+			fileData.loadData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");

@@ -30,10 +30,17 @@ public class TomlFile extends FlatFile {
 		} else {
 			setDataType(DataType.STANDARD);
 		}
-
-		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);
+		}
+
+		try {
+			this.fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
+			this.lastLoaded = System.currentTimeMillis();
+		} catch (IOException e) {
+			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
@@ -41,7 +48,7 @@ public class TomlFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
+			fileData.loadData(com.electronwill.toml.Toml.read(getFile()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");

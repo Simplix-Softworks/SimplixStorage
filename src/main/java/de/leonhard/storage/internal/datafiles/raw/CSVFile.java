@@ -29,8 +29,6 @@ public class CSVFile extends FlatFile {
 		} else {
 			setDataType(DataType.STANDARD);
 		}
-
-		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);
 		}

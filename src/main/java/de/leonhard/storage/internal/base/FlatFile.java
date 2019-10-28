@@ -216,11 +216,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	protected final synchronized boolean create() {
 		if (this.file.exists()) {
-			this.lastLoaded = System.currentTimeMillis();
 			return false;
 		} else {
 			FileUtils.createFile(this.file);
-			this.lastLoaded = System.currentTimeMillis();
 			return true;
 		}
 	}

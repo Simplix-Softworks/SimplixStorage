@@ -25,6 +25,26 @@ public class FileData {
 
 
 	/**
+	 * Reload the contents of FileData.
+	 *
+	 * @param map the Contents to be inserted.
+	 */
+	public synchronized void loadData(@Nullable final Map<String, Object> map) {
+		this.localMap.clear();
+		if (map != null) {
+			this.localMap.putAll(map);
+		}
+	}
+
+	public synchronized void loadData(@Nullable final JSONObject jsonObject) {
+		this.localMap.clear();
+		if (jsonObject != null) {
+			this.localMap.putAll(jsonObject.toMap());
+		}
+	}
+
+
+	/**
 	 * Method to assign a value to a key.
 	 *
 	 * @param key   the key to be used.

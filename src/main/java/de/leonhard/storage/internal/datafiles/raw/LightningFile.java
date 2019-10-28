@@ -32,28 +32,29 @@ public class LightningFile extends FlatFile {
 		if (dataType != null) {
 			setDataType(dataType);
 		}
-
-		reload();
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);
 		}
+
+		this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
+		this.lastLoaded = System.currentTimeMillis();
+	}
+
+	public void reload(@NotNull final ConfigSetting configSetting) {
+		setConfigSetting(configSetting);
+		reload();
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
+			this.fileData.loadData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
-	}
-
-	public void reload(@NotNull final ConfigSetting configSetting) {
-		setConfigSetting(configSetting);
-		reload();
 	}
 
 	public Object get(@NotNull final String key, @NotNull final ConfigSetting configSetting) {
