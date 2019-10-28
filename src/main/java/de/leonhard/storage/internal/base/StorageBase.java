@@ -115,7 +115,7 @@ public interface StorageBase {
 	 * @param key Path to int in file
 	 * @return Short from file
 	 */
-	default int getShort(@NotNull final String key) {
+	default short getShort(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return 0;
 		} else {
