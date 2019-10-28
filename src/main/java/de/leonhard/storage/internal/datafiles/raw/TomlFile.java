@@ -42,8 +42,9 @@ public class TomlFile extends FlatFile {
 	public void reload() {
 		try {
 			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
+			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
-			System.err.println("Exception while reading '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}

@@ -56,11 +56,10 @@ public class YamlFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			@Cleanup YamlReader reader = new YamlReader(new FileReader(this.file));
-			Map<String, Object> map = (Map<String, Object>) reader.read();
-			fileData = new FileData(map);
+			fileData = new FileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
+			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
-			System.err.println("Exception while reading '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}

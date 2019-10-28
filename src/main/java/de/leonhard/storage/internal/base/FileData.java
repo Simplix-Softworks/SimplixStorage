@@ -179,6 +179,13 @@ public class FileData {
 		return containsKey(key) ? size((Map<String, Object>) get(key)) : 0;
 	}
 
+	/**
+	 * Clear the contents of this FileData.
+	 */
+	public void clear() {
+		this.localMap.clear();
+	}
+
 
 	private Map<String, Object> removeKey(Map<String, Object> map, String[] key, int id) {
 		Map<String, Object> tempMap = map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map);

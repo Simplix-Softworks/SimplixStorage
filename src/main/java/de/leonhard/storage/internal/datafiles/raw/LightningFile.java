@@ -41,7 +41,14 @@ public class LightningFile extends FlatFile {
 
 	@Override
 	public void reload() {
-		this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
+		try {
+			this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
+			this.lastLoaded = System.currentTimeMillis();
+		} catch (IllegalArgumentException | IllegalStateException e) {
+			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
 	}
 
 	public void reload(@NotNull final ConfigSetting configSetting) {

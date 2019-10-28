@@ -48,6 +48,7 @@ public class JsonFile extends FlatFile {
 	public void reload() {
 		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
 		fileData = new FileData(new JSONObject(jsonTokener));
+		this.lastLoaded = System.currentTimeMillis();
 	}
 
 	/**

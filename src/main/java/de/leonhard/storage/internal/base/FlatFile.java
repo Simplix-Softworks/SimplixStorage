@@ -26,6 +26,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected File file;
 	protected FileData fileData;
+	protected long lastLoaded;
 
 	@Setter
 	private String pathPrefix;
@@ -36,7 +37,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Setter
 	private DataType dataType = DataType.AUTOMATIC;
 	private FileType fileType;
-	private long lastModified;
 
 
 	public FlatFile(@NotNull final File file, @NotNull final FileType fileType) {
@@ -73,14 +73,14 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	public final synchronized void setFileContentFromStream(@Nullable final InputStream inputStream) {
 		if (inputStream == null) {
-			clear();
+			clearFile();
 		} else {
 			FileUtils.writeToFile(this.file, inputStream);
 			reload();
 		}
 	}
 
-	public final synchronized void clear() {
+	public final synchronized void clearFile() {
 		try {
 			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
 			writer.write("");
@@ -97,9 +97,24 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public abstract void reload();
 
+	public final synchronized void deleteFile() {
+		if (!this.file.delete()) {
+			System.err.println("Could not delete '" + this.file.getAbsolutePath() + "'");
+			throw new IllegalStateException();
+		}
+	}
+
+	/**
+	 * Clears the contents of the internal FileData.
+	 * To get any data, you simply need to reload.
+	 */
+	public final synchronized void clearData() {
+		this.fileData.clear();
+	}
+
 	public final synchronized void setFileContentFromFile(@Nullable final File file) {
 		if (file == null) {
-			clear();
+			clearFile();
 		} else {
 			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(file));
 			reload();
@@ -108,7 +123,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	public final synchronized void setFileContentFromResource(@Nullable final String resource) {
 		if (resource == null) {
-			clear();
+			clearFile();
 		} else {
 			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(resource));
 			reload();
@@ -151,7 +166,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @return true if it has changed.
 	 */
 	public final boolean hasChanged() {
-		return FileUtils.hasChanged(file, lastModified);
+		return FileUtils.hasChanged(file, lastLoaded);
 	}
 
 	public Set<String> keySet() {
@@ -201,11 +216,11 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	protected final synchronized boolean create() {
 		if (this.file.exists()) {
-			this.lastModified = System.currentTimeMillis();
+			this.lastLoaded = System.currentTimeMillis();
 			return false;
 		} else {
 			FileUtils.createFile(this.file);
-			this.lastModified = System.currentTimeMillis();
+			this.lastLoaded = System.currentTimeMillis();
 			return true;
 		}
 	}
@@ -262,7 +277,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 				   && this.fileData.equals(flatFile.fileData)
 				   && this.file.equals(flatFile.file)
 				   && fileType == flatFile.fileType
-				   && this.lastModified == flatFile.lastModified;
+				   && this.lastLoaded == flatFile.lastLoaded;
 		}
 	}
 

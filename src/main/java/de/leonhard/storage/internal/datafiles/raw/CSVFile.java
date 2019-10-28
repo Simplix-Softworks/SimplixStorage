@@ -41,6 +41,7 @@ public class CSVFile extends FlatFile {
 	@Override
 	public void reload() {
 		//TODO
+		this.lastLoaded = System.currentTimeMillis();
 	}
 
 	@Override
