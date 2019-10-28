@@ -9,7 +9,7 @@ lightningstorage - A Library to store data in a better way.
 [![](https://jitpack.io/v/JavaFactoryDev/LightningStorage.svg)](https://jitpack.io/#JavaFactoryDev/LightningStorage)
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
-Want to do more than just use simple .yml files store data?<br>
+Want to do more than just use simple .yml files to store data?<br>
 Are you looking for a powerful "bukkitlike" (Very similar to Bukkit config) library to store data in files?<br>
 
 **Then this library is just right for you.**
