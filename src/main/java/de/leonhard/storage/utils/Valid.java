@@ -5,14 +5,25 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Valid {
-	public static <T> void notNull(final T object) {
+
+
+	public static void checkBoolean(boolean condition) {
+		checkBoolean(condition, "Valid.checkBoolean(): Condition is False.");
+	}
+
+	public static void checkBoolean(boolean condition, String... errorMessage) {
+		if (!condition)
+			throw new LightningException(errorMessage);
+	}
+
+	public static <T> void notNull(T object) {
 		if (object != null) {
 			return;
 		}
 		throw new LightningException("Validated Object is null");
 	}
 
-	public static <T> void notNull(final T object, final String... message) {
+	public static <T> void notNull(T object, String... message) {
 		if (object != null) {
 			return;
 		}
@@ -20,7 +31,9 @@ public final class Valid {
 	}
 
 	private static class LightningException extends RuntimeException {
-		private LightningException(final String... message) {
+		private static final long serialVersionUID = -7961367314553460325L;
+
+		private LightningException(String... message) {
 			for (String part : message) {
 				System.out.println(part);
 			}

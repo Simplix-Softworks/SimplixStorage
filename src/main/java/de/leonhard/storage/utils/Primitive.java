@@ -1,5 +1,6 @@
 package de.leonhard.storage.utils;
 
+@SuppressWarnings("unchecked")
 public class Primitive {
 
 	public static <T> T getFromDef(Object obj, final T def) {

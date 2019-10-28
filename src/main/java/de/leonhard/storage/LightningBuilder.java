@@ -3,14 +3,11 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
 import de.leonhard.storage.utils.Valid;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
 
 
-@SuppressWarnings({"unused"})
 public class LightningBuilder {
 
 	private final String path;
@@ -24,7 +21,7 @@ public class LightningBuilder {
 		this.path = path;
 	}
 
-	public static LightningBuilder fromPath(@NotNull final String name, @Nullable final String path) {
+	public static LightningBuilder fromPath(final String name, final String path) {
 		Valid.notNull(name, "Name mustn't be null");
 		return new LightningBuilder(name, path);
 	}

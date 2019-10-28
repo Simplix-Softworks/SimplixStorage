@@ -159,7 +159,6 @@ public class FileData {
 		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
 	}
 
-
 	/**
 	 * get the keySet of all layers of the map combined.
 	 *

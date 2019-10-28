@@ -1,153 +1,308 @@
 package de.leonhard.storage.internal.editor;
 
-import de.leonhard.storage.internal.FileData;
+import com.sun.istack.internal.NotNull;
+import de.leonhard.storage.internal.settings.ConfigSettings;
+import lombok.RequiredArgsConstructor;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+
+/**
+ * Class for parsing a Lightning-Type File
+ */
+@SuppressWarnings("unchecked")
+@RequiredArgsConstructor
 public class LightningEditor {
 
 	private final File file;
 
-	public LightningEditor(File file) {
-		this.file = file;
+	/**
+	 * Write the given Data to a File.
+	 *
+	 * @param map           a HashMap containing the Data to be written.
+	 * @param configSetting the ConfigSetting to be used.
+	 */
+	public void writeData(@NotNull Map<String, Object> map, @NotNull ConfigSettings configSetting) {
+		if (configSetting == ConfigSettings.PRESERVE_COMMENTS) {
+			initialWriteWithComments(file, map);
+		} else if (configSetting == ConfigSettings.SKIP_COMMENTS) {
+			initialWriteWithOutComments(file, map);
+		} else {
+			throw new IllegalArgumentException("Illegal ConfigSetting");
+		}
 	}
 
-	public List<String> readLines() throws IOException {
-		byte[] bytes = Files.readAllBytes(file.toPath());
-		return Arrays.asList(new String(bytes).split("\n"));
-	}
+	/**
+	 * Read the Data of a File.
+	 *
+	 * @return a Map containing the Data of the File.
+	 */
+	public Map<String, Object> readData() {
+		try {
+			List<String> lines = Files.readAllLines(file.toPath());
+			Map<String, Object> tempMap = new HashMap<>();
 
-	public Map<String, Object> readData() throws IOException {
-		byte[] bytes = Files.readAllBytes(file.toPath());
-		Object obj = new String(bytes).replace("\n", "");
-		return (Map<String, Object>) obj;
-	}
+			String tempKey = null;
+			int blankLine = -1;
+			int commentLine = -1;
+			while (lines.size() > 0) {
+				String tempLine = lines.get(0).trim();
+				lines.remove(0);
 
-
-	public Map<String, Object> read() throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(this.file));
-		String line = reader.readLine();
-
-		Map<String, Object> tempMap = new HashMap<>();
-		String tempKey = null;
-		int blankLine = -1;
-		while (line != null) {
-			String tempLine = line.trim();
-			line = reader.readLine();
-
-			if (tempLine.contains("}")) {
-				throw new IllegalStateException("Block closed without being opened");
-			} else if (tempLine.isEmpty() || !tempLine.matches("\\S")) {
-				blankLine++;
-				tempMap.put("{=}emptyline" + blankLine, null);
-			} else if (tempLine.startsWith("#")) {
-				tempMap.put(tempLine, null);
-			} else if (tempLine.endsWith("{")) {
-				if (tempLine.equals("{") && tempKey == null) {
-					throw new IllegalStateException("Key must not be null");
+				if (tempLine.contains("}")) {
+					throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
+				} else if (tempLine.isEmpty()) {
+					blankLine++;
+					tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
+				} else if (tempLine.startsWith("#")) {
+					commentLine++;
+					tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
+				} else if (tempLine.endsWith("{")) {
+					if (!tempLine.equals("{")) {
+						tempKey = tempLine.replace("{", "").trim();
+					} else if (tempKey == null) {
+						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
+					}
+					tempMap.put(tempKey, internalRead(file.getAbsolutePath(), lines, blankLine, commentLine));
 				} else {
-					tempKey = tempLine.replace("{", "").trim();
-				}
-				tempMap.put(tempKey, read(line, blankLine, reader));
-			} else {
-				if (tempLine.contains(" = ")) {
-					String[] localLine = tempLine.split(" = ");
-					tempMap.put(localLine[0], localLine[1]);
-				} else {
-					if (line.trim().equals("{")) {
-						tempKey = tempLine;
+					if (tempLine.contains("=")) {
+						String[] line = tempLine.split("=");
+						line[0] = line[0].trim();
+						line[1] = line[1].trim();
+						if (line[1].startsWith("[")) {
+							if (line[1].endsWith("]")) {
+								String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+								List<String> list = new ArrayList<>();
+								for (String value : listArray) {
+									list.add(value.trim());
+								}
+								tempMap.put(line[0], list);
+							} else {
+								tempMap.put(line[0], readList(file.getAbsolutePath(), lines));
+
+							}
+						} else {
+							tempMap.put(line[0], line[1]);
+						}
 					} else {
-						throw new IllegalStateException("Key does not contain value or block");
+						if (lines.get(1).contains("{")) {
+							tempKey = tempLine;
+						} else {
+							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' does not contain value or subblock");
+						}
 					}
 				}
 			}
+			return tempMap;
+		} catch (IOException | ArrayIndexOutOfBoundsException e) {
+			System.err.println("Error while reading '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
-		reader.close();
-		return tempMap;
 	}
 
-	private Map<String, Object> read(String line, int blankLine, BufferedReader reader) throws IllegalStateException, IOException {
+
+	// <Read Data>
+	private Map<String, Object> internalRead(String filePath, List<String> lines, int blankLine, int commentLine) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = new HashMap<>();
 		String tempKey = null;
 
-		while (line != null) {
-			String tempLine = line.trim();
-			line = reader.readLine();
+		while (lines.size() > 0) {
+			String tempLine = lines.get(0).trim();
+			lines.remove(0);
 
 			if (tempLine.equals("}")) {
 				return tempMap;
 			} else if (tempLine.contains("}")) {
-				throw new IllegalStateException("Block closed without being opened");
-			} else if (tempLine.isEmpty() || !tempLine.matches("\\S")) {
+				throw new IllegalStateException("Error at '" + filePath + "' -> Block closed without being opened");
+			} else if (tempLine.isEmpty()) {
 				blankLine++;
-				tempMap.put("{=}emptyline" + blankLine, null);
+				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
 			} else if (tempLine.startsWith("#")) {
-				tempMap.put(tempLine, null);
+				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
 			} else if (tempLine.endsWith("{")) {
-				if (tempLine.equals("{") && tempKey == null) {
-					throw new IllegalStateException("Key must not be null");
-				} else {
+				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
+				} else if (tempKey == null) {
+					throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, read(line, blankLine, reader));
+				tempMap.put(tempKey, internalRead(filePath, lines, blankLine, commentLine));
 			} else {
-				if (tempLine.contains(" = ")) {
-					String[] localLine = tempLine.split(" = ");
-					tempMap.put(localLine[0], localLine[1]);
+				if (tempLine.contains("=")) {
+					String[] line = tempLine.split("=");
+					line[0] = line[0].trim();
+					line[1] = line[1].trim();
+					if (line[1].startsWith("[")) {
+						if (line[1].endsWith("]")) {
+							String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
+							List<String> list = new ArrayList<>();
+							for (String value : listArray) {
+								list.add(value.trim());
+							}
+							tempMap.put(line[0], list);
+						} else {
+							tempMap.put(line[0], readList(filePath, lines));
+						}
+					} else {
+						tempMap.put(line[0], line[1]);
+					}
 				} else {
-					if (line.trim().equals("{")) {
+					if (lines.get(1).contains("{")) {
 						tempKey = tempLine;
 					} else {
-						throw new IllegalStateException("Key does not contain value or block");
+						throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' does not contain value or subblock");
 					}
 				}
 			}
 		}
-		reader.close();
-		throw new IllegalStateException("Block does not close");
+		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
 
+	private List<String> readList(String filePath, List<String> lines) {
+		List<String> localList = new ArrayList<>();
+		while (lines.size() > 0) {
+			String tempLine = lines.get(0).trim();
+			lines.remove(0);
+			if (tempLine.startsWith("-")) {
+				localList.add(tempLine.substring(1).trim());
+			} else if (tempLine.endsWith("]")) {
+				return localList;
+			} else {
+				throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
+			}
+		}
+		throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
+	}
+	// </Read Data>
 
-	public void write(FileData fileData) {
-		try (PrintWriter writer = new PrintWriter(this.file)) {
-			Map<String, Object> map = fileData.toMap();
-			for (String localKey : map.keySet()) {
-				if (localKey.startsWith("#") && map.get(localKey) == null) {
-					writer.println(localKey);
-				} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == null) {
-					writer.println("");
-				} else if (map.get(localKey) instanceof Map) {
-					writer.println(localKey + " " + "{");
-					write((Map<String, Object>) map.get(localKey), "", writer);
-				} else {
-					writer.println(localKey + " = " + map.get(localKey));
-				}
+
+	// <Write Data>
+	// <Write Data with Comments>
+	private void initialWriteWithComments(File file, Map<String, Object> map) {
+		try (PrintWriter writer = new PrintWriter(file)) {
+			if (!map.isEmpty()) {
+				Iterator mapIterator = map.keySet().iterator();
+				topLayerWriteWithComments(writer, map, (String) mapIterator.next());
+				mapIterator.forEachRemaining(localKey -> {
+					writer.println();
+					topLayerWriteWithComments(writer, map, (String) localKey);
+				});
 			}
 			writer.flush();
 		} catch (FileNotFoundException e) {
-			System.err.println("Error while writing to '" + this.file.getName() + "'");
+			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	private void topLayerWriteWithComments(PrintWriter writer, Map<String, Object> map, String localKey) {
+		if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
+			writer.print(localKey.substring(0, localKey.lastIndexOf("{=}")));
+		} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
+			writer.print("");
+		} else if (map.get(localKey) instanceof Map) {
+			writer.print(localKey + " " + "{");
+			internalWriteWithComments((Map<String, Object>) map.get(localKey), "", writer);
+		} else {
+			writer.print(localKey + " = " + map.get(localKey));
+		}
+	}
+
+	private void internalWriteWithComments(Map<String, Object> map, String indentationString, PrintWriter writer) {
+		for (String localKey : map.keySet()) {
+			writer.println();
+			if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
+				writer.print(indentationString + "  " + localKey.substring(0, localKey.lastIndexOf("{=}")));
+			} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
+				writer.print("");
+			} else {
+				if (map.get(localKey) instanceof Map) {
+					writer.print(indentationString + "  " + localKey + " " + "{");
+					internalWriteWithComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
+				} else if (map.get(localKey) instanceof List) {
+					writer.println(indentationString + "  " + localKey + " = [");
+					writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
+				} else {
+					writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
+				}
+			}
+		}
+		writer.println();
+		writer.print(indentationString + "}");
+	}
+	// </Write Data with Comments
+
+	// <Write Data without Comments>
+	private void initialWriteWithOutComments(File file, Map<String, Object> map) {
+		try (PrintWriter writer = new PrintWriter(file)) {
+			if (!map.isEmpty()) {
+				Iterator mapIterator = map.keySet().iterator();
+				topLayerWriteWithOutComments(writer, map, mapIterator.next().toString());
+				mapIterator.forEachRemaining(localKey -> {
+					writer.println();
+					topLayerWriteWithOutComments(writer, map, localKey.toString());
+				});
+			}
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
 		}
 	}
 
-	public void write(Map<String, Object> map, String indentationString, PrintWriter writer) {
-		for (String localKey : map.keySet()) {
-			if (localKey.startsWith("#") && map.get(localKey) == null) {
-				writer.println(indentationString + "  " + localKey);
-			} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == null) {
-				writer.println("");
-			} else if (map.get(localKey) instanceof Map) {
-				writer.println(indentationString + "  " + localKey + " " + "{");
-				write((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
+	private void topLayerWriteWithOutComments(PrintWriter writer, Map<String, Object> map, String localKey) {
+		if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+			if (map.get(localKey) instanceof Map) {
+				writer.print(localKey + " " + "{");
+				internalWriteWithoutComments((Map<String, Object>) map.get(localKey), "", writer);
+			} else if (map.get(localKey) instanceof List) {
+				writer.println("  " + localKey + " = [");
+				writeList((List<String>) map.get(localKey), "  ", writer);
 			} else {
-				writer.println(indentationString + "  " + localKey + " = " + map.get(localKey));
+				writer.print(localKey + " = " + map.get(localKey));
 			}
 		}
-		writer.println(indentationString + "}");
+	}
+
+	private void internalWriteWithoutComments(Map<String, Object> map, String indentationString, PrintWriter writer) {
+		for (String localKey : map.keySet()) {
+			writer.println();
+			if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+				if (map.get(localKey) instanceof Map) {
+					writer.print(indentationString + "  " + localKey + " " + "{");
+					internalWriteWithoutComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
+				} else if (map.get(localKey) instanceof List) {
+					writer.println(indentationString + "  " + localKey + " = [");
+					writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
+				} else {
+					writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
+				}
+			}
+		}
+		writer.println();
+		writer.print(indentationString + "}");
+	}
+	// </Write Data without Comments>
+
+	private void writeList(List<String> list, String indentationString, PrintWriter writer) {
+		for (String line : list) {
+			writer.println(indentationString + "  - " + line);
+		}
+		writer.print(indentationString + "]");
+	}
+	// </Write Data>
+
+
+	private enum LineType {
+
+		VALUE,
+		COMMENT,
+		BLANK_LINE
 	}
 }

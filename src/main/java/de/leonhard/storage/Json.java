@@ -20,18 +20,18 @@ import java.util.Objects;
 @Getter
 public class Json extends FlatFile implements IStorage {
 
-	public Json(final String name, final String path) {
+	public Json(String name, String path) {
 		this(name, path, null);
 	}
 
-	public Json(final String name, final String path, final ReloadSettings reloadSettings) {
+	public Json(String name, String path, ReloadSettings reloadSettings) {
 		super(name, path, FileType.JSON);
 		if (create() || file.length() == 0) {
 			try {
 				Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
 				writer.write(new JSONObject().toString(2));
 				writer.close();
-			} catch (final Exception ex) {
+			} catch (Exception ex) {
 				System.err.println("Error creating JSON '" + file.getName() + "'");
 				System.err.println("In '" + file.getAbsolutePath() + "'");
 				ex.printStackTrace();
@@ -43,7 +43,7 @@ public class Json extends FlatFile implements IStorage {
 		update();
 	}
 
-	public Json(final File file) {
+	public Json(File file) {
 		super(file, FileType.JSON);
 		create();
 		update();
@@ -73,7 +73,7 @@ public class Json extends FlatFile implements IStorage {
 	 * @return Map
 	 */
 	@Override
-	public Map getMap(final String key) {
+	public Map getMap(String key) {
 		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		if (!contains(tempKey)) {
 			return new HashMap();
@@ -94,8 +94,8 @@ public class Json extends FlatFile implements IStorage {
 	}
 
 	@Override
-	public void set(final String key, final Object value) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+	public void set(String key, Object value) {
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 		synchronized (this) {
 
@@ -119,14 +119,16 @@ public class Json extends FlatFile implements IStorage {
 		}
 	}
 
-	public void write(final JSONObject object) throws IOException {
-		Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
-		writer.write(object.toString(3));
-		writer.close();
+	private void write(JSONObject object) throws IOException {
+		try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
+			writer.write(object.toString(3));
+			writer.flush();
+		}
 	}
 
 	@Override
-	public <T> T getOrSetDefault(final String key, T def) {
+	@SuppressWarnings("unchecked")
+	public <T> T getOrSetDefault(String key, T def) {
 		if (!contains(key)) {
 			set(key, def);
 			return def;
@@ -137,15 +139,15 @@ public class Json extends FlatFile implements IStorage {
 
 	@Override
 	protected void update() {
-		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
+		JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
 		fileData = new FileData(new JSONObject(jsonTokener));
 	}
 
 	@Override
-	public void remove(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+	public void remove(String key) {
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		final Map obj = fileData.toMap();
+		Map obj = fileData.toMap();
 		obj.remove(finalKey);
 
 		fileData = new FileData(new JSONObject(obj));
@@ -157,7 +159,7 @@ public class Json extends FlatFile implements IStorage {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

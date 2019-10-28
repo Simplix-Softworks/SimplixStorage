@@ -1,12 +1,14 @@
 package de.leonhard.storage.internal;
 
 import de.leonhard.storage.utils.Primitive;
+import de.leonhard.storage.utils.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unchecked")
 public interface IStorage {
 
 	Set<String> singleLayerKeySet();
@@ -17,7 +19,7 @@ public interface IStorage {
 
 	Set<String> keySet(String key);
 
-	void remove(final String key);
+	void remove(String key);
 
 	/**
 	 * Set an object to your file
@@ -37,7 +39,7 @@ public interface IStorage {
 
 	Object get(String key);
 
-	default <T> T get(final String key, final T def) {
+	default <T> T get(String key, T def) {
 		if (!contains(key)) {
 			return def;
 		}
@@ -50,7 +52,7 @@ public interface IStorage {
 	 * @param key Path to String in file
 	 * @return Returns the value
 	 */
-	default String getString(final String key) {
+	default String getString(String key) {
 		if (!contains(key)) {
 			return "";
 		} else {
@@ -64,7 +66,7 @@ public interface IStorage {
 	 * @param key Path to long in file
 	 * @return String from file
 	 */
-	default long getLong(final String key) {
+	default long getLong(String key) {
 		if (!contains(key)) {
 			return 0L;
 		} else {
@@ -78,7 +80,7 @@ public interface IStorage {
 	 * @param key Path to int in file
 	 * @return Int from file
 	 */
-	default int getInt(final String key) {
+	default int getInt(String key) {
 		if (!contains(key)) {
 			return 0;
 		} else {
@@ -92,7 +94,7 @@ public interface IStorage {
 	 * @param key Path to byte in file
 	 * @return Byte from file
 	 */
-	default byte getByte(final String key) {
+	default byte getByte(String key) {
 		if (!contains(key)) {
 			return 0;
 		} else {
@@ -106,7 +108,7 @@ public interface IStorage {
 	 * @param key Path to boolean in file
 	 * @return Boolean from file
 	 */
-	default boolean getBoolean(final String key) {
+	default boolean getBoolean(String key) {
 		if (!contains(key)) {
 			return false;
 		} else {
@@ -120,7 +122,7 @@ public interface IStorage {
 	 * @param key Path to float in file
 	 * @return Float from file
 	 */
-	default float getFloat(final String key) {
+	default float getFloat(String key) {
 		if (!contains(key)) {
 			return 0F;
 		} else {
@@ -128,13 +130,14 @@ public interface IStorage {
 		}
 	}
 
+
 	/**
 	 * Get a double from a file
 	 *
 	 * @param key Path to double in the file
 	 * @return Double from file
 	 */
-	default double getDouble(final String key) {
+	default double getDouble(String key) {
 		if (!contains(key)) {
 			return 0D;
 		} else {
@@ -143,12 +146,26 @@ public interface IStorage {
 	}
 
 	/**
+	 * Serialize an Enum from entry in the file
+	 *
+	 * @param key      Path to Enum
+	 * @param enumType Class of the Enum
+	 * @param <E>      EnumType
+	 * @return Serialized Enum
+	 */
+	default <E extends Enum<E>> E getEnum(String key, Class<E> enumType) {
+		Object object = get(key);
+		Valid.checkBoolean(object instanceof String, "No Enum-Value found for key '" + key + "'.");
+		return Enum.valueOf(enumType, (String) object);
+	}
+
+	/**
 	 * Get a List from a file
 	 *
 	 * @param key Path to StringList in file
 	 * @return List
 	 */
-	default List<?> getList(final String key) {
+	default List<?> getList(String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
 		} else {
@@ -156,13 +173,7 @@ public interface IStorage {
 		}
 	}
 
-	/**
-	 * Get String List
-	 *
-	 * @param key Path to String List in file
-	 * @return List
-	 */
-	default List<String> getStringList(final String key) {
+	default List<String> getStringList(String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
 		} else {
@@ -170,13 +181,7 @@ public interface IStorage {
 		}
 	}
 
-	/**
-	 * Get a IntegerList from a file
-	 *
-	 * @param key Path to Integer-List in file
-	 * @return Integer-List
-	 */
-	default List<Integer> getIntegerList(final String key) {
+	default List<Integer> getIntegerList(String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
 		} else {
@@ -184,13 +189,7 @@ public interface IStorage {
 		}
 	}
 
-	/**
-	 * Get a Byte-List from a file
-	 *
-	 * @param key Path to Byte-List from file
-	 * @return Byte-List
-	 */
-	default List<Byte> getByteList(final String key) {
+	default List<Byte> getByteList(String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
 		} else {
@@ -198,13 +197,7 @@ public interface IStorage {
 		}
 	}
 
-	/**
-	 * Get a Long-List from a file
-	 *
-	 * @param key Path to Long-List in file
-	 * @return Long-List
-	 */
-	default List<Long> getLongList(final String key) {
+	default List<Long> getLongList(String key) {
 		if (!contains(key)) {
 			return new ArrayList<>();
 		} else {
@@ -212,13 +205,7 @@ public interface IStorage {
 		}
 	}
 
-	/**
-	 * Gets a Map
-	 *
-	 * @param key Path to Map-List in file
-	 * @return Map
-	 */
-	default Map getMap(final String key) {
+	default Map getMap(String key) {
 		return (Map) get(key);
 	}
 
