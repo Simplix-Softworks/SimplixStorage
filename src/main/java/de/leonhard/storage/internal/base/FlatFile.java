@@ -148,7 +148,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Override
 	public boolean hasKey(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		String tempKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		String tempKey = (this.pathPrefix == null || this.pathPrefix.isEmpty()) ? key : this.pathPrefix + "." + key;
 		update();
 		return fileData.containsKey(tempKey);
 	}
@@ -239,7 +239,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		Valid.notNull(key, "Key must not be null");
 		update();
 
-		final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+		final String finalKey = ((this.pathPrefix == null || this.pathPrefix.isEmpty())) ? key : this.pathPrefix + "." + key;
 
 		String tempData = this.fileData.toString();
 		this.fileData.insert(finalKey, value);

@@ -71,7 +71,7 @@ public class LightningConfig extends LightningFile {
 
 	public List<String> getHeader(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
@@ -84,7 +84,7 @@ public class LightningConfig extends LightningFile {
 
 	public void setHeader(@NotNull final String key, @Nullable final List<String> header) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
@@ -98,7 +98,7 @@ public class LightningConfig extends LightningFile {
 
 	public List<String> getFooter(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
@@ -111,7 +111,7 @@ public class LightningConfig extends LightningFile {
 
 	public void setFooter(@NotNull final String key, @Nullable final List<String> footer) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 

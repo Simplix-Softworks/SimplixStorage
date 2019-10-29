@@ -78,14 +78,14 @@ public class YamlFile extends FlatFile {
 	public Object get(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
 	}
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
+		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
