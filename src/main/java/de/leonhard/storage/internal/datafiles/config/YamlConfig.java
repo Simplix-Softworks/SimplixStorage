@@ -1,9 +1,9 @@
 package de.leonhard.storage.internal.datafiles.config;
 
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
-import de.leonhard.storage.internal.enums.ConfigSetting;
+import de.leonhard.storage.internal.enums.Comments;
 import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.File;
 import java.io.IOException;
@@ -23,13 +23,13 @@ public class YamlConfig extends YamlFile {
 	private List<String> header;
 
 
-	public YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final DataType dataType) {
-		super(file, inputStream, reloadSetting, configSetting == null ? ConfigSetting.PRESERVE_COMMENTS : configSetting, dataType);
+	public YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comments commentSetting, @Nullable final DataType dataType) {
+		super(file, inputStream, reloadSetting, commentSetting == null ? Comments.PRESERVE : commentSetting, dataType);
 	}
 
 
 	public List<String> getHeader() {
-		if (getConfigSetting().equals(ConfigSetting.SKIP_COMMENTS)) {
+		if (getCommentSetting().equals(Comments.SKIP)) {
 			return new ArrayList<>();
 		} else if (!shouldReload()) {
 			return header;

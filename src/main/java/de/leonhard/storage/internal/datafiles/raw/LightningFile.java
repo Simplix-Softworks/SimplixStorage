@@ -1,11 +1,12 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
+import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.datafiles.section.LightningSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
-import de.leonhard.storage.internal.enums.ConfigSetting;
+import de.leonhard.storage.internal.enums.Comments;
 import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.File;
@@ -18,16 +19,16 @@ import org.jetbrains.annotations.Nullable;
  * Class to manager Lightning-Type Files
  */
 @SuppressWarnings("unused")
-public class LightningFile extends FlatFile {
+public class LightningFile extends CommentEnabledFile {
 
-	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final DataType dataType) {
+	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comments commentSetting, @Nullable final DataType dataType) {
 		super(file, FileType.LIGHTNING);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (configSetting != null) {
-			setConfigSetting(configSetting);
+		if (commentSetting != null) {
+			setCommentSetting(commentSetting);
 		}
 		if (dataType != null) {
 			setDataType(dataType);
@@ -36,19 +37,19 @@ public class LightningFile extends FlatFile {
 			setReloadSetting(reloadSetting);
 		}
 
-		this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
+		this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getCommentSetting()));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
-	public void reload(@NotNull final ConfigSetting configSetting) {
-		setConfigSetting(configSetting);
+	public void reload(@NotNull final Comments commentSetting) {
+		setCommentSetting(commentSetting);
 		reload();
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData.loadData(LightningEditor.readData(this.file, getDataType(), getConfigSetting()));
+			this.fileData.loadData(LightningEditor.readData(this.file, getDataType(), getCommentSetting()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
@@ -57,21 +58,15 @@ public class LightningFile extends FlatFile {
 		}
 	}
 
-	public Object get(@NotNull final String key, @NotNull final ConfigSetting configSetting) {
-		setConfigSetting(configSetting);
-		return get(key);
-	}
-
 	@Override
 	public Object get(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
-		String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
-		return fileData.get(finalKey);
+		return fileData.get(key);
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final ConfigSetting configSetting) {
-		setConfigSetting(configSetting);
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comments commentSetting) {
+		setCommentSetting(commentSetting);
 		set(key, value);
 	}
 
@@ -80,7 +75,7 @@ public class LightningFile extends FlatFile {
 		Valid.notNull(key, "Key must not be null");
 		if (insert(key, value)) {
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
+				LightningEditor.writeData(this.file, this.fileData.toMap(), getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -89,29 +84,32 @@ public class LightningFile extends FlatFile {
 		}
 	}
 
-	public synchronized void remove(@NotNull final String key, @NotNull final ConfigSetting configSetting) {
-		setConfigSetting(configSetting);
+	public synchronized void remove(@NotNull final String key, @NotNull final Comments commentSetting) {
+		setCommentSetting(commentSetting);
 		remove(key);
 	}
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		if (fileData.containsKey(finalKey)) {
-			fileData.remove(finalKey);
+		if (fileData.containsKey(key)) {
+			fileData.remove(key);
 
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), getConfigSetting());
+				LightningEditor.writeData(this.file, this.fileData.toMap(), getCommentSetting());
 			} catch (IllegalStateException e) {
 				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
+	}
+
+	public LightningSection getSection(@NotNull final String key) {
+		return new LightningSection(this, key);
 	}
 
 	protected final LightningFile getLightningFileInstance() {

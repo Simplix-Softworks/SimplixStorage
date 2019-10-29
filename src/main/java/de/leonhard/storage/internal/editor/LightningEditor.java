@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.editor;
 
-import de.leonhard.storage.internal.enums.ConfigSetting;
+import de.leonhard.storage.internal.enums.Comments;
 import de.leonhard.storage.internal.enums.DataType;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,14 +24,14 @@ public class LightningEditor {
 	/**
 	 * Write the given Data to a File.
 	 *
-	 * @param file          the File to be written to.
-	 * @param map           a HashMap containing the Data to be written.
-	 * @param configSetting the ConfigSetting to be used.
+	 * @param file           the File to be written to.
+	 * @param map            a HashMap containing the Data to be written.
+	 * @param commentSetting the ConfigSetting to be used.
 	 */
-	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final ConfigSetting configSetting) {
-		if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
+	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final Comments commentSetting) {
+		if (commentSetting == Comments.PRESERVE) {
 			initialWriteWithComments(file, map);
-		} else if (configSetting == ConfigSetting.SKIP_COMMENTS) {
+		} else if (commentSetting == Comments.SKIP) {
 			initialWriteWithOutComments(file, map);
 		} else {
 			throw new IllegalArgumentException("Illegal ConfigSetting");
@@ -41,16 +41,16 @@ public class LightningEditor {
 	/**
 	 * Read the Data of a File.
 	 *
-	 * @param file          the File to be read from.
-	 * @param dataType      the FileDataType to be used.
-	 * @param configSetting the ConfigSetting to be used.
+	 * @param file           the File to be read from.
+	 * @param dataType       the FileDataType to be used.
+	 * @param commentSetting the ConfigSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
-		if (configSetting == ConfigSetting.PRESERVE_COMMENTS) {
-			return initialReadWithComments(file, dataType, configSetting);
-		} else if (configSetting == ConfigSetting.SKIP_COMMENTS) {
-			return initialReadWithOutComments(file, dataType, configSetting);
+	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comments commentSetting) {
+		if (commentSetting == Comments.PRESERVE) {
+			return initialReadWithComments(file, dataType, commentSetting);
+		} else if (commentSetting == Comments.SKIP) {
+			return initialReadWithOutComments(file, dataType, commentSetting);
 		} else {
 			throw new IllegalArgumentException("Illegal ConfigSetting");
 		}
@@ -58,10 +58,10 @@ public class LightningEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static Map<String, Object> initialReadWithComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
+	private static Map<String, Object> initialReadWithComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comments commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
+			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
 			String tempKey = null;
 			int blankLine = -1;
@@ -84,9 +84,9 @@ public class LightningEditor {
 					} else if (tempKey == null) {
 						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, configSetting));
+					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, commentSetting));
 				} else {
-					tempKey = readKey(file.getAbsolutePath(), lines, dataType, configSetting, tempMap, tempKey, tempLine);
+					tempKey = readKey(file.getAbsolutePath(), lines, dataType, commentSetting, tempMap, tempKey, tempLine);
 				}
 			}
 			return tempMap;
@@ -97,8 +97,8 @@ public class LightningEditor {
 		}
 	}
 
-	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final ConfigSetting configSetting) throws ArrayIndexOutOfBoundsException {
-		Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
+	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final Comments commentSetting) throws ArrayIndexOutOfBoundsException {
+		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -121,9 +121,9 @@ public class LightningEditor {
 				} else if (tempKey == null) {
 					throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType, configSetting));
+				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType, commentSetting));
 			} else {
-				tempKey = readKey(filePath, lines, dataType, configSetting, tempMap, tempKey, tempLine);
+				tempKey = readKey(filePath, lines, dataType, commentSetting, tempMap, tempKey, tempLine);
 			}
 		}
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
@@ -131,10 +131,10 @@ public class LightningEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final ConfigSetting configSetting) {
+	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comments commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
+			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
 			String tempKey = null;
 			while (lines.size() > 0) {
@@ -150,9 +150,9 @@ public class LightningEditor {
 						} else if (tempKey == null) {
 							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
 						}
-						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, configSetting));
+						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, commentSetting));
 					} else {
-						tempKey = readKey(file.getAbsolutePath(), lines, dataType, configSetting, tempMap, tempKey, tempLine);
+						tempKey = readKey(file.getAbsolutePath(), lines, dataType, commentSetting, tempMap, tempKey, tempLine);
 					}
 				}
 			}
@@ -164,8 +164,8 @@ public class LightningEditor {
 		}
 	}
 
-	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType, final ConfigSetting configSetting) throws ArrayIndexOutOfBoundsException {
-		Map<String, Object> tempMap = dataType.getNewDataMap(configSetting, null);
+	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType, final Comments commentSetting) throws ArrayIndexOutOfBoundsException {
+		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -183,9 +183,9 @@ public class LightningEditor {
 					} else if (tempKey == null) {
 						throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType, configSetting));
+					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType, commentSetting));
 				} else {
-					tempKey = readKey(filePath, lines, dataType, configSetting, tempMap, tempKey, tempLine);
+					tempKey = readKey(filePath, lines, dataType, commentSetting, tempMap, tempKey, tempLine);
 				}
 			}
 		}
@@ -193,7 +193,7 @@ public class LightningEditor {
 	}
 	// </Read without Comments>
 
-	private static String readKey(String filePath, List<String> lines, DataType dataType, ConfigSetting configSetting, Map<String, Object> tempMap, String tempKey, String tempLine) {
+	private static String readKey(String filePath, List<String> lines, DataType dataType, Comments commentSetting, Map<String, Object> tempMap, String tempKey, String tempLine) {
 		if (tempLine.contains("=")) {
 			String[] line = tempLine.split("=");
 			line[0] = line[0].trim();
@@ -201,13 +201,13 @@ public class LightningEditor {
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
 					String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
-					List<String> list = dataType.getNewDataList(configSetting, null);
+					List<String> list = dataType.getNewDataList(commentSetting, null);
 					for (String value : listArray) {
 						list.add(value.trim());
 					}
 					tempMap.put(line[0], list);
 				} else {
-					tempMap.put(line[0], readList(filePath, lines, dataType, configSetting));
+					tempMap.put(line[0], readList(filePath, lines, dataType, commentSetting));
 				}
 			} else {
 				tempMap.put(line[0], line[1]);
@@ -223,8 +223,8 @@ public class LightningEditor {
 	}
 
 
-	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final ConfigSetting configSetting) {
-		List<String> localList = dataType.getNewDataList(configSetting, null);
+	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final Comments commentSetting) {
+		List<String> localList = dataType.getNewDataList(commentSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();
 			lines.remove(0);

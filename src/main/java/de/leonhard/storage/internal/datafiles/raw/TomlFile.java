@@ -2,8 +2,9 @@ package de.leonhard.storage.internal.datafiles.raw;
 
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.datafiles.section.TomlSection;
 import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.File;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
-	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final DataType dataType) {
+	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
 		super(file, FileType.TOML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -61,7 +62,6 @@ public class TomlFile extends FlatFile {
 	public Object get(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
-		String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(key);
 	}
 
@@ -88,12 +88,11 @@ public class TomlFile extends FlatFile {
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		if (fileData.containsKey(finalKey)) {
-			fileData.remove(finalKey);
+		if (fileData.containsKey(key)) {
+			fileData.remove(key);
 
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
@@ -103,6 +102,10 @@ public class TomlFile extends FlatFile {
 				throw new IllegalStateException();
 			}
 		}
+	}
+
+	public TomlSection getTomlSection(@NotNull final String key) {
+		return new TomlSection(this, key);
 	}
 
 	protected final TomlFile getTomlFileInstance() {

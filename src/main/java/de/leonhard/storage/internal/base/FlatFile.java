@@ -1,8 +1,7 @@
 package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.internal.enums.ConfigSetting;
 import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
@@ -29,17 +28,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	protected long lastLoaded;
 
 	@Setter
-	private String pathPrefix;
-	@Setter
-	private ReloadSetting reloadSetting = ReloadSetting.INTELLIGENT;
-	@Setter
-	private ConfigSetting configSetting = ConfigSetting.SKIP_COMMENTS;
+	private Reload reloadSetting = Reload.INTELLIGENT;
 	@Setter
 	private DataType dataType = DataType.AUTOMATIC;
 	private FileType fileType;
 
 
-	public FlatFile(@NotNull final File file, @NotNull final FileType fileType) {
+	protected FlatFile(@NotNull final File file, @NotNull final FileType fileType) {
 		if (FileTypeUtils.isType(file, fileType)) {
 			this.fileType = fileType;
 			this.file = file;
@@ -148,9 +143,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Override
 	public boolean hasKey(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		String tempKey = (this.pathPrefix == null || this.pathPrefix.isEmpty()) ? key : this.pathPrefix + "." + key;
 		update();
-		return fileData.containsKey(tempKey);
+		return fileData.containsKey(key);
 	}
 
 	/**
@@ -239,10 +233,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		Valid.notNull(key, "Key must not be null");
 		update();
 
-		final String finalKey = ((this.pathPrefix == null || this.pathPrefix.isEmpty())) ? key : this.pathPrefix + "." + key;
-
 		String tempData = this.fileData.toString();
-		this.fileData.insert(finalKey, value);
+		this.fileData.insert(key, value);
 		return !this.fileData.toString().equals(tempData);
 	}
 
@@ -307,8 +299,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			return false;
 		} else {
 			FlatFile flatFile = (FlatFile) obj;
-			return this.pathPrefix.equals(flatFile.pathPrefix)
-				   && reloadSetting == flatFile.reloadSetting
+			return reloadSetting == flatFile.reloadSetting
 				   && this.fileData.equals(flatFile.fileData)
 				   && this.file.equals(flatFile.file)
 				   && fileType == flatFile.fileType

@@ -3,12 +3,13 @@ package de.leonhard.storage.internal.datafiles.raw;
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
+import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.datafiles.section.YamlSection;
 import de.leonhard.storage.internal.editor.YamlEditor;
-import de.leonhard.storage.internal.enums.ConfigSetting;
+import de.leonhard.storage.internal.enums.Comments;
 import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.YamlUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
@@ -25,19 +26,19 @@ import org.jetbrains.annotations.Nullable;
  * Class to manager Yaml-Type Files
  */
 @SuppressWarnings({"unchecked", "unused"})
-public class YamlFile extends FlatFile {
+public class YamlFile extends CommentEnabledFile {
 
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils parser;
 
-	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final ConfigSetting configSetting, @Nullable final DataType dataType) {
+	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comments commentSetting, @Nullable final DataType dataType) {
 		super(file, FileType.YAML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (configSetting != null) {
-			setConfigSetting(configSetting);
+		if (commentSetting != null) {
+			setCommentSetting(commentSetting);
 		}
 		if (dataType != null) {
 			setDataType(dataType);
@@ -78,19 +79,17 @@ public class YamlFile extends FlatFile {
 	public Object get(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
-		String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
-		return fileData.get(finalKey);
+		return fileData.get(key);
 	}
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		if (fileData.containsKey(finalKey)) {
-			fileData.remove(finalKey);
+		if (fileData.containsKey(key)) {
+			fileData.remove(key);
 
 			try {
 				write(fileData.toMap());
@@ -109,13 +108,13 @@ public class YamlFile extends FlatFile {
 
 	@Override
 	public void set(@NotNull final String key, @Nullable final Object value) {
-		set(key, value, this.getConfigSetting());
+		set(key, value, this.getCommentSetting());
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final ConfigSetting configSetting) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comments commentSetting) {
 		if (insert(key, value)) {
 			try {
-				if (!ConfigSetting.PRESERVE_COMMENTS.equals(configSetting)) {
+				if (!Comments.PRESERVE.equals(commentSetting)) {
 					write(Objects.requireNonNull(fileData).toMap());
 				} else {
 					final List<String> unEdited = yamlEditor.read();
@@ -137,6 +136,10 @@ public class YamlFile extends FlatFile {
 		}
 	}
 
+	public YamlSection getYamlSection(@NotNull final String key) {
+		return new YamlSection(this, key);
+	}
+
 	protected final YamlFile getYamlFileInstance() {
 		return this;
 	}
@@ -149,7 +152,7 @@ public class YamlFile extends FlatFile {
 			return false;
 		} else {
 			YamlFile yaml = (YamlFile) obj;
-			return this.getConfigSetting().equals(yaml.getConfigSetting())
+			return this.getCommentSetting().equals(yaml.getCommentSetting())
 				   && super.equals(yaml.getFlatFileInstance());
 		}
 	}

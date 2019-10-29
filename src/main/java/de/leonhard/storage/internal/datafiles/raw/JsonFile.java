@@ -2,8 +2,9 @@ package de.leonhard.storage.internal.datafiles.raw;
 
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.datafiles.section.JsonSection;
 import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.ReloadSetting;
+import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.JsonUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
@@ -25,7 +26,7 @@ import org.json.JSONTokener;
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
-	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final ReloadSetting reloadSetting, @Nullable final DataType dataType) {
+	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
 		super(file, FileType.JSON);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -63,11 +64,10 @@ public class JsonFile extends FlatFile {
 	@Override
 	public Map getMap(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		String tempKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
-		if (!hasKey(tempKey)) {
+		if (!hasKey(key)) {
 			return new HashMap();
 		} else {
-			return getMapWithoutPath(tempKey);
+			return getMapWithoutPath(key);
 		}
 	}
 
@@ -128,19 +128,17 @@ public class JsonFile extends FlatFile {
 	public Object get(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
-		String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
-		return getObject(finalKey);
+		return getObject(key);
 	}
 
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		final String finalKey = (this.getPathPrefix() == null || this.getPathPrefix().isEmpty()) ? key : this.getPathPrefix() + "." + key;
 
 		update();
 
-		if (fileData.containsKey(finalKey)) {
-			fileData.remove(finalKey);
+		if (fileData.containsKey(key)) {
+			fileData.remove(key);
 			try {
 				write(fileData.toJsonObject());
 			} catch (IOException e) {
@@ -149,6 +147,10 @@ public class JsonFile extends FlatFile {
 				throw new IllegalStateException();
 			}
 		}
+	}
+
+	public JsonSection getSection(@NotNull final String key) {
+		return new JsonSection(this, key);
 	}
 
 	protected final JsonFile getJsonFileInstance() {
