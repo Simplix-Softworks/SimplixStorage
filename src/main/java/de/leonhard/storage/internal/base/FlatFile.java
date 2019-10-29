@@ -71,6 +71,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this.file.getName();
 	}
 
+	/**
+	 * Set the Contents of the File from a given InputStream
+	 */
 	public final synchronized void setFileContentFromStream(@Nullable final InputStream inputStream) {
 		if (inputStream == null) {
 			clearFile();
@@ -80,6 +83,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+	/**
+	 * Delete all Contents of the File
+	 */
 	public final synchronized void clearFile() {
 		try {
 			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
@@ -97,6 +103,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public abstract void reload();
 
+	/**
+	 * Just delete the File
+	 */
 	public final synchronized void deleteFile() {
 		if (!this.file.delete()) {
 			System.err.println("Could not delete '" + this.file.getAbsolutePath() + "'");
@@ -112,6 +121,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		this.fileData.clear();
 	}
 
+	/**
+	 * Set the Contents of the File from a given File
+	 */
 	public final synchronized void setFileContentFromFile(@Nullable final File file) {
 		if (file == null) {
 			clearFile();
@@ -121,6 +133,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
+	/**
+	 * Set the Contents of the File from a given Resource
+	 */
 	public final synchronized void setFileContentFromResource(@Nullable final String resource) {
 		if (resource == null) {
 			clearFile();
@@ -169,22 +184,44 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return FileUtils.hasChanged(file, lastLoaded);
 	}
 
+	/**
+	 * get the keySet of all layers of the map combined.
+	 *
+	 * @return the keySet of all layers of localMap combined (Format: key.subkey).
+	 */
 	public Set<String> keySet() {
 		update();
 		return fileData.keySet();
 	}
 
+	/**
+	 * get the keySet of all sublayers of the given key combined.
+	 *
+	 * @param key the key of the layer
+	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
+	 */
 	public Set<String> keySet(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 		return fileData.keySet(key);
 	}
 
+	/**
+	 * get the keySet of a single layer of the map.
+	 *
+	 * @return the keySet of the top layer of localMap.
+	 */
 	public Set<String> singleLayerKeySet() {
 		update();
 		return fileData.singleLayerKeySet();
 	}
 
+	/**
+	 * get the keySet of a single layer of the map.
+	 *
+	 * @param key the key of the layer.
+	 * @return the keySet of the given layer or an empty set if the key does not exist.
+	 */
 	public Set<String> singleLayerKeySet(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
