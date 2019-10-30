@@ -280,5 +280,5 @@ public interface StorageBase {
 		}
 	}
 
-	FlatSection getSection(@NotNull final String sectionKey);
+	Section getSection(@NotNull final String sectionKey);
 }

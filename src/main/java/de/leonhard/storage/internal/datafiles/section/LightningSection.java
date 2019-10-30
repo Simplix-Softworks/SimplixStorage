@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.datafiles.section;
 
-import de.leonhard.storage.internal.base.FlatSection;
+import de.leonhard.storage.internal.base.Section;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.enums.Comment;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class LightningSection extends FlatSection {
+public class LightningSection extends Section {
 
 	private final LightningFile lightningFile;
 

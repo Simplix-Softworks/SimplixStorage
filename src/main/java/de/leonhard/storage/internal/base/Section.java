@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public abstract class FlatSection {
+public abstract class Section {
 
 	private final FlatFile flatFile;
 	@Getter
@@ -18,7 +18,7 @@ public abstract class FlatSection {
 	protected String sectionKey;
 
 
-	public FlatSection(@NotNull final FlatFile flatFile, @NotNull final String sectionKey) {
+	public Section(@NotNull final FlatFile flatFile, @NotNull final String sectionKey) {
 		this.flatFile = flatFile;
 		this.sectionKey = sectionKey;
 	}
@@ -155,7 +155,7 @@ public abstract class FlatSection {
 		this.flatFile.setDefault(tempKey, value);
 	}
 
-	protected FlatSection getSectionInstance() {
+	protected Section getSectionInstance() {
 		return this;
 	}
 
@@ -166,9 +166,9 @@ public abstract class FlatSection {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			FlatSection flatSection = (FlatSection) obj;
-			return this.flatFile.equals(flatSection.flatFile)
-				   && this.sectionKey.equals(flatSection.sectionKey);
+			Section section = (Section) obj;
+			return this.flatFile.equals(section.flatFile)
+				   && this.sectionKey.equals(section.sectionKey);
 		}
 	}
 }

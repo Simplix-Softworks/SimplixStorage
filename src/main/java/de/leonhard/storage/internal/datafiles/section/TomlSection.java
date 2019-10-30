@@ -1,13 +1,13 @@
 package de.leonhard.storage.internal.datafiles.section;
 
-import de.leonhard.storage.internal.base.FlatSection;
+import de.leonhard.storage.internal.base.Section;
 import de.leonhard.storage.internal.datafiles.raw.TomlFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public class TomlSection extends FlatSection {
+public class TomlSection extends Section {
 
 	public TomlSection(@NotNull final TomlFile tomlFile, @NotNull final String sectionKey) {
 		super(tomlFile, sectionKey);
