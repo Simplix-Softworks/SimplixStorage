@@ -15,19 +15,20 @@ import java.util.Map;
 @Getter
 public class Toml extends FlatFile {
 
-	public Toml(final String name, final String path) {
+	public Toml(String name, String path) {
 		this(name, path, null);
 	}
 
-	public Toml(final String name, final String path, final ReloadSettings reloadSettings) {
+	public Toml(String name, String path, ReloadSettings reloadSettings) {
 		super(name, path, FileType.TOML);
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
+		create();
 		update();
 	}
 
-	public Toml(final File file) {
+	public Toml(File file) {
 		super(file, FileType.TOML);
 		create();
 		update();
@@ -42,12 +43,12 @@ public class Toml extends FlatFile {
 
 	@Override
 	@Synchronized
-	public void set(final String key, final Object value) {
+	public void set(String key, Object value) {
 		reload();
 
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		final String old = fileData.toString();
+		String old = fileData.toString();
 
 		fileData.insert(finalKey, value);
 
@@ -63,7 +64,7 @@ public class Toml extends FlatFile {
 		}
 	}
 
-	public void write(final Map<String, Object> data) {
+	public void write(Map<String, Object> data) {
 		try {
 			com.electronwill.toml.Toml.write(data, getFile());
 		} catch (IOException e) {
@@ -94,7 +95,7 @@ public class Toml extends FlatFile {
 	}
 
 	@Override
-	public void remove(final String key) {
+	public void remove(String key) {
 		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 		fileData.remove(finalKey);
@@ -103,7 +104,7 @@ public class Toml extends FlatFile {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

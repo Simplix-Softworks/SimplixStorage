@@ -24,16 +24,16 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	private long lastModified;
 
 
-	public FlatFile(final String name, final String path, final FileType fileType) {
+	public FlatFile(String name, String path, FileType fileType) {
 		this.fileType = fileType;
 		if (path == null || path.isEmpty()) {
 			this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
 		} else {
-			this.file = new File(path, FileUtils.replaceExtensions(name) + fileType.getExtension());
+			this.file = new File(path, FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
 		}
 	}
 
-	public FlatFile(final File file, final FileType fileType) {
+	public FlatFile(File file, FileType fileType) {
 		if (!fileType.getExtension().equals(FileUtils.getExtension(file))) {
 			throw new IllegalStateException("Invalid FileType for File '" + file.getName() + "'");
 		}
@@ -54,7 +54,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 		return createFile(this.file);
 	}
 
-	private synchronized boolean createFile(final File file) {
+	private synchronized boolean createFile(File file) {
 		if (file.exists()) {
 			lastModified = System.currentTimeMillis();
 			return false;
@@ -74,7 +74,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	@Override
 	public Object get(String key) {
 		reload();
-		final String finalKey = pathPrefix == null ? key : pathPrefix + "." + key;
+		String finalKey = pathPrefix == null ? key : pathPrefix + "." + key;
 		return fileData.get(finalKey);
 	}
 
@@ -85,7 +85,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	 * @return Returned value
 	 */
 	@Override
-	public boolean contains(final String key) {
+	public boolean contains(String key) {
 		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		return fileData.containsKey(finalKey);
 	}
@@ -97,7 +97,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(final String key) {
+	public Set<String> singleLayerKeySet(String key) {
 		reload();
 		return fileData.singleLayerKeySet(key);
 	}
@@ -109,7 +109,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> keySet(final String key) {
+	public Set<String> keySet(String key) {
 		reload();
 		return fileData.keySet(key);
 	}
@@ -136,9 +136,9 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 		return file.getAbsolutePath();
 	}
 
-	public void replace(final CharSequence target, final CharSequence replacement) throws IOException {
-		final List<String> lines = Files.readAllLines(file.toPath());
-		final List<String> result = new ArrayList<>();
+	public void replace(CharSequence target, CharSequence replacement) throws IOException {
+		List<String> lines = Files.readAllLines(file.toPath());
+		List<String> result = new ArrayList<>();
 		for (String line : lines) {
 			result.add(line.replace(target, replacement));
 		}
@@ -150,7 +150,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	@Override
-	public synchronized int compareTo(final FlatFile flatFile) {
+	public synchronized int compareTo(FlatFile flatFile) {
 		return this.file.compareTo(flatFile.file);
 	}
 
@@ -165,7 +165,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	@Override
-	public synchronized boolean equals(final Object obj) {
+	public synchronized boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
