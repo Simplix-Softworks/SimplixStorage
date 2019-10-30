@@ -20,7 +20,7 @@ public final class Valid {
 		if (object != null) {
 			return;
 		}
-		throw new LightningException("Validated Object is null");
+		throw new LightningException("Valid.notNull(): Validated Object is null");
 	}
 
 	public static <T> void notNull(T object, String... message) {

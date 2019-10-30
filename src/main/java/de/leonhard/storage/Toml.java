@@ -97,9 +97,7 @@ public class Toml extends FlatFile {
 	@Override
 	public void remove(String key) {
 		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
 		fileData.remove(finalKey);
-
 		write(fileData.toMap());
 	}
 

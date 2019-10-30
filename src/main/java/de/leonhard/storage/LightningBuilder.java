@@ -27,6 +27,7 @@ public class LightningBuilder {
     }
 
     public static LightningBuilder fromFile(final File file) {
+        Valid.notNull(file, "File mustn't be null");
         String path = "";
         if (file.isDirectory()) {
             path = file.getAbsolutePath();
@@ -37,6 +38,7 @@ public class LightningBuilder {
     }
 
     public LightningBuilder addInputStreamFromFile(final File file) {
+        Valid.notNull(file, "File mustn't be null");
         this.inputStream = FileUtils.createNewInputStream(file);
         return this;
     }
@@ -44,7 +46,7 @@ public class LightningBuilder {
 
     public LightningBuilder addInputStreamFromResource(final String resource) {
         this.inputStream = getClass().getClassLoader().getResourceAsStream(resource);
-        Valid.notNull(inputStream, "No inbuild resource '" + resource + "'", "InputStream is null.");
+        Valid.notNull(inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
         return this;
     }
 
@@ -55,16 +57,21 @@ public class LightningBuilder {
     }
 
     public LightningBuilder addInputStream(final InputStream inputStream) {
+        Valid.notNull(inputStream, "InputStream mustn't be null");
         this.inputStream = inputStream;
         return this;
     }
 
     public LightningBuilder setConfigSettings(final ConfigSettings configSettings) {
+        Valid.notNull(configSettings, "ConfigSettings mustn't be null");
+
         this.configSettings = configSettings;
         return this;
     }
 
     public LightningBuilder setReloadSettings(final ReloadSettings reloadSettings) {
+        Valid.notNull(reloadSettings,"ReloadSettings mustn't be null");
+
         this.reloadSettings = reloadSettings;
         return this;
     }

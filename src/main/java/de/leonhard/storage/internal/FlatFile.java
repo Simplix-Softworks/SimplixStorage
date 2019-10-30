@@ -24,8 +24,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
     protected String pathPrefix;
     private long lastModified;
 
-
-    public FlatFile(String name, String path, FileType fileType) {
+    protected FlatFile(String name, String path, FileType fileType) {
         this.fileType = fileType;
         if (path == null || path.isEmpty()) {
             this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
@@ -34,7 +33,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
         }
     }
 
-    public FlatFile(File file, FileType fileType) {
+    protected FlatFile(File file, FileType fileType) {
         if (!fileType.getExtension().equals(FileUtils.getExtension(file))) {
             throw new IllegalStateException("Invalid FileType for File '" + file.getName() + "'");
         }
@@ -107,43 +106,44 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
         return fileData.keySet(key);
     }
 
-    public FlatFileSection getSection(final String path){
+    public FlatFileSection getSection(final String path) {
         return new FlatFileSection(this, path);
     }
 
 
-	@Override
-	public synchronized int compareTo(FlatFile flatFile) {
-		return this.file.compareTo(flatFile.file);
-	}
+    @Override
+    public synchronized int compareTo(FlatFile flatFile) {
+        return this.file.compareTo(flatFile.file);
+    }
 
-	@Override
-	public synchronized int hashCode() {
-		return this.file.hashCode();
-	}
+    @Override
+    public synchronized int hashCode() {
+        return this.file.hashCode();
+    }
 
-	@Override
-	public synchronized String toString() {
-		return this.file.getAbsolutePath();
-	}
+    @Override
+    public synchronized String toString() {
+        return this.file.getAbsolutePath();
+    }
 
-	@Override
-	public synchronized boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			FlatFile flatFile = (FlatFile) obj;
-			return this.file.equals(flatFile.file)
-					&& this.lastModified == flatFile.lastModified
-					&& reloadSettings.equals(flatFile.reloadSettings)
-					&& fileType.equals(flatFile.fileType);
-		}
-	}
+    @Override
+    public synchronized boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        } else {
+            FlatFile flatFile = (FlatFile) obj;
+            return this.file.equals(flatFile.file)
+                    && this.lastModified == flatFile.lastModified
+                    && reloadSettings.equals(flatFile.reloadSettings)
+                    && fileType.equals(flatFile.fileType);
+        }
+    }
 
     /**
-     * Reread the content of our flat file
+     * Forces Re- read/load the content of our flat file
+     * Should be used to put the data from the file to our FileData
      */
     protected abstract void forceReload();
 
