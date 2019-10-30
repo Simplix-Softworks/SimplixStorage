@@ -22,15 +22,15 @@ public interface IStorage {
 	void remove(String key);
 
 	/**
-	 * Set an object to your file
+	 * Set an object to your data-structure
 	 *
 	 * @param key   The key your value should be associated with
-	 * @param value The value you want to set in your file
+	 * @param value The value you want to set in your data-structure
 	 */
 	void set(String key, Object value);
 
 	/**
-	 * Checks wheter a key exists in the file
+	 * Checks wheter a key exists in the data-structure
 	 *
 	 * @param key Key to check
 	 * @return Returned value
@@ -39,6 +39,11 @@ public interface IStorage {
 
 	Object get(String key);
 
+	/**
+	 * Get a value or a default one
+	 * @param key Path to value in data-structure
+	 * @param def Default value & type of it
+	 */
 	default <T> T get(String key, T def) {
 		if (!contains(key)) {
 			return def;
@@ -47,9 +52,9 @@ public interface IStorage {
 	}
 
 	/**
-	 * Get a String from a file
+	 * Get a String from a data-structure
 	 *
-	 * @param key Path to String in file
+	 * @param key Path to String in data-structure
 	 * @return Returns the value
 	 */
 	default String getString(String key) {
@@ -61,10 +66,10 @@ public interface IStorage {
 	}
 
 	/**
-	 * Gets a long from a file by key
+	 * Gets a long from a data-structure by key
 	 *
-	 * @param key Path to long in file
-	 * @return String from file
+	 * @param key Path to long in data-structure
+	 * @return String from data-structure
 	 */
 	default long getLong(String key) {
 		if (!contains(key)) {
@@ -75,10 +80,10 @@ public interface IStorage {
 	}
 
 	/**
-	 * Gets an int from a file
+	 * Gets an int from a data-structure
 	 *
-	 * @param key Path to int in file
-	 * @return Int from file
+	 * @param key Path to int in data-structure
+	 * @return Int from data-structure
 	 */
 	default int getInt(String key) {
 		if (!contains(key)) {
@@ -89,10 +94,10 @@ public interface IStorage {
 	}
 
 	/**
-	 * Get a byte from a file
+	 * Get a byte from a data-structure
 	 *
-	 * @param key Path to byte in file
-	 * @return Byte from file
+	 * @param key Path to byte in data-structure
+	 * @return Byte from data-structure
 	 */
 	default byte getByte(String key) {
 		if (!contains(key)) {
@@ -103,10 +108,10 @@ public interface IStorage {
 	}
 
 	/**
-	 * Get a boolean from a file
+	 * Get a boolean from a data-structure
 	 *
-	 * @param key Path to boolean in file
-	 * @return Boolean from file
+	 * @param key Path to boolean in data-structure
+	 * @return Boolean from data-structure
 	 */
 	default boolean getBoolean(String key) {
 		if (!contains(key)) {
@@ -117,10 +122,10 @@ public interface IStorage {
 	}
 
 	/**
-	 * Get a float from a file
+	 * Get a float from a data-structure
 	 *
-	 * @param key Path to float in file
-	 * @return Float from file
+	 * @param key Path to float in data-structure
+	 * @return Float from data-structure
 	 */
 	default float getFloat(String key) {
 		if (!contains(key)) {
@@ -132,10 +137,10 @@ public interface IStorage {
 
 
 	/**
-	 * Get a double from a file
+	 * Get a double from a data-structure
 	 *
-	 * @param key Path to double in the file
-	 * @return Double from file
+	 * @param key Path to double in the data-structure
+	 * @return Double from data-structure
 	 */
 	default double getDouble(String key) {
 		if (!contains(key)) {
@@ -146,7 +151,7 @@ public interface IStorage {
 	}
 
 	/**
-	 * Serialize an Enum from entry in the file
+	 * Serialize an Enum from entry in the data-structure
 	 *
 	 * @param key      Path to Enum
 	 * @param enumType Class of the Enum
@@ -160,9 +165,9 @@ public interface IStorage {
 	}
 
 	/**
-	 * Get a List from a file
+	 * Get a List from a data-structure
 	 *
-	 * @param key Path to StringList in file
+	 * @param key Path to StringList in data-structure
 	 * @return List
 	 */
 	default List<?> getList(String key) {
@@ -210,7 +215,7 @@ public interface IStorage {
 	}
 
 	/**
-	 * Sets a value to the file if the file doesn't already contain the value
+	 * Sets a value to the data-structure if the data-structure doesn't already contain the value
 	 * (Not mix up with Bukkit addDefault)
 	 *
 	 * @param key   Key to set the value

@@ -48,7 +48,7 @@ public class Yaml extends FlatFile implements IStorage {
 
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
-        update();
+        forceReload();
         if (reloadSettings != null) {
             this.reloadSettings = reloadSettings;
         }
@@ -106,14 +106,14 @@ public class Yaml extends FlatFile implements IStorage {
     }
 
     private void write(Map data) throws IOException {
-
-        YamlWriter writer = new YamlWriter(new FileWriter(getFile()));
+        final YamlWriter writer = new YamlWriter(new FileWriter(getFile()));
         writer.write(data);
         writer.close();
     }
 
     @Override
-    protected void update() {
+    @SuppressWarnings("unchecked")
+    protected void forceReload() {
         YamlReader reader = null;
         try {
             reader = new YamlReader(new FileReader(getFile()));// Needed?
@@ -170,7 +170,7 @@ public class Yaml extends FlatFile implements IStorage {
             return this.fileData.equals(yaml.fileData)
                     && this.pathPrefix.equals(yaml.pathPrefix)
                     && this.configSettings.equals(yaml.configSettings)
-                    && super.equals(yaml.getFlatFileInstance());
+                    && super.equals(yaml);
         }
     }
 }

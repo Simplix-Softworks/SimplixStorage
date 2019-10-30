@@ -36,6 +36,11 @@ public class LightningBuilder {
         return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), path);
     }
 
+    public LightningBuilder addInputStreamFromFile(final File file) {
+        this.inputStream = FileUtils.createNewInputStream(file);
+        return this;
+    }
+
 
     public LightningBuilder addInputStreamFromResource(final String resource) {
         this.inputStream = getClass().getClassLoader().getResourceAsStream(resource);
@@ -67,7 +72,6 @@ public class LightningBuilder {
     public LightningFile createLightningFile() {
         return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
     }
-
 
     public Config createConfig() {
         return new Config(name, path, inputStream, reloadSettings, configSettings);

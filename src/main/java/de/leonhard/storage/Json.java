@@ -38,13 +38,13 @@ public class Json extends FlatFile implements IStorage {
         if (reloadSettings != null) {
             this.reloadSettings = reloadSettings;
         }
-        update();
+        forceReload();
     }
 
     public Json(File file) {
         super(file, FileType.JSON);
         create();
-        update();
+        forceReload();
     }
 
 
@@ -136,7 +136,7 @@ public class Json extends FlatFile implements IStorage {
     }
 
     @Override
-    protected void update() {
+    protected void forceReload() {
         JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
         fileData = new FileData(new JSONObject(jsonTokener));
     }
@@ -166,7 +166,7 @@ public class Json extends FlatFile implements IStorage {
             Json json = (Json) obj;
             return this.fileData.equals(json.fileData)
                     && this.pathPrefix.equals(json.pathPrefix)
-                    && super.equals(json.getFlatFileInstance());
+                    && super.equals(json);
         }
     }
 }

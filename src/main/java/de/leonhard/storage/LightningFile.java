@@ -40,21 +40,21 @@ public class LightningFile extends FlatFile {
 			this.configSettings = configSettings;
 		}
 
-		update();
+		forceReload();
 		if (reloadSetting != null) {
 			this.reloadSettings = reloadSetting;
 		}
 	}
 
 	@Override
-	protected void update() {
+	protected void forceReload() {
 		this.fileData = new FileData(lightningEditor.readData());
 	}
 
 	@Override
 	public Object get(String key) {
 		Valid.notNull(key, "Key must not be null");
-		update();
+		forceReload();
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 		return fileData.get(finalKey);
 	}
@@ -77,7 +77,7 @@ public class LightningFile extends FlatFile {
 		Valid.notNull(key, "Key must not be null");
 		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
 
-		update();
+		forceReload();
 
 		if (!fileData.containsKey(finalKey)) {
 			return;

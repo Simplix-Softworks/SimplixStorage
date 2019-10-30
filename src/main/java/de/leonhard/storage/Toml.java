@@ -25,13 +25,13 @@ public class Toml extends FlatFile {
 			this.reloadSettings = reloadSettings;
 		}
 		create();
-		update();
+		forceReload();
 	}
 
 	public Toml(File file) {
 		super(file, FileType.TOML);
 		create();
-		update();
+		forceReload();
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class Toml extends FlatFile {
 	}
 
 	@Override
-	protected void update() {
+	protected void forceReload() {
 		try {
 			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
 		} catch (IOException e) {
@@ -90,7 +90,7 @@ public class Toml extends FlatFile {
 	@Override
 	public void reload() {
 		if (shouldReload()) {
-			update();
+			forceReload();
 		}
 	}
 

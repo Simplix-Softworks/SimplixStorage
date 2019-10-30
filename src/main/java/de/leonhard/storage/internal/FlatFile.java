@@ -60,7 +60,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 
     public void reload() {
         if (shouldReload()) {
-            update();
+            forceReload();
         }
     }
 
@@ -145,7 +145,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
     /**
      * Reread the content of our flat file
      */
-    protected abstract void update();
+    protected abstract void forceReload();
 
     /**
      * Creates an empty .yml or .json file.

@@ -12,11 +12,11 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtils {
 
-	public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
+	public static Map<String, Object> jsonToMap(JSONObject jsonObject) throws JSONException {
 		Map<String, Object> retMap = new HashMap<>();
 
-		if (json != JSONObject.NULL) {
-			retMap = toMap(json);
+		if (jsonObject != JSONObject.NULL) {
+			retMap = toMap(jsonObject);
 		}
 		return retMap;
 	}
@@ -33,23 +33,12 @@ public class JsonUtils {
 		return jsonData;
 	}
 
-	public static Map<String, Object> toMap(JSONObject object) throws JSONException {
+	public static Map<String, Object> toMap(JSONObject jsonObject) throws JSONException {
 		Map<String, Object> map = new HashMap<>();
 
-		Iterator<String> keysItr = object.keys();
-		keysItr.forEachRemaining(key -> map.put(key, getValue(object.get(key))));
+		Iterator<String> keysItr = jsonObject.keys();
+		keysItr.forEachRemaining(key -> map.put(key, getValue(jsonObject.get(key))));
 		return map;
-	}
-
-	private static Object getValue(Object o) {
-		if (o instanceof JSONArray) {
-			return toList((JSONArray) o);
-		} else if (o instanceof JSONObject) {
-			return toMap((JSONObject) o);
-		} else {
-			return o;
-		}
-
 	}
 
 	public static List<Object> toList(JSONArray array) throws JSONException {
@@ -58,5 +47,15 @@ public class JsonUtils {
 			list.add(getValue(array.get(i)));
 		}
 		return list;
+	}
+
+	private static Object getValue(Object obj) {
+		if (obj instanceof JSONArray) {
+			return toList((JSONArray) obj);
+		} else if (obj instanceof JSONObject) {
+			return toMap((JSONObject) obj);
+		} else {
+			return obj;
+		}
 	}
 }
