@@ -18,14 +18,14 @@ public interface StorageBase {
 	/**
 	 * Get a boolean from a file
 	 *
-	 * @param key Path to boolean in file
+	 * @param key Key to boolean in file
 	 * @return Boolean from file
 	 */
 	default boolean getBoolean(@NotNull final String key) {
 		if (!hasKey(key)) {
 			return false;
 		} else {
-			return Primitive.Boolean.getBoolean(get(key));
+			return Primitive.BOOLEAN.getBoolean(get(key));
 		}
 	}
 
@@ -42,7 +42,7 @@ public interface StorageBase {
 	/**
 	 * Get a byte from a file
 	 *
-	 * @param key Path to byte in file
+	 * @param key Key to byte in file
 	 * @return Byte from file
 	 */
 	default byte getByte(@NotNull final String key) {
@@ -56,7 +56,7 @@ public interface StorageBase {
 	/**
 	 * Get a Byte-List from a file
 	 *
-	 * @param key Path to Byte-List from file
+	 * @param key Key to Byte-List from file
 	 * @return Byte-List
 	 */
 	default List<Byte> getByteList(@NotNull final String key) {
@@ -70,7 +70,7 @@ public interface StorageBase {
 	/**
 	 * Get a double from a file
 	 *
-	 * @param key Path to double in the file
+	 * @param key Key to double in the file
 	 * @return Double from file
 	 */
 	default double getDouble(@NotNull final String key) {
@@ -84,7 +84,7 @@ public interface StorageBase {
 	/**
 	 * Get a float from a file
 	 *
-	 * @param key Path to float in file
+	 * @param key Key to float in file
 	 * @return Float from file
 	 */
 	default float getFloat(@NotNull final String key) {
@@ -98,7 +98,7 @@ public interface StorageBase {
 	/**
 	 * Gets an int from a file
 	 *
-	 * @param key Path to int in file
+	 * @param key Key to int in file
 	 * @return Int from file
 	 */
 	default int getInt(@NotNull final String key) {
@@ -112,7 +112,7 @@ public interface StorageBase {
 	/**
 	 * Gets a short from a file
 	 *
-	 * @param key Path to int in file
+	 * @param key Key to int in file
 	 * @return Short from file
 	 */
 	default short getShort(@NotNull final String key) {
@@ -126,7 +126,7 @@ public interface StorageBase {
 	/**
 	 * Get a IntegerList from a file
 	 *
-	 * @param key Path to Integer-List in file
+	 * @param key Key to Integer-List in file
 	 * @return Integer-List
 	 */
 	default List<Integer> getIntegerList(@NotNull final String key) {
@@ -140,7 +140,7 @@ public interface StorageBase {
 	/**
 	 * Get a List from a file
 	 *
-	 * @param key Path to StringList in file
+	 * @param key Key to StringList in file
 	 * @return List
 	 */
 	default List<?> getList(@NotNull final String key) {
@@ -154,7 +154,7 @@ public interface StorageBase {
 	/**
 	 * Gets a long from a file by key
 	 *
-	 * @param key Path to long in file
+	 * @param key Key to long in file
 	 * @return String from file
 	 */
 	default long getLong(@NotNull final String key) {
@@ -168,7 +168,7 @@ public interface StorageBase {
 	/**
 	 * Get a Long-List from a file
 	 *
-	 * @param key Path to Long-List in file
+	 * @param key Key to Long-List in file
 	 * @return Long-List
 	 */
 	default List<Long> getLongList(@NotNull final String key) {
@@ -182,7 +182,7 @@ public interface StorageBase {
 	/**
 	 * Gets a Map
 	 *
-	 * @param key Path to Map-List in file
+	 * @param key Key to Map-List in file
 	 * @return Map
 	 */
 	default Map getMap(@NotNull final String key) {
@@ -209,7 +209,7 @@ public interface StorageBase {
 				tempObj = Double.parseDouble((String) tempObj);
 			} else if (tempObj instanceof String && value instanceof Short) {
 				tempObj = Short.parseShort((String) tempObj);
-			} else if (tempObj instanceof String && value instanceof Primitive.Boolean) {
+			} else if (tempObj instanceof String && value instanceof Primitive.BOOLEAN) {
 				tempObj = ((String) tempObj).equalsIgnoreCase("true");
 			}
 			return (T) tempObj;
@@ -217,7 +217,7 @@ public interface StorageBase {
 	}
 
 	/**
-	 * Set an object to your file
+	 * Set an Object to your file
 	 *
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your file
@@ -225,9 +225,21 @@ public interface StorageBase {
 	void set(@NotNull final String key, @Nullable final Object value);
 
 	/**
+	 * Get an Object from the File casted to a certain type
+	 *
+	 * @param key Key to value in file
+	 * @param def the Class to be casted to
+	 * @param <T> returnType
+	 * @return returns the value of the key casted to def
+	 */
+	default <T> T get(@NotNull final String key, @NotNull final Class def) {
+		return Primitive.getFromDef(getString(key), def);
+	}
+
+	/**
 	 * Get a String from a file
 	 *
-	 * @param key Path to String in file
+	 * @param key Key to String in file
 	 * @return Returns the value
 	 */
 	default String getString(@NotNull final String key) {
@@ -242,7 +254,7 @@ public interface StorageBase {
 	/**
 	 * Get String List
 	 *
-	 * @param key Path to String List in file
+	 * @param key Key to String List in file
 	 * @return List
 	 */
 	default List<String> getStringList(@NotNull final String key) {
