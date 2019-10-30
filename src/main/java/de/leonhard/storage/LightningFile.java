@@ -105,7 +105,7 @@ public class LightningFile extends FlatFile {
 			return false;
 		} else {
 			LightningFile lightningFile = (LightningFile) obj;
-			return super.equals(lightningFile.getFlatFileInstance());
+			return super.equals(lightningFile);
 		}
 	}
 }
