@@ -108,8 +108,15 @@ public class LightningFile extends CommentEnabledFile {
 		}
 	}
 
-	public LightningSection getSection(@NotNull final String key) {
-		return new LightningSection(this, key);
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 * @return the Section using the given sectionKey
+	 */
+	@Override
+	public LightningSection getSection(@NotNull final String sectionKey) {
+		return new LightningSection(this, sectionKey);
 	}
 
 	protected final LightningFile getLightningFileInstance() {

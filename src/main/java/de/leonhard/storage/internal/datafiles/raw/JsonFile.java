@@ -149,8 +149,15 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	public JsonSection getSection(@NotNull final String key) {
-		return new JsonSection(this, key);
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 * @return the Section using the given sectionKey
+	 */
+	@Override
+	public JsonSection getSection(@NotNull final String sectionKey) {
+		return new JsonSection(this, sectionKey);
 	}
 
 	protected final JsonFile getJsonFileInstance() {

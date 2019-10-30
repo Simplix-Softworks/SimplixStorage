@@ -279,4 +279,6 @@ public interface StorageBase {
 			set(key, value);
 		}
 	}
+
+	FlatSection getSection(@NotNull final String sectionKey);
 }

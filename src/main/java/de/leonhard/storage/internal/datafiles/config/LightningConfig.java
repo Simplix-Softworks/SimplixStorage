@@ -120,9 +120,15 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 * @return the Section using the given sectionKey
+	 */
 	@Override
-	public LightningConfigSection getSection(@NotNull final String key) {
-		return new LightningConfigSection(this, key);
+	public LightningConfigSection getSection(@NotNull final String sectionKey) {
+		return new LightningConfigSection(this, sectionKey);
 	}
 
 	protected final LightningConfig getLightningConfigInstance() {

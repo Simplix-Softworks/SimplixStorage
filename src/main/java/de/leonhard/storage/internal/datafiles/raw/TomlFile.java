@@ -104,8 +104,16 @@ public class TomlFile extends FlatFile {
 		}
 	}
 
-	public TomlSection getTomlSection(@NotNull final String key) {
-		return new TomlSection(this, key);
+
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 * @return the Section using the given sectionKey
+	 */
+	@Override
+	public TomlSection getSection(@NotNull final String sectionKey) {
+		return new TomlSection(this, sectionKey);
 	}
 
 	protected final TomlFile getTomlFileInstance() {

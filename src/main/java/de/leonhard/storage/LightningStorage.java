@@ -219,9 +219,9 @@ public class LightningStorage {
 	}
 
 	/**
-	 * Set the ConfigSetting for the File.
+	 * Set the CommentSetting for the File.
 	 *
-	 * @param commentSetting the ConfigSetting to be set(Default for Configs is PRESERVE_COMMENTS, otherwise it's SKIP_COMMENTS)
+	 * @param commentSetting the CommentSetting to be set(Default for Configs is PRESERVE, otherwise it's SKIP)
 	 */
 	public final LightningStorage commentSetting(@Nullable Comment commentSetting) {
 		this.commentSetting = commentSetting;

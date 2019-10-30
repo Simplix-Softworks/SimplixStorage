@@ -11,8 +11,8 @@ public class LightningConfigSection extends LightningSection {
 
 	private final LightningConfig lightningConfig;
 
-	public LightningConfigSection(final @NotNull LightningConfig lightningConfig, final @NotNull String key) {
-		super(lightningConfig, key);
+	public LightningConfigSection(final @NotNull LightningConfig lightningConfig, final @NotNull String sectionKey) {
+		super(lightningConfig, sectionKey);
 		this.lightningConfig = lightningConfig;
 	}
 

@@ -136,8 +136,15 @@ public class YamlFile extends CommentEnabledFile {
 		}
 	}
 
-	public YamlSection getYamlSection(@NotNull final String key) {
-		return new YamlSection(this, key);
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 * @return the Section using the given sectionKey
+	 */
+	@Override
+	public YamlSection getSection(@NotNull final String sectionKey) {
+		return new YamlSection(this, sectionKey);
 	}
 
 	protected final YamlFile getYamlFileInstance() {
