@@ -14,10 +14,9 @@ import org.jetbrains.annotations.Nullable;
 public class JsonSection {
 
 	private final JsonFile jsonFile;
-
 	@Getter
 	@Setter
-	private String sectionKey;
+	protected String sectionKey;
 
 	public JsonSection(@NotNull final JsonFile jsonFile, @NotNull final String key) {
 		this.jsonFile = jsonFile;
@@ -168,8 +167,8 @@ public class JsonSection {
 			return false;
 		} else {
 			JsonSection jsonSection = (JsonSection) obj;
-			return this.sectionKey.equals(jsonSection.sectionKey)
-				   && this.jsonFile.equals(jsonSection.jsonFile);
+			return this.jsonFile.equals(jsonSection.jsonFile)
+				   && this.sectionKey.equals(jsonSection.sectionKey);
 		}
 	}
 }

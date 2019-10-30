@@ -14,10 +14,10 @@ import org.jetbrains.annotations.Nullable;
 public class TomlSection {
 
 	private final TomlFile tomlFile;
-
 	@Getter
 	@Setter
-	private String sectionKey;
+	protected String sectionKey;
+
 
 	public TomlSection(@NotNull final TomlFile tomlFile, @NotNull final String key) {
 		this.tomlFile = tomlFile;
@@ -168,8 +168,8 @@ public class TomlSection {
 			return false;
 		} else {
 			TomlSection tomlSection = (TomlSection) obj;
-			return this.sectionKey.equals(tomlSection.sectionKey)
-				   && this.tomlFile.equals(tomlSection.tomlFile);
+			return this.tomlFile.equals(tomlSection.tomlFile)
+				   && this.sectionKey.equals(tomlSection.sectionKey);
 		}
 	}
 }

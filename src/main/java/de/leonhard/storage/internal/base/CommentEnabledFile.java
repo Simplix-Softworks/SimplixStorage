@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class CommentEnabledFile extends FlatFile {
 
-
 	@Getter
 	@Setter
 	private Comment commentSetting = Comment.SKIP;

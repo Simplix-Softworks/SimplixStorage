@@ -17,7 +17,8 @@ public class LightningSection {
 	private final LightningFile lightningFile;
 	@Getter
 	@Setter
-	private String sectionKey;
+	protected String sectionKey;
+
 
 	public LightningSection(@NotNull final LightningFile lightningFile, @NotNull final String key) {
 		this.lightningFile = lightningFile;
@@ -180,8 +181,8 @@ public class LightningSection {
 			return false;
 		} else {
 			LightningSection lightningSection = (LightningSection) obj;
-			return this.sectionKey.equals(lightningSection.sectionKey)
-				   && this.lightningFile.equals(lightningSection.lightningFile);
+			return this.lightningFile.equals(lightningSection.lightningFile)
+				   && this.sectionKey.equals(lightningSection.sectionKey);
 		}
 	}
 }

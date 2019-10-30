@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
 public class YamlSection {
 
 	private final YamlFile yamlFile;
-
 	@Getter
 	@Setter
-	private String sectionKey;
+	protected String sectionKey;
+
 
 	public YamlSection(@NotNull final YamlFile yamlFile, @NotNull final String key) {
 		this.yamlFile = yamlFile;
@@ -175,8 +175,8 @@ public class YamlSection {
 			return false;
 		} else {
 			YamlSection yamlSection = (YamlSection) obj;
-			return this.sectionKey.equals(yamlSection.sectionKey)
-				   && this.yamlFile.equals(yamlSection.yamlFile);
+			return this.yamlFile.equals(yamlSection.yamlFile)
+				   && this.sectionKey.equals(yamlSection.sectionKey);
 		}
 	}
 }
