@@ -28,7 +28,6 @@ public class FileData {
 		this.localMap = new HashMap<>(jsonObject.toMap());
 	}
 
-
 	/**
 	 * Method to get the object assign to a key from a FileData Object.
 	 *

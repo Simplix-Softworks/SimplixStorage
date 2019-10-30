@@ -1,6 +1,5 @@
 package de.leonhard.storage;
 
-
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
@@ -21,6 +20,7 @@ public class Toml extends FlatFile {
 
 	public Toml(String name, String path, ReloadSettings reloadSettings) {
 		super(name, path, FileType.TOML);
+		create();
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
@@ -113,7 +113,7 @@ public class Toml extends FlatFile {
 			Toml toml = (Toml) obj;
 			return this.fileData.equals(toml.fileData)
 					&& this.pathPrefix.equals(toml.pathPrefix)
-					&& super.equals(toml.getFlatFileInstance());
+					&& super.equals(toml);
 		}
 	}
 }
