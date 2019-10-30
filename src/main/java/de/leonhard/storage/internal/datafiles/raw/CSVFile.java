@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.Section;
+import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.enums.DataType;
 import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -57,7 +57,7 @@ public class CSVFile extends FlatFile {
 	}
 
 	@Override
-	public Section getSection(final @NotNull String sectionKey) {
+	public FlatSection getSection(final @NotNull String sectionKey) {
 		return null;
 	}
 

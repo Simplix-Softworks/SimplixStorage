@@ -56,6 +56,11 @@ public class LightningConfigSection extends LightningSection {
 		this.lightningConfig.setFooter(tempKey, footer);
 	}
 
+	@Override
+	public LightningConfigSection getSection(final @NotNull String sectionKey) {
+		return new LightningConfigSection(this.lightningConfig, this.sectionKey + "." + sectionKey);
+	}
+
 	protected LightningConfigSection getLightningConfigSectionInstance() {
 		return this;
 	}

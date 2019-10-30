@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.datafiles.section;
 
-import de.leonhard.storage.internal.base.Section;
+import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
 import de.leonhard.storage.internal.enums.Comment;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public class YamlSection extends Section {
+public class YamlSection extends FlatSection {
 
 	private final YamlFile yamlFile;
 
@@ -21,6 +21,11 @@ public class YamlSection extends Section {
 		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
 
 		this.yamlFile.set(tempKey, value, commentSetting);
+	}
+
+	@Override
+	public YamlSection getSection(@NotNull final String sectionKey) {
+		return new YamlSection(this.yamlFile, this.sectionKey + "." + sectionKey);
 	}
 
 	protected YamlSection getYamlSectionInstance() {

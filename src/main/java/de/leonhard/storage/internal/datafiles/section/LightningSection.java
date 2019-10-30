@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.datafiles.section;
 
-import de.leonhard.storage.internal.base.Section;
+import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.enums.Comment;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class LightningSection extends Section {
+public class LightningSection extends FlatSection {
 
 	private final LightningFile lightningFile;
 
@@ -27,6 +27,11 @@ public class LightningSection extends Section {
 		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
 
 		this.lightningFile.remove(tempKey, commentSetting);
+	}
+
+	@Override
+	public LightningSection getSection(final @NotNull String sectionKey) {
+		return new LightningSection(this.lightningFile, this.sectionKey + "." + sectionKey);
 	}
 
 	protected LightningSection getLightningSectionInstance() {
