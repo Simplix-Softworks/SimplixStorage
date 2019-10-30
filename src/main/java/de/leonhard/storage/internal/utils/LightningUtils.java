@@ -2,7 +2,7 @@ package de.leonhard.storage.internal.utils;
 
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.editor.LightningEditor;
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import de.leonhard.storage.internal.enums.DataType;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class LightningUtils {
 	 * @param commentSetting the ConfigSetting to be used.
 	 * @return a List containing the Header of the FileData.
 	 */
-	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		for (String localKey : fileData.singleLayerKeySet()) {
 			if (fileData.get(localKey) == LightningEditor.LineType.COMMENT) {
@@ -51,7 +51,7 @@ public class LightningUtils {
 	 * @return a Map with the given Header.
 	 */
 	@SuppressWarnings("DuplicatedCode")
-	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @Nullable final List<String> header, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @Nullable final List<String> header, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
 		for (String localKey : tempMap.keySet()) {
 			if (tempMap.get(localKey) == LightningEditor.LineType.COMMENT) {
@@ -82,7 +82,7 @@ public class LightningUtils {
 	 * @return a Map with the given Header.
 	 */
 	@SuppressWarnings("DuplicatedCode")
-	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> header, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static Map<String, Object> setHeader(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> header, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
 			Map<String, Object> tempMap = (Map<String, Object>) fileData.get(key);
@@ -114,7 +114,7 @@ public class LightningUtils {
 	 * @param commentSetting the ConfigSetting to be used.
 	 * @return a List containing the Footer of the FileData.
 	 */
-	public static List<String> getFooter(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static List<String> getFooter(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet());
 		Collections.reverse(keyList);
@@ -140,7 +140,7 @@ public class LightningUtils {
 	 * @return a Map with the given Footer.
 	 */
 	@SuppressWarnings("DuplicatedCode")
-	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @Nullable final List<String> footer, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @Nullable final List<String> footer, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
 		List<String> keyList = new ArrayList<>(tempMap.keySet());
 		Collections.reverse(keyList);
@@ -172,7 +172,7 @@ public class LightningUtils {
 	 * @return a Map with the given Footer.
 	 */
 	@SuppressWarnings("DuplicatedCode")
-	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> footer, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static Map<String, Object> setFooter(@NotNull final FileData fileData, @NotNull final String key, @Nullable final List<String> footer, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
 			Map<String, Object> tempMap = (Map<String, Object>) fileData.get(key);
@@ -207,7 +207,7 @@ public class LightningUtils {
 	 * @param commentSetting the ConfigSetting to be used.
 	 * @return a List containing the Header of the SubBlock.
 	 */
-	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final String key, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final String key, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		for (String localKey : fileData.singleLayerKeySet(key)) {
 			if (fileData.get(key + "." + localKey) == LightningEditor.LineType.COMMENT) {
@@ -228,7 +228,7 @@ public class LightningUtils {
 	 * @param commentSetting the ConfigSetting to be used.
 	 * @return a List containing the Footer of the SubBlock.
 	 */
-	public static List<String> getFooter(@NotNull final FileData fileData, final String key, @NotNull final DataType dataType, @NotNull Comments commentSetting) {
+	public static List<String> getFooter(@NotNull final FileData fileData, final String key, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
 		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet(key));
 		Collections.reverse(keyList);

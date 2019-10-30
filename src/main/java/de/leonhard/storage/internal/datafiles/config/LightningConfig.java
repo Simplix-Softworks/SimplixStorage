@@ -3,7 +3,7 @@ package de.leonhard.storage.internal.datafiles.config;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.datafiles.section.LightningConfigSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import de.leonhard.storage.internal.enums.DataType;
 import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.LightningUtils;
@@ -23,15 +23,15 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile {
 
-	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comments commentSetting, @Nullable final DataType dataType) {
-		super(file, inputStream, reloadSetting, (commentSetting == null ? Comments.PRESERVE : commentSetting), dataType);
+	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comment commentSetting, @Nullable final DataType dataType) {
+		super(file, inputStream, reloadSetting, (commentSetting == null ? Comment.PRESERVE : commentSetting), dataType);
 	}
 
 
 	public List<String> getHeader() {
 		update();
 
-		if (getCommentSetting().equals(Comments.SKIP)) {
+		if (getCommentSetting().equals(Comment.SKIP)) {
 			return new ArrayList<>();
 		} else {
 			return LightningUtils.getHeader(this.fileData, getDataType(), getCommentSetting());
@@ -41,7 +41,7 @@ public class LightningConfig extends LightningFile {
 	public void setHeader(@Nullable final List<String> header) {
 		update();
 
-		if (getCommentSetting() != Comments.SKIP) {
+		if (getCommentSetting() != Comment.SKIP) {
 			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, header, getDataType(), getCommentSetting());
 			if (!this.fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getCommentSetting());
@@ -52,7 +52,7 @@ public class LightningConfig extends LightningFile {
 	public List<String> getFooter() {
 		update();
 
-		if (getCommentSetting().equals(Comments.SKIP)) {
+		if (getCommentSetting().equals(Comment.SKIP)) {
 			return new ArrayList<>();
 		} else {
 			return LightningUtils.getFooter(fileData, getDataType(), getCommentSetting());
@@ -62,7 +62,7 @@ public class LightningConfig extends LightningFile {
 	public void setFooter(@Nullable final List<String> footer) {
 		update();
 
-		if (getCommentSetting() != Comments.SKIP) {
+		if (getCommentSetting() != Comment.SKIP) {
 			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, footer, getDataType(), getCommentSetting());
 			if (!fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getCommentSetting());
@@ -75,7 +75,7 @@ public class LightningConfig extends LightningFile {
 
 		update();
 
-		if (getCommentSetting().equals(Comments.SKIP)) {
+		if (getCommentSetting().equals(Comment.SKIP)) {
 			return new ArrayList<>();
 		} else {
 			return LightningUtils.getHeader(this.fileData, key, getDataType(), getCommentSetting());
@@ -87,7 +87,7 @@ public class LightningConfig extends LightningFile {
 
 		update();
 
-		if (getCommentSetting() != Comments.SKIP) {
+		if (getCommentSetting() != Comment.SKIP) {
 			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, key, header, getDataType(), getCommentSetting());
 			if (!fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getCommentSetting());
@@ -100,7 +100,7 @@ public class LightningConfig extends LightningFile {
 
 		update();
 
-		if (getCommentSetting().equals(Comments.SKIP)) {
+		if (getCommentSetting().equals(Comment.SKIP)) {
 			return new ArrayList<>();
 		} else {
 			return LightningUtils.getFooter(this.fileData, key, getDataType(), getCommentSetting());
@@ -112,7 +112,7 @@ public class LightningConfig extends LightningFile {
 
 		update();
 
-		if (getCommentSetting() != Comments.SKIP) {
+		if (getCommentSetting() != Comment.SKIP) {
 			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, key, footer, getDataType(), getCommentSetting());
 			if (!fileData.toMap().equals(tempMap)) {
 				LightningEditor.writeData(this.file, tempMap, getCommentSetting());

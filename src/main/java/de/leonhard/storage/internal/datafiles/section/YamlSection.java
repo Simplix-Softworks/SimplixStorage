@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +31,7 @@ public class YamlSection {
 		return this.yamlFile.get(tempKey);
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comments commentSetting) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comment commentSetting) {
 		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
 
 		this.yamlFile.set(tempKey, value, commentSetting);

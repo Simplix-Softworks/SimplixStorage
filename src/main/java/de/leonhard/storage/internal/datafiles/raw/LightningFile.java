@@ -4,7 +4,7 @@ import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.datafiles.section.LightningSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import de.leonhard.storage.internal.enums.DataType;
 import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningFile extends CommentEnabledFile {
 
-	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comments commentSetting, @Nullable final DataType dataType) {
+	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comment commentSetting, @Nullable final DataType dataType) {
 		super(file, FileType.LIGHTNING);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -41,7 +41,7 @@ public class LightningFile extends CommentEnabledFile {
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
-	public void reload(@NotNull final Comments commentSetting) {
+	public void reload(@NotNull final Comment commentSetting) {
 		setCommentSetting(commentSetting);
 		reload();
 	}
@@ -65,7 +65,7 @@ public class LightningFile extends CommentEnabledFile {
 		return fileData.get(key);
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comments commentSetting) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comment commentSetting) {
 		setCommentSetting(commentSetting);
 		set(key, value);
 	}
@@ -84,7 +84,7 @@ public class LightningFile extends CommentEnabledFile {
 		}
 	}
 
-	public synchronized void remove(@NotNull final String key, @NotNull final Comments commentSetting) {
+	public synchronized void remove(@NotNull final String key, @NotNull final Comment commentSetting) {
 		setCommentSetting(commentSetting);
 		remove(key);
 	}

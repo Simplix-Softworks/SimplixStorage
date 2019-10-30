@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.editor;
 
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import de.leonhard.storage.internal.enums.DataType;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,10 +28,10 @@ public class LightningEditor {
 	 * @param map            a HashMap containing the Data to be written.
 	 * @param commentSetting the ConfigSetting to be used.
 	 */
-	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final Comments commentSetting) {
-		if (commentSetting == Comments.PRESERVE) {
+	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final Comment commentSetting) {
+		if (commentSetting == Comment.PRESERVE) {
 			initialWriteWithComments(file, map);
-		} else if (commentSetting == Comments.SKIP) {
+		} else if (commentSetting == Comment.SKIP) {
 			initialWriteWithOutComments(file, map);
 		} else {
 			throw new IllegalArgumentException("Illegal ConfigSetting");
@@ -46,10 +46,10 @@ public class LightningEditor {
 	 * @param commentSetting the ConfigSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comments commentSetting) {
-		if (commentSetting == Comments.PRESERVE) {
+	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comment commentSetting) {
+		if (commentSetting == Comment.PRESERVE) {
 			return initialReadWithComments(file, dataType, commentSetting);
-		} else if (commentSetting == Comments.SKIP) {
+		} else if (commentSetting == Comment.SKIP) {
 			return initialReadWithOutComments(file, dataType, commentSetting);
 		} else {
 			throw new IllegalArgumentException("Illegal ConfigSetting");
@@ -58,7 +58,7 @@ public class LightningEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static Map<String, Object> initialReadWithComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comments commentSetting) {
+	private static Map<String, Object> initialReadWithComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comment commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -97,7 +97,7 @@ public class LightningEditor {
 		}
 	}
 
-	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final Comments commentSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final Comment commentSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -131,7 +131,7 @@ public class LightningEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comments commentSetting) {
+	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comment commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -164,7 +164,7 @@ public class LightningEditor {
 		}
 	}
 
-	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType, final Comments commentSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType, final Comment commentSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -193,7 +193,7 @@ public class LightningEditor {
 	}
 	// </Read without Comments>
 
-	private static String readKey(String filePath, List<String> lines, DataType dataType, Comments commentSetting, Map<String, Object> tempMap, String tempKey, String tempLine) {
+	private static String readKey(String filePath, List<String> lines, DataType dataType, Comment commentSetting, Map<String, Object> tempMap, String tempKey, String tempLine) {
 		if (tempLine.contains("=")) {
 			String[] line = tempLine.split("=");
 			line[0] = line[0].trim();
@@ -223,7 +223,7 @@ public class LightningEditor {
 	}
 
 
-	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final Comments commentSetting) {
+	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final Comment commentSetting) {
 		List<String> localList = dataType.getNewDataList(commentSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();

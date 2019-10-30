@@ -4,7 +4,7 @@ import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.datafiles.config.LightningConfig;
 import de.leonhard.storage.internal.datafiles.config.YamlConfig;
 import de.leonhard.storage.internal.datafiles.raw.*;
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import de.leonhard.storage.internal.enums.DataType;
 import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -30,7 +30,7 @@ public class LightningStorage {
 	private final String path;
 	private BufferedInputStream inputStream;
 	private Reload reloadSetting;
-	private Comments commentSetting;
+	private Comment commentSetting;
 	private DataType dataType;
 
 	// <local Constructors>
@@ -223,7 +223,7 @@ public class LightningStorage {
 	 *
 	 * @param commentSetting the ConfigSetting to be set(Default for Configs is PRESERVE_COMMENTS, otherwise it's SKIP_COMMENTS)
 	 */
-	public final LightningStorage commentSetting(@Nullable Comments commentSetting) {
+	public final LightningStorage commentSetting(@Nullable Comment commentSetting) {
 		this.commentSetting = commentSetting;
 		return this;
 	}

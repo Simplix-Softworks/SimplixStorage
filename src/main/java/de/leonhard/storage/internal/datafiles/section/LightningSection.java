@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +30,7 @@ public class LightningSection {
 		return this.lightningFile.get(tempKey);
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comments commentSetting) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comment commentSetting) {
 		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
 
 		this.lightningFile.set(tempKey, value, commentSetting);
@@ -42,7 +42,7 @@ public class LightningSection {
 		this.lightningFile.set(tempKey, value);
 	}
 
-	public synchronized void remove(@NotNull final String key, @NotNull final Comments commentSetting) {
+	public synchronized void remove(@NotNull final String key, @NotNull final Comment commentSetting) {
 		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
 
 		this.lightningFile.remove(tempKey, commentSetting);

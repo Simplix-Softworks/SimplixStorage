@@ -7,7 +7,7 @@ import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.datafiles.section.YamlSection;
 import de.leonhard.storage.internal.editor.YamlEditor;
-import de.leonhard.storage.internal.enums.Comments;
+import de.leonhard.storage.internal.enums.Comment;
 import de.leonhard.storage.internal.enums.DataType;
 import de.leonhard.storage.internal.enums.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -31,7 +31,7 @@ public class YamlFile extends CommentEnabledFile {
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils parser;
 
-	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comments commentSetting, @Nullable final DataType dataType) {
+	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comment commentSetting, @Nullable final DataType dataType) {
 		super(file, FileType.YAML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -111,10 +111,10 @@ public class YamlFile extends CommentEnabledFile {
 		set(key, value, this.getCommentSetting());
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comments commentSetting) {
+	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comment commentSetting) {
 		if (insert(key, value)) {
 			try {
-				if (!Comments.PRESERVE.equals(commentSetting)) {
+				if (!Comment.PRESERVE.equals(commentSetting)) {
 					write(Objects.requireNonNull(fileData).toMap());
 				} else {
 					final List<String> unEdited = yamlEditor.read();
