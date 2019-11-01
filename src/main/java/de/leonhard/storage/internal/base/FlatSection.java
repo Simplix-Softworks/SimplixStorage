@@ -160,6 +160,11 @@ public abstract class FlatSection implements StorageBase {
 	}
 
 	@Override
+	public String toString() {
+		return "SectionKey: " + this.sectionKey + ", File: " + this.flatFile.toString();
+	}
+
+	@Override
 	public boolean equals(@Nullable final Object obj) {
 		if (obj == this) {
 			return true;
