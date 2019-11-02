@@ -3,10 +3,13 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.datafiles.config.LightningConfig;
 import de.leonhard.storage.internal.datafiles.config.YamlConfig;
-import de.leonhard.storage.internal.datafiles.raw.*;
-import de.leonhard.storage.internal.enums.Comment;
-import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.Reload;
+import de.leonhard.storage.internal.datafiles.raw.JsonFile;
+import de.leonhard.storage.internal.datafiles.raw.LightningFile;
+import de.leonhard.storage.internal.datafiles.raw.TomlFile;
+import de.leonhard.storage.internal.datafiles.raw.YamlFile;
+import de.leonhard.storage.internal.settings.Comment;
+import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
@@ -240,18 +243,7 @@ public class LightningStorage {
 	// </optional Builder arguments>
 
 
-	// <Create Datafile>
-
-	/**
-	 * Create a CSV-Type File.
-	 */
-	public final CSVFile asCSVFile() {
-		return this.file == null
-			   ? (this.directory == null
-				  ? new CSVFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.CSV)), this.inputStream, this.reloadSetting, this.dataType)
-				  : new CSVFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.CSV)), this.inputStream, this.reloadSetting, this.dataType))
-			   : new CSVFile(this.file, this.inputStream, this.reloadSetting, this.dataType);
-	}
+	// <Create Datafile>s
 
 	/**
 	 * Create a Json-Type File.

@@ -52,15 +52,15 @@ public class FileData {
 	 */
 	public synchronized void insert(@NotNull final String key, @Nullable final Object value) {
 		if (value == null) {
-			remove(key);
+			this.remove(key);
 		} else {
 			final String[] parts = key.split("\\.");
 			//noinspection unchecked
-			localMap.put(parts[0],
-						 localMap.containsKey(parts[0])
-						 && localMap.get(parts[0]) instanceof Map
-						 ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-						 : insert(new HashMap<>(), parts, value, 1));
+			this.localMap.put(parts[0],
+							  this.localMap.containsKey(parts[0])
+							  && this.localMap.get(parts[0]) instanceof Map
+							  ? this.insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
+							  : this.insert(new HashMap<>(), parts, value, 1));
 		}
 	}
 
@@ -70,9 +70,9 @@ public class FileData {
 	 * @param key the key to be removed from the map.
 	 */
 	public synchronized void remove(@NotNull final String key) {
-		if (containsKey(key)) {
+		if (this.containsKey(key)) {
 			final String[] parts = key.split("\\.");
-			removeKey(this.localMap, parts, 0);
+			this.removeKey(this.localMap, parts, 0);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class FileData {
 	 */
 	public boolean containsKey(@NotNull final String key) {
 		String[] parts = key.split("\\.");
-		return containsKey(localMap, parts, 0);
+		return this.containsKey(this.localMap, parts, 0);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class FileData {
 	 * @return the keySet of all layers of localMap combined (Format: key.subkey).
 	 */
 	public Set<String> keySet() {
-		return keySet(localMap);
+		return this.keySet(localMap);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class FileData {
 	 */
 	public Set<String> keySet(@NotNull final String key) {
 		//noinspection unchecked
-		return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
+		return this.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.get(key)) : new HashSet<>();
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class FileData {
 	 */
 	public Object get(@NotNull final String key) {
 		final String[] parts = key.split("\\.");
-		return get(localMap, parts, 0);
+		return this.get(this.localMap, parts, 0);
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class FileData {
 	 * @return the keySet of the top layer of localMap.
 	 */
 	public Set<String> singleLayerKeySet() {
-		return localMap.keySet();
+		return this.localMap.keySet();
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class FileData {
 	 */
 	public Set<String> singleLayerKeySet(@NotNull final String key) {
 		//noinspection unchecked
-		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
+		return this.get(key) instanceof Map ? ((Map<String, Object>) this.get(key)).keySet() : new HashSet<>();
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class FileData {
 	 * @return the size of the top layer of localMap.
 	 */
 	public int singleLayerSize() {
-		return localMap.size();
+		return this.localMap.size();
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class FileData {
 	 * @return the size of the given layer or 0 if the key does not exist.
 	 */
 	public int singleLayerSize(@NotNull final String key) {
-		return get(key) instanceof Map ? ((Map) get(key)).size() : 0;
+		return this.get(key) instanceof Map ? ((Map) this.get(key)).size() : -1;
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class FileData {
 	 * @return the size of all layers of localMap combined.
 	 */
 	public int size() {
-		return size(localMap);
+		return this.size(localMap);
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class FileData {
 	 * @return JsonObject from localMap.
 	 */
 	public JSONObject toJsonObject() {
-		return JsonUtils.getJsonFromMap(localMap);
+		return JsonUtils.getJsonFromMap(this.localMap);
 	}
 
 	/**
@@ -181,8 +181,8 @@ public class FileData {
 	 * @return localMap.
 	 */
 	public Map<String, Object> toMap() {
-		if (localMap != null) {
-			return localMap;
+		if (this.localMap != null) {
+			return this.localMap;
 		} else {
 			return new HashMap<>();
 		}
@@ -196,7 +196,7 @@ public class FileData {
 	 */
 	public int size(@NotNull final String key) {
 		//noinspection unchecked
-		return containsKey(key) ? size((Map<String, Object>) get(key)) : 0;
+		return this.containsKey(key) ? this.size((Map<String, Object>) this.get(key)) : -1;
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class FileData {
 				return tempMap;
 			} else {
 				//noinspection unchecked
-				map.put(key[id], removeKey((Map<String, Object>) map.get(key[id]), key, id + 1));
+				map.put(key[id], this.removeKey((Map<String, Object>) map.get(key[id]), key, id + 1));
 				//noinspection unchecked
 				if (((Map<String, Object>) map.get(key[id])).isEmpty()) {
 					map.remove(key[id]);
@@ -232,7 +232,7 @@ public class FileData {
 			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
 				//noinspection unchecked
 				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
-				return containsKey(tempMap, key, id + 1);
+				return this.containsKey(tempMap, key, id + 1);
 			} else {
 				return false;
 			}
@@ -245,7 +245,7 @@ public class FileData {
 		if (id < key.length - 1) {
 			if (map.get(key[id]) instanceof Map) {
 				@SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
-				return get(tempMap, key, id + 1);
+				return this.get(tempMap, key, id + 1);
 			} else {
 				return null;
 			}
@@ -263,7 +263,7 @@ public class FileData {
 					&& map.get(key[id]) instanceof Map
 					? (Map<String, Object>) map.get(key[id])
 					: (map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map));
-			tempMap.put(key[id], insert(childMap, key, value, id + 1));
+			tempMap.put(key[id], this.insert(childMap, key, value, id + 1));
 			return tempMap;
 		} else {
 			return value;
@@ -275,7 +275,7 @@ public class FileData {
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
 				//noinspection unchecked
-				for (String tempKey : keySet((Map<String, Object>) map.get(key))) {
+				for (String tempKey : this.keySet((Map<String, Object>) map.get(key))) {
 					localSet.add(key + "." + tempKey);
 				}
 			} else {
@@ -290,7 +290,7 @@ public class FileData {
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
 				//noinspection unchecked
-				size += size((Map<String, Object>) map.get(key));
+				size += this.size((Map<String, Object>) map.get(key));
 			}
 		}
 		return size;

@@ -2,7 +2,7 @@ package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
-import de.leonhard.storage.internal.enums.Comment;
+import de.leonhard.storage.internal.settings.Comment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,13 +18,13 @@ public class LightningSection extends FlatSection {
 	}
 
 	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comment commentSetting) {
-		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+		String tempKey = this.getTempKey(key);
 
 		this.lightningFile.set(tempKey, value, commentSetting);
 	}
 
 	public synchronized void remove(@NotNull final String key, @NotNull final Comment commentSetting) {
-		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+		String tempKey = this.getTempKey(key);
 
 		this.lightningFile.remove(tempKey, commentSetting);
 	}

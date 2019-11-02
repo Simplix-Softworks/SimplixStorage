@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.enums;
+package de.leonhard.storage.internal.settings;
 
 /**
  * an Enum defining the reload behaviour of the Data classes

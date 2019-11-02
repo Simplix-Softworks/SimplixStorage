@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.enums;
+package de.leonhard.storage.internal.settings;
 
 import java.util.*;
 import org.jetbrains.annotations.Nullable;

@@ -27,7 +27,7 @@ public class FileUtils {
 				file.createNewFile();
 			}
 		} catch (IOException e) {
-			System.err.println("Error while creating file '" + file.getAbsolutePath() + "'.");
+			System.err.println("Error while creating File '" + file.getAbsolutePath() + "'.");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}

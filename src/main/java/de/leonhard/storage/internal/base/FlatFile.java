@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.Reload;
+import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
@@ -43,11 +43,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-
-	public final String getAbsolutePath() {
-		return this.file.getAbsolutePath();
-	}
-
 	public final String getPath() {
 		return this.file.getPath();
 	}
@@ -71,10 +66,10 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public final synchronized void setFileContentFromStream(@Nullable final InputStream inputStream) {
 		if (inputStream == null) {
-			clearFile();
+			this.clearFile();
 		} else {
 			FileUtils.writeToFile(this.file, inputStream);
-			reload();
+			this.reload();
 		}
 	}
 
@@ -85,7 +80,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		try {
 			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
 			writer.write("");
-			reload();
+			this.reload();
 		} catch (IOException e) {
 			System.err.println("Could not clear '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -121,10 +116,10 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public final synchronized void setFileContentFromFile(@Nullable final File file) {
 		if (file == null) {
-			clearFile();
+			this.clearFile();
 		} else {
 			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(file));
-			reload();
+			this.reload();
 		}
 	}
 
@@ -133,10 +128,10 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public final synchronized void setFileContentFromResource(@Nullable final String resource) {
 		if (resource == null) {
-			clearFile();
+			this.clearFile();
 		} else {
 			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(resource));
-			reload();
+			this.reload();
 		}
 	}
 
@@ -151,8 +146,8 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * Checks if the File needs to be reloaded and does so if true.
 	 */
 	protected final void update() {
-		if (shouldReload()) {
-			reload();
+		if (this.shouldReload()) {
+			this.reload();
 		}
 	}
 
@@ -161,12 +156,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			case AUTOMATICALLY:
 				return true;
 			case INTELLIGENT:
-				return hasChanged();
+				return this.hasChanged();
 			case MANUALLY:
 				return false;
 			default:
-				throw new IllegalArgumentException("Illegal ReloadSetting");
+				throw new IllegalArgumentException("Illegal ReloadSetting in '" + this.getAbsolutePath() + "'");
 		}
+	}
+
+	public final String getAbsolutePath() {
+		return this.file.getAbsolutePath();
 	}
 
 	/**
@@ -175,51 +174,33 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @return true if it has changed.
 	 */
 	public final boolean hasChanged() {
-		return FileUtils.hasChanged(file, lastLoaded);
+		return FileUtils.hasChanged(this.file, this.lastLoaded);
 	}
 
-	/**
-	 * get the keySet of all layers of the map combined.
-	 *
-	 * @return the keySet of all layers of localMap combined (Format: key.subkey).
-	 */
+	@Override
 	public Set<String> keySet() {
-		update();
-		return fileData.keySet();
+		this.update();
+		return this.fileData.keySet();
 	}
 
-	/**
-	 * get the keySet of all sublayers of the given key combined.
-	 *
-	 * @param key the key of the layer
-	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
-	 */
+	@Override
 	public Set<String> keySet(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		update();
-		return fileData.keySet(key);
+		this.update();
+		return this.fileData.keySet(key);
 	}
 
-	/**
-	 * get the keySet of a single layer of the map.
-	 *
-	 * @return the keySet of the top layer of localMap.
-	 */
+	@Override
 	public Set<String> singleLayerKeySet() {
-		update();
-		return fileData.singleLayerKeySet();
+		this.update();
+		return this.fileData.singleLayerKeySet();
 	}
 
-	/**
-	 * get the keySet of a single layer of the map.
-	 *
-	 * @param key the key of the layer.
-	 * @return the keySet of the given layer or an empty set if the key does not exist.
-	 */
+	@Override
 	public Set<String> singleLayerKeySet(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
-		update();
-		return fileData.singleLayerKeySet(key);
+		this.update();
+		return this.fileData.singleLayerKeySet(key);
 	}
 
 	/**
@@ -231,7 +212,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	protected final boolean insert(@NotNull final String key, @Nullable final Object value) {
 		Valid.notNull(key, "Key must not be null");
-		update();
+		this.update();
 
 		String tempData = this.fileData.toString();
 		this.fileData.insert(key, value);
@@ -241,7 +222,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Creates an empty file.
 	 *
-	 * @return true if file was created.
+	 * @return true if File was created.
 	 */
 	protected final synchronized boolean create() {
 		if (this.file.exists()) {
@@ -274,6 +255,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			writer.println();
 			writer.print(line);
 		});
+		this.reload();
 	}
 
 	@Override
@@ -326,7 +308,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		@Override
 		public String toString() {
-			return extension;
+			return this.extension;
 		}
 	}
 }

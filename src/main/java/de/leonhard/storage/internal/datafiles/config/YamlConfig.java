@@ -1,9 +1,9 @@
 package de.leonhard.storage.internal.datafiles.config;
 
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
-import de.leonhard.storage.internal.enums.Comment;
-import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.Reload;
+import de.leonhard.storage.internal.settings.Comment;
+import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.File;
 import java.io.IOException;

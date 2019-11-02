@@ -2,8 +2,8 @@ package de.leonhard.storage.internal.utils;
 
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.editor.LightningEditor;
-import de.leonhard.storage.internal.enums.Comment;
-import de.leonhard.storage.internal.enums.DataType;
+import de.leonhard.storage.internal.settings.Comment;
+import de.leonhard.storage.internal.settings.DataType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

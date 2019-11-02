@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.editor;
 
-import de.leonhard.storage.internal.enums.Comment;
-import de.leonhard.storage.internal.enums.DataType;
+import de.leonhard.storage.internal.settings.Comment;
+import de.leonhard.storage.internal.settings.DataType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

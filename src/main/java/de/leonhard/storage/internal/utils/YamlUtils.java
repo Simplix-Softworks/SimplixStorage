@@ -80,7 +80,7 @@ public class YamlUtils {
 	 * Method to assign a comment to a key
 	 *
 	 * @return Nested Map with Comments assigned to the corresponding keys
-	 * @throws IOException if file could not be read
+	 * @throws IOException if File could not be read
 	 */
 	private Map<String, List<String>> assignCommentsToKey() throws IOException {
 		return assignCommentsToKey(yamlEditor.read());

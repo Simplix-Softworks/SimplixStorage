@@ -4,9 +4,9 @@ import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.datafiles.section.LightningSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
-import de.leonhard.storage.internal.enums.Comment;
-import de.leonhard.storage.internal.enums.DataType;
-import de.leonhard.storage.internal.enums.Reload;
+import de.leonhard.storage.internal.settings.Comment;
+import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.File;
@@ -28,31 +28,26 @@ public class LightningFile extends CommentEnabledFile {
 		}
 
 		if (commentSetting != null) {
-			setCommentSetting(commentSetting);
+			this.setCommentSetting(commentSetting);
 		}
 		if (dataType != null) {
-			setDataType(dataType);
+			this.setDataType(dataType);
 		}
 		if (reloadSetting != null) {
-			setReloadSetting(reloadSetting);
+			this.setReloadSetting(reloadSetting);
 		}
 
-		this.fileData = new FileData(LightningEditor.readData(this.file, getDataType(), getCommentSetting()));
+		this.fileData = new FileData(LightningEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
 		this.lastLoaded = System.currentTimeMillis();
-	}
-
-	public void reload(@NotNull final Comment commentSetting) {
-		setCommentSetting(commentSetting);
-		reload();
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData.loadData(LightningEditor.readData(this.file, getDataType(), getCommentSetting()));
+			this.fileData.loadData(LightningEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IllegalArgumentException | IllegalStateException e) {
-			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
+			System.err.println("Exception while reloading '" + this.getAbsolutePath() + "'");
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
@@ -62,46 +57,36 @@ public class LightningFile extends CommentEnabledFile {
 	public Object get(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
-		return fileData.get(key);
-	}
-
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, @NotNull final Comment commentSetting) {
-		setCommentSetting(commentSetting);
-		set(key, value);
+		return this.fileData.get(key);
 	}
 
 	@Override
 	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
 		Valid.notNull(key, "Key must not be null");
-		if (insert(key, value)) {
+		if (this.insert(key, value)) {
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), getCommentSetting());
+				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
-				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}
 		}
 	}
 
-	public synchronized void remove(@NotNull final String key, @NotNull final Comment commentSetting) {
-		setCommentSetting(commentSetting);
-		remove(key);
-	}
-
 	@Override
 	public synchronized void remove(@NotNull final String key) {
 		Valid.notNull(key, "Key must not be null");
 
-		update();
+		this.update();
 
-		if (fileData.containsKey(key)) {
-			fileData.remove(key);
+		if (this.fileData.containsKey(key)) {
+			this.fileData.remove(key);
 
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), getCommentSetting());
+				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException e) {
-				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
+				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
 				throw new IllegalStateException();
 			}

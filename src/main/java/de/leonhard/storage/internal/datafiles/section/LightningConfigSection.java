@@ -33,25 +33,25 @@ public class LightningConfigSection extends LightningSection {
 	}
 
 	public List<String> getHeader(@NotNull final String key) {
-		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+		String tempKey = this.getTempKey(key);
 
 		return this.lightningConfig.getHeader(tempKey);
 	}
 
 	public void setHeader(@NotNull final String key, @Nullable final List<String> header) {
-		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+		String tempKey = this.getTempKey(key);
 
 		this.lightningConfig.setHeader(tempKey, header);
 	}
 
 	public List<String> getFooter(@NotNull final String key) {
-		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+		String tempKey = this.getTempKey(key);
 
 		return this.lightningConfig.getFooter(tempKey);
 	}
 
 	public void setFooter(@NotNull final String key, @Nullable final List<String> footer) {
-		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+		String tempKey = this.getTempKey(key);
 
 		this.lightningConfig.setFooter(tempKey, footer);
 	}
