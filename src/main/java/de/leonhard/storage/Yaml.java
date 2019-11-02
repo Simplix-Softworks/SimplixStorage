@@ -131,7 +131,9 @@ public class Yaml extends FlatFile implements IStorage {
                     reader.close();
                 }
             } catch (IOException e) {
-                System.err.println("Exception while closing file");
+                System.err.println("Exception while closing yaml: '" + file.getName() + "'");
+                //FileUtils.getParentDirPath(file)
+                System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
                 e.printStackTrace();
             }
         }

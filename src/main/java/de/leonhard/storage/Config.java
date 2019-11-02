@@ -2,6 +2,8 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.utils.Primitive;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,16 +53,7 @@ public class Config extends Yaml {
             return def;
         } else {
             Object obj = get(key); //
-            if (obj instanceof String && def instanceof Integer) {
-                obj = Integer.parseInt((String) obj);
-            }
-            if (obj instanceof String && def instanceof Double) {
-                obj = Double.parseDouble((String) obj);
-            }
-            if (obj instanceof String && def instanceof Float) {
-                obj = Double.parseDouble((String) obj);
-            }
-            return (T) obj;
+            return Primitive.getFromDef(obj, def);
         }
     }
 
@@ -101,6 +94,7 @@ public class Config extends Yaml {
                 getYamlEditor().write(this.header);
             } catch (IOException e) {
                 System.err.println("Error while setting header of '" + getName() + "'");
+                System.err.println("Directory '" + FileUtils.getParentDirPath(file) + "'");
                 e.printStackTrace();
             }
             return;
@@ -121,6 +115,7 @@ public class Config extends Yaml {
             getYamlEditor().write(lines);
         } catch (final IOException e) {
             System.err.println("Exception while modifying header of '" + getName() + "'");
+            System.err.println("Directory '" + FileUtils.getParentDirPath(file) + "'");
             e.printStackTrace();
         }
     }

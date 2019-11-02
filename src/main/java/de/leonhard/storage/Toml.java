@@ -4,6 +4,7 @@ import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.utils.FileUtils;
 import lombok.Getter;
 import lombok.Synchronized;
 
@@ -78,7 +79,8 @@ public class Toml extends FlatFile {
 		try {
 			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
 		} catch (IOException e) {
-			System.err.println("Exception while reading '" + getName() + "'");
+			System.err.println("Exception while reloading '" + getName() + "'");
+			System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
 			e.printStackTrace();
 		}
 	}
