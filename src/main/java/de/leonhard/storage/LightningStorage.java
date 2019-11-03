@@ -320,7 +320,7 @@ public class LightningStorage {
 			   + ", Directory: " + (this.directory == null ? this.path : this.directory.getAbsolutePath())
 			   + (this.inputStream == null ? "" : ", InputStream: " + this.inputStream)
 			   + (this.reloadSetting == null ? "" : ", ReloadSetting: " + this.reloadSetting)
-			   + (this.commentSetting == null ? "" : ", ConfigSetting: " + this.commentSetting)
+			   + (this.commentSetting == null ? "" : ", CommentSetting: " + this.commentSetting)
 			   + (this.dataType == null ? "" : ", DataType: " + this.dataType);
 	}
 }

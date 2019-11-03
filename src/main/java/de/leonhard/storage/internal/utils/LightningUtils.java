@@ -26,7 +26,7 @@ public class LightningUtils {
 	 *
 	 * @param fileData       the FileData to be used.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Header of the FileData.
 	 */
 	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
@@ -47,7 +47,7 @@ public class LightningUtils {
 	 * @param fileData       the FileData to be used.
 	 * @param header         the Header to be set.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map with the given Header.
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -78,7 +78,7 @@ public class LightningUtils {
 	 * @param key            the Key of the SubBlock the Header shall be set to.
 	 * @param header         the Header to be set.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map with the given Header.
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -111,7 +111,7 @@ public class LightningUtils {
 	 *
 	 * @param fileData       the FileData to be used.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Footer of the FileData.
 	 */
 	public static List<String> getFooter(@NotNull final FileData fileData, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
@@ -136,7 +136,7 @@ public class LightningUtils {
 	 * @param fileData       the FileData to be used.
 	 * @param footer         the Footer to be set.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map with the given Footer.
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -168,7 +168,7 @@ public class LightningUtils {
 	 * @param key            the Key of the SubBlock the Footer shall be set to.
 	 * @param footer         the Header to be set.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map with the given Footer.
 	 */
 	@SuppressWarnings("DuplicatedCode")
@@ -204,7 +204,7 @@ public class LightningUtils {
 	 * @param fileData       the FileData to be used.
 	 * @param key            the key of the SubBlock the Header shall be getted from.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Header of the SubBlock.
 	 */
 	public static List<String> getHeader(@NotNull final FileData fileData, @NotNull final String key, @NotNull final DataType dataType, @NotNull Comment commentSetting) {
@@ -225,7 +225,7 @@ public class LightningUtils {
 	 * @param fileData       the FileData to be used.
 	 * @param key            the key of the SubBlock the Footer shall be getted from.
 	 * @param dataType       the FileDataType to be used with the given FileData.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Footer of the SubBlock.
 	 */
 	public static List<String> getFooter(@NotNull final FileData fileData, final String key, @NotNull final DataType dataType, @NotNull Comment commentSetting) {

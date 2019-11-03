@@ -18,14 +18,14 @@ public enum DataType {
 	 */
 	STANDARD,
 	/**
-	 * The Storage type depends on the ConfigSetting(HashMap for SKIP_COMMENTS, LinkedHashMap for PRESERVE_COMMENTS).
+	 * The Storage type depends on the CommentSetting(HashMap for SKIP_COMMENTS, LinkedHashMap for PRESERVE_COMMENTS).
 	 */
 	AUTOMATIC;
 
 	/**
-	 * Get a Map of the proper Type defined by your ConfigSetting.
+	 * Get a Map of the proper Type defined by your CommentSetting.
 	 *
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @param map            the Map to be imported from(an empty Map will be returned if @param map is null)
 	 * @return a Map containing the Data of @param map.
 	 */
@@ -40,7 +40,7 @@ public enum DataType {
 			} else if (commentSetting == Comment.PRESERVE) {
 				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 			} else {
-				throw new IllegalStateException("Illegal ConfigSetting");
+				throw new IllegalStateException("Illegal CommentSetting");
 			}
 		} else {
 			throw new IllegalStateException("Illegal DataType");
@@ -48,9 +48,9 @@ public enum DataType {
 	}
 
 	/**
-	 * Get a List of the proper Type defined by your ConfigSetting.
+	 * Get a List of the proper Type defined by your CommentSetting.
 	 *
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @param list           the Map to be imported from(an empty List will be returned if @param list is null)
 	 * @return a List containing the Data of @param list.
 	 */
@@ -65,7 +65,7 @@ public enum DataType {
 			} else if (commentSetting == Comment.PRESERVE) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);
 			} else {
-				throw new IllegalStateException("Illegal ConfigSetting");
+				throw new IllegalStateException("Illegal CommentSetting");
 			}
 		} else {
 			throw new IllegalStateException("Illegal DataType");

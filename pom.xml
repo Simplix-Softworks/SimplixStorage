@@ -5,7 +5,7 @@
 
 	<groupId>de.leonhard</groupId>
 	<artifactId>lightningstorage</artifactId>
-	<version>3.0.0-Beta-v3.50</version>
+	<version>3.0.0-Beta-v3.51</version>
 	<name>LightningStorage</name>
 	<description>Store data in a better way</description>
 	<url>https://github.com/JavaFactoryDev/LightningStorage</url>
@@ -230,14 +230,6 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20190722</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<!-- CSV -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-csv</artifactId>
-			<version>1.7</version>
 			<scope>compile</scope>
 		</dependency>
 

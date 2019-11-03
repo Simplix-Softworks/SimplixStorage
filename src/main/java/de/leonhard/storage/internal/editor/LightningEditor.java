@@ -26,7 +26,7 @@ public class LightningEditor {
 	 *
 	 * @param file           the File to be written to.
 	 * @param map            a HashMap containing the Data to be written.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 */
 	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, @NotNull final Comment commentSetting) {
 		if (commentSetting == Comment.PRESERVE) {
@@ -34,7 +34,7 @@ public class LightningEditor {
 		} else if (commentSetting == Comment.SKIP) {
 			initialWriteWithOutComments(file, map);
 		} else {
-			throw new IllegalArgumentException("Illegal ConfigSetting");
+			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
 	}
 
@@ -43,7 +43,7 @@ public class LightningEditor {
 	 *
 	 * @param file           the File to be read from.
 	 * @param dataType       the FileDataType to be used.
-	 * @param commentSetting the ConfigSetting to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
 	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, @NotNull final Comment commentSetting) {
@@ -52,7 +52,7 @@ public class LightningEditor {
 		} else if (commentSetting == Comment.SKIP) {
 			return initialReadWithOutComments(file, dataType, commentSetting);
 		} else {
-			throw new IllegalArgumentException("Illegal ConfigSetting");
+			throw new IllegalArgumentException("Illegal CommentSetting");
 		}
 	}
 
@@ -82,7 +82,7 @@ public class LightningEditor {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
-						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
+						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
 					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, commentSetting));
 				} else {
@@ -119,7 +119,7 @@ public class LightningEditor {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();
 				} else if (tempKey == null) {
-					throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
+					throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
 				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType, commentSetting));
 			} else {
@@ -148,7 +148,7 @@ public class LightningEditor {
 						if (!tempLine.equals("{")) {
 							tempKey = tempLine.replace("{", "").trim();
 						} else if (tempKey == null) {
-							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Key must not be null");
+							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
 						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, commentSetting));
 					} else {
@@ -181,7 +181,7 @@ public class LightningEditor {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
 					} else if (tempKey == null) {
-						throw new IllegalStateException("Error at '" + filePath + "' -> Key must not be null");
+						throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
 					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType, commentSetting));
 				} else {
@@ -210,13 +210,17 @@ public class LightningEditor {
 					tempMap.put(line[0], readList(filePath, lines, dataType, commentSetting));
 				}
 			} else {
-				tempMap.put(line[0], line[1]);
+				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
+					tempMap.put(line[0], line[1].equalsIgnoreCase("true"));
+				} else {
+					tempMap.put(line[0], line[1]);
+				}
 			}
 		} else {
 			if (lines.get(1).contains("{")) {
 				tempKey = tempLine;
 			} else {
-				throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' does not contain value or subblock");
+				throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' -> does not contain value or subblock");
 			}
 		}
 		return tempKey;
@@ -265,13 +269,15 @@ public class LightningEditor {
 	private static void topLayerWriteWithComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
 		if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
 			writer.print(localKey.substring(0, localKey.lastIndexOf("{=}")));
-		} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
-			writer.print("");
 		} else if (map.get(localKey) instanceof Map) {
 			writer.print(localKey + " " + "{");
 			//noinspection unchecked
 			internalWriteWithComments((Map<String, Object>) map.get(localKey), "", writer);
-		} else {
+		} else if (map.get(localKey) instanceof List) {
+			writer.println(localKey + " = [");
+			//noinspection unchecked
+			writeList((List<String>) map.get(localKey), "  ", writer);
+		} else if (!localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
 			writer.print(localKey + " = " + map.get(localKey));
 		}
 	}
@@ -281,20 +287,16 @@ public class LightningEditor {
 			writer.println();
 			if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
 				writer.print(indentationString + "  " + localKey.substring(0, localKey.lastIndexOf("{=}")));
-			} else if (localKey.startsWith("{=}emptyline") && map.get(localKey) == LineType.BLANK_LINE) {
-				writer.print("");
-			} else {
-				if (map.get(localKey) instanceof Map) {
-					writer.print(indentationString + "  " + localKey + " " + "{");
-					//noinspection unchecked
-					internalWriteWithComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
-				} else if (map.get(localKey) instanceof List) {
-					writer.println(indentationString + "  " + localKey + " = [");
-					//noinspection unchecked
-					writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
-				} else {
-					writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
-				}
+			} else if (map.get(localKey) instanceof Map) {
+				writer.print(indentationString + "  " + localKey + " " + "{");
+				//noinspection unchecked
+				internalWriteWithComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
+			} else if (map.get(localKey) instanceof List) {
+				writer.println(indentationString + "  " + localKey + " = [");
+				//noinspection unchecked
+				writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
+			} else if (!localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+				writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
 			}
 		}
 		writer.println();
@@ -307,40 +309,45 @@ public class LightningEditor {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
 				Iterator mapIterator = map.keySet().iterator();
+				String localKey = mapIterator.next().toString();
+				while (localKey.startsWith("#") || map.get(localKey) == LineType.COMMENT || localKey.startsWith("{=}emptyline") || map.get(localKey) == LineType.BLANK_LINE) {
+					localKey = mapIterator.next().toString();
+				}
 				topLayerWriteWithOutComments(writer, map, mapIterator.next().toString());
 				//noinspection unchecked
-				mapIterator.forEachRemaining(localKey -> {
-					writer.println();
-					topLayerWriteWithOutComments(writer, map, localKey.toString());
+				mapIterator.forEachRemaining(tempKey -> {
+					if (!tempKey.toString().startsWith("#") && map.get(tempKey.toString()) != LineType.COMMENT && !tempKey.toString().startsWith("{=}emptyline") && map.get(tempKey.toString()) != LineType.BLANK_LINE) {
+						writer.println();
+						topLayerWriteWithOutComments(writer, map, tempKey.toString());
+					}
 				});
 			}
 			writer.flush();
 		} catch (FileNotFoundException e) {
 			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
 	private static void topLayerWriteWithOutComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
-		if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
-			if (map.get(localKey) instanceof Map) {
-				writer.print(localKey + " " + "{");
-				//noinspection unchecked
-				internalWriteWithoutComments((Map<String, Object>) map.get(localKey), "", writer);
-			} else if (map.get(localKey) instanceof List) {
-				writer.println("  " + localKey + " = [");
-				//noinspection unchecked
-				writeList((List<String>) map.get(localKey), "  ", writer);
-			} else {
-				writer.print(localKey + " = " + map.get(localKey));
-			}
+		if (map.get(localKey) instanceof Map) {
+			writer.print(localKey + " " + "{");
+			//noinspection unchecked
+			internalWriteWithoutComments((Map<String, Object>) map.get(localKey), "", writer);
+		} else if (map.get(localKey) instanceof List) {
+			writer.println("  " + localKey + " = [");
+			//noinspection unchecked
+			writeList((List<String>) map.get(localKey), "  ", writer);
+		} else {
+			writer.print(localKey + " = " + map.get(localKey));
 		}
 	}
 
 	private static void internalWriteWithoutComments(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
 		for (String localKey : map.keySet()) {
-			writer.println();
 			if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+				writer.println();
 				if (map.get(localKey) instanceof Map) {
 					writer.print(indentationString + "  " + localKey + " " + "{");
 					//noinspection unchecked
