@@ -225,7 +225,7 @@ public class LightningStorage {
 	 *
 	 * @param preserveComments the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 	 */
-	public final LightningStorage commentSetting(boolean preserveComments) {
+	public final LightningStorage commentSetting(final boolean preserveComments) {
 		this.preserveComments = preserveComments;
 		return this;
 	}
