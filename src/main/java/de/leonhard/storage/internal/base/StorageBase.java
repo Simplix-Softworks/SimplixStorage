@@ -30,7 +30,7 @@ public interface StorageBase {
 	 * Checks whether a key exists in the file
 	 *
 	 * @param key Key to check
-	 * @return Returned value
+	 * @return true if key exists
 	 */
 	boolean hasKey(@NotNull final String key);
 

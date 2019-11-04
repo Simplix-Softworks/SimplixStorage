@@ -7,7 +7,6 @@ import de.leonhard.storage.internal.datafiles.raw.JsonFile;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.datafiles.raw.TomlFile;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
-import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -33,7 +32,7 @@ public class LightningStorage {
 	private final String path;
 	private BufferedInputStream inputStream;
 	private Reload reloadSetting;
-	private Comment commentSetting;
+	private boolean preserveComments = true;
 	private DataType dataType;
 
 	// <local Constructors>
@@ -224,10 +223,10 @@ public class LightningStorage {
 	/**
 	 * Set the CommentSetting for the File.
 	 *
-	 * @param commentSetting the CommentSetting to be set(Default for Configs is PRESERVE, otherwise it's SKIP)
+	 * @param preserveComments the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 	 */
-	public final LightningStorage commentSetting(@Nullable Comment commentSetting) {
-		this.commentSetting = commentSetting;
+	public final LightningStorage commentSetting(boolean preserveComments) {
+		this.preserveComments = preserveComments;
 		return this;
 	}
 
@@ -262,9 +261,9 @@ public class LightningStorage {
 	public final LightningConfig asLightningConfig() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LightningConfig(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
-				  : new LightningConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
-			   : new LightningConfig(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
+				  ? new LightningConfig(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
+				  : new LightningConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
+			   : new LightningConfig(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
 	}
 
 	/**
@@ -273,9 +272,9 @@ public class LightningStorage {
 	public final LightningFile asLightningFile() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LightningFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
-				  : new LightningFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
-			   : new LightningFile(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
+				  ? new LightningFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
+				  : new LightningFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
+			   : new LightningFile(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
 	}
 
 	/**
@@ -295,9 +294,9 @@ public class LightningStorage {
 	public final YamlFile asYamlFile() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new YamlFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
-				  : new YamlFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
-			   : new YamlFile(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
+				  ? new YamlFile(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
+				  : new YamlFile(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
+			   : new YamlFile(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
 	}
 
 	/**
@@ -306,9 +305,9 @@ public class LightningStorage {
 	public final YamlConfig asYamlConfig() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new YamlConfig(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
-				  : new YamlConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
-			   : new YamlConfig(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
+				  ? new YamlConfig(new File(this.path, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
+				  : new YamlConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.requireNonNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
+			   : new YamlConfig(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
 	}
 	// </Create Datafile>
 
@@ -320,7 +319,7 @@ public class LightningStorage {
 			   + ", Directory: " + (this.directory == null ? this.path : this.directory.getAbsolutePath())
 			   + (this.inputStream == null ? "" : ", InputStream: " + this.inputStream)
 			   + (this.reloadSetting == null ? "" : ", ReloadSetting: " + this.reloadSetting)
-			   + (this.commentSetting == null ? "" : ", CommentSetting: " + this.commentSetting)
-			   + (this.dataType == null ? "" : ", DataType: " + this.dataType);
+			   + (this.dataType == null ? "" : ", DataType: " + this.dataType)
+			   + ", CommentSetting: " + this.preserveComments;
 	}
 }

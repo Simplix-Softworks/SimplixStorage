@@ -7,7 +7,6 @@ import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.datafiles.section.YamlSection;
 import de.leonhard.storage.internal.editor.YamlEditor;
-import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -31,15 +30,12 @@ public class YamlFile extends CommentEnabledFile {
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils parser;
 
-	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comment commentSetting, @Nullable final DataType dataType) {
+	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
 		super(file, FileType.YAML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (commentSetting != null) {
-			setCommentSetting(commentSetting);
-		}
 		if (dataType != null) {
 			setDataType(dataType);
 		} else {
@@ -48,6 +44,7 @@ public class YamlFile extends CommentEnabledFile {
 		if (reloadSetting != null) {
 			setReloadSetting(reloadSetting);
 		}
+		this.setPreserveComments(preserveComments);
 
 		this.yamlEditor = new YamlEditor(this.file);
 		this.parser = new YamlUtils(yamlEditor);
@@ -110,7 +107,7 @@ public class YamlFile extends CommentEnabledFile {
 	public void set(@NotNull final String key, @Nullable final Object value) {
 		if (insert(key, value)) {
 			try {
-				if (getCommentSetting() != Comment.PRESERVE) {
+				if (!this.isPreserveComments()) {
 					write(Objects.requireNonNull(fileData).toMap());
 				} else {
 					final List<String> unEdited = yamlEditor.read();
@@ -155,7 +152,7 @@ public class YamlFile extends CommentEnabledFile {
 			return false;
 		} else {
 			YamlFile yaml = (YamlFile) obj;
-			return this.getCommentSetting().equals(yaml.getCommentSetting())
+			return this.isPreserveComments() == yaml.isPreserveComments()
 				   && super.equals(yaml.getFlatFileInstance());
 		}
 	}

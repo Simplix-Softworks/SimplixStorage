@@ -4,7 +4,6 @@ import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.datafiles.section.LightningSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
-import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -21,30 +20,28 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningFile extends CommentEnabledFile {
 
-	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final Comment commentSetting, @Nullable final DataType dataType) {
+	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
 		super(file, FileType.LIGHTNING);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (commentSetting != null) {
-			this.setCommentSetting(commentSetting);
-		}
 		if (dataType != null) {
 			this.setDataType(dataType);
 		}
 		if (reloadSetting != null) {
 			this.setReloadSetting(reloadSetting);
 		}
+		this.setPreserveComments(preserveComments);
 
-		this.fileData = new FileData(LightningEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+		this.fileData = new FileData(LightningEditor.readData(this.file, this.getDataType(), this.isPreserveComments()));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
 	@Override
 	public void reload() {
 		try {
-			this.fileData.loadData(LightningEditor.readData(this.file, this.getDataType(), this.getCommentSetting()));
+			this.fileData.loadData(LightningEditor.readData(this.file, this.getDataType(), this.isPreserveComments()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			System.err.println("Exception while reloading '" + this.getAbsolutePath() + "'");
@@ -65,7 +62,7 @@ public class LightningFile extends CommentEnabledFile {
 		Valid.notNull(key, "Key must not be null");
 		if (this.insert(key, value)) {
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				LightningEditor.writeData(this.file, this.fileData.toMap(), this.isPreserveComments());
 			} catch (IllegalStateException | IllegalArgumentException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -84,7 +81,7 @@ public class LightningFile extends CommentEnabledFile {
 			this.fileData.remove(key);
 
 			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+				LightningEditor.writeData(this.file, this.fileData.toMap(), this.isPreserveComments());
 			} catch (IllegalStateException e) {
 				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -116,7 +113,8 @@ public class LightningFile extends CommentEnabledFile {
 			return false;
 		} else {
 			LightningFile lightningFile = (LightningFile) obj;
-			return super.equals(lightningFile.getFlatFileInstance());
+			return this.isPreserveComments() == lightningFile.isPreserveComments()
+				   && super.equals(lightningFile.getFlatFileInstance());
 		}
 	}
 }
