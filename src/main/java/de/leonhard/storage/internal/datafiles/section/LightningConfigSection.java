@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.datafiles.config.LightningConfig;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +59,7 @@ public class LightningConfigSection extends LightningSection {
 
 	@Override
 	public LightningConfigSection getSection(final @NotNull String sectionKey) {
-		return new LightningConfigSection(this.lightningConfig, this.sectionKey + "." + Valid.notNullObject(sectionKey, "Key must not be null"));
+		return new LightningConfigSection(this.lightningConfig, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
 	}
 
 	protected LightningConfigSection getLightningConfigSectionInstance() {

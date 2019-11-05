@@ -6,7 +6,7 @@ import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.JsonUtils;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class JsonFile extends FlatFile {
 			setReloadSetting(reloadSetting);
 		}
 
-		final JSONTokener jsonTokener = new JSONTokener(Valid.notNullObject(FileUtils.createNewInputStream(file), "InputStream must not be null"));
+		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(FileUtils.createNewInputStream(file), "InputStream must not be null"));
 		fileData = new LocalFileData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
@@ -47,7 +47,7 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public void reload() {
-		final JSONTokener jsonTokener = new JSONTokener(Valid.notNullObject(FileUtils.createNewInputStream(file), "InputStream must not be null"));
+		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(FileUtils.createNewInputStream(file), "InputStream must not be null"));
 		fileData.loadData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
@@ -69,7 +69,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	private Map getMapWithoutPath(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		update();
 
 		if (!hasKey(key)) {
@@ -102,6 +102,13 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
+	public Object get(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+		update();
+		return getObject(key);
+	}
+
+	@Override
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
@@ -120,15 +127,8 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public Object get(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
-		update();
-		return getObject(key);
-	}
-
-	@Override
 	public synchronized void remove(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		update();
 

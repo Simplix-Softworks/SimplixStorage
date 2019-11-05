@@ -2,7 +2,7 @@ package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class YamlSection extends FlatSection {
 
 	@Override
 	public YamlSection getSection(final @NotNull String sectionKey) {
-		return new YamlSection(this.yamlFile, this.sectionKey + "." + Valid.notNullObject(sectionKey, "Key must not be null"));
+		return new YamlSection(this.yamlFile, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
 	}
 
 	protected YamlSection getYamlSectionInstance() {

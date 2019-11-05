@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.utils;
 
 import de.leonhard.storage.LightningStorage;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
 import lombok.AccessLevel;
@@ -56,7 +56,7 @@ public class FileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file.
 	 */
 	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
-		return new BufferedInputStream(Valid.notNullObject(LightningStorage.class.getClassLoader().getResourceAsStream(resource), "Resource must not be null"));
+		return new BufferedInputStream(Objects.notNull(LightningStorage.class.getClassLoader().getResourceAsStream(resource), "Resource must not be null"));
 	}
 
 	/**

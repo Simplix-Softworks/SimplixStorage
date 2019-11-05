@@ -3,7 +3,7 @@ package de.leonhard.storage.internal.datafiles.config;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +44,7 @@ public class YamlConfig extends YamlFile {
 	}
 
 	public void setHeader(final @NotNull List<String> header) {
-		Valid.notNull(header, "Header must not be null");
+		Objects.checkNull(header, "Header must not be null");
 
 		List<String> tmp = new ArrayList<>();
 		//Updating the values to have a comments, if someone forgets to set them

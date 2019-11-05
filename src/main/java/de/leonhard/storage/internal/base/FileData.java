@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.utils.JsonUtils;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +21,7 @@ public class FileData {
 	}
 
 	protected FileData(final @NotNull JSONObject jsonObject) {
-		this.localMap = new HashMap<>(Valid.notNullObject(jsonObject, "JsonObject must not be null").toMap());
+		this.localMap = new HashMap<>(Objects.notNull(jsonObject, "JsonObject must not be null").toMap());
 	}
 
 

@@ -6,7 +6,7 @@ import de.leonhard.storage.internal.editor.LightningEditor;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.InputStream;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +51,7 @@ public class LightningFile extends CommentEnabledFile {
 
 	@Override
 	public Object get(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		update();
 		return this.fileData.get(key);
 	}
@@ -71,7 +71,7 @@ public class LightningFile extends CommentEnabledFile {
 
 	@Override
 	public synchronized void remove(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 

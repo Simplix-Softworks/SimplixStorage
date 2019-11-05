@@ -4,7 +4,7 @@ import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Iterator;
@@ -139,7 +139,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		update();
 		return fileData.containsKey(key);
 	}
@@ -187,7 +187,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		return this.fileData.keySet(key);
 	}
@@ -200,9 +200,30 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	@Override
 	public Set<String> singleLayerKeySet(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		return this.fileData.singleLayerKeySet(key);
+	}
+
+	/**
+	 * replaces a give CharSequence with another in the File.
+	 *
+	 * @param target      the CharSequence to be replaced.
+	 * @param replacement the Replacement Sequence.
+	 */
+	public synchronized void replaceInFile(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
+		Objects.checkNull(target, "Target must not be null");
+		Objects.checkNull(replacement, "Replacement must not be null");
+
+		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
+		PrintWriter writer = new PrintWriter(this.file);
+		writer.print(((String) lines.next()).replace(target, replacement));
+		//noinspection unchecked
+		lines.forEachRemaining(line -> {
+			writer.println();
+			writer.print(((String) line).replace(target, replacement));
+		});
+		this.reload();
 	}
 
 	/**
@@ -213,7 +234,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
 	protected final boolean insert(final @NotNull String key, final @Nullable Object value) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		this.update();
 
 		String tempData = this.fileData.toString();
@@ -237,27 +258,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected final FlatFile getFlatFileInstance() {
 		return this;
-	}
-
-	/**
-	 * replaces a give CharSequence with another in the File.
-	 *
-	 * @param target      the CharSequence to be replaced.
-	 * @param replacement the Replacement Sequence.
-	 */
-	protected synchronized void replace(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
-		Valid.notNull(target, "Target must not be null");
-		Valid.notNull(replacement, "Replacement must not be null");
-
-		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
-		PrintWriter writer = new PrintWriter(this.file);
-		writer.print(((String) lines.next()).replace(target, replacement));
-		//noinspection unchecked
-		lines.forEachRemaining(line -> {
-			writer.println();
-			writer.print(((String) line).replace(target, replacement));
-		});
-		this.reload();
 	}
 
 	@Override

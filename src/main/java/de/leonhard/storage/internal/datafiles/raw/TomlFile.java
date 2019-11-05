@@ -5,7 +5,7 @@ import de.leonhard.storage.internal.datafiles.section.TomlSection;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,7 +59,7 @@ public class TomlFile extends FlatFile {
 
 	@Override
 	public Object get(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		update();
 		return fileData.get(key);
 	}
@@ -85,7 +85,7 @@ public class TomlFile extends FlatFile {
 
 	@Override
 	public synchronized void remove(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		update();
 

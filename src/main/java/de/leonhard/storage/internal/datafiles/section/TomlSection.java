@@ -2,7 +2,7 @@ package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.TomlFile;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ public class TomlSection extends FlatSection {
 
 	@Override
 	public TomlSection getSection(final @NotNull String sectionKey) {
-		return new TomlSection(this.tomlFile, this.sectionKey + "." + Valid.notNullObject(sectionKey, "Key must not be null"));
+		return new TomlSection(this.tomlFile, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
 	}
 
 	protected TomlSection getTomlSectionInstance() {

@@ -10,7 +10,7 @@ import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.YamlUtils;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -72,14 +72,14 @@ public class YamlFile extends CommentEnabledFile {
 
 	@Override
 	public Object get(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 		update();
 		return fileData.get(key);
 	}
 
 	@Override
 	public synchronized void remove(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		update();
 
@@ -106,7 +106,7 @@ public class YamlFile extends CommentEnabledFile {
 		if (this.insert(key, value)) {
 			try {
 				if (!this.isPreserveComments()) {
-					write(Valid.notNullObject(fileData, "FileData must not be null").toMap());
+					write(Objects.notNull(fileData, "FileData must not be null").toMap());
 				} else {
 					final List<String> unEdited = yamlEditor.read();
 					final List<String> header = yamlEditor.readHeader();
@@ -117,7 +117,7 @@ public class YamlFile extends CommentEnabledFile {
 						header.addAll(footer);
 					}
 					yamlEditor.write(parser.parseComments(unEdited, header));
-					write(Valid.notNullObject(fileData, "FileData must not be null").toMap());
+					write(Objects.notNull(fileData, "FileData must not be null").toMap());
 				}
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + getAbsolutePath() + "'");

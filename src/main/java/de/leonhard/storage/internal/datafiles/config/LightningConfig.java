@@ -6,7 +6,7 @@ import de.leonhard.storage.internal.editor.LightningEditor;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.LightningUtils;
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class LightningConfig extends LightningFile {
 	}
 
 	public List<String> getHeader(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 
@@ -82,7 +82,7 @@ public class LightningConfig extends LightningFile {
 	}
 
 	public void setHeader(final @NotNull String key, final @Nullable List<String> header) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 
@@ -95,7 +95,7 @@ public class LightningConfig extends LightningFile {
 	}
 
 	public List<String> getFooter(final @NotNull String key) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 
@@ -107,7 +107,7 @@ public class LightningConfig extends LightningFile {
 	}
 
 	public void setFooter(final @NotNull String key, final @Nullable List<String> footer) {
-		Valid.notNull(key, "Key must not be null");
+		Objects.checkNull(key, "Key must not be null");
 
 		this.update();
 

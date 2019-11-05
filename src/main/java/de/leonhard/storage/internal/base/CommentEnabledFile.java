@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,18 +20,18 @@ public abstract class CommentEnabledFile extends FlatFile {
 	}
 
 	public void reload(final boolean preserveComments) {
-		this.setPreserveComments(Valid.notNullObject(preserveComments, "PreserveComments must not be null"));
+		this.setPreserveComments(Objects.notNull(preserveComments, "PreserveComments must not be null"));
 		this.reload();
 	}
 
 	public synchronized void set(final @NotNull String key, final @Nullable Object value, final boolean preserveComments) {
-		this.setPreserveComments(Valid.notNullObject(preserveComments, "PreserveComments must not be null"));
-		this.set(Valid.notNullObject(key, "Key must not be null"), Valid.notNullObject(value, "Value must not be null"));
+		this.setPreserveComments(Objects.notNull(preserveComments, "PreserveComments must not be null"));
+		this.set(Objects.notNull(key, "Key must not be null"), Objects.notNull(value, "Value must not be null"));
 	}
 
 	public synchronized void remove(final @NotNull String key, final boolean preserveComments) {
-		this.setPreserveComments(Valid.notNullObject(preserveComments, "PreserveComments must not be null"));
-		this.remove(Valid.notNullObject(key, "Key must not be null"));
+		this.setPreserveComments(Objects.notNull(preserveComments, "PreserveComments must not be null"));
+		this.remove(Objects.notNull(key, "Key must not be null"));
 	}
 
 	@Override

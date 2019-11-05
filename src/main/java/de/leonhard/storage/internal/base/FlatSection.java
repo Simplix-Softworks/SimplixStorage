@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.internal.utils.basic.Valid;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public abstract class FlatSection implements StorageBase {
 
 	protected FlatSection(final @NotNull FlatFile flatFile, final @NotNull String sectionKey) {
 		this.flatFile = flatFile;
-		this.sectionKey = Valid.notNullObject(sectionKey, "Key must not be null");
+		this.sectionKey = Objects.notNull(sectionKey, "Key must not be null");
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public abstract class FlatSection implements StorageBase {
 	}
 
 	protected String getTempKey(final @NotNull String key) {
-		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? Valid.notNullObject(key, "Key must not be null") : this.sectionKey + "." + Valid.notNullObject(key, "Key must not be null");
+		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.sectionKey + "." + Objects.notNull(key, "Key must not be null");
 	}
 
 	@Override
