@@ -1,6 +1,8 @@
 package de.leonhard.storage.internal.editor;
 
+import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,12 +25,12 @@ public class LightningEditor {
 	/**
 	 * Write the given Data to a File.
 	 *
-	 * @param file             the File to be written to.
-	 * @param map              a HashMap containing the Data to be written.
-	 * @param preserveComments the CommentSetting to be used.
+	 * @param file           the File to be written to.
+	 * @param map            a HashMap containing the Data to be written.
+	 * @param commentSetting the CommentSetting to be used.
 	 */
-	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final boolean preserveComments) {
-		if (preserveComments) {
+	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull Comment commentSetting) {
+		if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
 			initialWriteWithComments(file, map);
 		} else {
 			initialWriteWithOutComments(file, map);
@@ -38,25 +40,51 @@ public class LightningEditor {
 	/**
 	 * Read the Data of a File.
 	 *
-	 * @param file             the File to be read from.
-	 * @param dataType         the FileDataType to be used.
-	 * @param preserveComments the CommentSetting to be used.
+	 * @param file           the File to be read from.
+	 * @param dataType       the FileDataType to be used.
+	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataType dataType, final boolean preserveComments) {
-		if (preserveComments) {
-			return initialReadWithComments(file, dataType);
+	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
+		if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
+			return initialReadWithComments(file, dataType, commentSetting);
 		} else {
-			return initialReadWithOutComments(file, dataType);
+			return initialReadWithOutComments(file, dataType, commentSetting);
+		}
+	}
+
+	// <Write Data without Comments>
+	private static void initialWriteWithOutComments(final File file, final Map<String, Object> map) {
+		try (PrintWriter writer = new PrintWriter(file)) {
+			if (!map.isEmpty()) {
+				Iterator mapIterator = map.keySet().iterator();
+				String localKey = (String) mapIterator.next();
+				while (localKey.startsWith("#") || map.get(localKey) == LineType.COMMENT || localKey.startsWith("{=}emptyline") || map.get(localKey) == LineType.BLANK_LINE) {
+					localKey = (String) mapIterator.next();
+				}
+				topLayerWriteWithOutComments(writer, map, (String) mapIterator.next());
+				//noinspection unchecked
+				mapIterator.forEachRemaining(tempKey -> {
+					if (!((String) tempKey).startsWith("#") && map.get(tempKey) != LineType.COMMENT && !((String) tempKey).startsWith("{=}emptyline") && map.get(tempKey) != LineType.BLANK_LINE) {
+						writer.println();
+						topLayerWriteWithOutComments(writer, map, (String) tempKey);
+					}
+				});
+			}
+			writer.flush();
+		} catch (FileNotFoundException e) {
+			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataType dataType) {
+	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = dataType.getNewDataMap(true, null);
+			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
 			String tempKey = null;
 			int blankLine = -1;
@@ -79,9 +107,9 @@ public class LightningEditor {
 					} else if (tempKey == null) {
 						throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType));
+					tempMap.put(tempKey, internalReadWithComments(file.getAbsolutePath(), lines, blankLine, commentLine, dataType, commentSetting));
 				} else {
-					tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, true);
+					tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, commentSetting);
 				}
 			}
 			return tempMap;
@@ -91,9 +119,10 @@ public class LightningEditor {
 			throw new IllegalStateException();
 		}
 	}
+	// </Read Data with Comments>
 
-	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType) throws ArrayIndexOutOfBoundsException {
-		Map<String, Object> tempMap = dataType.getNewDataMap(true, null);
+	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final Comment commentSetting) throws ArrayIndexOutOfBoundsException {
+		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -116,20 +145,19 @@ public class LightningEditor {
 				} else if (tempKey == null) {
 					throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 				}
-				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType));
+				tempMap.put(tempKey, internalReadWithComments(filePath, lines, blankLine, commentLine, dataType, commentSetting));
 			} else {
-				tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, true);
+				tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, commentSetting);
 			}
 		}
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
-	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private static Map<String, Object> initialReadWithOutComments(final @NotNull File file, final @NotNull DataType dataType) {
+	private static Map<String, Object> initialReadWithOutComments(final File file, final DataType dataType, final Comment commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
-			Map<String, Object> tempMap = dataType.getNewDataMap(false, null);
+			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
 			String tempKey = null;
 			while (lines.size() > 0) {
@@ -145,9 +173,9 @@ public class LightningEditor {
 						} else if (tempKey == null) {
 							throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' - > '" + tempLine + "' -> Key must not be null");
 						}
-						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType));
+						tempMap.put(tempKey, internalReadWithOutComments(file.getAbsolutePath(), lines, dataType, commentSetting));
 					} else {
-						tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, false);
+						tempKey = readKey(file.getAbsolutePath(), lines, dataType, tempMap, tempKey, tempLine, commentSetting);
 					}
 				}
 			}
@@ -158,9 +186,10 @@ public class LightningEditor {
 			throw new IllegalStateException();
 		}
 	}
+	// </Read without Comments>
 
-	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType) throws ArrayIndexOutOfBoundsException {
-		Map<String, Object> tempMap = dataType.getNewDataMap(false, null);
+	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType, final Comment commentSetting) throws ArrayIndexOutOfBoundsException {
+		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
 		while (lines.size() > 0) {
@@ -178,17 +207,16 @@ public class LightningEditor {
 					} else if (tempKey == null) {
 						throw new IllegalStateException("Error at '" + filePath + "' -> '" + tempLine + "' -> Key must not be null");
 					}
-					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType));
+					tempMap.put(tempKey, internalReadWithOutComments(filePath, lines, dataType, commentSetting));
 				} else {
-					tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, false);
+					tempKey = readKey(filePath, lines, dataType, tempMap, tempKey, tempLine, commentSetting);
 				}
 			}
 		}
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
-	// </Read without Comments>
 
-	private static String readKey(final String filePath, final List<String> lines, final DataType dataType, final Map<String, Object> tempMap, String tempKey, final String tempLine, final boolean preserveComments) {
+	private static String readKey(final String filePath, final List<String> lines, final DataType dataType, final Map<String, Object> tempMap, String tempKey, final String tempLine, final Comment commentSetting) {
 		if (tempLine.contains("=")) {
 			String[] line = tempLine.split("=");
 			line[0] = line[0].trim();
@@ -196,13 +224,13 @@ public class LightningEditor {
 			if (line[1].startsWith("[")) {
 				if (line[1].endsWith("]")) {
 					String[] listArray = line[1].substring(1, line[1].length() - 1).split(",");
-					List<String> list = dataType.getNewDataList(preserveComments, null);
+					List<String> list = dataType.getNewDataList(commentSetting, null);
 					for (String value : listArray) {
 						list.add(value.trim());
 					}
 					tempMap.put(line[0], list);
 				} else {
-					tempMap.put(line[0], readList(filePath, lines, dataType, preserveComments));
+					tempMap.put(line[0], readList(filePath, lines, dataType, commentSetting));
 				}
 			} else {
 				if (line[1].equalsIgnoreCase("true") || line[1].equalsIgnoreCase("false")) {
@@ -219,23 +247,6 @@ public class LightningEditor {
 			}
 		}
 		return tempKey;
-	}
-
-
-	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final boolean preserveComments) {
-		List<String> localList = dataType.getNewDataList(preserveComments, null);
-		while (lines.size() > 0) {
-			String tempLine = lines.get(0).trim();
-			lines.remove(0);
-			if (tempLine.startsWith("-")) {
-				localList.add(tempLine.substring(1).trim());
-			} else if (tempLine.endsWith("]")) {
-				return localList;
-			} else {
-				throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
-			}
-		}
-		throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 	}
 	// </Read Data>
 
@@ -299,30 +310,20 @@ public class LightningEditor {
 	}
 	// </Write Data with Comments
 
-	// <Write Data without Comments>
-	private static void initialWriteWithOutComments(final File file, final Map<String, Object> map) {
-		try (PrintWriter writer = new PrintWriter(file)) {
-			if (!map.isEmpty()) {
-				Iterator mapIterator = map.keySet().iterator();
-				String localKey = mapIterator.next().toString();
-				while (localKey.startsWith("#") || map.get(localKey) == LineType.COMMENT || localKey.startsWith("{=}emptyline") || map.get(localKey) == LineType.BLANK_LINE) {
-					localKey = mapIterator.next().toString();
-				}
-				topLayerWriteWithOutComments(writer, map, mapIterator.next().toString());
-				//noinspection unchecked
-				mapIterator.forEachRemaining(tempKey -> {
-					if (!tempKey.toString().startsWith("#") && map.get(tempKey.toString()) != LineType.COMMENT && !tempKey.toString().startsWith("{=}emptyline") && map.get(tempKey.toString()) != LineType.BLANK_LINE) {
-						writer.println();
-						topLayerWriteWithOutComments(writer, map, tempKey.toString());
-					}
-				});
+	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final Comment commentSetting) {
+		List<String> localList = dataType.getNewDataList(commentSetting, null);
+		while (lines.size() > 0) {
+			String tempLine = lines.get(0).trim();
+			lines.remove(0);
+			if (tempLine.startsWith("-")) {
+				localList.add(tempLine.substring(1).trim());
+			} else if (tempLine.endsWith("]")) {
+				return localList;
+			} else {
+				throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 			}
-			writer.flush();
-		} catch (FileNotFoundException e) {
-			System.err.println("Could not write to '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
 		}
+		throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 	}
 
 	private static void topLayerWriteWithOutComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {

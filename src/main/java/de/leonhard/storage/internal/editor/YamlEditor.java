@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import lombok.Cleanup;
 import org.jetbrains.annotations.NotNull;
@@ -131,9 +132,13 @@ public class YamlEditor {
 	}
 
 	public void write(final @NotNull List<String> lines) throws IOException {
-		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(file));
-		for (String line : lines) {
-			writer.println(line);
-		}
+		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(this.file));
+		Iterator tempIterator = lines.iterator();
+		writer.print(tempIterator.next());
+		//noinspection unchecked
+		tempIterator.forEachRemaining(line -> {
+			writer.println();
+			writer.print(line);
+		});
 	}
 }

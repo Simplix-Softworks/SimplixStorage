@@ -22,7 +22,7 @@ public class FileTypeUtils {
 	 * @return the path with the give FileType extension.
 	 */
 	public static String addExtension(final @NotNull String path, final @NotNull FlatFile.FileType fileType) {
-		return (Objects.notNull(path, "Path must not be null") + "." + Objects.notNull(fileType, "FileType must nor be null"));
+		return (Objects.notNull(path, "Path must not be null") + "." + Objects.notNull(fileType, "FileType must not be null"));
 	}
 
 	/**

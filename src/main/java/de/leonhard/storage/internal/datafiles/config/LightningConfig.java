@@ -3,6 +3,7 @@ package de.leonhard.storage.internal.datafiles.config;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.datafiles.section.LightningConfigSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
+import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.LightningUtils;
@@ -22,16 +23,16 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile {
 
-	protected LightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
-		super(file, inputStream, reloadSetting, preserveComments, dataType);
+	protected LightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
 	}
 
 
 	public List<String> getHeader() {
 		this.update();
 
-		if (this.isPreserveComments()) {
-			return LightningUtils.getHeader(this.fileData, this.getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getHeader(this.fileData, this.getDataType(), this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -40,10 +41,10 @@ public class LightningConfig extends LightningFile {
 	public void setHeader(final @Nullable List<String> header) {
 		this.update();
 
-		if (this.isPreserveComments()) {
-			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, header, this.getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, header, this.getDataType(), this.getCommentSetting());
 			if (!this.fileData.toString().equals(tempMap.toString())) {
-				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
+				LightningEditor.writeData(this.file, tempMap, this.getCommentSetting());
 			}
 		}
 	}
@@ -51,8 +52,8 @@ public class LightningConfig extends LightningFile {
 	public List<String> getFooter() {
 		this.update();
 
-		if (this.isPreserveComments()) {
-			return LightningUtils.getFooter(fileData, this.getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getFooter(fileData, this.getDataType(), this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -61,10 +62,10 @@ public class LightningConfig extends LightningFile {
 	public void setFooter(final @Nullable List<String> footer) {
 		this.update();
 
-		if (this.isPreserveComments()) {
-			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, footer, this.getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, footer, this.getDataType(), this.getCommentSetting());
 			if (!this.fileData.toString().equals(tempMap.toString())) {
-				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
+				LightningEditor.writeData(this.file, tempMap, this.getCommentSetting());
 			}
 		}
 	}
@@ -74,8 +75,8 @@ public class LightningConfig extends LightningFile {
 
 		this.update();
 
-		if (this.isPreserveComments()) {
-			return LightningUtils.getHeader(this.fileData, key, this.getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getHeader(this.fileData, key, this.getDataType(), this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -86,10 +87,10 @@ public class LightningConfig extends LightningFile {
 
 		this.update();
 
-		if (this.isPreserveComments()) {
-			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, key, header, this.getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, key, header, this.getDataType(), this.getCommentSetting());
 			if (!fileData.toString().equals(tempMap.toString())) {
-				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
+				LightningEditor.writeData(this.file, tempMap, this.getCommentSetting());
 			}
 		}
 	}
@@ -99,8 +100,8 @@ public class LightningConfig extends LightningFile {
 
 		this.update();
 
-		if (this.isPreserveComments()) {
-			return LightningUtils.getFooter(this.fileData, key, getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getFooter(this.fileData, key, getDataType(), this.getCommentSetting());
 		} else {
 			return new ArrayList<>();
 		}
@@ -111,10 +112,10 @@ public class LightningConfig extends LightningFile {
 
 		this.update();
 
-		if (this.isPreserveComments()) {
-			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, key, footer, this.getDataType(), this.isPreserveComments());
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, key, footer, this.getDataType(), this.getCommentSetting());
 			if (!fileData.toString().equals(tempMap.toString())) {
-				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
+				LightningEditor.writeData(this.file, tempMap, this.getCommentSetting());
 			}
 		}
 	}

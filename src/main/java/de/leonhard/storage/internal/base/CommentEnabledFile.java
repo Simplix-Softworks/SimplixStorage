@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import lombok.Getter;
@@ -13,24 +14,24 @@ public abstract class CommentEnabledFile extends FlatFile {
 
 	@Getter
 	@Setter
-	private boolean preserveComments = true;
+	private Comment commentSetting = Comment.SKIP;
 
 	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType) {
 		super(file, fileType);
 	}
 
-	public void reload(final boolean preserveComments) {
-		this.setPreserveComments(Objects.notNull(preserveComments, "PreserveComments must not be null"));
+	public void reload(final @NotNull Comment commentSetting) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.reload();
 	}
 
-	public synchronized void set(final @NotNull String key, final @Nullable Object value, final boolean preserveComments) {
-		this.setPreserveComments(Objects.notNull(preserveComments, "PreserveComments must not be null"));
+	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull Comment commentSetting) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.set(Objects.notNull(key, "Key must not be null"), Objects.notNull(value, "Value must not be null"));
 	}
 
-	public synchronized void remove(final @NotNull String key, final boolean preserveComments) {
-		this.setPreserveComments(Objects.notNull(preserveComments, "PreserveComments must not be null"));
+	public synchronized void remove(final @NotNull String key, final @NotNull Comment commentSetting) {
+		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.remove(Objects.notNull(key, "Key must not be null"));
 	}
 
@@ -42,7 +43,7 @@ public abstract class CommentEnabledFile extends FlatFile {
 			return false;
 		} else {
 			CommentEnabledFile commentEnabledFile = (CommentEnabledFile) obj;
-			return this.preserveComments == commentEnabledFile.preserveComments
+			return this.commentSetting == commentEnabledFile.commentSetting
 				   && super.equals(commentEnabledFile);
 		}
 	}

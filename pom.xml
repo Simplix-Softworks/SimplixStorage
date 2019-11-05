@@ -5,7 +5,7 @@
 
 	<groupId>de.leonhard</groupId>
 	<artifactId>lightningstorage</artifactId>
-	<version>3.0.0-Beta-v3.64</version>
+	<version>3.0.0-Beta-v3.65</version>
 	<name>LightningStorage</name>
 	<description>Store data in a better way</description>
 	<url>https://github.com/JavaFactoryDev/LightningStorage</url>

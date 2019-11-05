@@ -6,6 +6,7 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.CommentEnabledFile;
 import de.leonhard.storage.internal.datafiles.section.YamlSection;
 import de.leonhard.storage.internal.editor.YamlEditor;
+import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -28,22 +29,25 @@ public class YamlFile extends CommentEnabledFile {
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils yamlUtils;
 
-	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
+	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
 		super(file, FileType.YAML);
 
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
 
-		if (dataType != null) {
-			setDataType(dataType);
-		} else {
-			setDataType(DataType.STANDARD);
-		}
 		if (reloadSetting != null) {
-			setReloadSetting(reloadSetting);
+			this.setReloadSetting(reloadSetting);
 		}
-		this.setPreserveComments(preserveComments);
+		if (commentSetting != null) {
+			this.setCommentSetting(commentSetting);
+		}
+		if (dataType != null) {
+			this.setDataType(dataType);
+		} else {
+			this.setDataType(DataType.STANDARD);
+		}
+
 
 		this.yamlEditor = new LocalEditor(this.file);
 		this.yamlUtils = new LocalUtils(yamlEditor);
@@ -106,7 +110,7 @@ public class YamlFile extends CommentEnabledFile {
 	public void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				if (!this.isPreserveComments()) {
+				if (this.getCommentSetting() != Comment.PRESERVE) {
 					write(Objects.notNull(fileData, "FileData must not be null").toMap());
 				} else {
 					final List<String> unEdited = yamlEditor.read();
@@ -151,7 +155,7 @@ public class YamlFile extends CommentEnabledFile {
 			return false;
 		} else {
 			YamlFile yaml = (YamlFile) obj;
-			return this.isPreserveComments() == yaml.isPreserveComments()
+			return this.getCommentSetting() == yaml.getCommentSetting()
 				   && super.equals(yaml.getFlatFileInstance());
 		}
 	}

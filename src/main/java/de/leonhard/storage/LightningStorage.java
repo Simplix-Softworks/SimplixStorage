@@ -7,6 +7,7 @@ import de.leonhard.storage.internal.datafiles.raw.JsonFile;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.datafiles.raw.TomlFile;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
+import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -32,7 +33,7 @@ public class LightningStorage {
 	private final String path;
 	private BufferedInputStream inputStream;
 	private Reload reloadSetting;
-	private boolean preserveComments = true;
+	private Comment commentSetting;
 	private DataType dataType;
 
 	// <local Constructors>
@@ -214,10 +215,10 @@ public class LightningStorage {
 	/**
 	 * Set the CommentSetting for the File.
 	 *
-	 * @param preserveComments the CommentSetting to be set(Default for Configs is true, otherwise it's false)
+	 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 	 */
-	public final LightningStorage commentSetting(final boolean preserveComments) {
-		this.preserveComments = preserveComments;
+	public final LightningStorage commentSetting(final Comment commentSetting) {
+		this.commentSetting = commentSetting;
 		return this;
 	}
 
@@ -252,9 +253,9 @@ public class LightningStorage {
 	public final LightningConfig asLightningConfig() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LocalLightningConfig(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
-				  : new LocalLightningConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
-			   : new LocalLightningConfig(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
+				  ? new LocalLightningConfig(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
+				  : new LocalLightningConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
+			   : new LocalLightningConfig(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
 	}
 
 	/**
@@ -263,9 +264,9 @@ public class LightningStorage {
 	public final LightningFile asLightningFile() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LocalLightningFile(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
-				  : new LocalLightningFile(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
-			   : new LocalLightningFile(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
+				  ? new LocalLightningFile(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
+				  : new LocalLightningFile(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.LIGHTNING)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
+			   : new LocalLightningFile(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
 	}
 
 	/**
@@ -285,9 +286,9 @@ public class LightningStorage {
 	public final YamlFile asYamlFile() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LocalYamlFile(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
-				  : new LocalYamlFile(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
-			   : new LocalYamlFile(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
+				  ? new LocalYamlFile(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
+				  : new LocalYamlFile(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
+			   : new LocalYamlFile(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
 	}
 
 	/**
@@ -296,9 +297,9 @@ public class LightningStorage {
 	public final YamlConfig asYamlConfig() {
 		return this.file == null
 			   ? (this.directory == null
-				  ? new LocalYamlConfig(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType)
-				  : new LocalYamlConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.preserveComments, this.dataType))
-			   : new LocalYamlConfig(this.file, this.inputStream, this.reloadSetting, this.preserveComments, this.dataType);
+				  ? new LocalYamlConfig(new File(this.path, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType)
+				  : new LocalYamlConfig(new File(this.directory, FileTypeUtils.addExtension(Objects.notNull(this.name), FlatFile.FileType.YAML)), this.inputStream, this.reloadSetting, this.commentSetting, this.dataType))
+			   : new LocalYamlConfig(this.file, this.inputStream, this.reloadSetting, this.commentSetting, this.dataType);
 	}
 	// </Create Datafile>
 
@@ -311,7 +312,7 @@ public class LightningStorage {
 			   + (this.inputStream == null ? "" : ", InputStream: " + this.inputStream)
 			   + (this.reloadSetting == null ? "" : ", ReloadSetting: " + this.reloadSetting)
 			   + (this.dataType == null ? "" : ", DataType: " + this.dataType)
-			   + ", CommentSetting: " + this.preserveComments;
+			   + ", CommentSetting: " + this.commentSetting;
 	}
 
 
@@ -324,15 +325,15 @@ public class LightningStorage {
 
 	private static class LocalLightningConfig extends LightningConfig {
 
-		private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
-			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalLightningFile extends LightningFile {
 
-		private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
-			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
@@ -345,15 +346,15 @@ public class LightningStorage {
 
 	private static class LocalYamlFile extends YamlFile {
 
-		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
-			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalYamlConfig extends YamlConfig {
 
-		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
-			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 }

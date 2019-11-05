@@ -57,7 +57,7 @@ public class FileUtils {
 	 * @return BufferedInputStream containing the contents of the resource file.
 	 */
 	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
-		return new BufferedInputStream(Objects.notNull(LightningStorage.class.getClassLoader().getResourceAsStream(resource), "Resource must not be null"));
+		return new BufferedInputStream(Objects.notNull(LightningStorage.class.getClassLoader().getResourceAsStream(Objects.notNull(resource, "Resource must not be null"))));
 	}
 
 	/**

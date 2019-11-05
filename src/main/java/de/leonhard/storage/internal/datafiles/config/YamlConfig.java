@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.datafiles.config;
 
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
+import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.basic.Objects;
@@ -22,13 +23,13 @@ public class YamlConfig extends YamlFile {
 	private List<String> header;
 
 
-	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
-		super(file, inputStream, reloadSetting, preserveComments, dataType);
+	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
 	}
 
 
 	public List<String> getHeader() {
-		if (!this.isPreserveComments()) {
+		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
 		} else if (!shouldReload()) {
 			return this.header;
