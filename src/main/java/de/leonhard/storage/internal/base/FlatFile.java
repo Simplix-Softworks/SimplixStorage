@@ -297,7 +297,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		JSON("json"),
 		YAML("yml"),
 		TOML("toml"),
-		CSV("csv"),
 		LIGHTNING("ls"),
 		DEFAULT("");
 

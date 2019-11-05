@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class FileUtils {
 
 	public static void createFile(final @NotNull File file) {
+		Objects.checkNull(file);
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
 				//noinspection ResultOfMethodCallIgnored
@@ -41,7 +42,7 @@ public class FileUtils {
 	 */
 	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
 		try {
-			return new BufferedInputStream(new FileInputStream(file));
+			return new BufferedInputStream(new FileInputStream(Objects.notNull(file, "File must not be null")));
 		} catch (IOException e) {
 			System.err.println("Error while creating InputStream from '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -67,7 +68,7 @@ public class FileUtils {
 	 * @return true if the File has changed.
 	 */
 	public static boolean hasChanged(final @NotNull File file, final long timeStamp) {
-		return timeStamp < file.lastModified();
+		return timeStamp < Objects.notNull(file).lastModified();
 	}
 
 	/**
@@ -77,7 +78,8 @@ public class FileUtils {
 	 * @param inputStream the InputStream which shall be written.
 	 */
 	public static synchronized void writeToFile(final @NotNull File file, final @NotNull InputStream inputStream) {
-		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+		Objects.checkNull(inputStream);
+		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(Objects.notNull(file)))) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());
 			} else {

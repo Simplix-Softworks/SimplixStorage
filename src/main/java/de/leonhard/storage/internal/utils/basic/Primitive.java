@@ -13,7 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class Primitive {
 
 	public static <T> T getFromDef(final @NotNull Object obj, final @NotNull Class def) {
-		Object tempObj = obj;
+		Objects.checkNull(def);
+		Object tempObj = Objects.notNull(obj);
 		if (obj instanceof String && def == Integer.class) {
 			tempObj = Integer.parseInt((String) obj);
 		} else if (obj instanceof String && def == Long.class) {
@@ -35,6 +36,7 @@ public class Primitive {
 	public static class BOOLEAN {
 
 		public static boolean getBoolean(final @NotNull Object obj) {
+			Objects.checkNull(obj);
 			if (obj instanceof Boolean) {
 				return (boolean) obj;
 			} else if (obj instanceof String) {
@@ -49,6 +51,7 @@ public class Primitive {
 	public static class LONG {
 
 		public static long getLong(final @NotNull Object obj) {
+			Objects.checkNull(obj);
 			if (obj instanceof Long) {
 				return (long) obj;
 			} else if (obj instanceof Number) {
@@ -65,6 +68,7 @@ public class Primitive {
 	public static class DOUBLE {
 
 		public static double getDouble(final @NotNull Object obj) {
+			Objects.checkNull(obj);
 			if (obj instanceof Double) {
 				return (double) obj;
 			} else if (obj instanceof Number) {
@@ -81,6 +85,7 @@ public class Primitive {
 	public static class FLOAT {
 
 		public static float getFloat(final @NotNull Object obj) {
+			Objects.checkNull(obj);
 			if (obj instanceof Float) {
 				return (float) obj;
 			} else if (obj instanceof Number) {
@@ -97,6 +102,7 @@ public class Primitive {
 	public static class INTEGER {
 
 		public static int getInt(final @NotNull Object obj) {
+			Objects.checkNull(obj);
 			if (obj instanceof Integer) {
 				return (int) obj;
 			} else if (obj instanceof Number) {
@@ -113,6 +119,7 @@ public class Primitive {
 	public static class SHORT {
 
 		public static short getShort(final @NotNull Object obj) {
+			Objects.checkNull(obj);
 			if (obj instanceof Number) {
 				return ((Number) obj).shortValue();
 			} else if (obj instanceof String) {
@@ -127,6 +134,7 @@ public class Primitive {
 	public static class BYTE {
 
 		public static byte getByte(final @NotNull Object obj) {
+			Objects.checkNull(obj);
 			if (obj instanceof Byte) {
 				return (byte) obj;
 			} else if (obj instanceof Number) {

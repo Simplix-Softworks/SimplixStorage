@@ -31,7 +31,7 @@ public class YamlConfig extends YamlFile {
 		if (!this.isPreserveComments()) {
 			return new ArrayList<>();
 		} else if (!shouldReload()) {
-			return header;
+			return this.header;
 		} else {
 			try {
 				return this.yamlEditor.readHeader();
@@ -94,9 +94,9 @@ public class YamlConfig extends YamlFile {
 		} else if (obj == null || this.getClass() != obj.getClass()) {
 			return false;
 		} else {
-			YamlConfig config = (YamlConfig) obj;
-			return this.header.equals(config.header)
-				   && super.equals(config.getYamlFileInstance());
+			YamlConfig yamlConfig = (YamlConfig) obj;
+			return this.header.equals(yamlConfig.header)
+				   && super.equals(yamlConfig.getYamlFileInstance());
 		}
 	}
 }

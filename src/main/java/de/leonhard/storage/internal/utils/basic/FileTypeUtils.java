@@ -22,7 +22,7 @@ public class FileTypeUtils {
 	 * @return the path with the give FileType extension.
 	 */
 	public static String addExtension(final @NotNull String path, final @NotNull FlatFile.FileType fileType) {
-		return (path + "." + fileType);
+		return (Objects.notNull(path, "Path must not be null") + "." + Objects.notNull(fileType, "FileType must nor be null"));
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class FileTypeUtils {
 	 * @return true if the File is of the given FileType, otherwise false.
 	 */
 	public static boolean isType(final @NotNull File file, final @NotNull FlatFile.FileType fileType) {
-		return getFileType(file) == (fileType);
+		return getFileType(Objects.notNull(file, "File must not be null")) == (Objects.notNull(fileType, "FileType must not be null"));
 	}
 
 	/**
@@ -53,15 +53,13 @@ public class FileTypeUtils {
 	 * @return the FileType Enum of the give extension or null if no matching Enum exists.
 	 */
 	public static FlatFile.FileType getFileType(final @NotNull String extension) {
-		switch (extension) {
+		switch (Objects.notNull(extension, "Extension must not be null")) {
 			case "json":
 				return FlatFile.FileType.JSON;
 			case "yml":
 				return FlatFile.FileType.YAML;
 			case "toml":
 				return FlatFile.FileType.TOML;
-			case "CSV":
-				return FlatFile.FileType.CSV;
 			case "ls":
 				return FlatFile.FileType.LIGHTNING;
 			default:
@@ -76,7 +74,7 @@ public class FileTypeUtils {
 	 * @return the extension of the given File.
 	 */
 	public static String getExtension(final @NotNull File file) {
-		return getExtension(file.getName());
+		return getExtension(Objects.notNull(file, "File must not be null").getName());
 	}
 
 	/**
@@ -86,6 +84,6 @@ public class FileTypeUtils {
 	 * @return the extension of the given File.
 	 */
 	public static String getExtension(final @NotNull String path) {
-		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
+		return Objects.notNull(path, "Path must not be null").lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
 	}
 }

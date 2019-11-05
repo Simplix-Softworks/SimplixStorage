@@ -21,6 +21,7 @@ public class LightningFile extends CommentEnabledFile {
 
 	protected LightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 		super(file, FileType.LIGHTNING);
+
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}

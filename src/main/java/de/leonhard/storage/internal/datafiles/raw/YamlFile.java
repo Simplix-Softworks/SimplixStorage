@@ -26,10 +26,11 @@ import org.jetbrains.annotations.Nullable;
 public class YamlFile extends CommentEnabledFile {
 
 	protected final YamlEditor yamlEditor;
-	private final YamlUtils parser;
+	private final YamlUtils yamlUtils;
 
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 		super(file, FileType.YAML);
+
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
@@ -45,7 +46,7 @@ public class YamlFile extends CommentEnabledFile {
 		this.setPreserveComments(preserveComments);
 
 		this.yamlEditor = new LocalEditor(this.file);
-		this.parser = new LocalUtils(yamlEditor);
+		this.yamlUtils = new LocalUtils(yamlEditor);
 
 		try {
 			this.fileData = new LocalFileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
@@ -116,7 +117,7 @@ public class YamlFile extends CommentEnabledFile {
 					if (!header.containsAll(footer)) {
 						header.addAll(footer);
 					}
-					yamlEditor.write(parser.parseComments(unEdited, header));
+					yamlEditor.write(yamlUtils.parseComments(unEdited, header));
 					write(Objects.notNull(fileData, "FileData must not be null").toMap());
 				}
 			} catch (IOException e) {
