@@ -315,42 +315,42 @@ public class LightningStorage {
 	}
 
 
-	private static class LocalJsonFile extends de.leonhard.storage.internal.datafiles.raw.JsonFile {
+	private static class LocalJsonFile extends JsonFile {
 
 		private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
 			super(file, inputStream, reloadSetting, dataType);
 		}
 	}
 
-	private static class LocalLightningConfig extends de.leonhard.storage.internal.datafiles.config.LightningConfig {
+	private static class LocalLightningConfig extends LightningConfig {
 
 		private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 			super(file, inputStream, reloadSetting, preserveComments, dataType);
 		}
 	}
 
-	private static class LocalLightningFile extends de.leonhard.storage.internal.datafiles.raw.LightningFile {
+	private static class LocalLightningFile extends LightningFile {
 
 		private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 			super(file, inputStream, reloadSetting, preserveComments, dataType);
 		}
 	}
 
-	private static class LocalTomlFile extends de.leonhard.storage.internal.datafiles.raw.TomlFile {
+	private static class LocalTomlFile extends TomlFile {
 
 		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
 			super(file, inputStream, reloadSetting, dataType);
 		}
 	}
 
-	private static class LocalYamlFile extends de.leonhard.storage.internal.datafiles.raw.YamlFile {
+	private static class LocalYamlFile extends YamlFile {
 
 		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 			super(file, inputStream, reloadSetting, preserveComments, dataType);
 		}
 	}
 
-	private static class LocalYamlConfig extends de.leonhard.storage.internal.datafiles.config.YamlConfig {
+	private static class LocalYamlConfig extends YamlConfig {
 
 		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 			super(file, inputStream, reloadSetting, preserveComments, dataType);

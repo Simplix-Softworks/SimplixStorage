@@ -59,8 +59,9 @@ public class YamlEditor {
 			if (!line.startsWith("#")) {
 				Collections.reverse(result);
 				return result;
+			} else {
+				result.add(line);
 			}
-			result.add(line);
 		}
 		Collections.reverse(result);
 		return result;
@@ -75,8 +76,9 @@ public class YamlEditor {
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (!line.startsWith("#")) {
 				return result;
+			} else {
+				result.add(line);
 			}
-			result.add(line);
 		}
 		return result;
 	}

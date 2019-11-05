@@ -182,11 +182,7 @@ public class FileData {
 	 * @return localMap.
 	 */
 	public Map<String, Object> toMap() {
-		if (this.localMap != null) {
-			return this.localMap;
-		} else {
-			return new HashMap<>();
-		}
+		return this.localMap;
 	}
 
 	/**

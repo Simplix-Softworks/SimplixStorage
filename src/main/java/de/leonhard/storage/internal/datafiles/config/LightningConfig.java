@@ -42,7 +42,7 @@ public class LightningConfig extends LightningFile {
 
 		if (this.isPreserveComments()) {
 			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, header, this.getDataType(), this.isPreserveComments());
-			if (!this.fileData.toMap().equals(tempMap)) {
+			if (!this.fileData.toString().equals(tempMap.toString())) {
 				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
 			}
 		}
@@ -63,7 +63,7 @@ public class LightningConfig extends LightningFile {
 
 		if (this.isPreserveComments()) {
 			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, footer, this.getDataType(), this.isPreserveComments());
-			if (!this.fileData.toMap().equals(tempMap)) {
+			if (!this.fileData.toString().equals(tempMap.toString())) {
 				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
 			}
 		}
@@ -88,7 +88,7 @@ public class LightningConfig extends LightningFile {
 
 		if (this.isPreserveComments()) {
 			Map<String, Object> tempMap = LightningUtils.setHeader(this.fileData, key, header, this.getDataType(), this.isPreserveComments());
-			if (!fileData.toMap().equals(tempMap)) {
+			if (!fileData.toString().equals(tempMap.toString())) {
 				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
 			}
 		}
@@ -113,7 +113,7 @@ public class LightningConfig extends LightningFile {
 
 		if (this.isPreserveComments()) {
 			Map<String, Object> tempMap = LightningUtils.setFooter(this.fileData, key, footer, this.getDataType(), this.isPreserveComments());
-			if (!fileData.toMap().equals(tempMap)) {
+			if (!fileData.toString().equals(tempMap.toString())) {
 				LightningEditor.writeData(this.file, tempMap, this.isPreserveComments());
 			}
 		}

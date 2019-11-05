@@ -60,11 +60,12 @@ public class YamlConfig extends YamlFile {
 		if (getFile().length() == 0) {
 			try {
 				this.yamlEditor.write(this.header);
+				return;
 			} catch (IOException e) {
 				System.err.println("Error while setting header of '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
+				return;
 			}
-			return;
 		}
 
 		try {
