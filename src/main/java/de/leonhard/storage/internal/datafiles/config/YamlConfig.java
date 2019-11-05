@@ -22,7 +22,7 @@ public class YamlConfig extends YamlFile {
 	private List<String> header;
 
 
-	public YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
 		super(file, inputStream, reloadSetting, preserveComments, dataType);
 	}
 

@@ -11,7 +11,7 @@ public class YamlSection extends FlatSection {
 
 	private final YamlFile yamlFile;
 
-	public YamlSection(@NotNull final YamlFile yamlFile, @NotNull final String sectionKey) {
+	protected YamlSection(@NotNull final YamlFile yamlFile, @NotNull final String sectionKey) {
 		super(yamlFile, sectionKey);
 		this.yamlFile = yamlFile;
 	}

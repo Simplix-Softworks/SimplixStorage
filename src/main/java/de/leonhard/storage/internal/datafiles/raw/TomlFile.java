@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Class to manager Toml-Type Files
+ * Class to manage Toml-Type Files
  */
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
-	public TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
+	protected TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
 		super(file, FileType.TOML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -113,7 +113,7 @@ public class TomlFile extends FlatFile {
 	 */
 	@Override
 	public TomlSection getSection(@NotNull final String sectionKey) {
-		return new TomlSection(this, sectionKey);
+		return new LocalSection(this, sectionKey).get();
 	}
 
 	protected final TomlFile getTomlFileInstance() {
@@ -129,6 +129,18 @@ public class TomlFile extends FlatFile {
 		} else {
 			TomlFile toml = (TomlFile) obj;
 			return super.equals(toml.getFlatFileInstance());
+		}
+	}
+
+
+	private static class LocalSection extends TomlSection {
+
+		private LocalSection(final @NotNull TomlFile tomlFile, final @NotNull String sectionKey) {
+			super(tomlFile, sectionKey);
+		}
+
+		private TomlSection get() {
+			return super.getTomlSectionInstance();
 		}
 	}
 }

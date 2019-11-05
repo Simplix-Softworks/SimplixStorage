@@ -11,7 +11,7 @@ public class LightningConfigSection extends LightningSection {
 
 	private final LightningConfig lightningConfig;
 
-	public LightningConfigSection(final @NotNull LightningConfig lightningConfig, final @NotNull String sectionKey) {
+	protected LightningConfigSection(final @NotNull LightningConfig lightningConfig, final @NotNull String sectionKey) {
 		super(lightningConfig, sectionKey);
 		this.lightningConfig = lightningConfig;
 	}
@@ -74,7 +74,7 @@ public class LightningConfigSection extends LightningSection {
 		} else {
 			LightningConfigSection lightningConfigSection = (LightningConfigSection) obj;
 			return this.lightningConfig.equals(lightningConfigSection.lightningConfig)
-				   && super.equals(lightningConfigSection.getLightningSectionInstance());
+				   && this.sectionKey.equals(lightningConfigSection.sectionKey);
 		}
 	}
 }

@@ -6,12 +6,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public class LightningSection extends FlatSection {
 
 	private final LightningFile lightningFile;
 
-	public LightningSection(@NotNull final LightningFile lightningFile, @NotNull final String sectionKey) {
+	protected LightningSection(@NotNull final LightningFile lightningFile, @NotNull final String sectionKey) {
 		super(lightningFile, sectionKey);
 		this.lightningFile = lightningFile;
 	}
@@ -46,7 +46,7 @@ public class LightningSection extends FlatSection {
 		} else {
 			LightningSection lightningSection = (LightningSection) obj;
 			return this.lightningFile.equals(lightningSection.lightningFile)
-				   && super.equals(lightningSection.getSectionInstance());
+				   && this.sectionKey.equals(lightningSection.sectionKey);
 		}
 	}
 }

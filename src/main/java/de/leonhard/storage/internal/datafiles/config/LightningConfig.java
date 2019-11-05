@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile {
 
-	public LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
 		super(file, inputStream, reloadSetting, preserveComments, dataType);
 	}
 
@@ -127,7 +127,7 @@ public class LightningConfig extends LightningFile {
 	 */
 	@Override
 	public LightningConfigSection getSection(@NotNull final String sectionKey) {
-		return new LightningConfigSection(this, sectionKey);
+		return new LocalSection(this, sectionKey).get();
 	}
 
 	protected final LightningConfig getLightningConfigInstance() {
@@ -143,6 +143,18 @@ public class LightningConfig extends LightningFile {
 		} else {
 			LightningConfig config = (LightningConfig) obj;
 			return super.equals(config.getLightningFileInstance());
+		}
+	}
+
+
+	private static class LocalSection extends LightningConfigSection {
+
+		private LocalSection(final @NotNull LightningConfig lightningConfig, final @NotNull String sectionKey) {
+			super(lightningConfig, sectionKey);
+		}
+
+		private LightningConfigSection get() {
+			return super.getLightningConfigSectionInstance();
 		}
 	}
 }

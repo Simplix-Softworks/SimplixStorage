@@ -21,12 +21,12 @@ import org.json.JSONTokener;
 
 
 /**
- * Class to manager Json-Type Files
+ * Class to manage Json-Type Files
  */
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
-	public JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
+	protected JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
 		super(file, FileType.JSON);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -157,7 +157,7 @@ public class JsonFile extends FlatFile {
 	 */
 	@Override
 	public JsonSection getSection(@NotNull final String sectionKey) {
-		return new JsonSection(this, sectionKey);
+		return new LocalSection(this, sectionKey).get();
 	}
 
 	protected final JsonFile getJsonFileInstance() {
@@ -173,6 +173,18 @@ public class JsonFile extends FlatFile {
 		} else {
 			JsonFile json = (JsonFile) obj;
 			return super.equals(json.getFlatFileInstance());
+		}
+	}
+
+
+	private static class LocalSection extends JsonSection {
+
+		private LocalSection(final @NotNull JsonFile jsonFile, final @NotNull String sectionKey) {
+			super(jsonFile, sectionKey);
+		}
+
+		private JsonSection get() {
+			return super.getJsonSectionInstance();
 		}
 	}
 }

@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Class to manager Lightning-Type Files
+ * Class to manage Lightning-Type Files
  */
 @SuppressWarnings("unused")
 public class LightningFile extends CommentEnabledFile {
 
-	public LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
 		super(file, FileType.LIGHTNING);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -98,7 +98,7 @@ public class LightningFile extends CommentEnabledFile {
 	 */
 	@Override
 	public LightningSection getSection(@NotNull final String sectionKey) {
-		return new LightningSection(this, sectionKey);
+		return new LocalSection(this, sectionKey).get();
 	}
 
 	protected final LightningFile getLightningFileInstance() {
@@ -115,6 +115,18 @@ public class LightningFile extends CommentEnabledFile {
 			LightningFile lightningFile = (LightningFile) obj;
 			return this.isPreserveComments() == lightningFile.isPreserveComments()
 				   && super.equals(lightningFile.getFlatFileInstance());
+		}
+	}
+
+
+	private static class LocalSection extends LightningSection {
+
+		private LocalSection(final @NotNull LightningFile lightningFile, final @NotNull String sectionKey) {
+			super(lightningFile, sectionKey);
+		}
+
+		private LightningSection get() {
+			return super.getLightningSectionInstance();
 		}
 	}
 }

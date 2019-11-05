@@ -11,7 +11,7 @@ public class TomlSection extends FlatSection {
 
 	private final TomlFile tomlFile;
 
-	public TomlSection(@NotNull final TomlFile tomlFile, @NotNull final String sectionKey) {
+	protected TomlSection(@NotNull final TomlFile tomlFile, @NotNull final String sectionKey) {
 		super(tomlFile, sectionKey);
 		this.tomlFile = tomlFile;
 	}
@@ -33,7 +33,8 @@ public class TomlSection extends FlatSection {
 			return false;
 		} else {
 			TomlSection tomlSection = (TomlSection) obj;
-			return super.equals(tomlSection.getSectionInstance());
+			return this.tomlFile.equals(tomlSection.tomlFile)
+				   && this.sectionKey.equals(tomlSection.sectionKey);
 		}
 	}
 }

@@ -11,7 +11,7 @@ public class JsonSection extends FlatSection {
 
 	private final JsonFile jsonFile;
 
-	public JsonSection(final @NotNull JsonFile jsonFile, final @NotNull String sectionKey) {
+	protected JsonSection(final @NotNull JsonFile jsonFile, final @NotNull String sectionKey) {
 		super(jsonFile, sectionKey);
 		this.jsonFile = jsonFile;
 	}
@@ -33,7 +33,8 @@ public class JsonSection extends FlatSection {
 			return false;
 		} else {
 			JsonSection jsonSection = (JsonSection) obj;
-			return super.equals(jsonSection.getSectionInstance());
+			return this.jsonFile.equals(jsonSection.jsonFile)
+				   && this.sectionKey.equals(jsonSection.sectionKey);
 		}
 	}
 }

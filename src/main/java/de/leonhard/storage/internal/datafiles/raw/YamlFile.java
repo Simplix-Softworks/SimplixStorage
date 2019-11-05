@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Class to manager Yaml-Type Files
+ * Class to manage Yaml-Type Files
  */
 @SuppressWarnings({"unchecked", "unused"})
 public class YamlFile extends CommentEnabledFile {
@@ -30,7 +30,7 @@ public class YamlFile extends CommentEnabledFile {
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils parser;
 
-	public YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
 		super(file, FileType.YAML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -137,7 +137,7 @@ public class YamlFile extends CommentEnabledFile {
 	 */
 	@Override
 	public YamlSection getSection(@NotNull final String sectionKey) {
-		return new YamlSection(this, sectionKey);
+		return new LocalSection(this, sectionKey).get();
 	}
 
 	protected final YamlFile getYamlFileInstance() {
@@ -154,6 +154,18 @@ public class YamlFile extends CommentEnabledFile {
 			YamlFile yaml = (YamlFile) obj;
 			return this.isPreserveComments() == yaml.isPreserveComments()
 				   && super.equals(yaml.getFlatFileInstance());
+		}
+	}
+
+
+	private static class LocalSection extends de.leonhard.storage.internal.datafiles.section.YamlSection {
+
+		private LocalSection(final @NotNull YamlFile yamlFile, final @NotNull String sectionKey) {
+			super(yamlFile, sectionKey);
+		}
+
+		private YamlSection get() {
+			return super.getYamlSectionInstance();
 		}
 	}
 }

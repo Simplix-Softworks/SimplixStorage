@@ -1,12 +1,6 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.datafiles.config.LightningConfig;
-import de.leonhard.storage.internal.datafiles.config.YamlConfig;
-import de.leonhard.storage.internal.datafiles.raw.JsonFile;
-import de.leonhard.storage.internal.datafiles.raw.LightningFile;
-import de.leonhard.storage.internal.datafiles.raw.TomlFile;
-import de.leonhard.storage.internal.datafiles.raw.YamlFile;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
@@ -14,6 +8,7 @@ import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
 import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
@@ -321,5 +316,48 @@ public class LightningStorage {
 			   + (this.reloadSetting == null ? "" : ", ReloadSetting: " + this.reloadSetting)
 			   + (this.dataType == null ? "" : ", DataType: " + this.dataType)
 			   + ", CommentSetting: " + this.preserveComments;
+	}
+
+
+	private static class JsonFile extends de.leonhard.storage.internal.datafiles.raw.JsonFile {
+
+		private JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, dataType);
+		}
+	}
+
+	private static class LightningConfig extends de.leonhard.storage.internal.datafiles.config.LightningConfig {
+
+		private LightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		}
+	}
+
+	private static class LightningFile extends de.leonhard.storage.internal.datafiles.raw.LightningFile {
+
+		private LightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		}
+	}
+
+	private static class TomlFile extends de.leonhard.storage.internal.datafiles.raw.TomlFile {
+
+		private TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, dataType);
+		}
+	}
+
+	private static class YamlFile extends de.leonhard.storage.internal.datafiles.raw.YamlFile {
+
+		private YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		}
+	}
+
+	private static class YamlConfig extends de.leonhard.storage.internal.datafiles.config.YamlConfig {
+
+		private YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
+			super(file, inputStream, reloadSetting, preserveComments, dataType);
+		}
 	}
 }
