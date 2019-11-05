@@ -1,9 +1,9 @@
 package de.leonhard.storage.internal.utils;
 
 import de.leonhard.storage.LightningStorage;
+import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtils {
 
-	public static void createFile(@NotNull final File file) {
+	public static void createFile(final @NotNull File file) {
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
 				//noinspection ResultOfMethodCallIgnored
@@ -39,7 +39,7 @@ public class FileUtils {
 	 * @param file the File to be read.
 	 * @return BufferedInputstream containing the contents of the given File.
 	 */
-	public static BufferedInputStream createNewInputStream(@NotNull final File file) {
+	public static BufferedInputStream createNewInputStream(final @NotNull File file) {
 		try {
 			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
@@ -55,8 +55,8 @@ public class FileUtils {
 	 * @param resource the Path to the resource.
 	 * @return BufferedInputStream containing the contents of the resource file.
 	 */
-	public static BufferedInputStream createNewInputStream(@NotNull final String resource) {
-		return new BufferedInputStream(Objects.requireNonNull(LightningStorage.class.getClassLoader().getResourceAsStream(resource)));
+	public static BufferedInputStream createNewInputStream(final @NotNull String resource) {
+		return new BufferedInputStream(Valid.notNullObject(LightningStorage.class.getClassLoader().getResourceAsStream(resource), "Resource must not be null"));
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class FileUtils {
 	 * @param timeStamp the TimeStamp to be checked against.
 	 * @return true if the File has changed.
 	 */
-	public static boolean hasChanged(@NotNull final File file, final long timeStamp) {
+	public static boolean hasChanged(final @NotNull File file, final long timeStamp) {
 		return timeStamp < file.lastModified();
 	}
 
@@ -76,7 +76,7 @@ public class FileUtils {
 	 * @param file        the File to be written to.
 	 * @param inputStream the InputStream which shall be written.
 	 */
-	public static synchronized void writeToFile(@NotNull final File file, @NotNull final InputStream inputStream) {
+	public static synchronized void writeToFile(final @NotNull File file, final @NotNull InputStream inputStream) {
 		try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());

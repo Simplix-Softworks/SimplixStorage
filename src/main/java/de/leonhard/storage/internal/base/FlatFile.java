@@ -8,12 +8,14 @@ import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 
 /**
@@ -34,7 +36,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private FileType fileType;
 
 
-	protected FlatFile(@NotNull final File file, @NotNull final FileType fileType) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType) {
 		if (FileTypeUtils.isType(file, fileType)) {
 			this.fileType = fileType;
 			this.file = file;
@@ -64,7 +66,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Set the Contents of the File from a given InputStream
 	 */
-	public final synchronized void setFileContentFromStream(@Nullable final InputStream inputStream) {
+	public final synchronized void setFileContentFromStream(final @Nullable InputStream inputStream) {
 		if (inputStream == null) {
 			this.clearFile();
 		} else {
@@ -114,7 +116,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Set the Contents of the File from a given File
 	 */
-	public final synchronized void setFileContentFromFile(@Nullable final File file) {
+	public final synchronized void setFileContentFromFile(final @Nullable File file) {
 		if (file == null) {
 			this.clearFile();
 		} else {
@@ -126,7 +128,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Set the Contents of the File from a given Resource
 	 */
-	public final synchronized void setFileContentFromResource(@Nullable final String resource) {
+	public final synchronized void setFileContentFromResource(final @Nullable String resource) {
 		if (resource == null) {
 			this.clearFile();
 		} else {
@@ -136,7 +138,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public boolean hasKey(@NotNull final String key) {
+	public boolean hasKey(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 		return fileData.containsKey(key);
@@ -184,7 +186,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> keySet(@NotNull final String key) {
+	public Set<String> keySet(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		this.update();
 		return this.fileData.keySet(key);
@@ -197,7 +199,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(@NotNull final String key) {
+	public Set<String> singleLayerKeySet(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		this.update();
 		return this.fileData.singleLayerKeySet(key);
@@ -210,7 +212,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @param value the value to be assigned to @param key.
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
-	protected final boolean insert(@NotNull final String key, @Nullable final Object value) {
+	protected final boolean insert(final @NotNull String key, final @Nullable Object value) {
 		Valid.notNull(key, "Key must not be null");
 		this.update();
 
@@ -243,17 +245,17 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @param target      the CharSequence to be replaced.
 	 * @param replacement the Replacement Sequence.
 	 */
-	protected synchronized void replace(@NotNull final CharSequence target, @NotNull final CharSequence replacement) throws IOException {
+	protected synchronized void replace(final @NotNull CharSequence target, final @NotNull CharSequence replacement) throws IOException {
 		Valid.notNull(target, "Target must not be null");
 		Valid.notNull(replacement, "Replacement must not be null");
 
 		final Iterator lines = Files.readAllLines(this.file.toPath()).iterator();
 		PrintWriter writer = new PrintWriter(this.file);
-		writer.print(lines.next());
+		writer.print(((String) lines.next()).replace(target, replacement));
 		//noinspection unchecked
 		lines.forEachRemaining(line -> {
 			writer.println();
-			writer.print(line);
+			writer.print(((String) line).replace(target, replacement));
 		});
 		this.reload();
 	}
@@ -274,7 +276,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -302,13 +304,24 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		private final String extension;
 
-		FileType(@NotNull final String extension) {
+		FileType(final @NotNull String extension) {
 			this.extension = extension;
 		}
 
 		@Override
 		public String toString() {
 			return this.extension;
+		}
+	}
+
+	protected static class LocalFileData extends FileData {
+
+		public LocalFileData(final @Nullable Map<String, Object> map) {
+			super(map);
+		}
+
+		public LocalFileData(final @NotNull JSONObject jsonObject) {
+			super(jsonObject);
 		}
 	}
 }

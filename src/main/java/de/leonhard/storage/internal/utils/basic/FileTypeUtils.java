@@ -21,7 +21,7 @@ public class FileTypeUtils {
 	 * @param fileType the FileType to be used.
 	 * @return the path with the give FileType extension.
 	 */
-	public static String addExtension(@NotNull final String path, @NotNull final FlatFile.FileType fileType) {
+	public static String addExtension(final @NotNull String path, final @NotNull FlatFile.FileType fileType) {
 		return (path + "." + fileType);
 	}
 
@@ -32,7 +32,7 @@ public class FileTypeUtils {
 	 * @param fileType the FileType to be checked against.
 	 * @return true if the File is of the given FileType, otherwise false.
 	 */
-	public static boolean isType(@NotNull final File file, @NotNull final FlatFile.FileType fileType) {
+	public static boolean isType(final @NotNull File file, final @NotNull FlatFile.FileType fileType) {
 		return getFileType(file) == (fileType);
 	}
 
@@ -42,7 +42,7 @@ public class FileTypeUtils {
 	 * @param file the given File.
 	 * @return the FileType of the File.
 	 */
-	public static FlatFile.FileType getFileType(@NotNull final File file) {
+	public static FlatFile.FileType getFileType(final @NotNull File file) {
 		return getFileType(getExtension(file));
 	}
 
@@ -52,7 +52,7 @@ public class FileTypeUtils {
 	 * @param extension the extension to be checked.
 	 * @return the FileType Enum of the give extension or null if no matching Enum exists.
 	 */
-	public static FlatFile.FileType getFileType(@NotNull final String extension) {
+	public static FlatFile.FileType getFileType(final @NotNull String extension) {
 		switch (extension) {
 			case "json":
 				return FlatFile.FileType.JSON;
@@ -75,7 +75,7 @@ public class FileTypeUtils {
 	 * @param file the File to be checked.
 	 * @return the extension of the given File.
 	 */
-	public static String getExtension(@NotNull final File file) {
+	public static String getExtension(final @NotNull File file) {
 		return getExtension(file.getName());
 	}
 
@@ -85,7 +85,7 @@ public class FileTypeUtils {
 	 * @param path the Path of the File to be checked.
 	 * @return the extension of the given File.
 	 */
-	public static String getExtension(@NotNull final String path) {
+	public static String getExtension(final @NotNull String path) {
 		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
 	}
 }

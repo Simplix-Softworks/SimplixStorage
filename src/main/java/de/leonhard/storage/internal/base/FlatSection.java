@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.utils.basic.Valid;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,30 +17,30 @@ public abstract class FlatSection implements StorageBase {
 	protected String sectionKey;
 
 
-	public FlatSection(@NotNull final FlatFile flatFile, @NotNull final String sectionKey) {
+	protected FlatSection(final @NotNull FlatFile flatFile, final @NotNull String sectionKey) {
 		this.flatFile = flatFile;
-		this.sectionKey = sectionKey;
+		this.sectionKey = Valid.notNullObject(sectionKey, "Key must not be null");
 	}
 
 	@Override
-	public Object get(@NotNull final String key) {
+	public Object get(final @NotNull String key) {
 		String tempKey = this.getTempKey(key);
 
 		return this.flatFile.get(tempKey);
 	}
 
-	protected String getTempKey(final String key) {
-		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+	protected String getTempKey(final @NotNull String key) {
+		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? Valid.notNullObject(key, "Key must not be null") : this.sectionKey + "." + Valid.notNullObject(key, "Key must not be null");
 	}
 
 	@Override
-	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		String tempKey = this.getTempKey(key);
 
 		this.flatFile.set(tempKey, value);
 	}
 
-	public synchronized void set(@Nullable final Object value) {
+	public synchronized void set(final @Nullable Object value) {
 		this.flatFile.set(this.sectionKey, value);
 	}
 
@@ -48,14 +49,14 @@ public abstract class FlatSection implements StorageBase {
 	}
 
 	@Override
-	public synchronized void remove(@NotNull final String key) {
+	public synchronized void remove(final @NotNull String key) {
 		String tempKey = this.getTempKey(key);
 
 		this.flatFile.remove(tempKey);
 	}
 
 	@Override
-	public boolean hasKey(@NotNull final String key) {
+	public boolean hasKey(final @NotNull String key) {
 		String tempKey = this.getTempKey(key);
 
 		return this.flatFile.hasKey(tempKey);
@@ -72,20 +73,20 @@ public abstract class FlatSection implements StorageBase {
 	}
 
 	@Override
-	public Set<String> keySet(@NotNull final String key) {
+	public Set<String> keySet(final @NotNull String key) {
 		String tempKey = this.getTempKey(key);
 
 		return this.flatFile.keySet(tempKey);
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(@NotNull final String key) {
-		String tempKey = (this.sectionKey == null || this.sectionKey.isEmpty()) ? key : this.sectionKey + "." + key;
+	public Set<String> singleLayerKeySet(final @NotNull String key) {
+		String tempKey = this.getTempKey(key);
 
 		return this.flatFile.singleLayerKeySet(tempKey);
 	}
 
-	protected FlatSection getSectionInstance() {
+	protected final FlatSection getSectionInstance() {
 		return this;
 	}
 
@@ -95,7 +96,7 @@ public abstract class FlatSection implements StorageBase {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

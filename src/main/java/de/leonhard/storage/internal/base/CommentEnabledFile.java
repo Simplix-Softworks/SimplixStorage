@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.File;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,17 +20,30 @@ public abstract class CommentEnabledFile extends FlatFile {
 	}
 
 	public void reload(final boolean preserveComments) {
-		this.setPreserveComments(preserveComments);
+		this.setPreserveComments(Valid.notNullObject(preserveComments, "PreserveComments must not be null"));
 		this.reload();
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, final boolean preserveComments) {
-		this.setPreserveComments(preserveComments);
-		this.set(key, value);
+	public synchronized void set(final @NotNull String key, final @Nullable Object value, final boolean preserveComments) {
+		this.setPreserveComments(Valid.notNullObject(preserveComments, "PreserveComments must not be null"));
+		this.set(Valid.notNullObject(key, "Key must not be null"), Valid.notNullObject(value, "Value must not be null"));
 	}
 
-	public synchronized void remove(@NotNull final String key, final boolean preserveComments) {
-		this.setPreserveComments(preserveComments);
-		this.remove(key);
+	public synchronized void remove(final @NotNull String key, final boolean preserveComments) {
+		this.setPreserveComments(Valid.notNullObject(preserveComments, "PreserveComments must not be null"));
+		this.remove(Valid.notNullObject(key, "Key must not be null"));
+	}
+
+	@Override
+	public boolean equals(final @Nullable Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null || this.getClass() != obj.getClass()) {
+			return false;
+		} else {
+			CommentEnabledFile commentEnabledFile = (CommentEnabledFile) obj;
+			return this.preserveComments == commentEnabledFile.preserveComments
+				   && super.equals(commentEnabledFile);
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.datafiles.section.LightningSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
 import de.leonhard.storage.internal.settings.DataType;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningFile extends CommentEnabledFile {
 
-	protected LightningFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected LightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 		super(file, FileType.LIGHTNING);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -34,7 +33,7 @@ public class LightningFile extends CommentEnabledFile {
 		}
 		this.setPreserveComments(preserveComments);
 
-		this.fileData = new FileData(LightningEditor.readData(this.file, this.getDataType(), this.isPreserveComments()));
+		this.fileData = new LocalFileData(LightningEditor.readData(this.file, this.getDataType(), this.isPreserveComments()));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
@@ -51,15 +50,14 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public Object get(@NotNull final String key) {
+	public Object get(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 		return this.fileData.get(key);
 	}
 
 	@Override
-	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
-		Valid.notNull(key, "Key must not be null");
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), this.isPreserveComments());
@@ -72,7 +70,7 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void remove(@NotNull final String key) {
+	public synchronized void remove(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 
 		this.update();
@@ -97,8 +95,8 @@ public class LightningFile extends CommentEnabledFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public LightningSection getSection(@NotNull final String sectionKey) {
-		return new LocalSection(this, sectionKey).get();
+	public LightningSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(this, sectionKey);
 	}
 
 	protected final LightningFile getLightningFileInstance() {
@@ -106,7 +104,7 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -123,10 +121,6 @@ public class LightningFile extends CommentEnabledFile {
 
 		private LocalSection(final @NotNull LightningFile lightningFile, final @NotNull String sectionKey) {
 			super(lightningFile, sectionKey);
-		}
-
-		private LightningSection get() {
-			return super.getLightningSectionInstance();
 		}
 	}
 }

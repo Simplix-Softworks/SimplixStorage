@@ -4,7 +4,6 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.datafiles.section.YamlSection;
 import de.leonhard.storage.internal.editor.YamlEditor;
 import de.leonhard.storage.internal.settings.DataType;
@@ -15,7 +14,6 @@ import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import lombok.Cleanup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +28,7 @@ public class YamlFile extends CommentEnabledFile {
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils parser;
 
-	protected YamlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 		super(file, FileType.YAML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -46,11 +44,11 @@ public class YamlFile extends CommentEnabledFile {
 		}
 		this.setPreserveComments(preserveComments);
 
-		this.yamlEditor = new YamlEditor(this.file);
-		this.parser = new YamlUtils(yamlEditor);
+		this.yamlEditor = new LocalEditor(this.file);
+		this.parser = new LocalUtils(yamlEditor);
 
 		try {
-			this.fileData = new FileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
+			this.fileData = new LocalFileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (YamlException | FileNotFoundException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
@@ -73,14 +71,14 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public Object get(@NotNull final String key) {
+	public Object get(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 		return fileData.get(key);
 	}
 
 	@Override
-	public synchronized void remove(@NotNull final String key) {
+	public synchronized void remove(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 
 		update();
@@ -98,17 +96,17 @@ public class YamlFile extends CommentEnabledFile {
 		}
 	}
 
-	private void write(@NotNull final Map fileData) throws IOException {
+	private void write(final @NotNull Map fileData) throws IOException {
 		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
 		writer.write(fileData);
 	}
 
 	@Override
-	public void set(@NotNull final String key, @Nullable final Object value) {
-		if (insert(key, value)) {
+	public void set(final @NotNull String key, final @Nullable Object value) {
+		if (this.insert(key, value)) {
 			try {
 				if (!this.isPreserveComments()) {
-					write(Objects.requireNonNull(fileData).toMap());
+					write(Valid.notNullObject(fileData, "FileData must not be null").toMap());
 				} else {
 					final List<String> unEdited = yamlEditor.read();
 					final List<String> header = yamlEditor.readHeader();
@@ -119,7 +117,7 @@ public class YamlFile extends CommentEnabledFile {
 						header.addAll(footer);
 					}
 					yamlEditor.write(parser.parseComments(unEdited, header));
-					write(Objects.requireNonNull(fileData).toMap());
+					write(Valid.notNullObject(fileData, "FileData must not be null").toMap());
 				}
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
@@ -136,8 +134,8 @@ public class YamlFile extends CommentEnabledFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public YamlSection getSection(@NotNull final String sectionKey) {
-		return new LocalSection(this, sectionKey).get();
+	public YamlSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(this, sectionKey);
 	}
 
 	protected final YamlFile getYamlFileInstance() {
@@ -145,7 +143,7 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -163,9 +161,20 @@ public class YamlFile extends CommentEnabledFile {
 		private LocalSection(final @NotNull YamlFile yamlFile, final @NotNull String sectionKey) {
 			super(yamlFile, sectionKey);
 		}
+	}
 
-		private YamlSection get() {
-			return super.getYamlSectionInstance();
+
+	private static class LocalEditor extends YamlEditor {
+
+		private LocalEditor(final File file) {
+			super(file);
+		}
+	}
+
+	private static class LocalUtils extends YamlUtils {
+
+		private LocalUtils(final YamlEditor yamlEditor) {
+			super(yamlEditor);
 		}
 	}
 }

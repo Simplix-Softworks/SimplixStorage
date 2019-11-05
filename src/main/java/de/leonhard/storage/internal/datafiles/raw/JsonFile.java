@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.datafiles.section.JsonSection;
 import de.leonhard.storage.internal.settings.DataType;
@@ -11,7 +10,6 @@ import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import lombok.Cleanup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +24,7 @@ import org.json.JSONTokener;
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
-	protected JsonFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
+	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
 		super(file, FileType.JSON);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -41,15 +39,15 @@ public class JsonFile extends FlatFile {
 			setReloadSetting(reloadSetting);
 		}
 
-		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
-		fileData = new FileData(new JSONObject(jsonTokener));
+		final JSONTokener jsonTokener = new JSONTokener(Valid.notNullObject(FileUtils.createNewInputStream(file), "InputStream must not be null"));
+		fileData = new LocalFileData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
 
 	@Override
 	public void reload() {
-		final JSONTokener jsonTokener = new JSONTokener(Objects.requireNonNull(FileUtils.createNewInputStream(file)));
+		final JSONTokener jsonTokener = new JSONTokener(Valid.notNullObject(FileUtils.createNewInputStream(file), "InputStream must not be null"));
 		fileData.loadData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
@@ -62,8 +60,7 @@ public class JsonFile extends FlatFile {
 	 */
 
 	@Override
-	public Map getMap(@NotNull final String key) {
-		Valid.notNull(key, "Key must not be null");
+	public Map getMap(final @NotNull String key) {
 		if (!hasKey(key)) {
 			return new HashMap();
 		} else {
@@ -71,7 +68,7 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	private Map getMapWithoutPath(@NotNull final String key) {
+	private Map getMapWithoutPath(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 
@@ -93,8 +90,7 @@ public class JsonFile extends FlatFile {
 		throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
 	}
 
-	private Object getObject(@NotNull final String key) {
-		Valid.notNull(key, "Key must not be null");
+	private Object getObject(final @NotNull String key) {
 		if (!hasKey(key)) {
 			return null;
 		}
@@ -106,9 +102,8 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
-		Valid.notNull(key, "Key must not be null");
-		if (insert(key, value)) {
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
+		if (this.insert(key, value)) {
 			try {
 				write(new JSONObject(fileData.toMap()));
 			} catch (IOException e) {
@@ -125,14 +120,14 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public Object get(@NotNull final String key) {
+	public Object get(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 		return getObject(key);
 	}
 
 	@Override
-	public synchronized void remove(@NotNull final String key) {
+	public synchronized void remove(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 
 		update();
@@ -156,8 +151,8 @@ public class JsonFile extends FlatFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public JsonSection getSection(@NotNull final String sectionKey) {
-		return new LocalSection(this, sectionKey).get();
+	public JsonSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(this, sectionKey);
 	}
 
 	protected final JsonFile getJsonFileInstance() {
@@ -165,7 +160,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -181,10 +176,6 @@ public class JsonFile extends FlatFile {
 
 		private LocalSection(final @NotNull JsonFile jsonFile, final @NotNull String sectionKey) {
 			super(jsonFile, sectionKey);
-		}
-
-		private JsonSection get() {
-			return super.getJsonSectionInstance();
 		}
 	}
 }

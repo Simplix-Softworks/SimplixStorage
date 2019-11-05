@@ -22,7 +22,7 @@ public class YamlConfig extends YamlFile {
 	private List<String> header;
 
 
-	protected YamlConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 		super(file, inputStream, reloadSetting, preserveComments, dataType);
 	}
 
@@ -43,8 +43,9 @@ public class YamlConfig extends YamlFile {
 		}
 	}
 
-	public void setHeader(@NotNull final List<String> header) {
-		Valid.notNull(header, "Key must not be null");
+	public void setHeader(final @NotNull List<String> header) {
+		Valid.notNull(header, "Header must not be null");
+
 		List<String> tmp = new ArrayList<>();
 		//Updating the values to have a comments, if someone forgets to set them
 		for (final String line : header) {
@@ -87,7 +88,7 @@ public class YamlConfig extends YamlFile {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

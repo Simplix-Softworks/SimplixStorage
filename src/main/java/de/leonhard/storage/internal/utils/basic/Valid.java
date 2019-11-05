@@ -13,16 +13,37 @@ import org.jetbrains.annotations.Nullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Valid {
 
-	public static <T> void notNull(@Nullable final T object) {
+	/**
+	 * Checks if given Object is null
+	 */
+	public static <T> void notNull(final @Nullable T object) {
 		if (object != null) {
 			return;
 		}
-		throw new IllegalStateException("Validated Object may not be null");
+		throw new IllegalStateException("Validated Object must not be null");
 	}
 
-	public static <T> void notNull(@Nullable final T object, @NotNull final String message) {
+	public static <T> void notNull(final @Nullable T object, final @NotNull String message) {
 		if (object != null) {
 			return;
+		}
+		throw new IllegalArgumentException(message);
+	}
+
+
+	/**
+	 * Returns the given Object if not null
+	 */
+	public static <T> T notNullObject(final @Nullable T object) {
+		if (object != null) {
+			return object;
+		}
+		throw new IllegalStateException("Validated Object must not be null");
+	}
+
+	public static <T> T notNullObject(final @Nullable T object, final @NotNull String message) {
+		if (object != null) {
+			return object;
 		}
 		throw new IllegalArgumentException(message);
 	}

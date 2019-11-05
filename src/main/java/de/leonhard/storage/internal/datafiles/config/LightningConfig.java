@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile {
 
-	protected LightningConfig(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, final boolean preserveComments, @Nullable final DataType dataType) {
+	protected LightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final boolean preserveComments, final @Nullable DataType dataType) {
 		super(file, inputStream, reloadSetting, preserveComments, dataType);
 	}
 
@@ -37,7 +37,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
-	public void setHeader(@Nullable final List<String> header) {
+	public void setHeader(final @Nullable List<String> header) {
 		this.update();
 
 		if (this.isPreserveComments()) {
@@ -58,7 +58,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
-	public void setFooter(@Nullable final List<String> footer) {
+	public void setFooter(final @Nullable List<String> footer) {
 		this.update();
 
 		if (this.isPreserveComments()) {
@@ -69,7 +69,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
-	public List<String> getHeader(@NotNull final String key) {
+	public List<String> getHeader(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 
 		this.update();
@@ -81,7 +81,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
-	public void setHeader(@NotNull final String key, @Nullable final List<String> header) {
+	public void setHeader(final @NotNull String key, final @Nullable List<String> header) {
 		Valid.notNull(key, "Key must not be null");
 
 		this.update();
@@ -94,7 +94,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
-	public List<String> getFooter(@NotNull final String key) {
+	public List<String> getFooter(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 
 		this.update();
@@ -106,7 +106,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
-	public void setFooter(@NotNull final String key, @Nullable final List<String> footer) {
+	public void setFooter(final @NotNull String key, final @Nullable List<String> footer) {
 		Valid.notNull(key, "Key must not be null");
 
 		this.update();
@@ -126,8 +126,8 @@ public class LightningConfig extends LightningFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public LightningConfigSection getSection(@NotNull final String sectionKey) {
-		return new LocalSection(this, sectionKey).get();
+	public LightningConfigSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(this, sectionKey);
 	}
 
 	protected final LightningConfig getLightningConfigInstance() {
@@ -135,7 +135,7 @@ public class LightningConfig extends LightningFile {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -151,10 +151,6 @@ public class LightningConfig extends LightningFile {
 
 		private LocalSection(final @NotNull LightningConfig lightningConfig, final @NotNull String sectionKey) {
 			super(lightningConfig, sectionKey);
-		}
-
-		private LightningConfigSection get() {
-			return super.getLightningConfigSectionInstance();
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.utils.JsonUtils;
+import de.leonhard.storage.internal.utils.basic.Valid;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,12 +16,12 @@ public class FileData {
 
 	private final Map<String, Object> localMap;
 
-	public FileData(@Nullable final Map<String, Object> map) {
+	protected FileData(final @Nullable Map<String, Object> map) {
 		this.localMap = map != null ? (map instanceof LinkedHashMap ? new LinkedHashMap<>(map) : new HashMap<>(map)) : new HashMap<>();
 	}
 
-	public FileData(@NotNull final JSONObject jsonObject) {
-		this.localMap = new HashMap<>(jsonObject.toMap());
+	protected FileData(final @NotNull JSONObject jsonObject) {
+		this.localMap = new HashMap<>(Valid.notNullObject(jsonObject, "JsonObject must not be null").toMap());
 	}
 
 
@@ -29,14 +30,14 @@ public class FileData {
 	 *
 	 * @param map the Contents to be inserted.
 	 */
-	public synchronized void loadData(@Nullable final Map<String, Object> map) {
+	public synchronized void loadData(final @Nullable Map<String, Object> map) {
 		this.localMap.clear();
 		if (map != null) {
 			this.localMap.putAll(map);
 		}
 	}
 
-	public synchronized void loadData(@Nullable final JSONObject jsonObject) {
+	public synchronized void loadData(final @Nullable JSONObject jsonObject) {
 		this.localMap.clear();
 		if (jsonObject != null) {
 			this.localMap.putAll(jsonObject.toMap());
@@ -50,7 +51,7 @@ public class FileData {
 	 * @param key   the key to be used.
 	 * @param value the value to be assigned to the key.
 	 */
-	public synchronized void insert(@NotNull final String key, @Nullable final Object value) {
+	public synchronized void insert(final @NotNull String key, final @Nullable Object value) {
 		if (value == null) {
 			this.remove(key);
 		} else {
@@ -69,7 +70,7 @@ public class FileData {
 	 *
 	 * @param key the key to be removed from the map.
 	 */
-	public synchronized void remove(@NotNull final String key) {
+	public synchronized void remove(final @NotNull String key) {
 		if (this.containsKey(key)) {
 			final String[] parts = key.split("\\.");
 			this.removeKey(this.localMap, parts, 0);
@@ -82,7 +83,7 @@ public class FileData {
 	 * @param key the key to be looked for.
 	 * @return true if the key exists, otherwise false.
 	 */
-	public boolean containsKey(@NotNull final String key) {
+	public boolean containsKey(final @NotNull String key) {
 		String[] parts = key.split("\\.");
 		return this.containsKey(this.localMap, parts, 0);
 	}
@@ -102,7 +103,7 @@ public class FileData {
 	 * @param key the key of the layer
 	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
 	 */
-	public Set<String> keySet(@NotNull final String key) {
+	public Set<String> keySet(final @NotNull String key) {
 		//noinspection unchecked
 		return this.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.get(key)) : new HashSet<>();
 	}
@@ -113,7 +114,7 @@ public class FileData {
 	 * @param key the key to look for.
 	 * @return the value assigned to the given key or null if the key does not exist.
 	 */
-	public Object get(@NotNull final String key) {
+	public Object get(final @NotNull String key) {
 		final String[] parts = key.split("\\.");
 		return this.get(this.localMap, parts, 0);
 	}
@@ -133,7 +134,7 @@ public class FileData {
 	 * @param key the key of the layer.
 	 * @return the keySet of the given layer or an empty set if the key does not exist.
 	 */
-	public Set<String> singleLayerKeySet(@NotNull final String key) {
+	public Set<String> singleLayerKeySet(final @NotNull String key) {
 		//noinspection unchecked
 		return this.get(key) instanceof Map ? ((Map<String, Object>) this.get(key)).keySet() : new HashSet<>();
 	}
@@ -153,7 +154,7 @@ public class FileData {
 	 * @param key the key of the layer.
 	 * @return the size of the given layer or 0 if the key does not exist.
 	 */
-	public int singleLayerSize(@NotNull final String key) {
+	public int singleLayerSize(final @NotNull String key) {
 		return this.get(key) instanceof Map ? ((Map) this.get(key)).size() : -1;
 	}
 
@@ -194,7 +195,7 @@ public class FileData {
 	 * @param key the key of the layer
 	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
 	 */
-	public int size(@NotNull final String key) {
+	public int size(final @NotNull String key) {
 		//noinspection unchecked
 		return this.containsKey(key) ? this.size((Map<String, Object>) this.get(key)) : -1;
 	}
@@ -307,7 +308,7 @@ public class FileData {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

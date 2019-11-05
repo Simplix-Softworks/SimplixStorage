@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.datafiles.raw;
 
-import de.leonhard.storage.internal.base.FileData;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.datafiles.section.TomlSection;
 import de.leonhard.storage.internal.settings.DataType;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
-	protected TomlFile(@NotNull final File file, @Nullable final InputStream inputStream, @Nullable final Reload reloadSetting, @Nullable final DataType dataType) {
+	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
 		super(file, FileType.TOML);
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
@@ -36,7 +35,7 @@ public class TomlFile extends FlatFile {
 		}
 
 		try {
-			this.fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
+			this.fileData = new LocalFileData(com.electronwill.toml.Toml.read(getFile()));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
@@ -59,7 +58,7 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public Object get(@NotNull final String key) {
+	public Object get(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 		update();
 		return fileData.get(key);
@@ -72,9 +71,8 @@ public class TomlFile extends FlatFile {
 	 * @param value The value you want to set in your file
 	 */
 	@Override
-	public synchronized void set(@NotNull final String key, @Nullable final Object value) {
-		Valid.notNull(key, "Key must not be null");
-		if (insert(key, value)) {
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
+		if (this.insert(key, value)) {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
@@ -86,7 +84,7 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void remove(@NotNull final String key) {
+	public synchronized void remove(final @NotNull String key) {
 		Valid.notNull(key, "Key must not be null");
 
 		update();
@@ -112,8 +110,8 @@ public class TomlFile extends FlatFile {
 	 * @return the Section using the given sectionKey
 	 */
 	@Override
-	public TomlSection getSection(@NotNull final String sectionKey) {
-		return new LocalSection(this, sectionKey).get();
+	public TomlSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(this, sectionKey);
 	}
 
 	protected final TomlFile getTomlFileInstance() {
@@ -121,7 +119,7 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -137,10 +135,6 @@ public class TomlFile extends FlatFile {
 
 		private LocalSection(final @NotNull TomlFile tomlFile, final @NotNull String sectionKey) {
 			super(tomlFile, sectionKey);
-		}
-
-		private TomlSection get() {
-			return super.getTomlSectionInstance();
 		}
 	}
 }

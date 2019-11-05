@@ -2,6 +2,7 @@ package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.JsonFile;
+import de.leonhard.storage.internal.utils.basic.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +19,7 @@ public class JsonSection extends FlatSection {
 
 	@Override
 	public JsonSection getSection(final @NotNull String sectionKey) {
-		return new JsonSection(this.jsonFile, this.sectionKey + "." + sectionKey);
+		return new JsonSection(this.jsonFile, this.sectionKey + "." + Valid.notNullObject(sectionKey, "Key must not be null"));
 	}
 
 	protected JsonSection getJsonSectionInstance() {
@@ -26,7 +27,7 @@ public class JsonSection extends FlatSection {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

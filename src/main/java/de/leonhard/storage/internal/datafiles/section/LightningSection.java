@@ -2,6 +2,7 @@ package de.leonhard.storage.internal.datafiles.section;
 
 import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
+import de.leonhard.storage.internal.utils.basic.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,18 +12,18 @@ public class LightningSection extends FlatSection {
 
 	private final LightningFile lightningFile;
 
-	protected LightningSection(@NotNull final LightningFile lightningFile, @NotNull final String sectionKey) {
+	protected LightningSection(final @NotNull LightningFile lightningFile, final @NotNull String sectionKey) {
 		super(lightningFile, sectionKey);
 		this.lightningFile = lightningFile;
 	}
 
-	public synchronized void set(@NotNull final String key, @Nullable final Object value, final boolean preserveComments) {
+	public synchronized void set(final @NotNull String key, final @Nullable Object value, final boolean preserveComments) {
 		String tempKey = this.getTempKey(key);
 
 		this.lightningFile.set(tempKey, value, preserveComments);
 	}
 
-	public synchronized void remove(@NotNull final String key, final boolean preserveComments) {
+	public synchronized void remove(final @NotNull String key, final boolean preserveComments) {
 		String tempKey = this.getTempKey(key);
 
 		this.lightningFile.remove(tempKey, preserveComments);
@@ -30,7 +31,7 @@ public class LightningSection extends FlatSection {
 
 	@Override
 	public LightningSection getSection(final @NotNull String sectionKey) {
-		return new LightningSection(this.lightningFile, this.sectionKey + "." + sectionKey);
+		return new LightningSection(this.lightningFile, this.sectionKey + "." + Valid.notNullObject(sectionKey, "Key must not be null"));
 	}
 
 	protected LightningSection getLightningSectionInstance() {
@@ -38,7 +39,7 @@ public class LightningSection extends FlatSection {
 	}
 
 	@Override
-	public boolean equals(@Nullable final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {

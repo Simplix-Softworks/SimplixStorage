@@ -29,7 +29,7 @@ public enum DataType {
 	 * @param map              the Map to be imported from(an empty Map will be returned if @param map is null)
 	 * @return a Map containing the Data of @param map.
 	 */
-	public Map<String, Object> getNewDataMap(final boolean preserveComments, @Nullable final Map<String, Object> map) {
+	public Map<String, Object> getNewDataMap(final boolean preserveComments, final @Nullable Map<String, Object> map) {
 		if (this == DataType.SORTED) {
 			return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 		} else if (this == DataType.STANDARD) {
@@ -52,7 +52,7 @@ public enum DataType {
 	 * @param list             the Map to be imported from(an empty List will be returned if @param list is null)
 	 * @return a List containing the Data of @param list.
 	 */
-	public List<String> getNewDataList(final boolean preserveComments, @Nullable final List<String> list) {
+	public List<String> getNewDataList(final boolean preserveComments, final @Nullable List<String> list) {
 		if (this == DataType.SORTED) {
 			return list == null ? new LinkedList<>() : new LinkedList<>(list);
 		} else if (this == DataType.STANDARD) {

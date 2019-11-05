@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.editor;
 
+import de.leonhard.storage.internal.utils.basic.Valid;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class YamlEditor {
 	private final File file;
 
 
-	public YamlEditor(final File file) {
+	protected YamlEditor(final File file) {
 		this.file = file;
 	}
 
@@ -35,10 +36,9 @@ public class YamlEditor {
 		return Files.readAllLines(file.toPath());
 	}
 
-	public static List<String> getCommentsFromLines(@NotNull final List<String> lines) {
+	public static List<String> getCommentsFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
-
-		for (final String line : lines) {
+		for (final String line : Valid.notNullObject(lines, "Lines must not be null")) {
 			if (line.startsWith("#")) {
 				result.add(line);
 			}
@@ -50,7 +50,9 @@ public class YamlEditor {
 		return getFooterFromLines(read());
 	}
 
-	public static List<String> getFooterFromLines(@NotNull final List<String> lines) {
+	public static List<String> getFooterFromLines(final @NotNull List<String> lines) {
+		Valid.notNull(lines, "Lines must not be null");
+
 		final List<String> result = new ArrayList<>();
 		Collections.reverse(lines);
 		for (final String line : lines) {
@@ -68,10 +70,9 @@ public class YamlEditor {
 		return getHeaderFromLines(read());
 	}
 
-	public static List<String> getHeaderFromLines(@NotNull final List<String> lines) {
+	public static List<String> getHeaderFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
-
-		for (final String line : lines) {
+		for (final String line : Valid.notNullObject(lines, "Lines must not be null")) {
 			if (!line.startsWith("#")) {
 				return result;
 			}
@@ -84,10 +85,9 @@ public class YamlEditor {
 		return getKeys(read());
 	}
 
-	public static List<String> getKeys(@NotNull final List<String> lines) {
+	public static List<String> getKeys(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
-
-		for (final String line : lines) {
+		for (final String line : Valid.notNullObject(lines, "Lines must not be null")) {
 			if (!line.replaceAll("\\s+", "").startsWith("#")) {
 				result.add(line);
 			}
@@ -103,7 +103,7 @@ public class YamlEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
-	public static List<String> getPureCommentsFromLines(@NotNull final List<String> lines) {
+	public static List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
 		final List<String> comments = getCommentsFromLines(lines);
 		final List<String> header = getHeaderFromLines(lines);
 		final List<String> footer = getFooterFromLines(lines);
@@ -118,7 +118,7 @@ public class YamlEditor {
 		return getLinesWithoutFooterAndHeaderFromLines(read());
 	}
 
-	public static List<String> getLinesWithoutFooterAndHeaderFromLines(@NotNull final List<String> lines) {
+	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
 		final List<String> header = getHeaderFromLines(lines);
 		final List<String> footer = getFooterFromLines(lines);
 
@@ -128,7 +128,7 @@ public class YamlEditor {
 		return lines;
 	}
 
-	public void write(@NotNull final List<String> lines) throws IOException {
+	public void write(final @NotNull List<String> lines) throws IOException {
 		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(file));
 		for (String line : lines) {
 			writer.println(line);

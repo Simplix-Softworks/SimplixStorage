@@ -18,7 +18,7 @@ public interface StorageBase {
 	 * @param key Key to boolean in file
 	 * @return Boolean from file
 	 */
-	default boolean getBoolean(@NotNull final String key) {
+	default boolean getBoolean(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return false;
 		} else {
@@ -32,9 +32,9 @@ public interface StorageBase {
 	 * @param key Key to check
 	 * @return true if key exists
 	 */
-	boolean hasKey(@NotNull final String key);
+	boolean hasKey(final @NotNull String key);
 
-	Object get(@NotNull final String key);
+	Object get(final @NotNull String key);
 
 	/**
 	 * Get a byte from a file
@@ -42,7 +42,7 @@ public interface StorageBase {
 	 * @param key Key to byte in file
 	 * @return Byte from file
 	 */
-	default byte getByte(@NotNull final String key) {
+	default byte getByte(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return 0;
 		} else {
@@ -56,7 +56,7 @@ public interface StorageBase {
 	 * @param key Key to Byte-List from file
 	 * @return Byte-List
 	 */
-	default List<Byte> getByteList(@NotNull final String key) {
+	default List<Byte> getByteList(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -70,7 +70,7 @@ public interface StorageBase {
 	 * @param key Key to double in the file
 	 * @return Double from file
 	 */
-	default double getDouble(@NotNull final String key) {
+	default double getDouble(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return 0D;
 		} else {
@@ -84,7 +84,7 @@ public interface StorageBase {
 	 * @param key Key to float in file
 	 * @return Float from file
 	 */
-	default float getFloat(@NotNull final String key) {
+	default float getFloat(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return 0F;
 		} else {
@@ -98,7 +98,7 @@ public interface StorageBase {
 	 * @param key Key to int in file
 	 * @return Int from file
 	 */
-	default int getInt(@NotNull final String key) {
+	default int getInt(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return 0;
 		} else {
@@ -112,7 +112,7 @@ public interface StorageBase {
 	 * @param key Key to int in file
 	 * @return Short from file
 	 */
-	default short getShort(@NotNull final String key) {
+	default short getShort(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return 0;
 		} else {
@@ -126,7 +126,7 @@ public interface StorageBase {
 	 * @param key Key to Integer-List in file
 	 * @return Integer-List
 	 */
-	default List<Integer> getIntegerList(@NotNull final String key) {
+	default List<Integer> getIntegerList(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -140,7 +140,7 @@ public interface StorageBase {
 	 * @param key Key to StringList in file
 	 * @return List
 	 */
-	default List<?> getList(@NotNull final String key) {
+	default List<?> getList(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -154,7 +154,7 @@ public interface StorageBase {
 	 * @param key Key to long in file
 	 * @return String from file
 	 */
-	default long getLong(@NotNull final String key) {
+	default long getLong(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return 0L;
 		} else {
@@ -168,7 +168,7 @@ public interface StorageBase {
 	 * @param key Key to Long-List in file
 	 * @return Long-List
 	 */
-	default List<Long> getLongList(@NotNull final String key) {
+	default List<Long> getLongList(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -182,7 +182,7 @@ public interface StorageBase {
 	 * @param key Key to Map-List in file
 	 * @return Map
 	 */
-	default Map getMap(@NotNull final String key) {
+	default Map getMap(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return new HashMap();
 		} else {
@@ -198,7 +198,7 @@ public interface StorageBase {
 	 * @param value Value to set
 	 * @return the value set in the File
 	 */
-	default <T> T getOrSetDefault(@NotNull final String key, @NotNull final T value) {
+	default <T> T getOrSetDefault(final @NotNull String key, final @NotNull T value) {
 		if (!this.hasKey(key)) {
 			set(key, value);
 			return value;
@@ -227,7 +227,7 @@ public interface StorageBase {
 	 * @param key   The key your value should be associated with
 	 * @param value The value you want to set in your file
 	 */
-	void set(@NotNull final String key, @Nullable final Object value);
+	void set(final @NotNull String key, final @Nullable Object value);
 
 	/**
 	 * get the keySet of all layers of the map combined.
@@ -242,7 +242,7 @@ public interface StorageBase {
 	 * @param key the key of the layer
 	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
 	 */
-	Set<String> keySet(@NotNull final String key);
+	Set<String> keySet(final @NotNull String key);
 
 	/**
 	 * get the keySet of a single layer of the map.
@@ -257,7 +257,7 @@ public interface StorageBase {
 	 * @param key the key of the layer.
 	 * @return the keySet of the given layer or an empty set if the key does not exist.
 	 */
-	Set<String> singleLayerKeySet(@NotNull final String key);
+	Set<String> singleLayerKeySet(final @NotNull String key);
 
 	/**
 	 * Get an Object from the File casted to a certain type
@@ -267,7 +267,7 @@ public interface StorageBase {
 	 * @param <T> returnType
 	 * @return returns the value of the key casted to def
 	 */
-	default <T> T get(@NotNull final String key, @NotNull final Class def) {
+	default <T> T get(final @NotNull String key, final @NotNull Class def) {
 		return Primitive.getFromDef(getString(key), def);
 	}
 
@@ -277,7 +277,7 @@ public interface StorageBase {
 	 * @param key Key to String in file
 	 * @return Returns the value
 	 */
-	default String getString(@NotNull final String key) {
+	default String getString(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return "";
 		} else {
@@ -292,7 +292,7 @@ public interface StorageBase {
 	 * @param key Key to String List in file
 	 * @return List
 	 */
-	default List<String> getStringList(@NotNull final String key) {
+	default List<String> getStringList(final @NotNull String key) {
 		if (!this.hasKey(key)) {
 			return new ArrayList<>();
 		} else {
@@ -300,7 +300,7 @@ public interface StorageBase {
 		}
 	}
 
-	void remove(@NotNull final String key);
+	void remove(final @NotNull String key);
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value
@@ -309,11 +309,11 @@ public interface StorageBase {
 	 * @param key   Key to set the value
 	 * @param value Value to set
 	 */
-	default void setDefault(@NotNull final String key, @Nullable final Object value) {
+	default void setDefault(final @NotNull String key, final @Nullable Object value) {
 		if (!this.hasKey(key)) {
 			set(key, value);
 		}
 	}
 
-	FlatSection getSection(@NotNull final String sectionKey);
+	FlatSection getSection(final @NotNull String sectionKey);
 }

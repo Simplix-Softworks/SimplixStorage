@@ -27,7 +27,7 @@ public class LightningEditor {
 	 * @param map              a HashMap containing the Data to be written.
 	 * @param preserveComments the CommentSetting to be used.
 	 */
-	public static void writeData(@NotNull final File file, @NotNull final Map<String, Object> map, final boolean preserveComments) {
+	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final boolean preserveComments) {
 		if (preserveComments) {
 			initialWriteWithComments(file, map);
 		} else {
@@ -43,7 +43,7 @@ public class LightningEditor {
 	 * @param preserveComments the CommentSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(@NotNull final File file, @NotNull final DataType dataType, final boolean preserveComments) {
+	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataType dataType, final boolean preserveComments) {
 		if (preserveComments) {
 			return initialReadWithComments(file, dataType);
 		} else {
@@ -53,7 +53,7 @@ public class LightningEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static Map<String, Object> initialReadWithComments(@NotNull final File file, @NotNull final DataType dataType) {
+	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataType dataType) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(true, null);
@@ -126,7 +126,7 @@ public class LightningEditor {
 	// </Read Data with Comments>
 
 	// <Read Data without Comments>
-	private static Map<String, Object> initialReadWithOutComments(@NotNull final File file, @NotNull final DataType dataType) {
+	private static Map<String, Object> initialReadWithOutComments(final @NotNull File file, final @NotNull DataType dataType) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(false, null);

@@ -15,13 +15,13 @@ public class YamlUtils {
 	final private YamlEditor yamlEditor;
 
 
-	public YamlUtils(final YamlEditor yamlEditor) {
+	protected YamlUtils(final YamlEditor yamlEditor) {
 		this.yamlEditor = yamlEditor;
 	}
 
 
 	@SuppressWarnings("UnusedAssignment")
-	public List<String> parseComments(@NotNull final List<String> comments, @NotNull final List<String> updated) {
+	public List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
 		final List<String> keys;
 		final Map<String, List<String>> parsed;
 		try {
@@ -46,7 +46,7 @@ public class YamlUtils {
 		return updated;
 	}
 
-	private Map<String, List<String>> assignCommentsToKey(@NotNull final List<String> fileLines) {
+	private Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
 		List<String> storage = new ArrayList<>();
 		final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
 		final Map<String, List<String>> result = new HashMap<>();

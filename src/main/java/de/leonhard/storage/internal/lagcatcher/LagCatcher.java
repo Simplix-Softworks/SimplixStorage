@@ -18,7 +18,7 @@ public class LagCatcher {
 	private static final HashMap<String, Long> stopTimes = new HashMap<>();
 
 
-	public static void runMultipleTimes(final int cycles, @NotNull final Runnable runnable) {
+	public static void runMultipleTimes(final int cycles, final @NotNull Runnable runnable) {
 		long nanosTook = 0L;
 		for (int i = 0; i < cycles; ++i) {
 			final long nanoTime = System.nanoTime();
@@ -31,7 +31,7 @@ public class LagCatcher {
 									 "- " + TimeUnit.NANOSECONDS.toMillis(nanosTook) + " ms"));
 	}
 
-	public static void start(@NotNull final String name) {
+	public static void start(final @NotNull String name) {
 		if (LagCatcher.startTimes.containsKey(name)) {
 			throw new IllegalStateException(("Test is already running for '" + name + '\''));
 		}
@@ -39,19 +39,19 @@ public class LagCatcher {
 		LagCatcher.startTimes.put(name, nanoTime);
 	}
 
-	public static void stopAndShow(@NotNull final String name) {
+	public static void stopAndShow(final @NotNull String name) {
 		stop(name);
 		show(name);
 	}
 
-	public static void stop(@NotNull final String name) {
+	public static void stop(final @NotNull String name) {
 		if (LagCatcher.stopTimes.containsKey(name)) {
 			throw new IllegalStateException(("No test running for '" + name + '\''));
 		}
 		LagCatcher.stopTimes.put(name, System.nanoTime());
 	}
 
-	private static void show(@NotNull final String name) {
+	private static void show(final @NotNull String name) {
 		if (!LagCatcher.startTimes.containsKey(name) || !LagCatcher.stopTimes.containsKey(name)) {
 			throw new IllegalStateException(("No results found for '" + name + '\''));
 		}
