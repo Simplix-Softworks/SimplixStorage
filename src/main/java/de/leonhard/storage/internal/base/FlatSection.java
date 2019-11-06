@@ -1,6 +1,8 @@
 package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.utils.basic.Objects;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,9 +37,17 @@ public abstract class FlatSection implements StorageBase {
 
 	@Override
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
-		String tempKey = this.getTempKey(key);
+		this.flatFile.set(this.getTempKey(key), value);
+	}
 
-		this.flatFile.set(tempKey, value);
+	@Override
+	public synchronized void setAll(final @NotNull Map<String, Object> map) {
+		this.flatFile.setAll(this.sectionKey, map);
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+		this.flatFile.setAll(this.getTempKey(key), map);
 	}
 
 	public synchronized void set(final @Nullable Object value) {
@@ -50,16 +60,22 @@ public abstract class FlatSection implements StorageBase {
 
 	@Override
 	public synchronized void remove(final @NotNull String key) {
-		String tempKey = this.getTempKey(key);
+		this.flatFile.remove(this.getTempKey(key));
+	}
 
-		this.flatFile.remove(tempKey);
+	@Override
+	public synchronized void removeAll(final @NotNull List<String> list) {
+		this.flatFile.removeAll(this.sectionKey, list);
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
+		this.flatFile.removeAll(this.getTempKey(key), list);
 	}
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
-		String tempKey = this.getTempKey(key);
-
-		return this.flatFile.hasKey(tempKey);
+		return this.flatFile.hasKey(this.getTempKey(key));
 	}
 
 	@Override
@@ -74,16 +90,12 @@ public abstract class FlatSection implements StorageBase {
 
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
-		String tempKey = this.getTempKey(key);
-
-		return this.flatFile.keySet(tempKey);
+		return this.flatFile.keySet(this.getTempKey(key));
 	}
 
 	@Override
 	public Set<String> singleLayerKeySet(final @NotNull String key) {
-		String tempKey = this.getTempKey(key);
-
-		return this.flatFile.singleLayerKeySet(tempKey);
+		return this.flatFile.singleLayerKeySet(this.getTempKey(key));
 	}
 
 	protected final FlatSection getSectionInstance() {

@@ -229,6 +229,10 @@ public interface StorageBase {
 	 */
 	void set(final @NotNull String key, final @Nullable Object value);
 
+	void setAll(final @NotNull Map<String, Object> map);
+
+	void setAll(final @NotNull String key, final @NotNull Map<String, Object> map);
+
 	/**
 	 * get the keySet of all layers of the map combined.
 	 *
@@ -301,6 +305,10 @@ public interface StorageBase {
 	}
 
 	void remove(final @NotNull String key);
+
+	void removeAll(final @NotNull List<String> list);
+
+	void removeAll(final @NotNull String key, final @NotNull List<String> list);
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value

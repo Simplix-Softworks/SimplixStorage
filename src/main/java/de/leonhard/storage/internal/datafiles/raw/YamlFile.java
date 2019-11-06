@@ -107,28 +107,84 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public void set(final @NotNull String key, final @Nullable Object value) {
+	public synchronized void removeAll(final @NotNull List<String> list) {
+		Objects.checkNull(list, "List must not be null");
+
+		update();
+
+		for (String key : list) {
+			fileData.remove(key);
+		}
+
+		try {
+			write(fileData.toMap());
+		} catch (IOException e) {
+			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
+		Objects.checkNull(list, "List must not be null");
+
+		update();
+
+		for (String tempKey : list) {
+			fileData.remove(key + "." + tempKey);
+		}
+
+		try {
+			write(fileData.toMap());
+		} catch (IOException e) {
+			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
-			try {
-				if (this.getCommentSetting() != Comment.PRESERVE) {
-					write(Objects.notNull(fileData, "FileData must not be null").toMap());
-				} else {
-					final List<String> unEdited = yamlEditor.read();
-					final List<String> header = yamlEditor.readHeader();
-					final List<String> footer = yamlEditor.readFooter();
-					write(fileData.toMap());
-					header.addAll(yamlEditor.read());
-					if (!header.containsAll(footer)) {
-						header.addAll(footer);
-					}
-					yamlEditor.write(yamlUtils.parseComments(unEdited, header));
-					write(Objects.notNull(fileData, "FileData must not be null").toMap());
+			writeData();
+		}
+	}
+
+	private void writeData() {
+		try {
+			if (this.getCommentSetting() != Comment.PRESERVE) {
+				write(Objects.notNull(fileData, "FileData must not be null").toMap());
+			} else {
+				final List<String> unEdited = yamlEditor.read();
+				final List<String> header = yamlEditor.readHeader();
+				final List<String> footer = yamlEditor.readFooter();
+				write(fileData.toMap());
+				header.addAll(yamlEditor.read());
+				if (!header.containsAll(footer)) {
+					header.addAll(footer);
 				}
-			} catch (IOException e) {
-				System.err.println("Error while writing to '" + getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
+				yamlEditor.write(yamlUtils.parseComments(unEdited, header));
+				write(Objects.notNull(fileData, "FileData must not be null").toMap());
 			}
+		} catch (IOException e) {
+			System.err.println("Error while writing to '" + getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull Map<String, Object> map) {
+		if (this.insertAll(map)) {
+			writeData();
+		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+		if (this.insertAll(key, map)) {
+			writeData();
 		}
 	}
 

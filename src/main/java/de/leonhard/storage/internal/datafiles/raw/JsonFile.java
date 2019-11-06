@@ -9,6 +9,7 @@ import de.leonhard.storage.internal.utils.JsonUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.Cleanup;
 import org.jetbrains.annotations.NotNull;
@@ -128,20 +129,83 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
+	public synchronized void setAll(final @NotNull Map<String, Object> map) {
+		if (this.insertAll(map)) {
+			try {
+				write(new JSONObject(fileData.toMap()));
+			} catch (IOException e) {
+				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+		if (this.insertAll(key, map)) {
+			try {
+				write(new JSONObject(fileData.toMap()));
+			} catch (IOException e) {
+				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	@Override
 	public synchronized void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
 		update();
 
-		if (fileData.containsKey(key)) {
+		fileData.remove(key);
+
+		try {
+			write(fileData.toJsonObject());
+		} catch (IOException e) {
+			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull List<String> list) {
+		Objects.checkNull(list, "List must not be null");
+
+		update();
+
+		for (String key : list) {
 			fileData.remove(key);
-			try {
-				write(fileData.toJsonObject());
-			} catch (IOException e) {
-				System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
-			}
+		}
+
+		try {
+			write(fileData.toJsonObject());
+		} catch (IOException e) {
+			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
+		Objects.checkNull(list, "List must not be null");
+
+		update();
+
+		for (String tempKey : list) {
+			fileData.remove(key + "." + tempKey);
+		}
+
+		try {
+			write(fileData.toJsonObject());
+		} catch (IOException e) {
+			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 

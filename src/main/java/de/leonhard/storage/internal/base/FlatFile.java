@@ -242,6 +242,29 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return !this.fileData.toString().equals(tempData);
 	}
 
+	protected final boolean insertAll(final @NotNull Map<String, Object> map) {
+		Objects.checkNull(map, "Map must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		for (String key : map.keySet()) {
+			this.fileData.insert(key, map.get(key));
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
+	protected final boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+		Objects.checkNull(key, "Key must not be null");
+		Objects.checkNull(map, "Map must not be null");
+		this.update();
+
+		String tempData = this.fileData.toString();
+		for (String tempKey : map.keySet()) {
+			this.fileData.insert(key + "." + tempKey, map.get(tempKey));
+		}
+		return !this.fileData.toString().equals(tempData);
+	}
+
 	/**
 	 * Creates an empty file.
 	 *

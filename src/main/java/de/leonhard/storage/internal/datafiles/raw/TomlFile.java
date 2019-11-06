@@ -9,6 +9,8 @@ import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,21 +87,83 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
+	public synchronized void setAll(final @NotNull Map<String, Object> map) {
+		if (this.insertAll(map)) {
+			try {
+				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+			} catch (IOException e) {
+				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+		if (this.insertAll(key, map)) {
+			try {
+				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+			} catch (IOException e) {
+				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	@Override
 	public synchronized void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
 		update();
 
-		if (fileData.containsKey(key)) {
-			fileData.remove(key);
+		fileData.remove(key);
 
-			try {
-				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
-			} catch (IOException e) {
-				System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
-			}
+		try {
+			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+		} catch (IOException e) {
+			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull List<String> list) {
+		Objects.checkNull(list, "List must not be null");
+
+		update();
+
+		for (String key : list) {
+			fileData.remove(key);
+		}
+
+		try {
+			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+		} catch (IOException e) {
+			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
+		Objects.checkNull(list, "List must not be null");
+
+		update();
+
+		for (String tempKey : list) {
+			fileData.remove(key + "." + tempKey);
+		}
+
+		try {
+			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+		} catch (IOException e) {
+			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 

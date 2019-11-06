@@ -10,6 +10,8 @@ import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,9 +62,36 @@ public class LightningFile extends CommentEnabledFile {
 		return this.fileData.get(key);
 	}
 
+
 	@Override
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
+			try {
+				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			} catch (IllegalStateException | IllegalArgumentException e) {
+				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull Map<String, Object> map) {
+		if (this.insertAll(map)) {
+			try {
+				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+			} catch (IllegalStateException | IllegalArgumentException e) {
+				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
+				e.printStackTrace();
+				throw new IllegalStateException();
+			}
+		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+		if (this.insertAll(key, map)) {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
@@ -79,16 +108,53 @@ public class LightningFile extends CommentEnabledFile {
 
 		this.update();
 
-		if (this.fileData.containsKey(key)) {
-			this.fileData.remove(key);
+		this.fileData.remove(key);
 
-			try {
-				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
-			} catch (IllegalStateException e) {
-				System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
-				e.printStackTrace();
-				throw new IllegalStateException();
-			}
+		try {
+			LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+		} catch (IllegalStateException e) {
+			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull List<String> list) {
+		Objects.checkNull(list, "List must not be null");
+
+		this.update();
+
+		for (String key : list) {
+			this.fileData.remove(key);
+		}
+
+		try {
+			LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+		} catch (IllegalStateException e) {
+			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+	}
+
+	@Override
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
+		Objects.checkNull(key, "Key must not be null");
+		Objects.checkNull(list, "List must not be null");
+
+		this.update();
+
+		for (String tempKey : list) {
+			this.fileData.remove(key + "." + tempKey);
+		}
+
+		try {
+			LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
+		} catch (IllegalStateException e) {
+			System.err.println("Error while writing to '" + this.getAbsolutePath() + "'");
+			e.printStackTrace();
+			throw new IllegalStateException();
 		}
 	}
 
