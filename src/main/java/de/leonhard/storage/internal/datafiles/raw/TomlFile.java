@@ -87,8 +87,8 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> map) {
-		if (this.insertAll(map)) {
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(dataMap)) {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
@@ -100,8 +100,8 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		if (this.insertAll(key, map)) {
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(key, dataMap)) {
 			try {
 				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
 			} catch (IOException e) {
@@ -130,12 +130,12 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> list) {
-		Objects.checkNull(list, "List must not be null");
+	public synchronized void removeAll(final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List must not be null");
 
 		update();
 
-		for (String key : list) {
+		for (String key : keys) {
 			fileData.remove(key);
 		}
 
@@ -149,12 +149,12 @@ public class TomlFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
-		Objects.checkNull(list, "List must not be null");
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List must not be null");
 
 		update();
 
-		for (String tempKey : list) {
+		for (String tempKey : keys) {
 			fileData.remove(key + "." + tempKey);
 		}
 
@@ -176,7 +176,7 @@ public class TomlFile extends FlatFile {
 	 */
 	@Override
 	public TomlSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(this, sectionKey);
+		return new LocalSection(sectionKey, this);
 	}
 
 	protected final TomlFile getTomlFileInstance() {
@@ -198,8 +198,8 @@ public class TomlFile extends FlatFile {
 
 	private static class LocalSection extends TomlSection {
 
-		private LocalSection(final @NotNull TomlFile tomlFile, final @NotNull String sectionKey) {
-			super(tomlFile, sectionKey);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
+			super(sectionKey, tomlFile);
 		}
 	}
 }

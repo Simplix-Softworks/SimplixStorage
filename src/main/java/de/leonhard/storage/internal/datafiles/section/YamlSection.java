@@ -13,26 +13,26 @@ public class YamlSection extends FlatSection {
 
 	private final YamlFile yamlFile;
 
-	protected YamlSection(final @NotNull YamlFile yamlFile, final @NotNull String sectionKey) {
-		super(yamlFile, sectionKey);
+	protected YamlSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
+		super(sectionKey, yamlFile);
 		this.yamlFile = yamlFile;
 	}
 
 	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull Comment commentSetting) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		this.yamlFile.set(tempKey, value, commentSetting);
 	}
 
 	public synchronized void remove(final @NotNull String key, final @NotNull Comment commentSetting) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		this.yamlFile.remove(tempKey, commentSetting);
 	}
 
 	@Override
 	public YamlSection getSection(final @NotNull String sectionKey) {
-		return new YamlSection(this.yamlFile, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
+		return new YamlSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.yamlFile);
 	}
 
 	protected YamlSection getYamlSectionInstance() {

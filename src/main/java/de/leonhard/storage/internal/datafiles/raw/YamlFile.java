@@ -101,18 +101,13 @@ public class YamlFile extends CommentEnabledFile {
 		}
 	}
 
-	private void write(final @NotNull Map fileData) throws IOException {
-		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
-		writer.write(fileData);
-	}
-
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> list) {
-		Objects.checkNull(list, "List must not be null");
+	public synchronized void removeAll(final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List must not be null");
 
 		update();
 
-		for (String key : list) {
+		for (String key : keys) {
 			fileData.remove(key);
 		}
 
@@ -126,12 +121,12 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
-		Objects.checkNull(list, "List must not be null");
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List must not be null");
 
 		update();
 
-		for (String tempKey : list) {
+		for (String tempKey : keys) {
 			fileData.remove(key + "." + tempKey);
 		}
 
@@ -149,6 +144,40 @@ public class YamlFile extends CommentEnabledFile {
 		if (this.insert(key, value)) {
 			writeData();
 		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(dataMap)) {
+			writeData();
+		}
+	}
+
+	@Override
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(key, dataMap)) {
+			writeData();
+		}
+	}
+
+	/**
+	 * Get a Section with a defined SectionKey
+	 *
+	 * @param sectionKey the sectionKey to be used as a prefix by the Section
+	 * @return the Section using the given sectionKey
+	 */
+	@Override
+	public YamlSection getSection(final @NotNull String sectionKey) {
+		return new LocalSection(sectionKey, this);
+	}
+
+	protected final YamlFile getYamlFileInstance() {
+		return this;
+	}
+
+	private void write(final @NotNull Map fileData) throws IOException {
+		@Cleanup YamlWriter writer = new YamlWriter(new FileWriter(this.file));
+		writer.write(fileData);
 	}
 
 	private void writeData() {
@@ -175,35 +204,6 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> map) {
-		if (this.insertAll(map)) {
-			writeData();
-		}
-	}
-
-	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		if (this.insertAll(key, map)) {
-			writeData();
-		}
-	}
-
-	/**
-	 * Get a Section with a defined SectionKey
-	 *
-	 * @param sectionKey the sectionKey to be used as a prefix by the Section
-	 * @return the Section using the given sectionKey
-	 */
-	@Override
-	public YamlSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(this, sectionKey);
-	}
-
-	protected final YamlFile getYamlFileInstance() {
-		return this;
-	}
-
-	@Override
 	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
@@ -219,8 +219,8 @@ public class YamlFile extends CommentEnabledFile {
 
 	private static class LocalSection extends de.leonhard.storage.internal.datafiles.section.YamlSection {
 
-		private LocalSection(final @NotNull YamlFile yamlFile, final @NotNull String sectionKey) {
-			super(yamlFile, sectionKey);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
+			super(sectionKey, yamlFile);
 		}
 	}
 

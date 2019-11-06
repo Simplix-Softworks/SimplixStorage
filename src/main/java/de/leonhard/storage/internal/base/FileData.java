@@ -105,7 +105,7 @@ public class FileData {
 	 */
 	public Set<String> keySet(final @NotNull String key) {
 		//noinspection unchecked
-		return this.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.get(key)) : new HashSet<>();
+		return this.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.get(key)) : null;
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class FileData {
 	 */
 	public Set<String> singleLayerKeySet(final @NotNull String key) {
 		//noinspection unchecked
-		return this.get(key) instanceof Map ? ((Map<String, Object>) this.get(key)).keySet() : new HashSet<>();
+		return this.get(key) instanceof Map ? ((Map<String, Object>) this.get(key)).keySet() : null;
 	}
 
 	/**
@@ -241,7 +241,8 @@ public class FileData {
 	private Object get(final Map<String, Object> map, final String[] key, final int id) {
 		if (id < key.length - 1) {
 			if (map.get(key[id]) instanceof Map) {
-				@SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+				//noinspection unchecked
+				Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
 				return this.get(tempMap, key, id + 1);
 			} else {
 				return null;
@@ -299,11 +300,6 @@ public class FileData {
 	}
 
 	@Override
-	public String toString() {
-		return this.localMap.toString();
-	}
-
-	@Override
 	public boolean equals(final @Nullable Object obj) {
 		if (obj == this) {
 			return true;
@@ -313,5 +309,10 @@ public class FileData {
 			FileData fileData = (FileData) obj;
 			return this.localMap.equals(fileData.localMap);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return this.localMap.toString();
 	}
 }

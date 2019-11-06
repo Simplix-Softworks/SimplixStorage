@@ -24,19 +24,6 @@ public class YamlEditor {
 		this.file = file;
 	}
 
-
-	public final File getFile() {
-		return file;
-	}
-
-	public List<String> readComments() throws IOException {
-		return getCommentsFromLines(read());
-	}
-
-	public List<String> read() throws IOException {
-		return Files.readAllLines(file.toPath());
-	}
-
 	public static List<String> getCommentsFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
@@ -45,10 +32,6 @@ public class YamlEditor {
 			}
 		}
 		return result;
-	}
-
-	public List<String> readFooter() throws IOException {
-		return getFooterFromLines(read());
 	}
 
 	public static List<String> getFooterFromLines(final @NotNull List<String> lines) {
@@ -68,10 +51,6 @@ public class YamlEditor {
 		return result;
 	}
 
-	public List<String> readHeader() throws IOException {
-		return getHeaderFromLines(read());
-	}
-
 	public static List<String> getHeaderFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
@@ -84,10 +63,6 @@ public class YamlEditor {
 		return result;
 	}
 
-	public List<String> readKeys() throws IOException {
-		return getKeys(read());
-	}
-
 	public static List<String> getKeys(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
@@ -97,10 +72,6 @@ public class YamlEditor {
 		}
 
 		return result;
-	}
-
-	public List<String> readPureComments() throws IOException {
-		return getPureCommentsFromLines(read());
 	}
 
 	/**
@@ -117,10 +88,6 @@ public class YamlEditor {
 		return comments;
 	}
 
-	public List<String> readWithoutHeaderAndFooter() throws IOException {
-		return getLinesWithoutFooterAndHeaderFromLines(read());
-	}
-
 	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
 		final List<String> header = getHeaderFromLines(lines);
 		final List<String> footer = getFooterFromLines(lines);
@@ -129,6 +96,38 @@ public class YamlEditor {
 		lines.removeAll(footer);
 
 		return lines;
+	}
+
+	public final File getFile() {
+		return file;
+	}
+
+	public List<String> readComments() throws IOException {
+		return getCommentsFromLines(read());
+	}
+
+	public List<String> read() throws IOException {
+		return Files.readAllLines(file.toPath());
+	}
+
+	public List<String> readFooter() throws IOException {
+		return getFooterFromLines(read());
+	}
+
+	public List<String> readHeader() throws IOException {
+		return getHeaderFromLines(read());
+	}
+
+	public List<String> readKeys() throws IOException {
+		return getKeys(read());
+	}
+
+	public List<String> readPureComments() throws IOException {
+		return getPureCommentsFromLines(read());
+	}
+
+	public List<String> readWithoutHeaderAndFooter() throws IOException {
+		return getLinesWithoutFooterAndHeaderFromLines(read());
 	}
 
 	public void write(final @NotNull List<String> lines) throws IOException {

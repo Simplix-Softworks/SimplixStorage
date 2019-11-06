@@ -70,44 +70,11 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	private Map getMapWithoutPath(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
-		update();
-
-		if (!hasKey(key)) {
-			return new HashMap<>();
-		}
-
-		Object map;
-		try {
-			map = getObject(key);
-		} catch (JSONException e) {
-			return new HashMap<>();
-		}
-		if (map instanceof Map) {
-			return (Map<?, ?>) fileData.get(key);
-		} else if (map instanceof JSONObject) {
-			return JsonUtils.jsonToMap((JSONObject) map);
-		}
-		throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
-	}
-
-	private Object getObject(final @NotNull String key) {
-		if (!hasKey(key)) {
-			return null;
-		}
-
-		/*if (key.contains(".")) {
-			return new FileData(fileData.toMap()).containsKey(key) ? new FileData(fileData.toMap()).get(key) : null;
-		}*/
-		return fileData.containsKey(key) ? fileData.get(key) : null;
-	}
-
 	@Override
 	public Object get(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		update();
-		return getObject(key);
+		return this.fileData.get(key);
 	}
 
 	@Override
@@ -123,14 +90,9 @@ public class JsonFile extends FlatFile {
 		}
 	}
 
-	private void write(final JSONObject object) throws IOException {
-		@Cleanup Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
-		writer.write(object.toString(3));
-	}
-
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> map) {
-		if (this.insertAll(map)) {
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(dataMap)) {
 			try {
 				write(new JSONObject(fileData.toMap()));
 			} catch (IOException e) {
@@ -142,8 +104,8 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		if (this.insertAll(key, map)) {
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(key, dataMap)) {
 			try {
 				write(new JSONObject(fileData.toMap()));
 			} catch (IOException e) {
@@ -172,12 +134,12 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> list) {
-		Objects.checkNull(list, "List must not be null");
+	public synchronized void removeAll(final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List must not be null");
 
 		update();
 
-		for (String key : list) {
+		for (String key : keys) {
 			fileData.remove(key);
 		}
 
@@ -191,12 +153,12 @@ public class JsonFile extends FlatFile {
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
-		Objects.checkNull(list, "List must not be null");
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List must not be null");
 
 		update();
 
-		for (String tempKey : list) {
+		for (String tempKey : keys) {
 			fileData.remove(key + "." + tempKey);
 		}
 
@@ -217,11 +179,38 @@ public class JsonFile extends FlatFile {
 	 */
 	@Override
 	public JsonSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(this, sectionKey);
+		return new LocalSection(sectionKey, this);
 	}
 
 	protected final JsonFile getJsonFileInstance() {
 		return this;
+	}
+
+	private Map getMapWithoutPath(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+		update();
+
+		if (!hasKey(key)) {
+			return new HashMap<>();
+		}
+
+		Object map;
+		try {
+			map = get(key);
+		} catch (JSONException e) {
+			return new HashMap<>();
+		}
+		if (map instanceof Map) {
+			return (Map<?, ?>) fileData.get(key);
+		} else if (map instanceof JSONObject) {
+			return JsonUtils.jsonToMap((JSONObject) map);
+		}
+		throw new IllegalArgumentException("Json does not contain: '" + key + "'.");
+	}
+
+	private void write(final JSONObject object) throws IOException {
+		@Cleanup Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
+		writer.write(object.toString(3));
 	}
 
 	@Override
@@ -239,8 +228,8 @@ public class JsonFile extends FlatFile {
 
 	private static class LocalSection extends JsonSection {
 
-		private LocalSection(final @NotNull JsonFile jsonFile, final @NotNull String sectionKey) {
-			super(jsonFile, sectionKey);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
+			super(sectionKey, jsonFile);
 		}
 	}
 }

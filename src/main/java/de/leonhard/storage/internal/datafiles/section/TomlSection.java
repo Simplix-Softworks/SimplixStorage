@@ -12,14 +12,14 @@ public class TomlSection extends FlatSection {
 
 	private final TomlFile tomlFile;
 
-	protected TomlSection(final @NotNull TomlFile tomlFile, final @NotNull String sectionKey) {
-		super(tomlFile, sectionKey);
+	protected TomlSection(final @NotNull String sectionKey, final @NotNull TomlFile tomlFile) {
+		super(sectionKey, tomlFile);
 		this.tomlFile = tomlFile;
 	}
 
 	@Override
 	public TomlSection getSection(final @NotNull String sectionKey) {
-		return new TomlSection(this.tomlFile, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
+		return new TomlSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.tomlFile);
 	}
 
 	protected TomlSection getTomlSectionInstance() {

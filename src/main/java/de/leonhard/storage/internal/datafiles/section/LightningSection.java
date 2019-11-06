@@ -13,26 +13,26 @@ public class LightningSection extends FlatSection {
 
 	private final LightningFile lightningFile;
 
-	protected LightningSection(final @NotNull LightningFile lightningFile, final @NotNull String sectionKey) {
-		super(lightningFile, sectionKey);
+	protected LightningSection(final @NotNull String sectionKey, final @NotNull LightningFile lightningFile) {
+		super(sectionKey, lightningFile);
 		this.lightningFile = lightningFile;
 	}
 
 	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull Comment commentSetting) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		this.lightningFile.set(tempKey, value, commentSetting);
 	}
 
 	public synchronized void remove(final @NotNull String key, final @NotNull Comment commentSetting) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		this.lightningFile.remove(tempKey, commentSetting);
 	}
 
 	@Override
 	public LightningSection getSection(final @NotNull String sectionKey) {
-		return new LightningSection(this.lightningFile, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
+		return new LightningSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.lightningFile);
 	}
 
 	protected LightningSection getLightningSectionInstance() {

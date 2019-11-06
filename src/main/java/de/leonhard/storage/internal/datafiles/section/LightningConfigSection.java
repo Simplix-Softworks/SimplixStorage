@@ -12,8 +12,8 @@ public class LightningConfigSection extends LightningSection {
 
 	private final LightningConfig lightningConfig;
 
-	protected LightningConfigSection(final @NotNull LightningConfig lightningConfig, final @NotNull String sectionKey) {
-		super(lightningConfig, sectionKey);
+	protected LightningConfigSection(final @NotNull String sectionKey, final @NotNull LightningConfig lightningConfig) {
+		super(sectionKey, lightningConfig);
 		this.lightningConfig = lightningConfig;
 	}
 
@@ -34,32 +34,32 @@ public class LightningConfigSection extends LightningSection {
 	}
 
 	public List<String> getHeader(final @NotNull String key) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		return this.lightningConfig.getHeader(tempKey);
 	}
 
 	public void setHeader(final @NotNull String key, final @Nullable List<String> header) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		this.lightningConfig.setHeader(tempKey, header);
 	}
 
 	public List<String> getFooter(final @NotNull String key) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		return this.lightningConfig.getFooter(tempKey);
 	}
 
 	public void setFooter(final @NotNull String key, final @Nullable List<String> footer) {
-		String tempKey = this.getTempKey(key);
+		String tempKey = this.getSectionKey(key);
 
 		this.lightningConfig.setFooter(tempKey, footer);
 	}
 
 	@Override
 	public LightningConfigSection getSection(final @NotNull String sectionKey) {
-		return new LightningConfigSection(this.lightningConfig, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
+		return new LightningConfigSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.lightningConfig);
 	}
 
 	protected LightningConfigSection getLightningConfigSectionInstance() {

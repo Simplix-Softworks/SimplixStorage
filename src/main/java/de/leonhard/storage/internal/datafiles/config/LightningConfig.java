@@ -128,7 +128,7 @@ public class LightningConfig extends LightningFile {
 	 */
 	@Override
 	public LightningConfigSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(this, sectionKey);
+		return new LocalSection(sectionKey, this);
 	}
 
 	protected final LightningConfig getLightningConfigInstance() {
@@ -150,8 +150,8 @@ public class LightningConfig extends LightningFile {
 
 	private static class LocalSection extends LightningConfigSection {
 
-		private LocalSection(final @NotNull LightningConfig lightningConfig, final @NotNull String sectionKey) {
-			super(lightningConfig, sectionKey);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull LightningConfig lightningConfig) {
+			super(sectionKey, lightningConfig);
 		}
 	}
 }

@@ -1,7 +1,10 @@
 package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.utils.basic.Primitive;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,22 +22,27 @@ public interface StorageBase {
 	 * @return Boolean from file
 	 */
 	default boolean getBoolean(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return false;
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
 			return Primitive.BOOLEAN.getBoolean(get(key));
 		}
 	}
 
-	/**
-	 * Checks whether a key exists in the file
-	 *
-	 * @param key Key to check
-	 * @return true if key exists
-	 */
-	boolean hasKey(final @NotNull String key);
-
 	Object get(final @NotNull String key);
+
+	default Map<String, Object> getAll(final @NotNull String... keys) {
+		return getAll(Arrays.asList(keys));
+	}
+
+	Map<String, Object> getAll(final @NotNull List<String> keys);
+
+	default Map<String, Object> getAll(final @NotNull String key, final @NotNull String... keys) {
+		return getAll(key, Arrays.asList(keys));
+	}
+
+	Map<String, Object> getAll(final @NotNull String key, final @NotNull List<String> keys);
 
 	/**
 	 * Get a byte from a file
@@ -43,8 +51,9 @@ public interface StorageBase {
 	 * @return Byte from file
 	 */
 	default byte getByte(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return 0;
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
 			return Primitive.BYTE.getByte(get(key));
 		}
@@ -57,10 +66,11 @@ public interface StorageBase {
 	 * @return Byte-List
 	 */
 	default List<Byte> getByteList(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return new ArrayList<>();
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
-			return (List<Byte>) get(key);
+			return (List<Byte>) tempObject;
 		}
 	}
 
@@ -71,8 +81,9 @@ public interface StorageBase {
 	 * @return Double from file
 	 */
 	default double getDouble(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return 0D;
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
 			return Primitive.DOUBLE.getDouble(get(key));
 		}
@@ -85,8 +96,9 @@ public interface StorageBase {
 	 * @return Float from file
 	 */
 	default float getFloat(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return 0F;
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
 			return Primitive.FLOAT.getFloat(get(key));
 		}
@@ -99,8 +111,9 @@ public interface StorageBase {
 	 * @return Int from file
 	 */
 	default int getInt(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return 0;
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
 			return Primitive.INTEGER.getInt(get(key));
 		}
@@ -113,8 +126,9 @@ public interface StorageBase {
 	 * @return Short from file
 	 */
 	default short getShort(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return 0;
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
 			return Primitive.SHORT.getShort(get(key));
 		}
@@ -127,10 +141,11 @@ public interface StorageBase {
 	 * @return Integer-List
 	 */
 	default List<Integer> getIntegerList(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return new ArrayList<>();
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
-			return (List<Integer>) get(key);
+			return (List<Integer>) tempObject;
 		}
 	}
 
@@ -140,11 +155,12 @@ public interface StorageBase {
 	 * @param key Key to StringList in file
 	 * @return List
 	 */
-	default List<?> getList(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return new ArrayList<>();
+	default List getList(final @NotNull String key) {
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
-			return (List<?>) get(key);
+			return (List) tempObject;
 		}
 	}
 
@@ -155,8 +171,9 @@ public interface StorageBase {
 	 * @return String from file
 	 */
 	default long getLong(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return 0L;
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
 			return Primitive.LONG.getLong(get(key));
 		}
@@ -169,11 +186,8 @@ public interface StorageBase {
 	 * @return Long-List
 	 */
 	default List<Long> getLongList(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return new ArrayList<>();
-		} else {
-			return (List<Long>) get(key);
-		}
+		Object tempObject = this.get(key);
+		return tempObject != null ? (List<Long>) get(key) : null;
 	}
 
 	/**
@@ -183,13 +197,13 @@ public interface StorageBase {
 	 * @return Map
 	 */
 	default Map getMap(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return new HashMap();
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
-			return (Map) get(key);
+			return (Map) tempObject;
 		}
 	}
-
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value or returns the value if the value exists
@@ -222,6 +236,14 @@ public interface StorageBase {
 	}
 
 	/**
+	 * Checks whether a key exists in the file
+	 *
+	 * @param key Key to check
+	 * @return true if key exists
+	 */
+	boolean hasKey(final @NotNull String key);
+
+	/**
 	 * Set an Object to your file
 	 *
 	 * @param key   The key your value should be associated with
@@ -229,9 +251,9 @@ public interface StorageBase {
 	 */
 	void set(final @NotNull String key, final @Nullable Object value);
 
-	void setAll(final @NotNull Map<String, Object> map);
+	void setAll(final @NotNull Map<String, Object> dataMap);
 
-	void setAll(final @NotNull String key, final @NotNull Map<String, Object> map);
+	void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap);
 
 	/**
 	 * get the keySet of all layers of the map combined.
@@ -282,10 +304,10 @@ public interface StorageBase {
 	 * @return Returns the value
 	 */
 	default String getString(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return "";
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
-			Object tempObject = get(key);
 			return tempObject instanceof String ? (String) tempObject : tempObject.toString();
 		}
 	}
@@ -297,18 +319,27 @@ public interface StorageBase {
 	 * @return List
 	 */
 	default List<String> getStringList(final @NotNull String key) {
-		if (!this.hasKey(key)) {
-			return new ArrayList<>();
+		Object tempObject = this.get(key);
+		if (tempObject == null) {
+			throw new IllegalStateException("Key '" + key + "' does not exist");
 		} else {
-			return (List<String>) get(key);
+			return (List<String>) tempObject;
 		}
 	}
 
 	void remove(final @NotNull String key);
 
-	void removeAll(final @NotNull List<String> list);
+	default void removeAll(final @NotNull String... keys) {
+		removeAll(Arrays.asList(keys));
+	}
 
-	void removeAll(final @NotNull String key, final @NotNull List<String> list);
+	void removeAll(final @NotNull List<String> keys);
+
+	default void removeAll(final @NotNull String key, final @NotNull String... keys) {
+		removeAll(key, Arrays.asList(keys));
+	}
+
+	void removeAll(final @NotNull String key, final @NotNull List<String> keys);
 
 	/**
 	 * Sets a value to the File if the File doesn't already contain the value

@@ -68,7 +68,7 @@ public class FileUtils {
 	 * @return true if the File has changed.
 	 */
 	public static boolean hasChanged(final @NotNull File file, final long timeStamp) {
-		return timeStamp < Objects.notNull(file).lastModified();
+		return Objects.notNull(timeStamp) < Objects.notNull(file).lastModified();
 	}
 
 	/**

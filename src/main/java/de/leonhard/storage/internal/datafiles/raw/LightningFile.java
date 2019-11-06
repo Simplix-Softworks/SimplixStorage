@@ -10,8 +10,10 @@ import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,8 +79,8 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> map) {
-		if (this.insertAll(map)) {
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(dataMap)) {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
@@ -90,8 +92,8 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		if (this.insertAll(key, map)) {
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+		if (this.insertAll(key, dataMap)) {
 			try {
 				LightningEditor.writeData(this.file, this.fileData.toMap(), this.getCommentSetting());
 			} catch (IllegalStateException | IllegalArgumentException e) {
@@ -120,12 +122,12 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> list) {
-		Objects.checkNull(list, "List must not be null");
+	public synchronized void removeAll(final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
-		for (String key : list) {
+		for (String key : keys) {
 			this.fileData.remove(key);
 		}
 
@@ -139,13 +141,13 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		Objects.checkNull(key, "Key must not be null");
-		Objects.checkNull(list, "List must not be null");
+		Objects.checkNull(keys, "List must not be null");
 
 		this.update();
 
-		for (String tempKey : list) {
+		for (String tempKey : keys) {
 			this.fileData.remove(key + "." + tempKey);
 		}
 
@@ -158,6 +160,34 @@ public class LightningFile extends CommentEnabledFile {
 		}
 	}
 
+	@Override
+	public Set<String> keySet() {
+		this.update();
+		return this.keySet(this.fileData.toMap());
+	}
+
+	@Override
+	public Set<String> keySet(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+		this.update();
+		//noinspection unchecked
+		return this.fileData.get(key) instanceof Map ? this.keySet((Map<String, Object>) this.fileData.get(key)) : null;
+	}
+
+	@Override
+	public Set<String> singleLayerKeySet() {
+		this.update();
+		return this.singleLayerKeySet(this.fileData.toMap());
+	}
+
+	@Override
+	public Set<String> singleLayerKeySet(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+		this.update();
+		//noinspection unchecked
+		return this.fileData.get(key) instanceof Map ? this.singleLayerKeySet((Map<String, Object>) this.fileData.get(key)) : null;
+	}
+
 	/**
 	 * Get a Section with a defined SectionKey
 	 *
@@ -166,11 +196,36 @@ public class LightningFile extends CommentEnabledFile {
 	 */
 	@Override
 	public LightningSection getSection(final @NotNull String sectionKey) {
-		return new LocalSection(this, sectionKey);
+		return new LocalSection(sectionKey, this);
 	}
 
 	protected final LightningFile getLightningFileInstance() {
 		return this;
+	}
+
+	private Set<String> singleLayerKeySet(final Map<String, Object> map) {
+		Set<String> localSet = new HashSet<>();
+		for (String key : map.keySet()) {
+			if (map.get(key) != LightningEditor.LineType.COMMENT && map.get(key) != LightningEditor.LineType.BLANK_LINE) {
+				localSet.add(key);
+			}
+		}
+		return localSet;
+	}
+
+	private Set<String> keySet(final Map<String, Object> map) {
+		Set<String> localSet = new HashSet<>();
+		for (String key : map.keySet()) {
+			if (map.get(key) instanceof Map) {
+				//noinspection unchecked
+				for (String tempKey : this.keySet((Map<String, Object>) map.get(key))) {
+					localSet.add(key + "." + tempKey);
+				}
+			} else if (map.get(key) != LightningEditor.LineType.COMMENT && map.get(key) != LightningEditor.LineType.BLANK_LINE) {
+				localSet.add(key);
+			}
+		}
+		return localSet;
 	}
 
 	@Override
@@ -189,8 +244,8 @@ public class LightningFile extends CommentEnabledFile {
 
 	private static class LocalSection extends LightningSection {
 
-		private LocalSection(final @NotNull LightningFile lightningFile, final @NotNull String sectionKey) {
-			super(lightningFile, sectionKey);
+		private LocalSection(final @NotNull String sectionKey, final @NotNull LightningFile lightningFile) {
+			super(sectionKey, lightningFile);
 		}
 	}
 }

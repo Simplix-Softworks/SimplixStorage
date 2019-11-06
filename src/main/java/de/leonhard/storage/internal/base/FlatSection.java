@@ -19,35 +19,39 @@ public abstract class FlatSection implements StorageBase {
 	protected String sectionKey;
 
 
-	protected FlatSection(final @NotNull FlatFile flatFile, final @NotNull String sectionKey) {
-		this.flatFile = flatFile;
+	protected FlatSection(final @NotNull String sectionKey, final @NotNull FlatFile flatFile) {
 		this.sectionKey = Objects.notNull(sectionKey, "Key must not be null");
+		this.flatFile = flatFile;
 	}
 
 	@Override
 	public Object get(final @NotNull String key) {
-		String tempKey = this.getTempKey(key);
-
-		return this.flatFile.get(tempKey);
+		return this.flatFile.get(this.getSectionKey(key));
 	}
 
-	protected String getTempKey(final @NotNull String key) {
-		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.sectionKey + "." + Objects.notNull(key, "Key must not be null");
+	@Override
+	public Map<String, Object> getAll(final @NotNull List<String> keys) {
+		return this.flatFile.getAll(keys);
+	}
+
+	@Override
+	public Map<String, Object> getAll(final @NotNull String key, final @NotNull List<String> keys) {
+		return this.flatFile.getAll(this.getSectionKey(key), keys);
 	}
 
 	@Override
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
-		this.flatFile.set(this.getTempKey(key), value);
+		this.flatFile.set(this.getSectionKey(key), value);
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull Map<String, Object> map) {
-		this.flatFile.setAll(this.sectionKey, map);
+	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
+		this.flatFile.setAll(this.sectionKey, dataMap);
 	}
 
 	@Override
-	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
-		this.flatFile.setAll(this.getTempKey(key), map);
+	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
+		this.flatFile.setAll(this.getSectionKey(key), dataMap);
 	}
 
 	public synchronized void set(final @Nullable Object value) {
@@ -60,22 +64,22 @@ public abstract class FlatSection implements StorageBase {
 
 	@Override
 	public synchronized void remove(final @NotNull String key) {
-		this.flatFile.remove(this.getTempKey(key));
+		this.flatFile.remove(this.getSectionKey(key));
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull List<String> list) {
-		this.flatFile.removeAll(this.sectionKey, list);
+	public synchronized void removeAll(final @NotNull List<String> keys) {
+		this.flatFile.removeAll(this.sectionKey, keys);
 	}
 
 	@Override
-	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> list) {
-		this.flatFile.removeAll(this.getTempKey(key), list);
+	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
+		this.flatFile.removeAll(this.getSectionKey(key), keys);
 	}
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
-		return this.flatFile.hasKey(this.getTempKey(key));
+		return this.flatFile.hasKey(this.getSectionKey(key));
 	}
 
 	@Override
@@ -90,21 +94,20 @@ public abstract class FlatSection implements StorageBase {
 
 	@Override
 	public Set<String> keySet(final @NotNull String key) {
-		return this.flatFile.keySet(this.getTempKey(key));
+		return this.flatFile.keySet(this.getSectionKey(key));
 	}
 
 	@Override
 	public Set<String> singleLayerKeySet(final @NotNull String key) {
-		return this.flatFile.singleLayerKeySet(this.getTempKey(key));
+		return this.flatFile.singleLayerKeySet(this.getSectionKey(key));
 	}
 
 	protected final FlatSection getSectionInstance() {
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		return "SectionKey: " + this.sectionKey + ", File: " + this.flatFile.toString();
+	protected String getSectionKey(final @NotNull String key) {
+		return (this.sectionKey == null || this.sectionKey.isEmpty()) ? Objects.notNull(key, "Key must not be null") : this.sectionKey + "." + Objects.notNull(key, "Key must not be null");
 	}
 
 	@Override
@@ -118,5 +121,10 @@ public abstract class FlatSection implements StorageBase {
 			return this.flatFile.equals(flatSection.flatFile)
 				   && this.sectionKey.equals(flatSection.sectionKey);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "SectionKey: " + this.sectionKey + ", File: " + this.flatFile.toString();
 	}
 }

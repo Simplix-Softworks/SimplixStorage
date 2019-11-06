@@ -7,9 +7,7 @@ import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
@@ -91,11 +89,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	/**
-	 * Reread the content of our flat file
-	 */
-	public abstract void reload();
-
-	/**
 	 * Just delete the File
 	 */
 	public final synchronized void deleteFile() {
@@ -137,35 +130,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-	@Override
-	public boolean hasKey(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
-		update();
-		return fileData.containsKey(key);
-	}
-
-	/**
-	 * Checks if the File needs to be reloaded and does so if true.
-	 */
-	protected final void update() {
-		if (this.shouldReload()) {
-			this.reload();
-		}
-	}
-
-	protected boolean shouldReload() {
-		switch (this.reloadSetting) {
-			case AUTOMATICALLY:
-				return true;
-			case INTELLIGENT:
-				return this.hasChanged();
-			case MANUALLY:
-				return false;
-			default:
-				throw new IllegalArgumentException("Illegal ReloadSetting in '" + this.getAbsolutePath() + "'");
-		}
-	}
-
 	public final String getAbsolutePath() {
 		return this.file.getAbsolutePath();
 	}
@@ -177,6 +141,18 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 */
 	public final boolean hasChanged() {
 		return FileUtils.hasChanged(this.file, this.lastLoaded);
+	}
+
+	/**
+	 * Reread the content of our flat file
+	 */
+	public abstract void reload();
+
+	@Override
+	public boolean hasKey(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+		this.update();
+		return fileData.containsKey(key);
 	}
 
 	@Override
@@ -224,6 +200,40 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 			writer.print(((String) line).replace(target, replacement));
 		});
 		this.reload();
+	}
+
+	@Override
+	public Map<String, Object> getAll(final @NotNull List<String> keys) {
+		Objects.checkNull(keys, "KeyList must not be null");
+		this.update();
+
+		Map<String, Object> tempMap = new HashMap<>();
+		for (String key : keys) {
+			tempMap.put(key, this.fileData.get(key));
+		}
+		return tempMap;
+	}
+
+	@Override
+	public Map<String, Object> getAll(final @NotNull String key, final @NotNull List<String> keys) {
+		Objects.checkNull(key, "Key must not be null");
+		Objects.checkNull(keys, "KeyList must not be null");
+		this.update();
+
+		Map<String, Object> tempMap = new HashMap<>();
+		for (String tempKey : keys) {
+			tempMap.put(key, this.fileData.get(key + "." + tempKey));
+		}
+		return tempMap;
+	}
+
+	/**
+	 * Checks if the File needs to be reloaded and does so if true.
+	 */
+	protected final void update() {
+		if (this.shouldReload()) {
+			this.reload();
+		}
 	}
 
 	/**
@@ -283,19 +293,22 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return this;
 	}
 
+	protected boolean shouldReload() {
+		switch (this.reloadSetting) {
+			case AUTOMATICALLY:
+				return true;
+			case INTELLIGENT:
+				return this.hasChanged();
+			case MANUALLY:
+				return false;
+			default:
+				throw new IllegalArgumentException("Illegal ReloadSetting in '" + this.getAbsolutePath() + "'");
+		}
+	}
+
 	@Override
 	public int hashCode() {
 		return this.file.hashCode();
-	}
-
-	@Override
-	public int compareTo(final FlatFile flatFile) {
-		return this.file.compareTo(flatFile.file);
-	}
-
-	@Override
-	public String toString() {
-		return this.file.getAbsolutePath();
 	}
 
 	@Override
@@ -312,6 +325,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 				   && fileType == flatFile.fileType
 				   && this.lastLoaded == flatFile.lastLoaded;
 		}
+	}
+
+	@Override
+	public int compareTo(final FlatFile flatFile) {
+		return this.file.compareTo(flatFile.file);
+	}
+
+	@Override
+	public String toString() {
+		return this.file.getAbsolutePath();
 	}
 
 

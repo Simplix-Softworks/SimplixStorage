@@ -3,6 +3,8 @@ package de.leonhard.storage.internal.datafiles.section;
 import de.leonhard.storage.internal.base.FlatSection;
 import de.leonhard.storage.internal.datafiles.raw.JsonFile;
 import de.leonhard.storage.internal.utils.basic.Objects;
+import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,14 +14,19 @@ public class JsonSection extends FlatSection {
 
 	private final JsonFile jsonFile;
 
-	protected JsonSection(final @NotNull JsonFile jsonFile, final @NotNull String sectionKey) {
-		super(jsonFile, sectionKey);
+	protected JsonSection(final @NotNull String sectionKey, final @NotNull JsonFile jsonFile) {
+		super(sectionKey, jsonFile);
 		this.jsonFile = jsonFile;
 	}
 
 	@Override
+	public Map<String, Object> getAll(final @NotNull List<String> keys) {
+		return null;
+	}
+
+	@Override
 	public JsonSection getSection(final @NotNull String sectionKey) {
-		return new JsonSection(this.jsonFile, this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"));
+		return new JsonSection(this.sectionKey + "." + Objects.notNull(sectionKey, "Key must not be null"), this.jsonFile);
 	}
 
 	protected JsonSection getJsonSectionInstance() {
