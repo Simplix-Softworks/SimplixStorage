@@ -32,6 +32,12 @@ public interface StorageBase {
 
 	Object get(final @NotNull String key);
 
+	/**
+	 * returns all values of the given keys
+	 *
+	 * @param keys the keys to get from
+	 * @return Map of the give keys and their values
+	 */
 	default Map<String, Object> getAll(final @NotNull String... keys) {
 		return getAll(Arrays.asList(keys));
 	}
@@ -275,7 +281,7 @@ public interface StorageBase {
 	 *
 	 * @return the keySet of the top layer of localMap.
 	 */
-	Set<String> singleLayerKeySet();
+	Set<String> blockKeySet();
 
 	/**
 	 * get the keySet of a single layer of the map.
@@ -283,7 +289,7 @@ public interface StorageBase {
 	 * @param key the key of the layer.
 	 * @return the keySet of the given layer or an empty set if the key does not exist.
 	 */
-	Set<String> singleLayerKeySet(final @NotNull String key);
+	Set<String> blockKeySet(final @NotNull String key);
 
 	/**
 	 * Get an Object from the File casted to a certain type

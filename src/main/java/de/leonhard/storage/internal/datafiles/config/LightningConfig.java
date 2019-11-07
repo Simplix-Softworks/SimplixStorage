@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.datafiles.config;
 
+import de.leonhard.storage.internal.base.ConfigBase;
 import de.leonhard.storage.internal.datafiles.raw.LightningFile;
 import de.leonhard.storage.internal.datafiles.section.LightningConfigSection;
 import de.leonhard.storage.internal.editor.LightningEditor;
@@ -21,13 +22,14 @@ import org.jetbrains.annotations.Nullable;
  * Extended LightningFile with added methods for Config purposes
  */
 @SuppressWarnings("unused")
-public class LightningConfig extends LightningFile {
+public class LightningConfig extends LightningFile implements ConfigBase {
 
 	protected LightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
 		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
 	}
 
 
+	@Override
 	public List<String> getHeader() {
 		this.update();
 
@@ -38,6 +40,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
+	@Override
 	public void setHeader(final @Nullable List<String> header) {
 		this.update();
 
@@ -49,6 +52,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
+	@Override
 	public List<String> getFooter() {
 		this.update();
 
@@ -59,6 +63,7 @@ public class LightningConfig extends LightningFile {
 		}
 	}
 
+	@Override
 	public void setFooter(final @Nullable List<String> footer) {
 		this.update();
 
@@ -117,6 +122,51 @@ public class LightningConfig extends LightningFile {
 			if (!fileData.toString().equals(tempMap.toString())) {
 				LightningEditor.writeData(this.file, tempMap, this.getCommentSetting());
 			}
+		}
+	}
+
+	@Override
+	public List<String> getComments() {
+		this.update();
+
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getComments(this.fileData, this.getDataType(), this.getCommentSetting(), true);
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public List<String> getComments(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+
+		this.update();
+
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getComments(this.fileData, key, this.getDataType(), this.getCommentSetting(), true);
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public List<String> getBlockComments() {
+		this.update();
+
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getComments(this.fileData, this.getDataType(), this.getCommentSetting(), false);
+		} else {
+			return new ArrayList<>();
+		}
+	}
+
+	public List<String> getBlockComments(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+
+		this.update();
+
+		if (this.getCommentSetting() == Comment.PRESERVE) {
+			return LightningUtils.getComments(this.fileData, key, this.getDataType(), this.getCommentSetting(), false);
+		} else {
+			return new ArrayList<>();
 		}
 	}
 

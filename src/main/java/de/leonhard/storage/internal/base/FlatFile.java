@@ -23,15 +23,14 @@ import org.json.JSONObject;
 @Getter
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
-	protected File file;
+	protected final File file;
+	private final FileType fileType;
 	protected FileData fileData;
 	protected long lastLoaded;
-
 	@Setter
 	private Reload reloadSetting = Reload.INTELLIGENT;
 	@Setter
 	private DataType dataType = DataType.AUTOMATIC;
-	private FileType fileType;
 
 
 	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType) {
@@ -169,16 +168,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet() {
+	public Set<String> blockKeySet() {
 		this.update();
-		return this.fileData.singleLayerKeySet();
+		return this.fileData.blockKeySet();
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(final @NotNull String key) {
+	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
-		return this.fileData.singleLayerKeySet(key);
+		return this.fileData.blockKeySet(key);
 	}
 
 	/**
@@ -351,6 +350,10 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 		FileType(final @NotNull String extension) {
 			this.extension = extension;
+		}
+
+		public String toLowerCase() {
+			return this.extension.toLowerCase();
 		}
 
 		@Override

@@ -100,8 +100,8 @@ public class FileData {
 	/**
 	 * get the keySet of all sublayers of the given key combined.
 	 *
-	 * @param key the key of the layer
-	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
+	 * @param key the key of the Block.
+	 * @return the keySet of all sublayers of the given key or null if the key does not exist (Format: key.subkey).
 	 */
 	public Set<String> keySet(final @NotNull String key) {
 		//noinspection unchecked
@@ -124,7 +124,7 @@ public class FileData {
 	 *
 	 * @return the keySet of the top layer of localMap.
 	 */
-	public Set<String> singleLayerKeySet() {
+	public Set<String> blockKeySet() {
 		return this.localMap.keySet();
 	}
 
@@ -132,9 +132,9 @@ public class FileData {
 	 * get the keySet of a single layer of the map.
 	 *
 	 * @param key the key of the layer.
-	 * @return the keySet of the given layer or an empty set if the key does not exist.
+	 * @return the keySet of the given layer or null if the key does not exist.
 	 */
-	public Set<String> singleLayerKeySet(final @NotNull String key) {
+	public Set<String> blockKeySet(final @NotNull String key) {
 		//noinspection unchecked
 		return this.get(key) instanceof Map ? ((Map<String, Object>) this.get(key)).keySet() : null;
 	}
@@ -144,7 +144,7 @@ public class FileData {
 	 *
 	 * @return the size of the top layer of localMap.
 	 */
-	public int singleLayerSize() {
+	public int blockSize() {
 		return this.localMap.size();
 	}
 
@@ -154,7 +154,7 @@ public class FileData {
 	 * @param key the key of the layer.
 	 * @return the size of the given layer or 0 if the key does not exist.
 	 */
-	public int singleLayerSize(final @NotNull String key) {
+	public int blockSize(final @NotNull String key) {
 		return this.get(key) instanceof Map ? ((Map) this.get(key)).size() : -1;
 	}
 

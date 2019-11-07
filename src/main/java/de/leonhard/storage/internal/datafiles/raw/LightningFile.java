@@ -175,17 +175,17 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet() {
+	public Set<String> blockKeySet() {
 		this.update();
-		return this.singleLayerKeySet(this.fileData.toMap());
+		return this.blockKeySet(this.fileData.toMap());
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(final @NotNull String key) {
+	public Set<String> blockKeySet(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 		//noinspection unchecked
-		return this.fileData.get(key) instanceof Map ? this.singleLayerKeySet((Map<String, Object>) this.fileData.get(key)) : null;
+		return this.fileData.get(key) instanceof Map ? this.blockKeySet((Map<String, Object>) this.fileData.get(key)) : null;
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class LightningFile extends CommentEnabledFile {
 		return this;
 	}
 
-	private Set<String> singleLayerKeySet(final Map<String, Object> map) {
+	private Set<String> blockKeySet(final Map<String, Object> map) {
 		Set<String> localSet = new HashSet<>();
 		for (String key : map.keySet()) {
 			if (map.get(key) != LightningEditor.LineType.COMMENT && map.get(key) != LightningEditor.LineType.BLANK_LINE) {

@@ -88,8 +88,8 @@ public abstract class FlatSection implements StorageBase {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet() {
-		return this.flatFile.singleLayerKeySet(this.sectionKey);
+	public Set<String> blockKeySet() {
+		return this.flatFile.blockKeySet(this.sectionKey);
 	}
 
 	@Override
@@ -98,8 +98,8 @@ public abstract class FlatSection implements StorageBase {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(final @NotNull String key) {
-		return this.flatFile.singleLayerKeySet(this.getSectionKey(key));
+	public Set<String> blockKeySet(final @NotNull String key) {
+		return this.flatFile.blockKeySet(this.getSectionKey(key));
 	}
 
 	protected final FlatSection getSectionInstance() {

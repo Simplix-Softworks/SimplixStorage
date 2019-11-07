@@ -31,9 +31,9 @@ public class LightningUtils {
 	 */
 	public static List<String> getHeader(final @NotNull FileData fileData, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		for (String localKey : fileData.singleLayerKeySet()) {
-			if (fileData.get(localKey) == LightningEditor.LineType.COMMENT) {
-				returnList.add(localKey.substring(0, localKey.lastIndexOf("{=}")));
+		for (String tempKey : fileData.blockKeySet()) {
+			if (fileData.get(tempKey) == LightningEditor.LineType.COMMENT) {
+				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				return returnList;
 			}
@@ -53,18 +53,19 @@ public class LightningUtils {
 	@SuppressWarnings("DuplicatedCode")
 	public static Map<String, Object> setHeader(final @NotNull FileData fileData, final @Nullable List<String> header, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
 		Map<String, Object> tempMap = fileData.toMap();
-		for (String localKey : tempMap.keySet()) {
-			if (tempMap.get(localKey) == LightningEditor.LineType.COMMENT) {
-				tempMap.remove(localKey);
+		for (String tempKey : tempMap.keySet()) {
+			if (tempMap.get(tempKey) == LightningEditor.LineType.COMMENT) {
+				tempMap.remove(tempKey);
 			} else {
 				break;
 			}
 		}
 		Map<String, Object> finalMap = dataType.getNewDataMap(commentSetting, null);
 		if (header != null) {
-			int commentLine = -1;
+			int commentLine = 0;
 			for (String comment : header) {
 				finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, LightningEditor.LineType.COMMENT);
+				commentLine++;
 			}
 		}
 		finalMap.putAll(tempMap);
@@ -86,18 +87,19 @@ public class LightningUtils {
 		if (fileData.get(key) instanceof Map) {
 			//noinspection unchecked
 			Map<String, Object> tempMap = (Map<String, Object>) fileData.get(key);
-			for (String localKey : tempMap.keySet()) {
-				if (tempMap.get(localKey) == LightningEditor.LineType.COMMENT) {
-					tempMap.remove(localKey);
+			for (String tempKey : tempMap.keySet()) {
+				if (tempMap.get(tempKey) == LightningEditor.LineType.COMMENT) {
+					tempMap.remove(tempKey);
 				} else {
 					break;
 				}
 			}
 			Map<String, Object> finalMap = dataType.getNewDataMap(commentSetting, null);
 			if (header != null) {
-				int commentLine = -1;
+				int commentLine = 0;
 				for (String comment : header) {
 					finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, LightningEditor.LineType.COMMENT);
+					commentLine++;
 				}
 			}
 			finalMap.putAll(tempMap);
@@ -116,11 +118,11 @@ public class LightningUtils {
 	 */
 	public static List<String> getFooter(final @NotNull FileData fileData, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet());
+		List<String> keyList = new ArrayList<>(fileData.blockKeySet());
 		Collections.reverse(keyList);
-		for (String localKey : keyList) {
-			if (fileData.get(localKey) == LightningEditor.LineType.COMMENT) {
-				returnList.add(localKey.substring(0, localKey.lastIndexOf("{=}")));
+		for (String tempKey : keyList) {
+			if (fileData.get(tempKey) == LightningEditor.LineType.COMMENT) {
+				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				Collections.reverse(returnList);
 				return returnList;
@@ -144,18 +146,19 @@ public class LightningUtils {
 		Map<String, Object> tempMap = fileData.toMap();
 		List<String> keyList = new ArrayList<>(tempMap.keySet());
 		Collections.reverse(keyList);
-		for (String localKey : keyList) {
-			if (tempMap.get(localKey) == LightningEditor.LineType.COMMENT) {
-				tempMap.remove(localKey);
+		for (String tempKey : keyList) {
+			if (tempMap.get(tempKey) == LightningEditor.LineType.COMMENT) {
+				tempMap.remove(tempKey);
 			} else {
 				break;
 			}
 		}
 		Map<String, Object> finalMap = dataType.getNewDataMap(commentSetting, tempMap);
 		if (footer != null) {
-			int commentLine = -1;
+			int commentLine = 0;
 			for (String comment : footer) {
 				finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, LightningEditor.LineType.COMMENT);
+				commentLine++;
 			}
 		}
 		return finalMap;
@@ -178,18 +181,19 @@ public class LightningUtils {
 			Map<String, Object> tempMap = (Map<String, Object>) fileData.get(key);
 			List<String> keyList = new ArrayList<>(tempMap.keySet());
 			Collections.reverse(keyList);
-			for (String localKey : keyList) {
-				if (tempMap.get(localKey) == LightningEditor.LineType.COMMENT) {
-					tempMap.remove(localKey);
+			for (String tempKey : keyList) {
+				if (tempMap.get(tempKey) == LightningEditor.LineType.COMMENT) {
+					tempMap.remove(tempKey);
 				} else {
 					break;
 				}
 			}
 			Map<String, Object> finalMap = dataType.getNewDataMap(commentSetting, tempMap);
 			if (footer != null) {
-				int commentLine = -1;
+				int commentLine = 0;
 				for (String comment : footer) {
 					finalMap.put((comment.startsWith("#") ? comment : "#" + comment) + "{=}" + commentLine, LightningEditor.LineType.COMMENT);
+					commentLine++;
 				}
 			}
 			finalMap.putAll(tempMap);
@@ -202,16 +206,16 @@ public class LightningUtils {
 	 * Get the Header from a give FileData.
 	 *
 	 * @param fileData       the FileData to be used.
-	 * @param key            the key of the SubBlock the Header shall be getted from.
+	 * @param key            the Key of the SubBlock the Header shall be getted from.
 	 * @param dataType       the FileDataType to be used with the given FileData.
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Header of the SubBlock.
 	 */
 	public static List<String> getHeader(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		for (String localKey : fileData.singleLayerKeySet(key)) {
-			if (fileData.get(key + "." + localKey) == LightningEditor.LineType.COMMENT) {
-				returnList.add(localKey.substring(0, localKey.lastIndexOf("{=}")));
+		for (String tempKey : fileData.blockKeySet(key)) {
+			if (fileData.get(key + "." + tempKey) == LightningEditor.LineType.COMMENT) {
+				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				return returnList;
 			}
@@ -228,19 +232,60 @@ public class LightningUtils {
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a List containing the Footer of the SubBlock.
 	 */
-	public static List<String> getFooter(final @NotNull FileData fileData, final String key, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
+	public static List<String> getFooter(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
 		List<String> returnList = dataType.getNewDataList(commentSetting, null);
-		List<String> keyList = new ArrayList<>(fileData.singleLayerKeySet(key));
+		List<String> keyList = new ArrayList<>(fileData.blockKeySet(key));
 		Collections.reverse(keyList);
-		for (String localKey : keyList) {
-			if (fileData.get(key + "." + localKey) == LightningEditor.LineType.COMMENT) {
-				returnList.add(localKey.substring(0, localKey.lastIndexOf("{=}")));
+		for (String tempKey : keyList) {
+			if (fileData.get(key + "." + tempKey) == LightningEditor.LineType.COMMENT) {
+				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
 			} else {
 				Collections.reverse(returnList);
 				return returnList;
 			}
 		}
 		Collections.reverse(returnList);
+		return returnList;
+	}
+
+	/**
+	 * Get the Comments from a given FileData compatible with LightningFile.
+	 *
+	 * @param fileData       the FileData to be used.
+	 * @param dataType       the FileDataType to be used with the given FileData.
+	 * @param commentSetting the CommentSetting to be used.
+	 * @param deep           defining, if it should get all comments or only the ones in the top Layer.
+	 * @return a List containing the Comments of the FileData.
+	 */
+	public static List<String> getComments(final @NotNull FileData fileData, final @NotNull DataType dataType, final @NotNull Comment commentSetting, final boolean deep) {
+		List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		List<String> keyList = deep ? new ArrayList<>(fileData.keySet()) : new ArrayList<>(fileData.blockKeySet());
+		for (String tempKey : keyList) {
+			if (fileData.get(tempKey) == LightningEditor.LineType.COMMENT) {
+				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
+			}
+		}
+		return returnList;
+	}
+
+	/**
+	 * Get the Comments from a given FileData compatible with LightningFile.
+	 *
+	 * @param fileData       the FileData to be used.
+	 * @param key            the key of the SubBlock the Footer shall be getted from.
+	 * @param dataType       the FileDataType to be used with the given FileData.
+	 * @param commentSetting the CommentSetting to be used.
+	 * @param deep           defining, if it should get all comments or only the ones in the given SubBlock.
+	 * @return a List containing the Comments of the SubBlock.
+	 */
+	public static List<String> getComments(final @NotNull FileData fileData, final @NotNull String key, final @NotNull DataType dataType, final @NotNull Comment commentSetting, final boolean deep) {
+		List<String> returnList = dataType.getNewDataList(commentSetting, null);
+		List<String> keyList = deep ? new ArrayList<>(fileData.keySet(key)) : new ArrayList<>(fileData.blockKeySet(key));
+		for (String tempKey : keyList) {
+			if (fileData.get(key + "." + tempKey) == LightningEditor.LineType.COMMENT) {
+				returnList.add(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
+			}
+		}
 		return returnList;
 	}
 }

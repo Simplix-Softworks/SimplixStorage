@@ -87,8 +87,8 @@ public class LightningEditor {
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 
 			String tempKey = null;
-			int blankLine = -1;
-			int commentLine = -1;
+			int blankLine = 0;
+			int commentLine = 0;
 			while (lines.size() > 0) {
 				String tempLine = lines.get(0).trim();
 				lines.remove(0);
@@ -96,11 +96,11 @@ public class LightningEditor {
 				if (tempLine.contains("}")) {
 					throw new IllegalStateException("Error at '" + file.getAbsolutePath() + "' -> Block closed without being opened");
 				} else if (tempLine.isEmpty()) {
-					blankLine++;
 					tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
+					blankLine++;
 				} else if (tempLine.startsWith("#")) {
-					commentLine++;
 					tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
+					commentLine++;
 				} else if (tempLine.endsWith("{")) {
 					if (!tempLine.equals("{")) {
 						tempKey = tempLine.replace("{", "").trim();
@@ -134,11 +134,11 @@ public class LightningEditor {
 			} else if (tempLine.contains("}")) {
 				throw new IllegalStateException("Error at '" + filePath + "' -> Block closed without being opened");
 			} else if (tempLine.isEmpty()) {
-				blankLine++;
 				tempMap.put("{=}emptyline" + blankLine, LineType.BLANK_LINE);
+				blankLine++;
 			} else if (tempLine.startsWith("#")) {
-				commentLine++;
 				tempMap.put(tempLine + "{=}" + commentLine, LineType.COMMENT);
+				commentLine++;
 			} else if (tempLine.endsWith("{")) {
 				if (!tempLine.equals("{")) {
 					tempKey = tempLine.replace("{", "").trim();

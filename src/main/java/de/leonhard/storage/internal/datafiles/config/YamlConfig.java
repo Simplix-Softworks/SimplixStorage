@@ -1,10 +1,10 @@
 package de.leonhard.storage.internal.datafiles.config;
 
+import de.leonhard.storage.internal.base.ConfigBase;
 import de.leonhard.storage.internal.datafiles.raw.YamlFile;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
-import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,9 +18,11 @@ import org.jetbrains.annotations.Nullable;
  * Extended YamlFile with added methods for Config purposes
  */
 @SuppressWarnings("unused")
-public class YamlConfig extends YamlFile {
+public class YamlConfig extends YamlFile implements ConfigBase {
 
 	private List<String> header;
+	private List<String> footer;
+	private List<String> comments;
 
 
 	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
@@ -28,6 +30,7 @@ public class YamlConfig extends YamlFile {
 	}
 
 
+	@Override
 	public List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
@@ -35,7 +38,8 @@ public class YamlConfig extends YamlFile {
 			return this.header;
 		} else {
 			try {
-				return this.yamlEditor.readHeader();
+				this.header = yamlEditor.readHeader();
+				return this.header;
 			} catch (IOException e) {
 				System.err.println("Couldn't get header of '" + this.file.getAbsolutePath() + "'.");
 				e.printStackTrace();
@@ -44,43 +48,144 @@ public class YamlConfig extends YamlFile {
 		}
 	}
 
-	public void setHeader(final @NotNull List<String> header) {
-		Objects.checkNull(header, "Header must not be null");
+	@Override
+	public void setHeader(final @Nullable List<String> header) {
+		if (header != null) {
+			List<String> tmp = new ArrayList<>();
+			//Updating the values to have a comments, if someone forgets to set them
+			for (final String line : header) {
+				if (!line.startsWith("#")) {
+					tmp.add("#" + line);
+				} else {
+					tmp.add(line);
+				}
+			}
+			this.header = tmp;
 
-		List<String> tmp = new ArrayList<>();
-		//Updating the values to have a comments, if someone forgets to set them
-		for (final String line : header) {
-			if (!line.startsWith("#")) {
-				tmp.add("#" + line);
+			if (getFile().length() == 0) {
+				try {
+					this.yamlEditor.write(this.header);
+				} catch (IOException e) {
+					System.err.println("Error while setting header of '" + this.file.getAbsolutePath() + "'");
+					e.printStackTrace();
+				}
 			} else {
-				tmp.add(line);
-			}
-		}
-		this.header = tmp;
+				try {
+					final List<String> lines = this.yamlEditor.read();
+					final List<String> oldHeader = this.yamlEditor.readHeader();
 
-		if (getFile().length() == 0) {
+					List<String> newLines = this.header;
+					lines.removeAll(oldHeader);
+					newLines.addAll(lines);
+
+					this.yamlEditor.write(newLines);
+				} catch (final IOException e) {
+					System.err.println("Exception while modifying header of '" + this.file.getAbsolutePath() + "'");
+					e.printStackTrace();
+				}
+			}
+		} else {
+			this.header = new ArrayList<>();
+
 			try {
-				this.yamlEditor.write(this.header);
-				return;
-			} catch (IOException e) {
-				System.err.println("Error while setting header of '" + this.file.getAbsolutePath() + "'");
+				final List<String> lines = this.yamlEditor.read();
+				final List<String> oldHeader = this.yamlEditor.readHeader();
+
+				lines.removeAll(oldHeader);
+
+				this.yamlEditor.write(lines);
+			} catch (final IOException e) {
+				System.err.println("Exception while modifying header of '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
-				return;
 			}
 		}
+	}
 
-		try {
-			final List<String> lines = this.yamlEditor.read();
-			final List<String> oldHeader = this.yamlEditor.readHeader();
+	@Override
+	public List<String> getFooter() {
+		if (this.getCommentSetting() != Comment.PRESERVE) {
+			return new ArrayList<>();
+		} else if (!shouldReload()) {
+			return this.footer;
+		} else {
+			try {
+				this.footer = yamlEditor.readFooter();
+				return this.footer;
+			} catch (IOException e) {
+				System.err.println("Couldn't get footer of '" + this.file.getAbsolutePath() + "'.");
+				e.printStackTrace();
+				return new ArrayList<>();
+			}
+		}
+	}
 
-			List<String> newLines = this.header;
-			lines.removeAll(oldHeader);
-			newLines.addAll(lines);
+	@Override
+	public void setFooter(@Nullable List<String> footer) {
+		if (footer != null) {
+			List<String> tmp = new ArrayList<>();
+			//Updating the values to have a comments, if someone forgets to set them
+			for (final String line : footer) {
+				if (!line.startsWith("#")) {
+					tmp.add("#" + line);
+				} else {
+					tmp.add(line);
+				}
+			}
+			this.footer = tmp;
 
-			this.yamlEditor.write(newLines);
-		} catch (final IOException e) {
-			System.err.println("Exception while modifying header of '" + this.file.getAbsolutePath() + "'");
-			e.printStackTrace();
+			if (getFile().length() == 0) {
+				try {
+					this.yamlEditor.write(this.footer);
+				} catch (IOException e) {
+					System.err.println("Error while setting footer of '" + this.file.getAbsolutePath() + "'");
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					final List<String> lines = this.yamlEditor.read();
+					final List<String> oldFooter = this.yamlEditor.readFooter();
+
+					lines.removeAll(oldFooter);
+					lines.addAll(this.footer);
+
+					this.yamlEditor.write(lines);
+				} catch (final IOException e) {
+					System.err.println("Exception while modifying footer of '" + this.file.getAbsolutePath() + "'");
+					e.printStackTrace();
+				}
+			}
+		} else {
+			this.footer = new ArrayList<>();
+
+			try {
+				final List<String> lines = this.yamlEditor.read();
+				final List<String> oldFooter = this.yamlEditor.readFooter();
+
+				lines.removeAll(oldFooter);
+
+				this.yamlEditor.write(lines);
+			} catch (final IOException e) {
+				System.err.println("Exception while modifying footer of '" + this.file.getAbsolutePath() + "'");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public List<String> getComments() {
+		if (this.getCommentSetting() != Comment.PRESERVE) {
+			return new ArrayList<>();
+		} else if (!shouldReload()) {
+			return this.comments;
+		} else {
+			try {
+				this.comments = yamlEditor.readComments();
+				return this.comments;
+			} catch (IOException e) {
+				System.err.println("Couldn't get comments from '" + this.file.getAbsolutePath() + "'.");
+				e.printStackTrace();
+				return new ArrayList<>();
+			}
 		}
 	}
 
