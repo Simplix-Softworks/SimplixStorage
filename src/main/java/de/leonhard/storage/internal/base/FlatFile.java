@@ -1,9 +1,9 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.data.FileData;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
-import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
@@ -24,7 +24,7 @@ import org.json.JSONObject;
 public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	protected final File file;
-	private final FileType fileType;
+	private final FileTypeBase fileType;
 	protected FileData fileData;
 	protected long lastLoaded;
 	@Setter
@@ -33,10 +33,11 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private DataType dataType = DataType.AUTOMATIC;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileType fileType) {
-		if (FileTypeUtils.isType(file, fileType)) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType) {
+		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
+			this.reloadSetting.setFlatFile(this);
 		} else {
 			throw new IllegalStateException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}
@@ -334,32 +335,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	@Override
 	public String toString() {
 		return this.file.getAbsolutePath();
-	}
-
-
-	public enum FileType {
-
-		JSON("json"),
-		YAML("yml"),
-		TOML("toml"),
-		LIGHTNING("ls"),
-		DEFAULT("");
-
-
-		private final String extension;
-
-		FileType(final @NotNull String extension) {
-			this.extension = extension;
-		}
-
-		public String toLowerCase() {
-			return this.extension.toLowerCase();
-		}
-
-		@Override
-		public String toString() {
-			return this.extension;
-		}
 	}
 
 	protected static class LocalFileData extends FileData {

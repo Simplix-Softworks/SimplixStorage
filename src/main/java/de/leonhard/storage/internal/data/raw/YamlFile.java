@@ -1,17 +1,17 @@
-package de.leonhard.storage.internal.datafiles.raw;
+package de.leonhard.storage.internal.data.raw;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.datafiles.section.YamlSection;
-import de.leonhard.storage.internal.editor.YamlEditor;
+import de.leonhard.storage.internal.data.section.YamlSection;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.YamlUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
+import de.leonhard.storage.internal.utils.editor.YamlEditor;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -217,7 +217,7 @@ public class YamlFile extends CommentEnabledFile {
 	}
 
 
-	private static class LocalSection extends de.leonhard.storage.internal.datafiles.section.YamlSection {
+	private static class LocalSection extends de.leonhard.storage.internal.data.section.YamlSection {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
 			super(sectionKey, yamlFile);

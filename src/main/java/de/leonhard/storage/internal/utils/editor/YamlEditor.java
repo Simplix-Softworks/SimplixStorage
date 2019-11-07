@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.editor;
+package de.leonhard.storage.internal.utils.editor;
 
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;

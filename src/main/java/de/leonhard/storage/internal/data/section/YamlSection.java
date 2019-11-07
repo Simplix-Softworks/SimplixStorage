@@ -1,7 +1,7 @@
-package de.leonhard.storage.internal.datafiles.section;
+package de.leonhard.storage.internal.data.section;
 
 import de.leonhard.storage.internal.base.FlatSection;
-import de.leonhard.storage.internal.datafiles.raw.YamlFile;
+import de.leonhard.storage.internal.data.raw.YamlFile;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import org.jetbrains.annotations.NotNull;

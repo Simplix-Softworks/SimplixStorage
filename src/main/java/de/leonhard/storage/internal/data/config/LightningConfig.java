@@ -1,14 +1,14 @@
-package de.leonhard.storage.internal.datafiles.config;
+package de.leonhard.storage.internal.data.config;
 
 import de.leonhard.storage.internal.base.ConfigBase;
-import de.leonhard.storage.internal.datafiles.raw.LightningFile;
-import de.leonhard.storage.internal.datafiles.section.LightningConfigSection;
-import de.leonhard.storage.internal.editor.LightningEditor;
+import de.leonhard.storage.internal.data.raw.LightningFile;
+import de.leonhard.storage.internal.data.section.LightningConfigSection;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.LightningUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
+import de.leonhard.storage.internal.utils.editor.LightningEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;

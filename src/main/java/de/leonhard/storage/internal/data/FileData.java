@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.base;
+package de.leonhard.storage.internal.data;
 
 import de.leonhard.storage.internal.utils.JsonUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
@@ -11,7 +11,7 @@ import org.json.JSONObject;
 /**
  * Class to handle the Nested HashMaps used to cache the Data read from the Files
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
 public class FileData {
 
 	private final Map<String, Object> localMap;

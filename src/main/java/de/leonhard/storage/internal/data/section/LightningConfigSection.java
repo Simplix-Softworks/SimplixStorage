@@ -1,6 +1,6 @@
-package de.leonhard.storage.internal.datafiles.section;
+package de.leonhard.storage.internal.data.section;
 
-import de.leonhard.storage.internal.datafiles.config.LightningConfig;
+import de.leonhard.storage.internal.data.config.LightningConfig;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;

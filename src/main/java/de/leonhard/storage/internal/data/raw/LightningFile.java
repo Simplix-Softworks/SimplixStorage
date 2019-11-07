@@ -1,13 +1,13 @@
-package de.leonhard.storage.internal.datafiles.raw;
+package de.leonhard.storage.internal.data.raw;
 
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.datafiles.section.LightningSection;
-import de.leonhard.storage.internal.editor.LightningEditor;
+import de.leonhard.storage.internal.data.section.LightningSection;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
+import de.leonhard.storage.internal.utils.editor.LightningEditor;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;

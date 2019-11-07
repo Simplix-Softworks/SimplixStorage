@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.utils;
 
-import de.leonhard.storage.internal.editor.YamlEditor;
+import de.leonhard.storage.internal.utils.editor.YamlEditor;
 import java.io.IOException;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;

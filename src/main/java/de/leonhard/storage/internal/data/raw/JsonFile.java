@@ -1,7 +1,7 @@
-package de.leonhard.storage.internal.datafiles.raw;
+package de.leonhard.storage.internal.data.raw;
 
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.datafiles.section.JsonSection;
+import de.leonhard.storage.internal.data.section.JsonSection;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;

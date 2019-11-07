@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.editor;
+package de.leonhard.storage.internal.utils.editor;
 
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;

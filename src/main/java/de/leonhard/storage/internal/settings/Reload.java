@@ -1,5 +1,10 @@
 package de.leonhard.storage.internal.settings;
 
+import de.leonhard.storage.internal.base.FlatFile;
+import lombok.Getter;
+import lombok.Setter;
+
+
 /**
  * an Enum defining the reload behaviour of the Data classes
  */
@@ -16,5 +21,20 @@ public enum Reload {
 	/**
 	 * only reloads if you manually call the reload.
 	 */
-	MANUALLY
+	MANUALLY;
+
+	@Getter
+	@Setter
+	private FlatFile flatFile;
+
+	public boolean shouldReload() {
+		switch (this) {
+			case AUTOMATICALLY:
+				return true;
+			case INTELLIGENT:
+				return this.flatFile.hasChanged();
+			default:
+				return false;
+		}
+	}
 }

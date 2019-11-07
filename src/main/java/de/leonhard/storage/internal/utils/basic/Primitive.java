@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Primitive {
 
-	public static <T> T getFromDef(final @NotNull Object obj, final @NotNull Class def) {
+	public static <T> T getFromDef(final @NotNull Object obj, final @NotNull Class<T> def) {
 		Objects.checkNull(def);
 		Object tempObj = Objects.notNull(obj);
 		if (obj instanceof String && def == Integer.class) {

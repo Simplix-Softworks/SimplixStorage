@@ -1,9 +1,9 @@
 package de.leonhard.storage.internal.utils;
 
-import de.leonhard.storage.internal.base.FileData;
-import de.leonhard.storage.internal.editor.LightningEditor;
+import de.leonhard.storage.internal.data.FileData;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
+import de.leonhard.storage.internal.utils.editor.LightningEditor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

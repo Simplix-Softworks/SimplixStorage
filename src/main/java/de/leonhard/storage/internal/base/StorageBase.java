@@ -299,8 +299,8 @@ public interface StorageBase {
 	 * @param <T> returnType
 	 * @return returns the value of the key casted to def
 	 */
-	default <T> T get(final @NotNull String key, final @NotNull Class def) {
-		return Primitive.getFromDef(getString(key), def);
+	default <T> T get(final @NotNull String key, final @NotNull Class<T> def) {
+		return Primitive.getFromDef(get(key), def);
 	}
 
 	/**
