@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.utils;
+package de.leonhard.storage.internal.utils.datafiles;
 
 import de.leonhard.storage.internal.utils.editor.YamlEditor;
 import java.io.IOException;

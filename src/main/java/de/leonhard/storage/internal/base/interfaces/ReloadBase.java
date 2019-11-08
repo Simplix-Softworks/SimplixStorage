@@ -12,4 +12,6 @@ public interface ReloadBase {
 	void setFlatFile(final @NotNull FlatFile flatFile);
 
 	boolean shouldReload();
+
+	boolean shouldReload(final @NotNull FlatFile flatFile);
 }

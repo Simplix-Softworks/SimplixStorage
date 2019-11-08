@@ -4,18 +4,20 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.base.FileType;
 import de.leonhard.storage.internal.base.interfaces.CommentBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
 import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.section.YamlSection;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.utils.FileUtils;
-import de.leonhard.storage.internal.utils.YamlUtils;
+import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
+import de.leonhard.storage.internal.utils.datafiles.YamlUtils;
 import de.leonhard.storage.internal.utils.editor.YamlEditor;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import lombok.Cleanup;
@@ -36,7 +38,7 @@ public class YamlFile extends CommentEnabledFile {
 		super(file, FileType.YAML);
 
 		if (create() && inputStream != null) {
-			FileUtils.writeToFile(this.file, inputStream);
+			LightningFileUtils.writeToFile(this.file, inputStream);
 		}
 
 		if (reloadSetting != null) {
@@ -76,13 +78,6 @@ public class YamlFile extends CommentEnabledFile {
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
-	}
-
-	@Override
-	public Object get(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
-		update();
-		return fileData.get(key);
 	}
 
 	@Override
@@ -216,6 +211,59 @@ public class YamlFile extends CommentEnabledFile {
 			YamlFile yaml = (YamlFile) obj;
 			return this.getCommentSetting() == yaml.getCommentSetting()
 				   && super.equals(yaml.getFlatFileInstance());
+		}
+	}
+
+
+	public enum FileType implements FileTypeBase {
+
+		YAML("yml");
+
+
+		private final String extension;
+
+		FileType(final @NotNull String extension) {
+			this.extension = extension;
+		}
+
+		@Override
+		public String addExtensionTo(final @NotNull String filePath) {
+			return (Objects.notNull(filePath, "Path must not be null") + "." + this.extension);
+		}
+
+		@Override
+		public Path addExtensionTo(final @NotNull Path filePath) {
+			return Paths.get(Objects.notNull(filePath, "Path must not be null") + "." + this.extension);
+		}
+
+		@Override
+		public File addExtensionTo(final @NotNull File file) {
+			return new File(Objects.notNull(file, "Path must not be null").getAbsolutePath() + "." + this.extension);
+		}
+
+		@Override
+		public boolean isTypeOf(final @NotNull String filePath) {
+			return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		}
+
+		@Override
+		public String toLowerCase() {
+			return this.extension.toLowerCase();
+		}
+
+		@Override
+		public boolean isTypeOf(final @NotNull Path filePath) {
+			return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		}
+
+		@Override
+		public boolean isTypeOf(final @NotNull File file) {
+			return LightningFileUtils.getExtension(Objects.notNull(file, "File must not be null")).equals(this.toLowerCase());
+		}
+
+		@Override
+		public String toString() {
+			return this.extension;
 		}
 	}
 

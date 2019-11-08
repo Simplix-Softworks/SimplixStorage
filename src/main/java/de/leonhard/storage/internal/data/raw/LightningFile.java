@@ -1,16 +1,18 @@
 package de.leonhard.storage.internal.data.raw;
 
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.base.FileType;
 import de.leonhard.storage.internal.base.interfaces.CommentBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
 import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.section.LightningSection;
-import de.leonhard.storage.internal.utils.FileUtils;
+import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import de.leonhard.storage.internal.utils.editor.LightningEditor;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class LightningFile extends CommentEnabledFile {
 		super(file, FileType.LIGHTNING);
 
 		if (create() && inputStream != null) {
-			FileUtils.writeToFile(this.file, inputStream);
+			LightningFileUtils.writeToFile(this.file, inputStream);
 		}
 
 		if (reloadSetting != null) {
@@ -57,14 +59,6 @@ public class LightningFile extends CommentEnabledFile {
 			throw new IllegalStateException();
 		}
 	}
-
-	@Override
-	public Object get(final @NotNull String key) {
-		Objects.checkNull(key, "Key must not be null");
-		update();
-		return this.fileData.get(key);
-	}
-
 
 	@Override
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
@@ -239,6 +233,59 @@ public class LightningFile extends CommentEnabledFile {
 			LightningFile lightningFile = (LightningFile) obj;
 			return this.getCommentSetting() == lightningFile.getCommentSetting()
 				   && super.equals(lightningFile.getFlatFileInstance());
+		}
+	}
+
+
+	public enum FileType implements FileTypeBase {
+
+		LIGHTNING("ls");
+
+
+		private final String extension;
+
+		FileType(final @NotNull String extension) {
+			this.extension = extension;
+		}
+
+		@Override
+		public String addExtensionTo(final @NotNull String filePath) {
+			return (Objects.notNull(filePath, "Path must not be null") + "." + this.extension);
+		}
+
+		@Override
+		public Path addExtensionTo(final @NotNull Path filePath) {
+			return Paths.get(Objects.notNull(filePath, "Path must not be null") + "." + this.extension);
+		}
+
+		@Override
+		public File addExtensionTo(final @NotNull File file) {
+			return new File(Objects.notNull(file, "Path must not be null").getAbsolutePath() + "." + this.extension);
+		}
+
+		@Override
+		public boolean isTypeOf(final @NotNull String filePath) {
+			return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		}
+
+		@Override
+		public String toLowerCase() {
+			return this.extension.toLowerCase();
+		}
+
+		@Override
+		public boolean isTypeOf(final @NotNull Path filePath) {
+			return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
+		}
+
+		@Override
+		public boolean isTypeOf(final @NotNull File file) {
+			return LightningFileUtils.getExtension(Objects.notNull(file, "File must not be null")).equals(this.toLowerCase());
+		}
+
+		@Override
+		public String toString() {
+			return this.extension;
 		}
 	}
 

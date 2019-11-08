@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.data;
 
-import de.leonhard.storage.internal.utils.JsonUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
+import de.leonhard.storage.internal.utils.datafiles.JsonUtils;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

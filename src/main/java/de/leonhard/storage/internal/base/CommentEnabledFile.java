@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
@@ -17,7 +18,7 @@ public abstract class CommentEnabledFile extends FlatFile {
 	@Setter
 	private CommentBase commentSetting = Comment.SKIP;
 
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType) {
+	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType) {
 		super(file, fileType);
 	}
 

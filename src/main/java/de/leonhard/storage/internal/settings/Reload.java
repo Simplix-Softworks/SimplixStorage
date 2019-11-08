@@ -2,6 +2,7 @@ package de.leonhard.storage.internal.settings;
 
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.utils.basic.Objects;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -42,7 +43,23 @@ public enum Reload implements ReloadBase {
 			case AUTOMATICALLY:
 				return true;
 			case INTELLIGENT:
-				return this.flatFile.hasChanged();
+				if (this.flatFile == null) {
+					return true;
+				} else {
+					return this.flatFile.hasChanged();
+				}
+			default:
+				return false;
+		}
+	}
+
+	@Override
+	public boolean shouldReload(final @NotNull FlatFile flatFile) {
+		switch (this) {
+			case AUTOMATICALLY:
+				return true;
+			case INTELLIGENT:
+				return Objects.notNull(flatFile).hasChanged();
 			default:
 				return false;
 		}

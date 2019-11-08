@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.utils;
+package de.leonhard.storage.internal.utils.datafiles;
 
 import java.util.*;
 import lombok.AccessLevel;

@@ -7,7 +7,7 @@ import de.leonhard.storage.internal.base.interfaces.StorageBase;
 import de.leonhard.storage.internal.data.FileData;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
-import de.leonhard.storage.internal.utils.FileUtils;
+import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.*;
 import java.nio.file.Files;
@@ -71,7 +71,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (inputStream == null) {
 			this.clearFile();
 		} else {
-			FileUtils.writeToFile(this.file, inputStream);
+			LightningFileUtils.writeToFile(this.file, inputStream);
 			this.reload();
 		}
 	}
@@ -116,7 +116,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (file == null) {
 			this.clearFile();
 		} else {
-			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(file));
+			LightningFileUtils.writeToFile(this.file, LightningFileUtils.createNewInputStream(file));
 			this.reload();
 		}
 	}
@@ -128,7 +128,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (resource == null) {
 			this.clearFile();
 		} else {
-			FileUtils.writeToFile(this.file, FileUtils.createNewInputStream(resource));
+			LightningFileUtils.writeToFile(this.file, LightningFileUtils.createNewInputStream(resource));
 			this.reload();
 		}
 	}
@@ -143,7 +143,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @return true if it has changed.
 	 */
 	public final boolean hasChanged() {
-		return FileUtils.hasChanged(this.file, this.lastLoaded);
+		return LightningFileUtils.hasChanged(this.file, this.lastLoaded);
 	}
 
 	/**
@@ -211,6 +211,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	@Override
+	public Object get(final @NotNull String key) {
+		Objects.checkNull(key, "Key must not be null");
+		update();
+		return fileData.get(key);
+	}
+
+	@Override
 	public Map<String, Object> getAll(final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "KeyList must not be null");
 		this.update();
@@ -239,7 +246,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * Checks if the File needs to be reloaded and does so if true.
 	 */
 	protected final void update() {
-		if (this.shouldReload()) {
+		if (this.reloadSetting.shouldReload()) {
 			this.reload();
 		}
 	}
@@ -292,17 +299,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (this.file.exists()) {
 			return false;
 		} else {
-			FileUtils.createFile(this.file);
+			LightningFileUtils.createFile(this.file);
 			return true;
 		}
 	}
 
 	protected final FlatFile getFlatFileInstance() {
 		return this;
-	}
-
-	protected boolean shouldReload() {
-		return this.reloadSetting.shouldReload();
 	}
 
 	@Override
@@ -335,6 +338,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	public String toString() {
 		return this.file.getAbsolutePath();
 	}
+
 
 	protected static class LocalFileData extends FileData {
 
