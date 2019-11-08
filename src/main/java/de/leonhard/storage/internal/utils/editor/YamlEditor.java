@@ -99,35 +99,35 @@ public class YamlEditor {
 	}
 
 	public final File getFile() {
-		return file;
+		return this.file;
 	}
 
 	public List<String> readComments() throws IOException {
-		return getCommentsFromLines(read());
+		return getCommentsFromLines(this.read());
 	}
 
 	public List<String> read() throws IOException {
-		return Files.readAllLines(file.toPath());
+		return Files.readAllLines(this.file.toPath());
 	}
 
 	public List<String> readFooter() throws IOException {
-		return getFooterFromLines(read());
+		return getFooterFromLines(this.read());
 	}
 
 	public List<String> readHeader() throws IOException {
-		return getHeaderFromLines(read());
+		return getHeaderFromLines(this.read());
 	}
 
 	public List<String> readKeys() throws IOException {
-		return getKeys(read());
+		return getKeys(this.read());
 	}
 
 	public List<String> readPureComments() throws IOException {
-		return getPureCommentsFromLines(read());
+		return getPureCommentsFromLines(this.read());
 	}
 
 	public List<String> readWithoutHeaderAndFooter() throws IOException {
-		return getLinesWithoutFooterAndHeaderFromLines(read());
+		return getLinesWithoutFooterAndHeaderFromLines(this.read());
 	}
 
 	public void write(final @NotNull List<String> lines) throws IOException {

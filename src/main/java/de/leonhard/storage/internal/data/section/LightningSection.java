@@ -19,9 +19,7 @@ public class LightningSection extends FlatSection {
 	}
 
 	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull Comment commentSetting) {
-		String tempKey = this.getSectionKey(key);
-
-		this.lightningFile.set(tempKey, value, commentSetting);
+		this.lightningFile.set(this.getSectionKey(key), value, commentSetting);
 	}
 
 	public synchronized void remove(final @NotNull String key, final @NotNull Comment commentSetting) {

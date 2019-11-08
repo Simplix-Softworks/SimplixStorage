@@ -34,27 +34,19 @@ public class LightningConfigSection extends LightningSection {
 	}
 
 	public List<String> getHeader(final @NotNull String key) {
-		String tempKey = this.getSectionKey(key);
-
-		return this.lightningConfig.getHeader(tempKey);
+		return this.lightningConfig.getHeader(this.getSectionKey(key));
 	}
 
 	public void setHeader(final @NotNull String key, final @Nullable List<String> header) {
-		String tempKey = this.getSectionKey(key);
-
-		this.lightningConfig.setHeader(tempKey, header);
+		this.lightningConfig.setHeader(this.getSectionKey(key), header);
 	}
 
 	public List<String> getFooter(final @NotNull String key) {
-		String tempKey = this.getSectionKey(key);
-
-		return this.lightningConfig.getFooter(tempKey);
+		return this.lightningConfig.getFooter(this.getSectionKey(key));
 	}
 
 	public void setFooter(final @NotNull String key, final @Nullable List<String> footer) {
-		String tempKey = this.getSectionKey(key);
-
-		this.lightningConfig.setFooter(tempKey, footer);
+		this.lightningConfig.setFooter(this.getSectionKey(key), footer);
 	}
 
 	@Override

@@ -19,15 +19,11 @@ public class YamlSection extends FlatSection {
 	}
 
 	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull Comment commentSetting) {
-		String tempKey = this.getSectionKey(key);
-
-		this.yamlFile.set(tempKey, value, commentSetting);
+		this.yamlFile.set(this.getSectionKey(key), value, commentSetting);
 	}
 
 	public synchronized void remove(final @NotNull String key, final @NotNull Comment commentSetting) {
-		String tempKey = this.getSectionKey(key);
-
-		this.yamlFile.remove(tempKey, commentSetting);
+		this.yamlFile.remove(this.getSectionKey(key), commentSetting);
 	}
 
 	@Override

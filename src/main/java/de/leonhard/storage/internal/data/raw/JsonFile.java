@@ -30,34 +30,34 @@ public class JsonFile extends FlatFile {
 	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.JSON);
 
-		if (create() && inputStream != null) {
+		if (this.create() && inputStream != null) {
 			LightningFileUtils.writeToFile(this.file, inputStream);
 		}
 
 		if (dataType != null) {
-			setDataType(dataType);
+			this.setDataType(dataType);
 		} else {
-			setDataType(DataType.STANDARD);
+			this.setDataType(DataType.STANDARD);
 		}
 		if (reloadSetting != null) {
-			setReloadSetting(reloadSetting);
+			this.setReloadSetting(reloadSetting);
 		}
 
-		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(LightningFileUtils.createNewInputStream(file), "InputStream must not be null"));
-		fileData = new LocalFileData(new JSONObject(jsonTokener));
+		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(LightningFileUtils.createNewInputStream(this.file), "InputStream must not be null"));
+		this.fileData = new LocalFileData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
 
 	@Override
 	public void reload() {
-		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(LightningFileUtils.createNewInputStream(file), "InputStream must not be null"));
-		fileData.loadData(new JSONObject(jsonTokener));
+		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(LightningFileUtils.createNewInputStream(this.file), "InputStream must not be null"));
+		this.fileData.loadData(new JSONObject(jsonTokener));
 		this.lastLoaded = System.currentTimeMillis();
 	}
 
 	/**
-	 * Gets a Map by key Although used to get nested objects {@link JsonFile}
+	 * Gets a Map by key, also used to get nested objects {@link JsonFile}
 	 *
 	 * @param key Path to Map-List in JSON
 	 * @return Map
@@ -65,10 +65,10 @@ public class JsonFile extends FlatFile {
 
 	@Override
 	public Map getMap(final @NotNull String key) {
-		if (!hasKey(key)) {
+		if (!this.hasKey(key)) {
 			return new HashMap();
 		} else {
-			return getMapWithoutPath(key);
+			return this.getMapWithoutPath(key);
 		}
 	}
 
@@ -76,7 +76,7 @@ public class JsonFile extends FlatFile {
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				write(new JSONObject(fileData.toMap()));
+				this.write(new JSONObject(this.fileData.toMap()));
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -89,7 +89,7 @@ public class JsonFile extends FlatFile {
 	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
 			try {
-				write(new JSONObject(fileData.toMap()));
+				this.write(new JSONObject(this.fileData.toMap()));
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -102,7 +102,7 @@ public class JsonFile extends FlatFile {
 	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
-				write(new JSONObject(fileData.toMap()));
+				this.write(new JSONObject(this.fileData.toMap()));
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -115,12 +115,12 @@ public class JsonFile extends FlatFile {
 	public synchronized void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
-		update();
+		this.update();
 
-		fileData.remove(key);
+		this.fileData.remove(key);
 
 		try {
-			write(fileData.toJsonObject());
+			this.write(this.fileData.toJsonObject());
 		} catch (IOException e) {
 			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -132,14 +132,14 @@ public class JsonFile extends FlatFile {
 	public synchronized void removeAll(final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
-		update();
+		this.update();
 
 		for (String key : keys) {
-			fileData.remove(key);
+			this.fileData.remove(key);
 		}
 
 		try {
-			write(fileData.toJsonObject());
+			this.write(this.fileData.toJsonObject());
 		} catch (IOException e) {
 			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -151,14 +151,14 @@ public class JsonFile extends FlatFile {
 	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
-		update();
+		this.update();
 
 		for (String tempKey : keys) {
-			fileData.remove(key + "." + tempKey);
+			this.fileData.remove(key + "." + tempKey);
 		}
 
 		try {
-			write(fileData.toJsonObject());
+			this.write(this.fileData.toJsonObject());
 		} catch (IOException e) {
 			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -183,20 +183,20 @@ public class JsonFile extends FlatFile {
 
 	private Map getMapWithoutPath(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
-		update();
+		this.update();
 
-		if (!hasKey(key)) {
+		if (!this.hasKey(key)) {
 			return new HashMap<>();
 		}
 
 		Object map;
 		try {
-			map = get(key);
+			map = this.get(key);
 		} catch (JSONException e) {
 			return new HashMap<>();
 		}
 		if (map instanceof Map) {
-			return (Map<?, ?>) fileData.get(key);
+			return (Map<?, ?>) this.fileData.get(key);
 		} else if (map instanceof JSONObject) {
 			return JsonUtils.jsonToMap((JSONObject) map);
 		}
@@ -204,7 +204,7 @@ public class JsonFile extends FlatFile {
 	}
 
 	private void write(final JSONObject object) throws IOException {
-		@Cleanup Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()));
+		@Cleanup Writer writer = new PrintWriter(new FileWriter(this.file.getAbsolutePath()));
 		writer.write(object.toString(3));
 	}
 

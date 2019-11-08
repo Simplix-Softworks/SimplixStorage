@@ -39,7 +39,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			return this.header;
 		} else {
 			try {
-				this.header = yamlEditor.readHeader();
+				this.header = this.yamlEditor.readHeader();
 				return this.header;
 			} catch (IOException e) {
 				System.err.println("Couldn't get header of '" + this.file.getAbsolutePath() + "'.");
@@ -63,7 +63,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			}
 			this.header = tmp;
 
-			if (getFile().length() == 0) {
+			if (this.file.length() == 0) {
 				try {
 					this.yamlEditor.write(this.header);
 				} catch (IOException e) {
@@ -110,7 +110,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			return this.footer;
 		} else {
 			try {
-				this.footer = yamlEditor.readFooter();
+				this.footer = this.yamlEditor.readFooter();
 				return this.footer;
 			} catch (IOException e) {
 				System.err.println("Couldn't get footer of '" + this.file.getAbsolutePath() + "'.");
@@ -134,7 +134,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			}
 			this.footer = tmp;
 
-			if (getFile().length() == 0) {
+			if (this.file.length() == 0) {
 				try {
 					this.yamlEditor.write(this.footer);
 				} catch (IOException e) {

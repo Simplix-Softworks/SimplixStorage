@@ -35,7 +35,7 @@ public class YamlFile extends CommentEnabledFile {
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.YAML);
 
-		if (create() && inputStream != null) {
+		if (this.create() && inputStream != null) {
 			LightningFileUtils.writeToFile(this.file, inputStream);
 		}
 
@@ -53,7 +53,7 @@ public class YamlFile extends CommentEnabledFile {
 
 
 		this.yamlEditor = new LocalEditor(this.file);
-		this.yamlUtils = new LocalUtils(yamlEditor);
+		this.yamlUtils = new LocalUtils(this.yamlEditor);
 
 		try {
 			this.fileData = new LocalFileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
@@ -69,7 +69,7 @@ public class YamlFile extends CommentEnabledFile {
 	@Override
 	public void reload() {
 		try {
-			fileData.loadData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
+			this.fileData.loadData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
@@ -82,13 +82,13 @@ public class YamlFile extends CommentEnabledFile {
 	public synchronized void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
-		update();
+		this.update();
 
-		if (fileData.containsKey(key)) {
-			fileData.remove(key);
+		if (this.fileData.containsKey(key)) {
+			this.fileData.remove(key);
 
 			try {
-				write(fileData.toMap());
+				this.write(this.fileData.toMap());
 			} catch (IOException e) {
 				System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -101,14 +101,14 @@ public class YamlFile extends CommentEnabledFile {
 	public synchronized void removeAll(final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
-		update();
+		this.update();
 
 		for (String key : keys) {
-			fileData.remove(key);
+			this.fileData.remove(key);
 		}
 
 		try {
-			write(fileData.toMap());
+			this.write(this.fileData.toMap());
 		} catch (IOException e) {
 			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -120,14 +120,14 @@ public class YamlFile extends CommentEnabledFile {
 	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
-		update();
+		this.update();
 
 		for (String tempKey : keys) {
-			fileData.remove(key + "." + tempKey);
+			this.fileData.remove(key + "." + tempKey);
 		}
 
 		try {
-			write(fileData.toMap());
+			this.write(this.fileData.toMap());
 		} catch (IOException e) {
 			System.err.println("Could not write to '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -138,21 +138,21 @@ public class YamlFile extends CommentEnabledFile {
 	@Override
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
-			writeData();
+			this.writeData();
 		}
 	}
 
 	@Override
 	public synchronized void setAll(final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(dataMap)) {
-			writeData();
+			this.writeData();
 		}
 	}
 
 	@Override
 	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
-			writeData();
+			this.writeData();
 		}
 	}
 
@@ -179,18 +179,18 @@ public class YamlFile extends CommentEnabledFile {
 	private void writeData() {
 		try {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
-				write(Objects.notNull(fileData, "FileData must not be null").toMap());
+				this.write(Objects.notNull(this.fileData, "FileData must not be null").toMap());
 			} else {
-				final List<String> unEdited = yamlEditor.read();
-				final List<String> header = yamlEditor.readHeader();
-				final List<String> footer = yamlEditor.readFooter();
-				write(fileData.toMap());
-				header.addAll(yamlEditor.read());
+				final List<String> unEdited = this.yamlEditor.read();
+				final List<String> header = this.yamlEditor.readHeader();
+				final List<String> footer = this.yamlEditor.readFooter();
+				this.write(this.fileData.toMap());
+				header.addAll(this.yamlEditor.read());
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
-				yamlEditor.write(yamlUtils.parseComments(unEdited, header));
-				write(Objects.notNull(fileData, "FileData must not be null").toMap());
+				this.yamlEditor.write(this.yamlUtils.parseComments(unEdited, header));
+				this.write(Objects.notNull(this.fileData, "FileData must not be null").toMap());
 			}
 		} catch (IOException e) {
 			System.err.println("Error while writing to '" + getAbsolutePath() + "'");

@@ -25,8 +25,8 @@ public class YamlUtils {
 		final List<String> keys;
 		final Map<String, List<String>> parsed;
 		try {
-			keys = yamlEditor.readKeys();
-			parsed = assignCommentsToKey(comments);
+			keys = this.yamlEditor.readKeys();
+			parsed = this.assignCommentsToKey(comments);
 		} catch (IOException e) {
 			System.err.println("Error while reading keys from '" + yamlEditor.getFile().getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -83,6 +83,6 @@ public class YamlUtils {
 	 * @throws IOException if File could not be read
 	 */
 	private Map<String, List<String>> assignCommentsToKey() throws IOException {
-		return assignCommentsToKey(yamlEditor.read());
+		return assignCommentsToKey(this.yamlEditor.read());
 	}
 }

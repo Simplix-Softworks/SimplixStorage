@@ -31,6 +31,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private final FileTypeBase fileType;
 	protected FileData fileData;
 	protected long lastLoaded;
+	@Setter
 	private ReloadBase reloadSetting = Reload.INTELLIGENT;
 	@Setter
 	private DataTypeBase dataType = DataType.AUTOMATIC;
@@ -149,10 +150,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * Reread the content of our flat file
 	 */
 	public abstract void reload();
-
-	public void setReloadSetting(final @NotNull ReloadBase reloadSetting) {
-		this.reloadSetting = reloadSetting;
-	}
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {

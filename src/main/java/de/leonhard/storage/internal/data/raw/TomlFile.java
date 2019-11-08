@@ -26,7 +26,7 @@ public class TomlFile extends FlatFile {
 	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.TOML);
 
-		if (create() && inputStream != null) {
+		if (this.create() && inputStream != null) {
 			LightningFileUtils.writeToFile(this.file, inputStream);
 		}
 
@@ -40,7 +40,7 @@ public class TomlFile extends FlatFile {
 		}
 
 		try {
-			this.fileData = new LocalFileData(com.electronwill.toml.Toml.read(getFile()));
+			this.fileData = new LocalFileData(com.electronwill.toml.Toml.read(this.file));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
@@ -53,7 +53,7 @@ public class TomlFile extends FlatFile {
 	@Override
 	public void reload() {
 		try {
-			fileData.loadData(com.electronwill.toml.Toml.read(getFile()));
+			this.fileData.loadData(com.electronwill.toml.Toml.read(this.file));
 			this.lastLoaded = System.currentTimeMillis();
 		} catch (IOException e) {
 			System.err.println("Exception while reloading '" + this.file.getAbsolutePath() + "'");
@@ -72,7 +72,7 @@ public class TomlFile extends FlatFile {
 	public synchronized void set(final @NotNull String key, final @Nullable Object value) {
 		if (this.insert(key, value)) {
 			try {
-				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+				com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -98,7 +98,7 @@ public class TomlFile extends FlatFile {
 	public synchronized void setAll(final @NotNull String key, final @NotNull Map<String, Object> dataMap) {
 		if (this.insertAll(key, dataMap)) {
 			try {
-				com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+				com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
 			} catch (IOException e) {
 				System.err.println("Error while writing to '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -111,12 +111,12 @@ public class TomlFile extends FlatFile {
 	public synchronized void remove(final @NotNull String key) {
 		Objects.checkNull(key, "Key must not be null");
 
-		update();
+		this.update();
 
-		fileData.remove(key);
+		this.fileData.remove(key);
 
 		try {
-			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+			com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
 		} catch (IOException e) {
 			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -128,14 +128,14 @@ public class TomlFile extends FlatFile {
 	public synchronized void removeAll(final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
-		update();
+		this.update();
 
 		for (String key : keys) {
-			fileData.remove(key);
+			this.fileData.remove(key);
 		}
 
 		try {
-			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+			com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
 		} catch (IOException e) {
 			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
@@ -147,14 +147,14 @@ public class TomlFile extends FlatFile {
 	public synchronized void removeAll(final @NotNull String key, final @NotNull List<String> keys) {
 		Objects.checkNull(keys, "List must not be null");
 
-		update();
+		this.update();
 
 		for (String tempKey : keys) {
-			fileData.remove(key + "." + tempKey);
+			this.fileData.remove(key + "." + tempKey);
 		}
 
 		try {
-			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
+			com.electronwill.toml.Toml.write(this.fileData.toMap(), this.file);
 		} catch (IOException e) {
 			System.err.println("Exception while writing to Toml file '" + this.file.getAbsolutePath() + "'");
 			e.printStackTrace();
