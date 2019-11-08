@@ -1,15 +1,15 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.internal.base.FileType;
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.config.LightningConfig;
 import de.leonhard.storage.internal.data.config.YamlConfig;
 import de.leonhard.storage.internal.data.raw.JsonFile;
 import de.leonhard.storage.internal.data.raw.LightningFile;
 import de.leonhard.storage.internal.data.raw.TomlFile;
 import de.leonhard.storage.internal.data.raw.YamlFile;
-import de.leonhard.storage.internal.settings.Comment;
-import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.BufferedInputStream;
@@ -31,9 +31,9 @@ public class LightningStorage {
 	private final String name;
 	private final String path;
 	private BufferedInputStream inputStream;
-	private Reload reloadSetting;
-	private Comment commentSetting;
-	private DataType dataType;
+	private ReloadBase reloadSetting;
+	private DataTypeBase dataType;
+	private CommentBase commentSetting;
 
 	// <local Constructors>
 	private LightningStorage(final @NotNull File file) {
@@ -206,7 +206,7 @@ public class LightningStorage {
 	 *
 	 * @param reloadSetting the ReloadSetting to be set(default is INTELLIGENT)
 	 */
-	public final LightningStorage reloadSetting(final @Nullable Reload reloadSetting) {
+	public final LightningStorage reloadSetting(final @Nullable ReloadBase reloadSetting) {
 		this.reloadSetting = reloadSetting;
 		return this;
 	}
@@ -216,7 +216,7 @@ public class LightningStorage {
 	 *
 	 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 	 */
-	public final LightningStorage commentSetting(final Comment commentSetting) {
+	public final LightningStorage commentSetting(final CommentBase commentSetting) {
 		this.commentSetting = commentSetting;
 		return this;
 	}
@@ -226,7 +226,7 @@ public class LightningStorage {
 	 *
 	 * @param dataType the DataType to be set(Default is AUTOMATIC, which depends on the FileType and the ReloadSetting)
 	 */
-	public final LightningStorage dataType(final @Nullable DataType dataType) {
+	public final LightningStorage dataType(final @Nullable DataTypeBase dataType) {
 		this.dataType = dataType;
 		return this;
 	}
@@ -302,7 +302,6 @@ public class LightningStorage {
 	}
 	// </Create Datafile>
 
-
 	@Override
 	public String toString() {
 		return "LightningStorageBuilder: File: "
@@ -314,45 +313,44 @@ public class LightningStorage {
 			   + ", CommentSetting: " + this.commentSetting;
 	}
 
-
 	private static class LocalJsonFile extends JsonFile {
 
-		private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
+		private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, dataType);
-		}
-	}
-
-	private static class LocalLightningConfig extends LightningConfig {
-
-		private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
-			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalLightningFile extends LightningFile {
 
-		private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+		private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+			super(file, inputStream, reloadSetting, commentSetting, dataType);
+		}
+	}
+
+	private static class LocalLightningConfig extends LightningConfig {
+
+		private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalTomlFile extends TomlFile {
 
-		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
+		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, dataType);
 		}
 	}
 
 	private static class LocalYamlFile extends YamlFile {
 
-		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalYamlConfig extends YamlConfig {
 
-		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}

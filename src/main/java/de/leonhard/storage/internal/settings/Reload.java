@@ -1,14 +1,15 @@
 package de.leonhard.storage.internal.settings;
 
 import de.leonhard.storage.internal.base.FlatFile;
-import lombok.Getter;
-import lombok.Setter;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
  * an Enum defining the reload behaviour of the Data classes
  */
-public enum Reload {
+@SuppressWarnings("unused")
+public enum Reload implements ReloadBase {
 
 	/**
 	 * reloads every time you try to get something from the config
@@ -23,10 +24,19 @@ public enum Reload {
 	 */
 	MANUALLY;
 
-	@Getter
-	@Setter
 	private FlatFile flatFile;
 
+	@Override
+	public FlatFile getFlatFile() {
+		return flatFile;
+	}
+
+	@Override
+	public void setFlatFile(final @NotNull FlatFile flatFile) {
+		this.flatFile = flatFile;
+	}
+
+	@Override
 	public boolean shouldReload() {
 		switch (this) {
 			case AUTOMATICALLY:

@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.base;
+package de.leonhard.storage.internal.base.interfaces;
 
 import java.util.List;
 import org.jetbrains.annotations.Nullable;

@@ -1,7 +1,8 @@
 package de.leonhard.storage.internal.utils.editor;
 
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.settings.Comment;
-import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +30,7 @@ public class LightningEditor {
 	 * @param map            a HashMap containing the Data to be written.
 	 * @param commentSetting the CommentSetting to be used.
 	 */
-	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull Comment commentSetting) {
+	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull CommentBase commentSetting) {
 		if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
 			initialWriteWithComments(file, map);
 		} else {
@@ -45,7 +46,7 @@ public class LightningEditor {
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
+	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentBase commentSetting) {
 		if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
 			return initialReadWithComments(file, dataType, commentSetting);
 		} else {
@@ -81,7 +82,7 @@ public class LightningEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataType dataType, final @NotNull Comment commentSetting) {
+	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentBase commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -121,7 +122,7 @@ public class LightningEditor {
 	}
 	// </Read Data with Comments>
 
-	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataType dataType, final Comment commentSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataTypeBase dataType, final CommentBase commentSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -154,7 +155,7 @@ public class LightningEditor {
 	}
 
 	// <Read Data without Comments>
-	private static Map<String, Object> initialReadWithOutComments(final File file, final DataType dataType, final Comment commentSetting) {
+	private static Map<String, Object> initialReadWithOutComments(final File file, final DataTypeBase dataType, final CommentBase commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -188,7 +189,7 @@ public class LightningEditor {
 	}
 	// </Read without Comments>
 
-	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataType dataType, final Comment commentSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataTypeBase dataType, final CommentBase commentSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -216,7 +217,7 @@ public class LightningEditor {
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
 
-	private static String readKey(final String filePath, final List<String> lines, final DataType dataType, final Map<String, Object> tempMap, String tempKey, final String tempLine, final Comment commentSetting) {
+	private static String readKey(final String filePath, final List<String> lines, final DataTypeBase dataType, final Map<String, Object> tempMap, String tempKey, final String tempLine, final CommentBase commentSetting) {
 		if (tempLine.contains("=")) {
 			String[] line = tempLine.split("=");
 			line[0] = line[0].trim();
@@ -310,7 +311,7 @@ public class LightningEditor {
 	}
 	// </Write Data with Comments
 
-	private static List<String> readList(final String filePath, final List<String> lines, final DataType dataType, final Comment commentSetting) {
+	private static List<String> readList(final String filePath, final List<String> lines, final DataTypeBase dataType, final CommentBase commentSetting) {
 		List<String> localList = dataType.getNewDataList(commentSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();

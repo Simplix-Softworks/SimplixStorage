@@ -4,10 +4,13 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.CommentEnabledFile;
+import de.leonhard.storage.internal.base.FileType;
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.section.YamlSection;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.YamlUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
@@ -29,7 +32,7 @@ public class YamlFile extends CommentEnabledFile {
 	protected final YamlEditor yamlEditor;
 	private final YamlUtils yamlUtils;
 
-	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.YAML);
 
 		if (create() && inputStream != null) {

@@ -1,5 +1,9 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.StorageBase;
 import de.leonhard.storage.internal.data.FileData;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
@@ -27,10 +31,9 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	private final FileTypeBase fileType;
 	protected FileData fileData;
 	protected long lastLoaded;
+	private ReloadBase reloadSetting = Reload.INTELLIGENT;
 	@Setter
-	private Reload reloadSetting = Reload.INTELLIGENT;
-	@Setter
-	private DataType dataType = DataType.AUTOMATIC;
+	private DataTypeBase dataType = DataType.AUTOMATIC;
 
 
 	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType) {
@@ -147,6 +150,11 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * Reread the content of our flat file
 	 */
 	public abstract void reload();
+
+	public void setReloadSetting(final @NotNull ReloadBase reloadSetting) {
+		this.reloadSetting = reloadSetting;
+		this.reloadSetting.setFlatFile(this);
+	}
 
 	@Override
 	public boolean hasKey(final @NotNull String key) {
@@ -294,16 +302,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	protected boolean shouldReload() {
-		switch (this.reloadSetting) {
-			case AUTOMATICALLY:
-				return true;
-			case INTELLIGENT:
-				return this.hasChanged();
-			case MANUALLY:
-				return false;
-			default:
-				throw new IllegalArgumentException("Illegal ReloadSetting in '" + this.getAbsolutePath() + "'");
-		}
+		return this.reloadSetting.shouldReload();
 	}
 
 	@Override

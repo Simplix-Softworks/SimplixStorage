@@ -1,9 +1,11 @@
 package de.leonhard.storage.internal.data.raw;
 
+import de.leonhard.storage.internal.base.FileType;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.section.JsonSection;
 import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.JsonUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
@@ -25,7 +27,7 @@ import org.json.JSONTokener;
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
-	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
+	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.JSON);
 
 		if (create() && inputStream != null) {

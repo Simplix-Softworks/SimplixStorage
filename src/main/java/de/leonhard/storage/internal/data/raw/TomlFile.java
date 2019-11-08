@@ -1,9 +1,11 @@
 package de.leonhard.storage.internal.data.raw;
 
+import de.leonhard.storage.internal.base.FileType;
 import de.leonhard.storage.internal.base.FlatFile;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.section.TomlSection;
 import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.FileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
@@ -21,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
-	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable DataType dataType) {
+	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.TOML);
 
 		if (create() && inputStream != null) {

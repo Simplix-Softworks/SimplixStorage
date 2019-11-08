@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
@@ -14,7 +15,7 @@ public abstract class CommentEnabledFile extends FlatFile {
 
 	@Getter
 	@Setter
-	private Comment commentSetting = Comment.SKIP;
+	private CommentBase commentSetting = Comment.SKIP;
 
 	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileType fileType) {
 		super(file, fileType);
@@ -25,12 +26,12 @@ public abstract class CommentEnabledFile extends FlatFile {
 		this.reload();
 	}
 
-	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull Comment commentSetting) {
+	public synchronized void set(final @NotNull String key, final @Nullable Object value, final @NotNull CommentBase commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.set(Objects.notNull(key, "Key must not be null"), Objects.notNull(value, "Value must not be null"));
 	}
 
-	public synchronized void remove(final @NotNull String key, final @NotNull Comment commentSetting) {
+	public synchronized void remove(final @NotNull String key, final @NotNull CommentBase commentSetting) {
 		this.setCommentSetting(Objects.notNull(commentSetting, "CommentSetting must not be null"));
 		this.remove(Objects.notNull(key, "Key must not be null"));
 	}

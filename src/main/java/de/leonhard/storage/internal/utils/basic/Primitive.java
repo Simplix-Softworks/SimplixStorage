@@ -120,7 +120,9 @@ public class Primitive {
 
 		public static short getShort(final @NotNull Object obj) {
 			Objects.checkNull(obj);
-			if (obj instanceof Number) {
+			if (obj instanceof Short) {
+				return (short) obj;
+			} else if (obj instanceof Number) {
 				return ((Number) obj).shortValue();
 			} else if (obj instanceof String) {
 				return Short.parseShort((String) obj);

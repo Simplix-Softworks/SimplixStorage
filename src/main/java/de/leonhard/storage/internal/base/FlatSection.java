@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.base.interfaces.StorageBase;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.util.List;
 import java.util.Map;

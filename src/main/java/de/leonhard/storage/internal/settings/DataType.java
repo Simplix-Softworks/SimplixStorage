@@ -1,5 +1,7 @@
 package de.leonhard.storage.internal.settings;
 
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.util.*;
 import org.jetbrains.annotations.Nullable;
@@ -8,7 +10,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * An Enum defining how the Data should be stored
  */
-public enum DataType {
+@SuppressWarnings("unused")
+public enum DataType implements DataTypeBase {
 
 	/**
 	 * The Data is stored in a LinkedHashMap.
@@ -23,14 +26,9 @@ public enum DataType {
 	 */
 	AUTOMATIC;
 
-	/**
-	 * Get a Map of the proper Type defined by your CommentSetting.
-	 *
-	 * @param commentSetting the CommentSetting to be used.
-	 * @param map            the Map to be imported from(an empty Map will be returned if @param map is null)
-	 * @return a Map containing the Data of @param map.
-	 */
-	public Map<String, Object> getNewDataMap(final @Nullable Comment commentSetting, final @Nullable Map<String, Object> map) {
+
+	@Override
+	public Map<String, Object> getNewDataMap(final @Nullable CommentBase commentSetting, final @Nullable Map<String, Object> map) {
 		if (this == DataType.SORTED) {
 			return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 		} else if (this == DataType.STANDARD) {
@@ -46,14 +44,8 @@ public enum DataType {
 		}
 	}
 
-	/**
-	 * Get a List of the proper Type defined by your CommentSetting.
-	 *
-	 * @param commentSetting the CommentSetting to be used.
-	 * @param list           the Map to be imported from(an empty List will be returned if @param list is null)
-	 * @return a List containing the Data of @param list.
-	 */
-	public List<String> getNewDataList(final @Nullable Comment commentSetting, final @Nullable List<String> list) {
+	@Override
+	public List<String> getNewDataList(final @Nullable CommentBase commentSetting, final @Nullable List<String> list) {
 		if (this == DataType.SORTED) {
 			return list == null ? new LinkedList<>() : new LinkedList<>(list);
 		} else if (this == DataType.STANDARD) {

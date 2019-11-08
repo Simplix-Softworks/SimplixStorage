@@ -1,11 +1,12 @@
 package de.leonhard.storage.internal.data.config;
 
-import de.leonhard.storage.internal.base.ConfigBase;
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.ConfigBase;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.raw.LightningFile;
 import de.leonhard.storage.internal.data.section.LightningConfigSection;
 import de.leonhard.storage.internal.settings.Comment;
-import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.LightningUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import de.leonhard.storage.internal.utils.editor.LightningEditor;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningConfig extends LightningFile implements ConfigBase {
 
-	protected LightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+	protected LightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
 	}
 

@@ -35,7 +35,7 @@ public class FileTypeUtils {
 	}
 
 	/**
-	 * Returns the extension of a given File.
+	 * Returns the extension of a given File.y
 	 *
 	 * @param filePath the Path of the File to be checked.
 	 * @return the extension of the given File.

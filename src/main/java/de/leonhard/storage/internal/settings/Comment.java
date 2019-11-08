@@ -1,6 +1,9 @@
 package de.leonhard.storage.internal.settings;
 
-public enum Comment {
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
+
+
+public enum Comment implements CommentBase {
 
 	SKIP,
 	PRESERVE

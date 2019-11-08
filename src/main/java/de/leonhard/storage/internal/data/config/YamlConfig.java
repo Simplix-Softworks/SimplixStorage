@@ -1,10 +1,11 @@
 package de.leonhard.storage.internal.data.config;
 
-import de.leonhard.storage.internal.base.ConfigBase;
+import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.ConfigBase;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadBase;
 import de.leonhard.storage.internal.data.raw.YamlFile;
 import de.leonhard.storage.internal.settings.Comment;
-import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.internal.settings.Reload;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +26,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	private List<String> comments;
 
 
-	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable Reload reloadSetting, final @Nullable Comment commentSetting, final @Nullable DataType dataType) {
+	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
 	}
 

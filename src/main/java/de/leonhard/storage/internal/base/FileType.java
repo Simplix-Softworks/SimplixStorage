@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.base;
 
+import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
 import de.leonhard.storage.internal.utils.basic.FileTypeUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
@@ -45,6 +46,11 @@ public enum FileType implements FileTypeBase {
 	}
 
 	@Override
+	public String toLowerCase() {
+		return this.extension.toLowerCase();
+	}
+
+	@Override
 	public boolean isTypeOf(final @NotNull Path filePath) {
 		return FileTypeUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
 	}
@@ -52,11 +58,6 @@ public enum FileType implements FileTypeBase {
 	@Override
 	public boolean isTypeOf(final @NotNull File file) {
 		return FileTypeUtils.getExtension(Objects.notNull(file, "File must not be null")).equals(this.toLowerCase());
-	}
-
-	@Override
-	public String toLowerCase() {
-		return this.extension.toLowerCase();
 	}
 
 	@Override
