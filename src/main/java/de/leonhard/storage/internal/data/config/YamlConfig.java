@@ -35,7 +35,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	public List<String> getHeader() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
-		} else if (!this.getReloadSetting().shouldReload()) {
+		} else if (!this.shouldReload()) {
 			return this.header;
 		} else {
 			try {
@@ -106,7 +106,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	public List<String> getFooter() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
-		} else if (!this.getReloadSetting().shouldReload()) {
+		} else if (!this.shouldReload()) {
 			return this.footer;
 		} else {
 			try {
@@ -176,7 +176,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	public List<String> getComments() {
 		if (this.getCommentSetting() != Comment.PRESERVE) {
 			return new ArrayList<>();
-		} else if (!this.getReloadSetting().shouldReload()) {
+		} else if (!this.shouldReload()) {
 			return this.comments;
 		} else {
 			try {

@@ -40,17 +40,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
-			this.reloadSetting.setFlatFile(this);
 		} else {
 			throw new IllegalStateException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}
 	}
 
-	public final String getPath() {
+	public String getPath() {
 		return this.file.getPath();
 	}
 
-	public final String getCanonicalPath() {
+	public String getCanonicalPath() {
 		try {
 			return this.file.getCanonicalPath();
 		} catch (IOException e) {
@@ -60,14 +59,14 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-	public final String getName() {
+	public String getName() {
 		return this.file.getName();
 	}
 
 	/**
 	 * Set the Contents of the File from a given InputStream
 	 */
-	public final synchronized void setFileContentFromStream(final @Nullable InputStream inputStream) {
+	public synchronized void setFileContentFromStream(final @Nullable InputStream inputStream) {
 		if (inputStream == null) {
 			this.clearFile();
 		} else {
@@ -79,7 +78,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Delete all Contents of the File
 	 */
-	public final synchronized void clearFile() {
+	public synchronized void clearFile() {
 		try {
 			@Cleanup BufferedWriter writer = new BufferedWriter(new FileWriter(this.file));
 			writer.write("");
@@ -94,7 +93,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Just delete the File
 	 */
-	public final synchronized void deleteFile() {
+	public synchronized void deleteFile() {
 		if (!this.file.delete()) {
 			System.err.println("Could not delete '" + this.file.getAbsolutePath() + "'");
 			throw new IllegalStateException();
@@ -105,14 +104,14 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * Clears the contents of the internal FileData.
 	 * To get any data, you simply need to reload.
 	 */
-	public final synchronized void clearData() {
+	public synchronized void clearData() {
 		this.fileData.clear();
 	}
 
 	/**
 	 * Set the Contents of the File from a given File
 	 */
-	public final synchronized void setFileContentFromFile(final @Nullable File file) {
+	public synchronized void setFileContentFromFile(final @Nullable File file) {
 		if (file == null) {
 			this.clearFile();
 		} else {
@@ -124,7 +123,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	/**
 	 * Set the Contents of the File from a given Resource
 	 */
-	public final synchronized void setFileContentFromResource(final @Nullable String resource) {
+	public synchronized void setFileContentFromResource(final @Nullable String resource) {
 		if (resource == null) {
 			this.clearFile();
 		} else {
@@ -133,7 +132,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		}
 	}
 
-	public final String getAbsolutePath() {
+	public String getAbsolutePath() {
 		return this.file.getAbsolutePath();
 	}
 
@@ -142,7 +141,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 *
 	 * @return true if it has changed.
 	 */
-	public final boolean hasChanged() {
+	public boolean hasChanged() {
 		return LightningFileUtils.hasChanged(this.file, this.lastLoaded);
 	}
 
@@ -153,7 +152,6 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 
 	public void setReloadSetting(final @NotNull ReloadBase reloadSetting) {
 		this.reloadSetting = reloadSetting;
-		this.reloadSetting.setFlatFile(this);
 	}
 
 	@Override
@@ -243,10 +241,23 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	}
 
 	/**
+	 * Checks if the File needs to be reloaded.
+	 *
+	 * @return true if File should be reloaded due to it's ReloadSetting.
+	 */
+	public boolean shouldReload() {
+		return this.reloadSetting.shouldReload(this);
+	}
+
+	protected final FlatFile getFlatFileInstance() {
+		return this;
+	}
+
+	/**
 	 * Checks if the File needs to be reloaded and does so if true.
 	 */
-	protected final void update() {
-		if (this.reloadSetting.shouldReload()) {
+	protected void update() {
+		if (this.shouldReload()) {
 			this.reload();
 		}
 	}
@@ -258,7 +269,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 * @param value the value to be assigned to @param key.
 	 * @return true if the Data contained by FileData contained after adding the key-value-pair.
 	 */
-	protected final boolean insert(final @NotNull String key, final @Nullable Object value) {
+	protected boolean insert(final @NotNull String key, final @Nullable Object value) {
 		Objects.checkNull(key, "Key must not be null");
 		this.update();
 
@@ -267,7 +278,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	protected final boolean insertAll(final @NotNull Map<String, Object> map) {
+	protected boolean insertAll(final @NotNull Map<String, Object> map) {
 		Objects.checkNull(map, "Map must not be null");
 		this.update();
 
@@ -278,7 +289,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 		return !this.fileData.toString().equals(tempData);
 	}
 
-	protected final boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
+	protected boolean insertAll(final @NotNull String key, final @NotNull Map<String, Object> map) {
 		Objects.checkNull(key, "Key must not be null");
 		Objects.checkNull(map, "Map must not be null");
 		this.update();
@@ -295,17 +306,13 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	 *
 	 * @return true if File was created.
 	 */
-	protected final synchronized boolean create() {
+	protected synchronized boolean create() {
 		if (this.file.exists()) {
 			return false;
 		} else {
 			LightningFileUtils.createFile(this.file);
 			return true;
 		}
-	}
-
-	protected final FlatFile getFlatFileInstance() {
-		return this;
 	}
 
 	@Override

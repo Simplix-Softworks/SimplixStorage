@@ -10,8 +10,6 @@ import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import de.leonhard.storage.internal.utils.datafiles.JsonUtils;
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,38 +233,8 @@ public class JsonFile extends FlatFile {
 		}
 
 		@Override
-		public String addExtensionTo(final @NotNull String filePath) {
-			return (Objects.notNull(filePath, "Path must not be null") + "." + this.extension);
-		}
-
-		@Override
-		public Path addExtensionTo(final @NotNull Path filePath) {
-			return Paths.get(Objects.notNull(filePath, "Path must not be null") + "." + this.extension);
-		}
-
-		@Override
-		public File addExtensionTo(final @NotNull File file) {
-			return new File(Objects.notNull(file, "Path must not be null").getAbsolutePath() + "." + this.extension);
-		}
-
-		@Override
-		public boolean isTypeOf(final @NotNull String filePath) {
-			return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
-		}
-
-		@Override
 		public String toLowerCase() {
 			return this.extension.toLowerCase();
-		}
-
-		@Override
-		public boolean isTypeOf(final @NotNull Path filePath) {
-			return LightningFileUtils.getExtension(Objects.notNull(filePath, "FilePath must not be null")).equals(this.toLowerCase());
-		}
-
-		@Override
-		public boolean isTypeOf(final @NotNull File file) {
-			return LightningFileUtils.getExtension(Objects.notNull(file, "File must not be null")).equals(this.toLowerCase());
 		}
 
 		@Override

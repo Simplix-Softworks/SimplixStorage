@@ -2,6 +2,7 @@ package de.leonhard.storage.internal.base.interfaces;
 
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -15,7 +16,7 @@ public interface DataTypeBase {
 	 * @param map            the Map to be imported from(an empty Map will be returned if @param map is null)
 	 * @return a Map containing the Data of @param map.
 	 */
-	Map<String, Object> getNewDataMap(final @Nullable CommentBase commentSetting, final @Nullable Map<String, Object> map);
+	Map<String, Object> getNewDataMap(final @NotNull CommentBase commentSetting, final @Nullable Map<String, Object> map);
 
 	/**
 	 * Get a List of the proper Type defined by your CommentSetting.
@@ -24,5 +25,5 @@ public interface DataTypeBase {
 	 * @param list           the Map to be imported from(an empty List will be returned if @param list is null)
 	 * @return a List containing the Data of @param list.
 	 */
-	List<String> getNewDataList(final @Nullable CommentBase commentSetting, final @Nullable List<String> list);
+	List<String> getNewDataList(final @NotNull CommentBase commentSetting, final @Nullable List<String> list);
 }
