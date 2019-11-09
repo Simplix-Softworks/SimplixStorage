@@ -3,7 +3,7 @@ package de.leonhard.storage.internal.data.raw;
 import de.leonhard.storage.internal.base.FlatFile;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
-import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.data.section.JsonSection;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.utils.LightningFileUtils;
@@ -27,7 +27,7 @@ import org.json.JSONTokener;
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
-	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
+	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.JSON);
 
 		if (this.create() && inputStream != null) {

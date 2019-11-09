@@ -10,21 +10,66 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Cleanup;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings("unused")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class YamlEditor {
 
-	private final File file;
-
-
-	protected YamlEditor(final File file) {
-		this.file = file;
+	public static List<String> readComments(final @NotNull File file) throws IOException {
+		return getCommentsFromLines(read(file));
 	}
 
-	public static List<String> getCommentsFromLines(final @NotNull List<String> lines) {
+	public static List<String> read(final @NotNull File file) throws IOException {
+		return Files.readAllLines(file.toPath());
+	}
+
+	public static List<String> readFooter(final @NotNull File file) throws IOException {
+		return getFooterFromLines(read(file));
+	}
+
+	public static List<String> readHeader(final @NotNull File file) throws IOException {
+		return getHeaderFromLines(read(file));
+	}
+
+	public static List<String> readKeys(final @NotNull File file) throws IOException {
+		return getKeys(read(file));
+	}
+
+	public static List<String> readPureComments(final @NotNull File file) throws IOException {
+		return getPureCommentsFromLines(read(file));
+	}
+
+	public static List<String> readWithoutHeaderAndFooter(final @NotNull File file) throws IOException {
+		return getLinesWithoutFooterAndHeaderFromLines(read(file));
+	}
+
+	public static void write(final @NotNull File file, final @NotNull List<String> lines) throws IOException {
+		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(file));
+		Iterator tempIterator = lines.iterator();
+		writer.print(tempIterator.next());
+		//noinspection unchecked
+		tempIterator.forEachRemaining(line -> {
+			writer.println();
+			writer.print(line);
+		});
+	}
+
+	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
+		final List<String> header = getHeaderFromLines(lines);
+		final List<String> footer = getFooterFromLines(lines);
+
+		lines.removeAll(header);
+		lines.removeAll(footer);
+
+		return lines;
+	}
+
+	private static List<String> getCommentsFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (line.startsWith("#")) {
@@ -34,7 +79,7 @@ public class YamlEditor {
 		return result;
 	}
 
-	public static List<String> getFooterFromLines(final @NotNull List<String> lines) {
+	private static List<String> getFooterFromLines(final @NotNull List<String> lines) {
 		Objects.checkNull(lines, "Lines must not be null");
 
 		final List<String> result = new ArrayList<>();
@@ -51,7 +96,7 @@ public class YamlEditor {
 		return result;
 	}
 
-	public static List<String> getHeaderFromLines(final @NotNull List<String> lines) {
+	private static List<String> getHeaderFromLines(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (!line.startsWith("#")) {
@@ -63,7 +108,7 @@ public class YamlEditor {
 		return result;
 	}
 
-	public static List<String> getKeys(final @NotNull List<String> lines) {
+	private static List<String> getKeys(final @NotNull List<String> lines) {
 		final List<String> result = new ArrayList<>();
 		for (final String line : Objects.notNull(lines, "Lines must not be null")) {
 			if (!line.replaceAll("\\s+", "").startsWith("#")) {
@@ -77,7 +122,7 @@ public class YamlEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
-	public static List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
+	private static List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
 		final List<String> comments = getCommentsFromLines(lines);
 		final List<String> header = getHeaderFromLines(lines);
 		final List<String> footer = getFooterFromLines(lines);
@@ -86,58 +131,5 @@ public class YamlEditor {
 		comments.removeAll(footer);
 
 		return comments;
-	}
-
-	public static List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
-		final List<String> header = getHeaderFromLines(lines);
-		final List<String> footer = getFooterFromLines(lines);
-
-		lines.removeAll(header);
-		lines.removeAll(footer);
-
-		return lines;
-	}
-
-	public final File getFile() {
-		return this.file;
-	}
-
-	public List<String> readComments() throws IOException {
-		return getCommentsFromLines(this.read());
-	}
-
-	public List<String> read() throws IOException {
-		return Files.readAllLines(this.file.toPath());
-	}
-
-	public List<String> readFooter() throws IOException {
-		return getFooterFromLines(this.read());
-	}
-
-	public List<String> readHeader() throws IOException {
-		return getHeaderFromLines(this.read());
-	}
-
-	public List<String> readKeys() throws IOException {
-		return getKeys(this.read());
-	}
-
-	public List<String> readPureComments() throws IOException {
-		return getPureCommentsFromLines(this.read());
-	}
-
-	public List<String> readWithoutHeaderAndFooter() throws IOException {
-		return getLinesWithoutFooterAndHeaderFromLines(this.read());
-	}
-
-	public void write(final @NotNull List<String> lines) throws IOException {
-		@Cleanup PrintWriter writer = new PrintWriter(new FileWriter(this.file));
-		Iterator tempIterator = lines.iterator();
-		writer.print(tempIterator.next());
-		//noinspection unchecked
-		tempIterator.forEachRemaining(line -> {
-			writer.println();
-			writer.print(line);
-		});
 	}
 }

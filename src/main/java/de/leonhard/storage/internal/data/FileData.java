@@ -269,18 +269,18 @@ public class FileData {
 	}
 
 	private Set<String> keySet(final Map<String, Object> map) {
-		Set<String> localSet = new HashSet<>();
+		Set<String> tempSet = new HashSet<>();
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
 				//noinspection unchecked
 				for (String tempKey : this.keySet((Map<String, Object>) map.get(key))) {
-					localSet.add(key + "." + tempKey);
+					tempSet.add(key + "." + tempKey);
 				}
 			} else {
-				localSet.add(key);
+				tempSet.add(key);
 			}
 		}
-		return localSet;
+		return tempSet;
 	}
 
 	private int size(final Map<String, Object> map) {

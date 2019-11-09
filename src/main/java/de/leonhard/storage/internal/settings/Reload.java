@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.settings;
 
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * an Enum defining the reload behaviour of the Data classes
  */
 @SuppressWarnings("unused")
-public enum Reload implements ReloadBase {
+public enum Reload implements ReloadSettingBase {
 
 	/**
 	 * reloads every time you try to get something from the config

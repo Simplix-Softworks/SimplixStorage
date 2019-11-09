@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings("unused")
-public interface ReloadBase {
+public interface ReloadSettingBase {
 
 	boolean shouldReload(final @NotNull FlatFile flatFile);
 }

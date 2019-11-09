@@ -1,11 +1,12 @@
 package de.leonhard.storage.internal.data.config;
 
-import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.CommentSettingBase;
 import de.leonhard.storage.internal.base.interfaces.ConfigBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
-import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.data.raw.YamlFile;
 import de.leonhard.storage.internal.settings.Comment;
+import de.leonhard.storage.internal.utils.editor.YamlEditor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +27,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 	private List<String> comments;
 
 
-	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+	protected YamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, inputStream, reloadSetting, commentSetting == null ? Comment.PRESERVE : commentSetting, dataType);
 	}
 
@@ -39,7 +40,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			return this.header;
 		} else {
 			try {
-				this.header = this.yamlEditor.readHeader();
+				this.header = YamlEditor.readHeader(this.file);
 				return this.header;
 			} catch (IOException e) {
 				System.err.println("Couldn't get header of '" + this.file.getAbsolutePath() + "'.");
@@ -65,21 +66,21 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 			if (this.file.length() == 0) {
 				try {
-					this.yamlEditor.write(this.header);
+					YamlEditor.write(this.file, this.header);
 				} catch (IOException e) {
 					System.err.println("Error while setting header of '" + this.file.getAbsolutePath() + "'");
 					e.printStackTrace();
 				}
 			} else {
 				try {
-					final List<String> lines = this.yamlEditor.read();
-					final List<String> oldHeader = this.yamlEditor.readHeader();
+					final List<String> lines = YamlEditor.read(this.file);
+					final List<String> oldHeader = YamlEditor.readHeader(this.file);
 
 					List<String> newLines = this.header;
 					lines.removeAll(oldHeader);
 					newLines.addAll(lines);
 
-					this.yamlEditor.write(newLines);
+					YamlEditor.write(this.file, newLines);
 				} catch (final IOException e) {
 					System.err.println("Exception while modifying header of '" + this.file.getAbsolutePath() + "'");
 					e.printStackTrace();
@@ -89,12 +90,12 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			this.header = new ArrayList<>();
 
 			try {
-				final List<String> lines = this.yamlEditor.read();
-				final List<String> oldHeader = this.yamlEditor.readHeader();
+				final List<String> lines = YamlEditor.read(this.file);
+				final List<String> oldHeader = YamlEditor.readHeader(this.file);
 
 				lines.removeAll(oldHeader);
 
-				this.yamlEditor.write(lines);
+				YamlEditor.write(this.file, lines);
 			} catch (final IOException e) {
 				System.err.println("Exception while modifying header of '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -110,7 +111,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			return this.footer;
 		} else {
 			try {
-				this.footer = this.yamlEditor.readFooter();
+				this.footer = YamlEditor.readFooter(this.file);
 				return this.footer;
 			} catch (IOException e) {
 				System.err.println("Couldn't get footer of '" + this.file.getAbsolutePath() + "'.");
@@ -136,20 +137,20 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 
 			if (this.file.length() == 0) {
 				try {
-					this.yamlEditor.write(this.footer);
+					YamlEditor.write(this.file, this.footer);
 				} catch (IOException e) {
 					System.err.println("Error while setting footer of '" + this.file.getAbsolutePath() + "'");
 					e.printStackTrace();
 				}
 			} else {
 				try {
-					final List<String> lines = this.yamlEditor.read();
-					final List<String> oldFooter = this.yamlEditor.readFooter();
+					final List<String> lines = YamlEditor.read(this.file);
+					final List<String> oldFooter = YamlEditor.readFooter(this.file);
 
 					lines.removeAll(oldFooter);
 					lines.addAll(this.footer);
 
-					this.yamlEditor.write(lines);
+					YamlEditor.write(this.file, lines);
 				} catch (final IOException e) {
 					System.err.println("Exception while modifying footer of '" + this.file.getAbsolutePath() + "'");
 					e.printStackTrace();
@@ -159,12 +160,12 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			this.footer = new ArrayList<>();
 
 			try {
-				final List<String> lines = this.yamlEditor.read();
-				final List<String> oldFooter = this.yamlEditor.readFooter();
+				final List<String> lines = YamlEditor.read(this.file);
+				final List<String> oldFooter = YamlEditor.readFooter(this.file);
 
 				lines.removeAll(oldFooter);
 
-				this.yamlEditor.write(lines);
+				YamlEditor.write(this.file, lines);
 			} catch (final IOException e) {
 				System.err.println("Exception while modifying footer of '" + this.file.getAbsolutePath() + "'");
 				e.printStackTrace();
@@ -180,7 +181,7 @@ public class YamlConfig extends YamlFile implements ConfigBase {
 			return this.comments;
 		} else {
 			try {
-				this.comments = yamlEditor.readComments();
+				this.comments = YamlEditor.readComments(this.file);
 				return this.comments;
 			} catch (IOException e) {
 				System.err.println("Couldn't get comments from '" + this.file.getAbsolutePath() + "'.");

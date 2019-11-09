@@ -50,13 +50,13 @@ public class JsonUtils {
 		return map;
 	}
 
-	private static Object getValue(final @NotNull Object o) {
-		if (o instanceof JSONArray) {
-			return toList((JSONArray) o);
-		} else if (o instanceof JSONObject) {
-			return toMap((JSONObject) o);
+	private static Object getValue(final @NotNull Object obj) {
+		if (obj instanceof JSONArray) {
+			return toList((JSONArray) obj);
+		} else if (obj instanceof JSONObject) {
+			return toMap((JSONObject) obj);
 		} else {
-			return o;
+			return obj;
 		}
 	}
 }

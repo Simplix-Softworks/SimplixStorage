@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.utils.editor;
 
-import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.CommentSettingBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.utils.basic.Objects;
@@ -30,7 +30,7 @@ public class LightningEditor {
 	 * @param map            a HashMap containing the Data to be written.
 	 * @param commentSetting the CommentSetting to be used.
 	 */
-	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull CommentBase commentSetting) {
+	public static void writeData(final @NotNull File file, final @NotNull Map<String, Object> map, final @NotNull CommentSettingBase commentSetting) {
 		if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
 			initialWriteWithComments(file, map);
 		} else {
@@ -46,7 +46,7 @@ public class LightningEditor {
 	 * @param commentSetting the CommentSetting to be used.
 	 * @return a Map containing the Data of the File.
 	 */
-	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentBase commentSetting) {
+	public static Map<String, Object> readData(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
 			return initialReadWithComments(file, dataType, commentSetting);
 		} else {
@@ -59,9 +59,9 @@ public class LightningEditor {
 		try (PrintWriter writer = new PrintWriter(file)) {
 			if (!map.isEmpty()) {
 				Iterator mapIterator = map.keySet().iterator();
-				String localKey = (String) mapIterator.next();
-				while (localKey.startsWith("#") || map.get(localKey) == LineType.COMMENT || localKey.startsWith("{=}emptyline") || map.get(localKey) == LineType.BLANK_LINE) {
-					localKey = (String) mapIterator.next();
+				String initialKey = (String) mapIterator.next();
+				while (initialKey.startsWith("#") || map.get(initialKey) == LineType.COMMENT || initialKey.startsWith("{=}emptyline") || map.get(initialKey) == LineType.BLANK_LINE) {
+					initialKey = (String) mapIterator.next();
 				}
 				topLayerWriteWithOutComments(writer, map, (String) mapIterator.next());
 				//noinspection unchecked
@@ -82,7 +82,7 @@ public class LightningEditor {
 
 	// <Read Data>
 	// <Read Data with Comments>
-	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentBase commentSetting) {
+	private static Map<String, Object> initialReadWithComments(final @NotNull File file, final @NotNull DataTypeBase dataType, final @NotNull CommentSettingBase commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -122,7 +122,7 @@ public class LightningEditor {
 	}
 	// </Read Data with Comments>
 
-	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataTypeBase dataType, final CommentBase commentSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithComments(final String filePath, final List<String> lines, int blankLine, int commentLine, final DataTypeBase dataType, final CommentSettingBase commentSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -155,7 +155,7 @@ public class LightningEditor {
 	}
 
 	// <Read Data without Comments>
-	private static Map<String, Object> initialReadWithOutComments(final File file, final DataTypeBase dataType, final CommentBase commentSetting) {
+	private static Map<String, Object> initialReadWithOutComments(final File file, final DataTypeBase dataType, final CommentSettingBase commentSetting) {
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
@@ -189,7 +189,7 @@ public class LightningEditor {
 	}
 	// </Read without Comments>
 
-	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataTypeBase dataType, final CommentBase commentSetting) throws ArrayIndexOutOfBoundsException {
+	private static Map<String, Object> internalReadWithOutComments(final String filePath, final List<String> lines, final DataTypeBase dataType, final CommentSettingBase commentSetting) throws ArrayIndexOutOfBoundsException {
 		Map<String, Object> tempMap = dataType.getNewDataMap(commentSetting, null);
 		String tempKey = null;
 
@@ -217,7 +217,7 @@ public class LightningEditor {
 		throw new IllegalStateException("Error at '" + filePath + "' -> Block does not close");
 	}
 
-	private static String readKey(final String filePath, final List<String> lines, final DataTypeBase dataType, final Map<String, Object> tempMap, String tempKey, final String tempLine, final CommentBase commentSetting) {
+	private static String readKey(final String filePath, final List<String> lines, final DataTypeBase dataType, final Map<String, Object> tempMap, String tempKey, final String tempLine, final CommentSettingBase commentSetting) {
 		if (tempLine.contains("=")) {
 			String[] line = tempLine.split("=");
 			line[0] = line[0].trim();
@@ -260,9 +260,9 @@ public class LightningEditor {
 				Iterator mapIterator = map.keySet().iterator();
 				topLayerWriteWithComments(writer, map, (String) mapIterator.next());
 				//noinspection unchecked
-				mapIterator.forEachRemaining(localKey -> {
+				mapIterator.forEachRemaining(tempKey -> {
 					writer.println();
-					topLayerWriteWithComments(writer, map, (String) localKey);
+					topLayerWriteWithComments(writer, map, (String) tempKey);
 				});
 			}
 			writer.flush();
@@ -273,37 +273,37 @@ public class LightningEditor {
 		}
 	}
 
-	private static void topLayerWriteWithComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
-		if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
-			writer.print(localKey.substring(0, localKey.lastIndexOf("{=}")));
-		} else if (map.get(localKey) instanceof Map) {
-			writer.print(localKey + " " + "{");
+	private static void topLayerWriteWithComments(final PrintWriter writer, final Map<String, Object> map, final String tempKey) {
+		if (tempKey.startsWith("#") && map.get(tempKey) == LineType.COMMENT) {
+			writer.print(tempKey.substring(0, tempKey.lastIndexOf("{=}")));
+		} else if (map.get(tempKey) instanceof Map) {
+			writer.print(tempKey + " " + "{");
 			//noinspection unchecked
-			internalWriteWithComments((Map<String, Object>) map.get(localKey), "", writer);
-		} else if (map.get(localKey) instanceof List) {
-			writer.println(localKey + " = [");
+			internalWriteWithComments((Map<String, Object>) map.get(tempKey), "", writer);
+		} else if (map.get(tempKey) instanceof List) {
+			writer.println(tempKey + " = [");
 			//noinspection unchecked
-			writeList((List<String>) map.get(localKey), "  ", writer);
-		} else if (!localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
-			writer.print(localKey + " = " + map.get(localKey));
+			writeList((List<String>) map.get(tempKey), "  ", writer);
+		} else if (!tempKey.startsWith("{=}emptyline") && map.get(tempKey) != LineType.BLANK_LINE) {
+			writer.print(tempKey + " = " + map.get(tempKey));
 		}
 	}
 
 	private static void internalWriteWithComments(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
-		for (String localKey : map.keySet()) {
+		for (String tempKey : map.keySet()) {
 			writer.println();
-			if (localKey.startsWith("#") && map.get(localKey) == LineType.COMMENT) {
-				writer.print(indentationString + "  " + localKey.substring(0, localKey.lastIndexOf("{=}")));
-			} else if (map.get(localKey) instanceof Map) {
-				writer.print(indentationString + "  " + localKey + " " + "{");
+			if (tempKey.startsWith("#") && map.get(tempKey) == LineType.COMMENT) {
+				writer.print(indentationString + "  " + tempKey.substring(0, tempKey.lastIndexOf("{=}")));
+			} else if (map.get(tempKey) instanceof Map) {
+				writer.print(indentationString + "  " + tempKey + " " + "{");
 				//noinspection unchecked
-				internalWriteWithComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
-			} else if (map.get(localKey) instanceof List) {
-				writer.println(indentationString + "  " + localKey + " = [");
+				internalWriteWithComments((Map<String, Object>) map.get(tempKey), indentationString + "  ", writer);
+			} else if (map.get(tempKey) instanceof List) {
+				writer.println(indentationString + "  " + tempKey + " = [");
 				//noinspection unchecked
-				writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
-			} else if (!localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
-				writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
+				writeList((List<String>) map.get(tempKey), indentationString + "  ", writer);
+			} else if (!tempKey.startsWith("{=}emptyline") && map.get(tempKey) != LineType.BLANK_LINE) {
+				writer.print(indentationString + "  " + tempKey + " = " + map.get(tempKey));
 			}
 		}
 		writer.println();
@@ -311,15 +311,15 @@ public class LightningEditor {
 	}
 	// </Write Data with Comments
 
-	private static List<String> readList(final String filePath, final List<String> lines, final DataTypeBase dataType, final CommentBase commentSetting) {
-		List<String> localList = dataType.getNewDataList(commentSetting, null);
+	private static List<String> readList(final String filePath, final List<String> lines, final DataTypeBase dataType, final CommentSettingBase commentSetting) {
+		List<String> tempList = dataType.getNewDataList(commentSetting, null);
 		while (lines.size() > 0) {
 			String tempLine = lines.get(0).trim();
 			lines.remove(0);
 			if (tempLine.startsWith("-")) {
-				localList.add(tempLine.substring(1).trim());
+				tempList.add(tempLine.substring(1).trim());
 			} else if (tempLine.endsWith("]")) {
-				return localList;
+				return tempList;
 			} else {
 				throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 			}
@@ -327,34 +327,34 @@ public class LightningEditor {
 		throw new IllegalStateException("Error at '" + filePath + "' -> List not closed properly");
 	}
 
-	private static void topLayerWriteWithOutComments(final PrintWriter writer, final Map<String, Object> map, final String localKey) {
-		if (map.get(localKey) instanceof Map) {
-			writer.print(localKey + " " + "{");
+	private static void topLayerWriteWithOutComments(final PrintWriter writer, final Map<String, Object> map, final String tempKey) {
+		if (map.get(tempKey) instanceof Map) {
+			writer.print(tempKey + " " + "{");
 			//noinspection unchecked
-			internalWriteWithoutComments((Map<String, Object>) map.get(localKey), "", writer);
-		} else if (map.get(localKey) instanceof List) {
-			writer.println("  " + localKey + " = [");
+			internalWriteWithoutComments((Map<String, Object>) map.get(tempKey), "", writer);
+		} else if (map.get(tempKey) instanceof List) {
+			writer.println("  " + tempKey + " = [");
 			//noinspection unchecked
-			writeList((List<String>) map.get(localKey), "  ", writer);
+			writeList((List<String>) map.get(tempKey), "  ", writer);
 		} else {
-			writer.print(localKey + " = " + map.get(localKey));
+			writer.print(tempKey + " = " + map.get(tempKey));
 		}
 	}
 
 	private static void internalWriteWithoutComments(final Map<String, Object> map, final String indentationString, final PrintWriter writer) {
-		for (String localKey : map.keySet()) {
-			if (!localKey.startsWith("#") && map.get(localKey) != LineType.COMMENT && !localKey.startsWith("{=}emptyline") && map.get(localKey) != LineType.BLANK_LINE) {
+		for (String tempKey : map.keySet()) {
+			if (!tempKey.startsWith("#") && map.get(tempKey) != LineType.COMMENT && !tempKey.startsWith("{=}emptyline") && map.get(tempKey) != LineType.BLANK_LINE) {
 				writer.println();
-				if (map.get(localKey) instanceof Map) {
-					writer.print(indentationString + "  " + localKey + " " + "{");
+				if (map.get(tempKey) instanceof Map) {
+					writer.print(indentationString + "  " + tempKey + " " + "{");
 					//noinspection unchecked
-					internalWriteWithoutComments((Map<String, Object>) map.get(localKey), indentationString + "  ", writer);
-				} else if (map.get(localKey) instanceof List) {
-					writer.println(indentationString + "  " + localKey + " = [");
+					internalWriteWithoutComments((Map<String, Object>) map.get(tempKey), indentationString + "  ", writer);
+				} else if (map.get(tempKey) instanceof List) {
+					writer.println(indentationString + "  " + tempKey + " = [");
 					//noinspection unchecked
-					writeList((List<String>) map.get(localKey), indentationString + "  ", writer);
+					writeList((List<String>) map.get(tempKey), indentationString + "  ", writer);
 				} else {
-					writer.print(indentationString + "  " + localKey + " = " + map.get(localKey));
+					writer.print(indentationString + "  " + tempKey + " = " + map.get(tempKey));
 				}
 			}
 		}

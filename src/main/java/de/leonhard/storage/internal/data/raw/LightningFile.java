@@ -1,10 +1,10 @@
 package de.leonhard.storage.internal.data.raw;
 
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.CommentSettingBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
-import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.data.section.LightningSection;
 import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class LightningFile extends CommentEnabledFile {
 
-	protected LightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+	protected LightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.LIGHTNING);
 
 		if (this.create() && inputStream != null) {
@@ -197,28 +197,28 @@ public class LightningFile extends CommentEnabledFile {
 	}
 
 	private Set<String> blockKeySet(final Map<String, Object> map) {
-		Set<String> localSet = new HashSet<>();
+		Set<String> tempSet = new HashSet<>();
 		for (String key : map.keySet()) {
 			if (map.get(key) != LightningEditor.LineType.COMMENT && map.get(key) != LightningEditor.LineType.BLANK_LINE) {
-				localSet.add(key);
+				tempSet.add(key);
 			}
 		}
-		return localSet;
+		return tempSet;
 	}
 
 	private Set<String> keySet(final Map<String, Object> map) {
-		Set<String> localSet = new HashSet<>();
+		Set<String> tempSet = new HashSet<>();
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
 				//noinspection unchecked
 				for (String tempKey : this.keySet((Map<String, Object>) map.get(key))) {
-					localSet.add(key + "." + tempKey);
+					tempSet.add(key + "." + tempKey);
 				}
 			} else if (map.get(key) != LightningEditor.LineType.COMMENT && map.get(key) != LightningEditor.LineType.BLANK_LINE) {
-				localSet.add(key);
+				tempSet.add(key);
 			}
 		}
-		return localSet;
+		return tempSet;
 	}
 
 	@Override

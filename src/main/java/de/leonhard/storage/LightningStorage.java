@@ -1,8 +1,8 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.CommentSettingBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
-import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.data.config.LightningConfig;
 import de.leonhard.storage.internal.data.config.YamlConfig;
 import de.leonhard.storage.internal.data.raw.JsonFile;
@@ -30,9 +30,9 @@ public class LightningStorage {
 	private final String name;
 	private final String path;
 	private BufferedInputStream inputStream;
-	private ReloadBase reloadSetting;
+	private ReloadSettingBase reloadSetting;
 	private DataTypeBase dataType;
-	private CommentBase commentSetting;
+	private CommentSettingBase commentSetting;
 
 	// <local Constructors>
 	private LightningStorage(final @NotNull File file) {
@@ -205,7 +205,7 @@ public class LightningStorage {
 	 *
 	 * @param reloadSetting the ReloadSetting to be set(default is INTELLIGENT)
 	 */
-	public final LightningStorage reloadSetting(final @Nullable ReloadBase reloadSetting) {
+	public final LightningStorage reloadSetting(final @Nullable ReloadSettingBase reloadSetting) {
 		this.reloadSetting = reloadSetting;
 		return this;
 	}
@@ -215,7 +215,7 @@ public class LightningStorage {
 	 *
 	 * @param commentSetting the CommentSetting to be set(Default for Configs is true, otherwise it's false)
 	 */
-	public final LightningStorage commentSetting(final CommentBase commentSetting) {
+	public final LightningStorage commentSetting(final CommentSettingBase commentSetting) {
 		this.commentSetting = commentSetting;
 		return this;
 	}
@@ -314,42 +314,42 @@ public class LightningStorage {
 
 	private static class LocalJsonFile extends JsonFile {
 
-		private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
+		private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, dataType);
 		}
 	}
 
 	private static class LocalLightningFile extends LightningFile {
 
-		private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+		private LocalLightningFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalLightningConfig extends LightningConfig {
 
-		private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+		private LocalLightningConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalTomlFile extends TomlFile {
 
-		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable DataTypeBase dataType) {
+		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, dataType);
 		}
 	}
 
 	private static class LocalYamlFile extends YamlFile {
 
-		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+		private LocalYamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}
 
 	private static class LocalYamlConfig extends YamlConfig {
 
-		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+		private LocalYamlConfig(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 			super(file, inputStream, reloadSetting, commentSetting, dataType);
 		}
 	}

@@ -2,7 +2,7 @@ package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
-import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.base.interfaces.StorageBase;
 import de.leonhard.storage.internal.data.FileData;
 import de.leonhard.storage.internal.settings.DataType;
@@ -32,7 +32,7 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	protected FileData fileData;
 	protected long lastLoaded;
 	@Setter
-	private ReloadBase reloadSetting = Reload.INTELLIGENT;
+	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
 	@Setter
 	private DataTypeBase dataType = DataType.AUTOMATIC;
 

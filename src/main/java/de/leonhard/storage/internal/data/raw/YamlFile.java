@@ -4,10 +4,10 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.base.CommentEnabledFile;
-import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.CommentSettingBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
-import de.leonhard.storage.internal.base.interfaces.ReloadBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.data.section.YamlSection;
 import de.leonhard.storage.internal.settings.Comment;
 import de.leonhard.storage.internal.settings.DataType;
@@ -29,10 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unchecked", "unused"})
 public class YamlFile extends CommentEnabledFile {
 
-	protected final YamlEditor yamlEditor;
-	private final YamlUtils yamlUtils;
-
-	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadBase reloadSetting, final @Nullable CommentBase commentSetting, final @Nullable DataTypeBase dataType) {
+	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
 		super(file, FileType.YAML);
 
 		if (this.create() && inputStream != null) {
@@ -50,10 +47,6 @@ public class YamlFile extends CommentEnabledFile {
 		} else {
 			this.setDataType(DataType.STANDARD);
 		}
-
-
-		this.yamlEditor = new LocalEditor(this.file);
-		this.yamlUtils = new LocalUtils(this.yamlEditor);
 
 		try {
 			this.fileData = new LocalFileData((Map<String, Object>) new YamlReader(new FileReader(this.file)).read());
@@ -181,15 +174,15 @@ public class YamlFile extends CommentEnabledFile {
 			if (this.getCommentSetting() != Comment.PRESERVE) {
 				this.write(Objects.notNull(this.fileData, "FileData must not be null").toMap());
 			} else {
-				final List<String> unEdited = this.yamlEditor.read();
-				final List<String> header = this.yamlEditor.readHeader();
-				final List<String> footer = this.yamlEditor.readFooter();
+				final List<String> unEdited = YamlEditor.read(this.file);
+				final List<String> header = YamlEditor.readHeader(this.file);
+				final List<String> footer = YamlEditor.readFooter(this.file);
 				this.write(this.fileData.toMap());
-				header.addAll(this.yamlEditor.read());
+				header.addAll(YamlEditor.read(this.file));
 				if (!header.containsAll(footer)) {
 					header.addAll(footer);
 				}
-				this.yamlEditor.write(this.yamlUtils.parseComments(unEdited, header));
+				YamlEditor.write(this.file, YamlUtils.parseComments(this.file, unEdited, header));
 				this.write(Objects.notNull(this.fileData, "FileData must not be null").toMap());
 			}
 		} catch (IOException e) {
@@ -240,21 +233,6 @@ public class YamlFile extends CommentEnabledFile {
 
 		private LocalSection(final @NotNull String sectionKey, final @NotNull YamlFile yamlFile) {
 			super(sectionKey, yamlFile);
-		}
-	}
-
-
-	private static class LocalEditor extends YamlEditor {
-
-		private LocalEditor(final File file) {
-			super(file);
-		}
-	}
-
-	private static class LocalUtils extends YamlUtils {
-
-		private LocalUtils(final YamlEditor yamlEditor) {
-			super(yamlEditor);
 		}
 	}
 }

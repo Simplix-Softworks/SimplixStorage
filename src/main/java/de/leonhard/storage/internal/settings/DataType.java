@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.settings;
 
-import de.leonhard.storage.internal.base.interfaces.CommentBase;
+import de.leonhard.storage.internal.base.interfaces.CommentSettingBase;
 import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.util.*;
@@ -19,12 +19,12 @@ public enum DataType implements DataTypeBase {
 	 */
 	SORTED {
 		@Override
-		public Map<String, Object> getNewDataMap(final @Nullable CommentBase commentSetting, final @Nullable Map<String, Object> map) {
+		public Map<String, Object> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
 			return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 		}
 
 		@Override
-		public List<String> getNewDataList(final @Nullable CommentBase commentSetting, final @Nullable List<String> list) {
+		public List<String> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<String> list) {
 			return list == null ? new LinkedList<>() : new LinkedList<>(list);
 		}
 	},
@@ -33,12 +33,12 @@ public enum DataType implements DataTypeBase {
 	 */
 	STANDARD {
 		@Override
-		public Map<String, Object> getNewDataMap(final @Nullable CommentBase commentSetting, final @Nullable Map<String, Object> map) {
+		public Map<String, Object> getNewDataMap(final @Nullable CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
 			return map == null ? new HashMap<>() : new HashMap<>(map);
 		}
 
 		@Override
-		public List<String> getNewDataList(final @Nullable CommentBase commentSetting, final @Nullable List<String> list) {
+		public List<String> getNewDataList(final @Nullable CommentSettingBase commentSetting, final @Nullable List<String> list) {
 			return list == null ? new ArrayList<>() : new ArrayList<>(list);
 		}
 	},
@@ -47,7 +47,7 @@ public enum DataType implements DataTypeBase {
 	 */
 	AUTOMATIC {
 		@Override
-		public Map<String, Object> getNewDataMap(final @NotNull CommentBase commentSetting, final @Nullable Map<String, Object> map) {
+		public Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map) {
 			if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
 				return map == null ? new LinkedHashMap<>() : new LinkedHashMap<>(map);
 			} else {
@@ -56,7 +56,7 @@ public enum DataType implements DataTypeBase {
 		}
 
 		@Override
-		public List<String> getNewDataList(final @NotNull CommentBase commentSetting, final @Nullable List<String> list) {
+		public List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list) {
 			if (Objects.notNull(commentSetting) == Comment.PRESERVE) {
 				return list == null ? new LinkedList<>() : new LinkedList<>(list);
 			} else {
@@ -66,8 +66,8 @@ public enum DataType implements DataTypeBase {
 	};
 
 	@Override
-	public abstract Map<String, Object> getNewDataMap(final @NotNull CommentBase commentSetting, final @Nullable Map<String, Object> map);
+	public abstract Map<String, Object> getNewDataMap(final @NotNull CommentSettingBase commentSetting, final @Nullable Map<String, Object> map);
 
 	@Override
-	public abstract List<String> getNewDataList(final @NotNull CommentBase commentSetting, final @Nullable List<String> list);
+	public abstract List<String> getNewDataList(final @NotNull CommentSettingBase commentSetting, final @Nullable List<String> list);
 }

@@ -1,8 +1,11 @@
 package de.leonhard.storage.internal.utils.datafiles;
 
 import de.leonhard.storage.internal.utils.editor.YamlEditor;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -10,25 +13,19 @@ import org.jetbrains.annotations.NotNull;
  * Adds several utility Methods for Yaml-Files
  */
 @SuppressWarnings("unused")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class YamlUtils {
-
-	final private YamlEditor yamlEditor;
-
-
-	protected YamlUtils(final YamlEditor yamlEditor) {
-		this.yamlEditor = yamlEditor;
-	}
 
 
 	@SuppressWarnings("UnusedAssignment")
-	public List<String> parseComments(final @NotNull List<String> comments, final @NotNull List<String> updated) {
+	public static List<String> parseComments(final @NotNull File file, final @NotNull List<String> comments, final @NotNull List<String> updated) {
 		final List<String> keys;
 		final Map<String, List<String>> parsed;
 		try {
-			keys = this.yamlEditor.readKeys();
-			parsed = this.assignCommentsToKey(comments);
+			keys = YamlEditor.readKeys(file);
+			parsed = assignCommentsToKey(comments);
 		} catch (IOException e) {
-			System.err.println("Error while reading keys from '" + yamlEditor.getFile().getAbsolutePath() + "'");
+			System.err.println("Error while reading keys from '" + file.getAbsolutePath() + "'");
 			e.printStackTrace();
 			return new ArrayList<>();
 		}
@@ -46,7 +43,7 @@ public class YamlUtils {
 		return updated;
 	}
 
-	private Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
+	private static Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> fileLines) {
 		List<String> storage = new ArrayList<>();
 		final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
 		final Map<String, List<String>> result = new HashMap<>();
@@ -82,7 +79,7 @@ public class YamlUtils {
 	 * @return Nested Map with Comments assigned to the corresponding keys
 	 * @throws IOException if File could not be read
 	 */
-	private Map<String, List<String>> assignCommentsToKey() throws IOException {
-		return assignCommentsToKey(this.yamlEditor.read());
+	private static Map<String, List<String>> assignCommentsToKey(final @NotNull File file) throws IOException {
+		return assignCommentsToKey(YamlEditor.read(file));
 	}
 }
