@@ -1,11 +1,9 @@
 package de.leonhard.storage.internal.data.raw;
 
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
 import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.data.section.JsonSection;
-import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import de.leonhard.storage.internal.utils.datafiles.JsonUtils;
@@ -27,20 +25,11 @@ import org.json.JSONTokener;
 @SuppressWarnings("unused")
 public class JsonFile extends FlatFile {
 
-	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.JSON);
+	protected JsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
+		super(file, FileType.JSON, reloadSetting);
 
 		if (this.create() && inputStream != null) {
 			LightningFileUtils.writeToFile(this.file, inputStream);
-		}
-
-		if (dataType != null) {
-			this.setDataType(dataType);
-		} else {
-			this.setDataType(DataType.STANDARD);
-		}
-		if (reloadSetting != null) {
-			this.setReloadSetting(reloadSetting);
 		}
 
 		final JSONTokener jsonTokener = new JSONTokener(Objects.notNull(LightningFileUtils.createNewInputStream(this.file), "InputStream must not be null"));

@@ -1,8 +1,11 @@
 package de.leonhard.storage.internal.base;
 
 import de.leonhard.storage.internal.base.interfaces.CommentSettingBase;
+import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
+import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.settings.Comment;
+import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
 import lombok.Getter;
@@ -17,9 +20,18 @@ public abstract class CommentEnabledFile extends FlatFile {
 	@Getter
 	@Setter
 	private CommentSettingBase commentSetting = Comment.SKIP;
+	@Getter
+	@Setter
+	private DataTypeBase dataType = DataType.AUTOMATIC;
 
-	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType) {
-		super(file, fileType);
+	protected CommentEnabledFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
+		super(file, fileType, reloadSetting);
+		if (commentSetting != null) {
+			this.setCommentSetting(commentSetting);
+		}
+		if (dataType != null) {
+			this.setDataType(dataType);
+		}
 	}
 
 	public void reload(final @NotNull Comment commentSetting) {

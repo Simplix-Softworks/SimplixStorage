@@ -1,11 +1,9 @@
 package de.leonhard.storage.internal.base;
 
-import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
 import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.base.interfaces.StorageBase;
 import de.leonhard.storage.internal.data.FileData;
-import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.Reload;
 import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
@@ -33,14 +31,16 @@ public abstract class FlatFile implements StorageBase, Comparable<FlatFile> {
 	protected long lastLoaded;
 	@Setter
 	private ReloadSettingBase reloadSetting = Reload.INTELLIGENT;
-	@Setter
-	private DataTypeBase dataType = DataType.AUTOMATIC;
 
 
-	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType) {
+	protected FlatFile(final @NotNull File file, final @NotNull FileTypeBase fileType, final @Nullable ReloadSettingBase reloadSetting) {
 		if (fileType.isTypeOf(file)) {
 			this.fileType = fileType;
 			this.file = file;
+
+			if (reloadSetting != null) {
+				this.setReloadSetting(reloadSetting);
+			}
 		} else {
 			throw new IllegalStateException("File '" + file.getAbsolutePath() + "' is not of type '" + fileType + "'");
 		}

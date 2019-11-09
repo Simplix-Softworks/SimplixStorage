@@ -5,7 +5,7 @@
 
     <groupId>de.leonhard</groupId>
     <artifactId>lightningstorage</artifactId>
-    <version>3.0.0-Beta-v3.77</version>
+    <version>3.0.0-Beta-v3.78</version>
     <name>LightningStorage</name>
     <description>Store data in a better way</description>
     <url>https://github.com/JavaFactoryDev/LightningStorage</url>
@@ -26,6 +26,7 @@
             <roles>
                 <role>Lead Developer</role>
                 <role>Mutterer</role>
+                <role>Hey, lets break something again</role>
                 <role>Does not know how to document code</role>
             </roles>
             <timezone>Germany</timezone>

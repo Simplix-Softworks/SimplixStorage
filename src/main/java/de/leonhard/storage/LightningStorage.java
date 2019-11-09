@@ -315,7 +315,7 @@ public class LightningStorage {
 	private static class LocalJsonFile extends JsonFile {
 
 		private LocalJsonFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable DataTypeBase dataType) {
-			super(file, inputStream, reloadSetting, dataType);
+			super(file, inputStream, reloadSetting);
 		}
 	}
 
@@ -336,7 +336,7 @@ public class LightningStorage {
 	private static class LocalTomlFile extends TomlFile {
 
 		private LocalTomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable DataTypeBase dataType) {
-			super(file, inputStream, reloadSetting, dataType);
+			super(file, inputStream, reloadSetting);
 		}
 	}
 

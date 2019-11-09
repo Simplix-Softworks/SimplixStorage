@@ -1,11 +1,9 @@
 package de.leonhard.storage.internal.data.raw;
 
 import de.leonhard.storage.internal.base.FlatFile;
-import de.leonhard.storage.internal.base.interfaces.DataTypeBase;
 import de.leonhard.storage.internal.base.interfaces.FileTypeBase;
 import de.leonhard.storage.internal.base.interfaces.ReloadSettingBase;
 import de.leonhard.storage.internal.data.section.TomlSection;
-import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.utils.LightningFileUtils;
 import de.leonhard.storage.internal.utils.basic.Objects;
 import java.io.File;
@@ -23,20 +21,11 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TomlFile extends FlatFile {
 
-	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.TOML);
+	protected TomlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting) {
+		super(file, FileType.TOML, reloadSetting);
 
 		if (this.create() && inputStream != null) {
 			LightningFileUtils.writeToFile(this.file, inputStream);
-		}
-
-		if (dataType != null) {
-			setDataType(dataType);
-		} else {
-			setDataType(DataType.STANDARD);
-		}
-		if (reloadSetting != null) {
-			setReloadSetting(reloadSetting);
 		}
 
 		try {

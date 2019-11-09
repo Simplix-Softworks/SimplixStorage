@@ -30,22 +30,10 @@ import org.jetbrains.annotations.Nullable;
 public class YamlFile extends CommentEnabledFile {
 
 	protected YamlFile(final @NotNull File file, final @Nullable InputStream inputStream, final @Nullable ReloadSettingBase reloadSetting, final @Nullable CommentSettingBase commentSetting, final @Nullable DataTypeBase dataType) {
-		super(file, FileType.YAML);
+		super(file, FileType.YAML, reloadSetting, commentSetting, dataType == null ? DataType.STANDARD : dataType);
 
 		if (this.create() && inputStream != null) {
 			LightningFileUtils.writeToFile(this.file, inputStream);
-		}
-
-		if (reloadSetting != null) {
-			this.setReloadSetting(reloadSetting);
-		}
-		if (commentSetting != null) {
-			this.setCommentSetting(commentSetting);
-		}
-		if (dataType != null) {
-			this.setDataType(dataType);
-		} else {
-			this.setDataType(DataType.STANDARD);
 		}
 
 		try {
