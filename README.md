@@ -35,7 +35,7 @@ Now it is here: **LightningStorage**!
 LightningStorage is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
 Like bukkit it has a contains check - for both json and yaml.
-LightningStorage is licensed under the MIT license, which means that
+LightningStorage is licensed under the Apache2 license, which means that
 you can also **use it in private projects** that are not open source.
 
 If you have any ideas to add or issues just open a issue page. I will do my best to help.
