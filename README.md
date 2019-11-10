@@ -3,7 +3,6 @@
 lightningstorage - A Library to store data in a better way.
 
 
-
 ![LightingStorage](https://proxy.spigotmc.org/fe4eabc0f5de21c5ab0ca87a0003528e1b4ddf54?url=https%3A%2F%2Fi.ibb.co%2F3FyWVp2%2FLightning-Storage-Wallpaper.png)
 
 [![](https://jitpack.io/v/JavaFactoryDev/LightningStorage.svg)](https://jitpack.io/#JavaFactoryDev/LightningStorage)
@@ -28,9 +27,13 @@ LightningStorage is licensed under the Apache2 license, which means that
 you can also **use it in private projects** that are not open source.
 
 If you have any ideas to add or issues just open a issue page. I will do my best to help.
+<br>
+For more details, see the [wiki](https://github.com/JavaFactoryDev/LightningStorage/wiki) 
 
 <br>
-At the moment LightningStorage supports two file types:
+At the moment LightningStorage supports four file types:
+
+<br>
 
 #### Json:
 A very fast and slim file format.
