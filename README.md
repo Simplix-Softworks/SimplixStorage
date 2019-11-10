@@ -21,20 +21,9 @@ ThunderBolt-2 for example only supports Json files but does not support nested o
 Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
 Now it is here: **LightningStorage**!
 
-<br>
-### Table of contents:
-<br>
-- [A few information] <br>
-- [Supported file types] <br>
-- [How to setup] <br>
-- [Usage](https://github.com/JavaFactoryDev/LightningStorage/wiki/Usage) <br>
-- [Real world examples][Wiki] <br>
-
-
-
 LightningStorage is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
-Like bukkit it has a contains check - for both json and yaml.
+Like bukkit it has a contains check.
 LightningStorage is licensed under the Apache2 license, which means that
 you can also **use it in private projects** that are not open source.
 
@@ -55,7 +44,15 @@ Yaml files are not as fast as json files, but they are easier
 to read and are therefore more suitable than configuration files, 
 as you often find them in bukkit plugins in the form of "config.yml".
 
-More file formats will be supported soon
+### Toml:
+Toml is a compromise between the readybility of Yaml and the performance of Json, thus being a quite good way to go.
+
+
+### LightningFile
+LightningFile is our own implementation of a config file format. It has quite good performance (about as fast as Json) but is way more readable.
+
+
+
 
 
 
