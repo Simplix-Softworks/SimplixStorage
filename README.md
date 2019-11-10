@@ -24,11 +24,11 @@ Now it is here: **LightningStorage**!
 <br>
 ### Table of contents:
 <br>
--1. [A few information] <br>
--2. [Supported file types] <br>
--3. [How to setup] <br>
--4. [Usage](https://github.com/JavaFactoryDev/LightningStorage/wiki/Usage) <br>
--5. [Real world examples][Wiki] <br>
+- [A few information] <br>
+- [Supported file types] <br>
+- [How to setup] <br>
+- [Usage](https://github.com/JavaFactoryDev/LightningStorage/wiki/Usage) <br>
+- [Real world examples][Wiki] <br>
 
 
 
