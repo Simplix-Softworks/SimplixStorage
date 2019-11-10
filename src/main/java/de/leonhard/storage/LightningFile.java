@@ -93,10 +93,6 @@ public class LightningFile extends FlatFile {
 		}
 	}
 
-	protected final LightningFile getLightningFileInstance() {
-		return this;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) {

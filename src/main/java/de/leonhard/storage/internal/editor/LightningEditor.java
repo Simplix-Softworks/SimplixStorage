@@ -1,6 +1,5 @@
 package de.leonhard.storage.internal.editor;
 
-import com.sun.istack.internal.NotNull;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +26,7 @@ public class LightningEditor {
 	 * @param map           a HashMap containing the Data to be written.
 	 * @param configSetting the ConfigSetting to be used.
 	 */
-	public void writeData(@NotNull Map<String, Object> map, @NotNull ConfigSettings configSetting) {
+	public void writeData(Map<String, Object> map, ConfigSettings configSetting) {
 		if (configSetting == ConfigSettings.PRESERVE_COMMENTS) {
 			initialWriteWithComments(file, map);
 		} else if (configSetting == ConfigSettings.SKIP_COMMENTS) {
