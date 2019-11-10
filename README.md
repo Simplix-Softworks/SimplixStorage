@@ -3,7 +3,6 @@
 lightningstorage - A Library to store data in a better way.
 
 
-
 ![LightingStorage](https://proxy.spigotmc.org/fe4eabc0f5de21c5ab0ca87a0003528e1b4ddf54?url=https%3A%2F%2Fi.ibb.co%2F3FyWVp2%2FLightning-Storage-Wallpaper.png)
 
 [![](https://jitpack.io/v/JavaFactoryDev/LightningStorage.svg)](https://jitpack.io/#JavaFactoryDev/LightningStorage)
@@ -21,27 +20,20 @@ ThunderBolt-2 for example only supports Json files but does not support nested o
 Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
 Now it is here: **LightningStorage**!
 
-<br>
-### Table of contents:
-<br>
--1. [A few information] <br>
--2. [Supported file types] <br>
--3. [How to setup] <br>
--4. [Usage](https://github.com/JavaFactoryDev/LightningStorage/wiki/Usage) <br>
--5. [Real world examples][Wiki] <br>
-
-
-
 LightningStorage is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
-Like bukkit it has a contains check - for both json and yaml.
+Like bukkit it has a contains check.
 LightningStorage is licensed under the Apache2 license, which means that
 you can also **use it in private projects** that are not open source.
 
 If you have any ideas to add or issues just open a issue page. I will do my best to help.
+<br>
+For more details, see the [wiki](https://github.com/JavaFactoryDev/LightningStorage/wiki) 
 
 <br>
-At the moment LightningStorage supports two file types:
+At the moment LightningStorage supports four file types:
+
+<br>
 
 #### Json:
 A very fast and slim file format.
@@ -55,7 +47,15 @@ Yaml files are not as fast as json files, but they are easier
 to read and are therefore more suitable than configuration files, 
 as you often find them in bukkit plugins in the form of "config.yml".
 
-More file formats will be supported soon
+### Toml:
+Toml is a compromise between the readybility of Yaml and the performance of Json, thus being a quite good way to go.
+
+
+### LightningFile
+LightningFile is our own implementation of a config file format. It has quite good performance (about as fast as Json) but is way more readable.
+
+
+
 
 
 
