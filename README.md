@@ -1,6 +1,6 @@
 
-# lightningstorage
-lightningstorage - A Library to store data in a better way.
+# LightningStorage
+LightningStorage - A Library to store data in a better way.
 
 
 ![LightingStorage](https://proxy.spigotmc.org/fe4eabc0f5de21c5ab0ca87a0003528e1b4ddf54?url=https%3A%2F%2Fi.ibb.co%2F3FyWVp2%2FLightning-Storage-Wallpaper.png)
