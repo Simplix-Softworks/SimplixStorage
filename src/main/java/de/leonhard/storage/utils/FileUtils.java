@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class for easier, more convenient & strait interaction with files
+ */
 public final class FileUtils {
 
     public static File getAndMake(String name, String path) {
@@ -85,6 +88,29 @@ public final class FileUtils {
     // Methods for reading & writing a file
     // ----------------------------------------------------------------------------------------------------
 
+    public static InputStream createInputStream(File file) {
+        Valid.notNull(file);
+        try {
+            return Files.newInputStream(file.toPath());
+        } catch (IOException ex) {
+            System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
+            System.err.println("At: '" + file.getAbsolutePath() + "'");
+            ex.printStackTrace();
+            throw new IllegalStateException("InputStream would be null");
+        }
+    }
+
+    public static OutputStream createOutputStream(File file) {
+        try {
+            return new FileOutputStream(file);
+        } catch (FileNotFoundException ex) {
+            System.err.println("Exception while creating OutputStream from '" + file.getName() + "'");
+            System.err.println("At: '" + file.getAbsolutePath() + "'");
+            ex.printStackTrace();
+            throw new IllegalStateException("OutputStream would be null");
+        }
+    }
+
     public static Reader createReader(final File file) {
         try {
             return new FileReader(file);
@@ -104,18 +130,6 @@ public final class FileUtils {
             System.err.println("In '" + getParentDirPath(file) + "'");
             ex.printStackTrace();
             throw new IllegalStateException("Can't return null as writer");
-        }
-    }
-
-    public static InputStream createInputStream(File file) {
-        Valid.notNull(file);
-        try {
-            return Files.newInputStream(file.toPath());
-        } catch (IOException ex) {
-            System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
-            System.err.println("At: '" + file.getAbsolutePath() + "'");
-            ex.printStackTrace();
-            throw new IllegalStateException("InputStream would be null");
         }
     }
 
@@ -166,7 +180,7 @@ public final class FileUtils {
     // Misc
     // ----------------------------------------------------------------------------------------------------
 
-    public static void copyFolder(File source, File destination) {
+    public static void copyFolder(File source, File destination) throws IOException {
         Valid.notNull(source);
         Valid.notNull(destination);
         if (source.isDirectory()) {
@@ -183,18 +197,15 @@ public final class FileUtils {
                 copyFolder(srcFile, destFile);
             }
         } else {
-            try (final InputStream in = new FileInputStream(source);
-                 final OutputStream out = new FileOutputStream(destination)) {
-                byte[] buffer = new byte[1024];
+            final InputStream in = createInputStream(source);
+            final OutputStream out = createOutputStream(destination);
+            byte[] buffer = new byte[1024];
 
-                int length;
-                while ((length = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, length);
-                }
-            } catch (Exception ex) {
-                System.err.println("Exception copying '" + source.getName() + "' to '" + destination.getName() + "'");
-                System.err.println("Source-Path: '" + source.getAbsolutePath() + "'");
-                ex.printStackTrace();
+            int length;
+            while (true) {
+                if (!((length = in.read(buffer)) > 0)) break;
+                out.write(buffer, 0, length);
+
             }
         }
     }

@@ -40,46 +40,6 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
         this.file = file;
     }
 
-    public void reload() {
-        if (shouldReload()) {
-            forceReload();
-        }
-    }
-
-    //Should the file be re-read before the next get() operation?
-    protected final boolean shouldReload() {
-        if (ReloadSettings.AUTOMATICALLY.equals(reloadSettings)) {
-            return true;
-        } else if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
-            return FileUtils.hasChanged(file, lastModified);
-        } else {
-            return false;
-        }
-    }
-
-    // ----------------------------------------------------------------------------------------------------
-    //  Creating out file
-    // ----------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates an empty .yml or .json file.
-     *
-     * @return true if file was created.
-     */
-    protected final synchronized boolean create() {
-        return createFile(this.file);
-    }
-
-    private synchronized boolean createFile(File file) {
-        if (file.exists()) {
-            lastModified = System.currentTimeMillis();
-            return false;
-        } else {
-            FileUtils.getAndMake(file);
-            lastModified = System.currentTimeMillis();
-            return true;
-        }
-    }
 
     // ----------------------------------------------------------------------------------------------------
     // Abstract methods (Reading & Writing)
@@ -98,6 +58,30 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
      */
     protected abstract void write(final FileData data) throws IOException;
 
+    // ----------------------------------------------------------------------------------------------------
+    //  Creating out file
+    // ----------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates an empty .yml or .json file.
+     *
+     * @return true if file was created.
+     */
+    protected final synchronized boolean create() {
+        return createFile(this.file);
+    }
+
+    @Synchronized
+    private boolean createFile(File file) {
+        if (file.exists()) {
+            lastModified = System.currentTimeMillis();
+            return false;
+        } else {
+            FileUtils.getAndMake(file);
+            lastModified = System.currentTimeMillis();
+            return true;
+        }
+    }
 
     // ----------------------------------------------------------------------------------------------------
     // Overridden methods from IStorage
@@ -154,6 +138,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
     }
 
     @Override
+    @Synchronized
     public void remove(String key) {
         fileData.remove(key);
     }
@@ -162,15 +147,16 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
     // Pretty nice utility methods
     // ----------------------------------------------------------------------------------------------------
 
-    public synchronized final String getName() {
+    public final String getName() {
         return this.file.getName();
     }
 
-    public synchronized final String getFilePath() {
+    public final String getFilePath() {
         return file.getAbsolutePath();
     }
 
-    public synchronized void replace(CharSequence target, CharSequence replacement) throws IOException {
+    @Synchronized
+    public void replace(CharSequence target, CharSequence replacement) throws IOException {
         List<String> lines = Files.readAllLines(file.toPath());
         List<String> result = new ArrayList<>();
         for (String line : lines) {
@@ -196,9 +182,27 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
         write();
     }
 
+
     // ----------------------------------------------------------------------------------------------------
-    // Overridden Object-Methods
+    // Misc
     // ----------------------------------------------------------------------------------------------------
+
+    public void reload() {
+        if (shouldReload()) {
+            forceReload();
+        }
+    }
+
+    //Should the file be re-read before the next get() operation?
+    protected final boolean shouldReload() {
+        if (ReloadSettings.AUTOMATICALLY.equals(reloadSettings)) {
+            return true;
+        } else if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
+            return FileUtils.hasChanged(file, lastModified);
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public int compareTo(FlatFile flatFile) {

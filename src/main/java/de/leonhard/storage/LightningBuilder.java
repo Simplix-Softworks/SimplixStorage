@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.InputStream;
 
 public class LightningBuilder {
-
     private final String path;
     private String name;
     private InputStream inputStream;
@@ -78,6 +77,11 @@ public class LightningBuilder {
     public LightningFile createLightningFile() {
         return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
     }
+
+
+    // ----------------------------------------------------------------------------------------------------
+    // Create the objects of our FileTypes
+    // ----------------------------------------------------------------------------------------------------
 
     public Config createConfig() {
         return new Config(name, path, inputStream, reloadSettings, configSettings);

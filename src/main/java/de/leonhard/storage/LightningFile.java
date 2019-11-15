@@ -3,14 +3,14 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.editor.LightningEditor;
+import de.leonhard.storage.internal.editor.lighningfile.LightningEditor;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
-import de.leonhard.storage.utils.Valid;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -19,95 +19,47 @@ import java.io.InputStream;
  */
 @SuppressWarnings("unused")
 @Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class LightningFile extends FlatFile {
 
-	private final LightningEditor lightningEditor;
-	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+    private final LightningEditor lightningEditor;
+    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-	public LightningFile(String name, String path) {
-		this(name, path, null, null, null);
-	}
+    public LightningFile(String name, String path) {
+        this(name, path, null, null, null);
+    }
 
-	public LightningFile(String name, String path, InputStream inputStream,
-	                     ReloadSettings reloadSetting,
-	                     ConfigSettings configSettings) {
-		super(name, path, FileType.LS);
-		lightningEditor = new LightningEditor(file);
-		if (create() && inputStream != null) {
-			FileUtils.writeToFile(this.file, inputStream);
-		}
+    public LightningFile(String name, String path, InputStream inputStream,
+                         ReloadSettings reloadSetting,
+                         ConfigSettings configSettings) {
+        super(name, path, FileType.LS);
+        lightningEditor = new LightningEditor(file);
+        if (create() && inputStream != null) {
+            FileUtils.writeToFile(this.file, inputStream);
+        }
 
-		if (configSettings != null) {
-			this.configSettings = configSettings;
-		}
+        if (configSettings != null) {
+            this.configSettings = configSettings;
+        }
 
-		forceReload();
-		if (reloadSetting != null) {
-			this.reloadSettings = reloadSetting;
-		}
-	}
+        forceReload();
+        if (reloadSetting != null) {
+            this.reloadSettings = reloadSetting;
+        }
+    }
 
-	@Override
-	protected void forceReload() {
-		this.fileData = new FileData(lightningEditor.readData());
-	}
+    // ----------------------------------------------------------------------------------------------------
+    // Abstract methods to implement
+    // ----------------------------------------------------------------------------------------------------
 
-	@Override
-	protected void write(FileData data) throws IOException {
+    @Override
+    protected void forceReload() {
+        this.fileData = new FileData(lightningEditor.readData());
+    }
 
-	}
-
-	@Override
-	public Object get(String key) {
-		Valid.notNull(key, "Key must not be null");
-		forceReload();
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-		return fileData.get(finalKey);
-	}
-
-	@Override
-	public synchronized void set(String key, Object value) {
-		Valid.notNull(key, "Key must not be null");
-		fileData.insert(key, value);
-		try {
-			lightningEditor.writeData(this.fileData.toMap(), configSettings);
-		} catch (IllegalStateException | IllegalArgumentException e) {
-			System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
-		}
-	}
-
-	@Override
-	public synchronized void remove(String key) {
-		Valid.notNull(key, "Key must not be null");
-		String finalKey = (this.getPathPrefix() == null) ? key : this.getPathPrefix() + "." + key;
-
-		forceReload();
-
-		if (!fileData.containsKey(finalKey)) {
-			return;
-		}
-		fileData.remove(finalKey);
-
-		try {
-			lightningEditor.writeData(this.fileData.toMap(), getConfigSettings());
-		} catch (IllegalStateException e) {
-			System.err.println("Error while writing to '" + file.getAbsolutePath() + "'");
-			e.printStackTrace();
-			throw new IllegalStateException();
-		}
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			LightningFile lightningFile = (LightningFile) obj;
-			return super.equals(lightningFile);
-		}
-	}
+    @Override
+    protected void write(FileData data) {
+        lightningEditor.writeData(data.toMap(), configSettings);
+    }
 }

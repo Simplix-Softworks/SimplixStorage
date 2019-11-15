@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.editor;
+package de.leonhard.storage.internal.editor.yaml;
 
 import de.leonhard.storage.utils.FileUtils;
 

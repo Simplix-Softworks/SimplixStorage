@@ -39,7 +39,7 @@ public class Toml extends FlatFile {
     }
 
     // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to override
+    // Abstract methods to implement
     // ----------------------------------------------------------------------------------------------------
 
     @Override
@@ -54,7 +54,7 @@ public class Toml extends FlatFile {
     }
 
     @Override
-    protected void write(FileData data) throws IOException {
+    protected void write(FileData data) {
         try {
             com.electronwill.toml.Toml.write(data.toMap(), getFile());
         } catch (IOException ex) {

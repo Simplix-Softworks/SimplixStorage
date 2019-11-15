@@ -4,40 +4,18 @@ import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 class CSV extends FlatFile {
+    private CSV(String name, String path) {
+        super(name, path, FileType.CSV);
+    }
 
-	private CSV(String name, String path) {
-		super(name, path, FileType.CSV);
-	}
+    @Override
+    protected void forceReload() {
 
-	@Override
-	public void remove(String key) {
+    }
 
-	}
+    @Override
+    protected void write(FileData data) {
 
-	@Override
-	public void set(String key, Object value) {
-
-	}
-
-	@Override
-	public Object get(final String key) {
-		return null;
-	}
-
-	@Override
-	protected void forceReload() {
-
-	}
-
-	@Override
-	protected void write(FileData data) throws IOException {
-
-	}
-
+    }
 }

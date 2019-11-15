@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.editor;
+package de.leonhard.storage.internal.editor.yaml;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class YamlParser {
      * @throws IOException
      */
     @SuppressWarnings("JavaDoc")
-    private Map<String, List<String>> assignCommentsToKey() throws IOException {
+    private Map<String, List<String>> assignCommentsToKey() {
         return assignCommentsToKey(yamlEditor.read());
     }
 
@@ -30,14 +30,8 @@ public class YamlParser {
     public List<String> parseComments(final List<String> comments, final List<String> updated) {
         final List<String> keys;
         final Map<String, List<String>> parsed;
-        try {
-            keys = yamlEditor.readKeys();
-            parsed = assignCommentsToKey(comments);
-        } catch (final IOException e) {
-            System.err.println("Exception while reading keys from '" + file.getName() + "'");
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        keys = yamlEditor.readKeys();
+        parsed = assignCommentsToKey(comments);
 
         for (final String key : parsed.keySet()) {
             int i = 0;
@@ -59,7 +53,7 @@ public class YamlParser {
 
     private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
         List<String> storage = new ArrayList<>();
-        final List<String> lines = YamlEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
+        final List<String> lines = YamlStringEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
         final Map<String, List<String>> result = new HashMap<>();
 
         // Loop over the remaining lines

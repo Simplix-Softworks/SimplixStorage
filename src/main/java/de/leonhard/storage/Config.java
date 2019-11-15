@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.io.InputStream;
 import java.util.List;
 
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unused"})
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Config extends Yaml {
@@ -34,6 +34,10 @@ public class Config extends Yaml {
         super(name, path, inputStream, reloadSettings, configSettings);
         this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }
+
+    // ----------------------------------------------------------------------------------------------------
+    // Methods to override (Points where Config is unspecific for typical FlatFiles)
+    // ----------------------------------------------------------------------------------------------------
 
     @Override
     public void set(String key, Object value) {
