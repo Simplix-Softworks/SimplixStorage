@@ -47,11 +47,11 @@ Yaml files are not as fast as json files, but they are easier
 to read and are therefore more suitable than configuration files, 
 as you often find them in bukkit plugins in the form of "config.yml".
 
-### Toml:
+#### Toml:
 Toml is a compromise between the readybility of Yaml and the performance of Json, thus being a quite good way to go.
 
 
-### LightningFile
+#### LightningFile
 LightningFile is our own implementation of a config file format. It has quite good performance (about as fast as Json) but is way more readable.
 
 
