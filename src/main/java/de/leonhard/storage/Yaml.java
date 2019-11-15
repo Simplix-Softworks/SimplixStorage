@@ -105,7 +105,7 @@ public class Yaml extends FlatFile implements IStorage {
     }
 
     // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to override
+    // Abstract methods to implement
     // ----------------------------------------------------------------------------------------------------
 
     @Override
