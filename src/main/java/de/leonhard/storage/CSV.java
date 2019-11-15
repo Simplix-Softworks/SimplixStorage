@@ -1,8 +1,10 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +32,11 @@ class CSV extends FlatFile {
 
 	@Override
 	protected void forceReload() {
+
+	}
+
+	@Override
+	protected void write(FileData data) throws IOException {
 
 	}
 

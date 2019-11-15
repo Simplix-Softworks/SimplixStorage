@@ -7,103 +7,60 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Synchronized;
 import lombok.ToString;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Toml extends FlatFile {
 
-	public Toml(String name, String path) {
-		this(name, path, null);
-	}
+    public Toml(String name, String path) {
+        this(name, path, null);
+    }
 
-	public Toml(String name, String path, ReloadSettings reloadSettings) {
-		super(name, path, FileType.TOML);
-		create();
-		if (reloadSettings != null) {
-			this.reloadSettings = reloadSettings;
-		}
-		create();
-		forceReload();
-	}
+    public Toml(String name, String path, ReloadSettings reloadSettings) {
+        super(name, path, FileType.TOML);
+        create();
+        if (reloadSettings != null) {
+            this.reloadSettings = reloadSettings;
+        }
 
-	public Toml(File file) {
-		super(file, FileType.TOML);
-		create();
-		forceReload();
-	}
+        create();
+        forceReload();
+    }
 
-	/**
-	 * Set an object to your file
-	 *
-	 * @param key   The key your value should be associated with
-	 * @param value The value you want to set in your file
-	 */
+    public Toml(File file) {
+        super(file, FileType.TOML);
+        create();
+        forceReload();
+    }
 
-	@Override
-	@Synchronized
-	public void set(String key, Object value) {
-		reload();
+    // ----------------------------------------------------------------------------------------------------
+    // Abstract methods to override
+    // ----------------------------------------------------------------------------------------------------
 
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+    @Override
+    protected void forceReload() {
+        try {
+            fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
+        } catch (IOException e) {
+            System.err.println("Exception while reloading '" + getName() + "'");
+            System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
+            e.printStackTrace();
+        }
+    }
 
-		String old = fileData.toString();
-
-		fileData.insert(finalKey, value);
-
-		if (old.equals(fileData.toString())) {
-			return;
-		}
-
-		try {
-			com.electronwill.toml.Toml.write(fileData.toMap(), getFile());
-		} catch (IOException e) {
-			System.err.println("Exception while writing to Toml file '" + getName() + "'");
-			e.printStackTrace();
-		}
-	}
-
-	public void write(Map<String, Object> data) {
-		try {
-			com.electronwill.toml.Toml.write(data, getFile());
-		} catch (IOException e) {
-			System.err.println("Exception while writing fileData to file '" + getName() + "'");
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	protected void forceReload() {
-		try {
-			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
-		} catch (IOException e) {
-			System.err.println("Exception while reloading '" + getName() + "'");
-			System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Reloads the file when needed see {@link ReloadSettings} for deeper
-	 * information
-	 */
-	@Override
-	public void reload() {
-		if (shouldReload()) {
-			forceReload();
-		}
-	}
-
-	@Override
-	public void remove(String key) {
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		fileData.remove(finalKey);
-		write(fileData.toMap());
-	}
+    @Override
+    protected void write(FileData data) throws IOException {
+        try {
+            com.electronwill.toml.Toml.write(data.toMap(), getFile());
+        } catch (IOException ex) {
+            System.err.println("Exception while writing fileData to file '" + getName() + "'");
+            System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+            ex.printStackTrace();
+        }
+    }
 }

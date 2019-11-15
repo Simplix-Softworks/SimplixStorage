@@ -10,6 +10,7 @@ import de.leonhard.storage.utils.FileUtils;
 import de.leonhard.storage.utils.Valid;
 import lombok.Getter;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -49,6 +50,11 @@ public class LightningFile extends FlatFile {
 	@Override
 	protected void forceReload() {
 		this.fileData = new FileData(lightningEditor.readData());
+	}
+
+	@Override
+	protected void write(FileData data) throws IOException {
+
 	}
 
 	@Override

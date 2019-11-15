@@ -2,128 +2,60 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.utils.Primitive;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "unused"})
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Config extends Yaml {
-	private List<String> header;
+    private List<String> header;
 
-	public Config(String name, String path) {
-		super(name, path);
-		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
-	}
+    public Config(String name, String path) {
 
-	public Config(String name, String path, InputStream inputStream) {
-		super(name, path, inputStream);
-		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
-	}
+        super(name, path);
+        this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+    }
 
-	public Config(String name,
-	              String path,
-	              InputStream inputStream,
-	              ReloadSettings reloadSettings,
-	              ConfigSettings configSettings) {
-		super(name, path, inputStream, reloadSettings, configSettings);
-		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
-	}
+    public Config(String name, String path, InputStream inputStream) {
+        super(name, path, inputStream);
+        this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+    }
 
-	@Override
-	public void set(String key, Object value) {
-		super.set(key, value, getConfigSettings());
-	}
+    public Config(String name,
+                  String path,
+                  InputStream inputStream,
+                  ReloadSettings reloadSettings,
+                  ConfigSettings configSettings) {
+        super(name, path, inputStream, reloadSettings, configSettings);
+        this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+    }
 
-	@Override
-	public void setDefault(String key, Object value) {
-		if (!contains(key)) {
-			set(key, value, getConfigSettings());
-		}
-	}
+    @Override
+    public void set(String key, Object value) {
+        super.set(key, value, getConfigSettings());
+    }
 
-	@Override
-	public <T> T getOrSetDefault(String key, T def) {
-		reload();
-		if (!contains(key)) {
-			set(key, def, getConfigSettings());
-			return def;
-		} else {
-			Object obj = get(key); //
-			if (obj instanceof String && def instanceof Integer) {
-				obj = Integer.parseInt((String) obj);
-			}
-			if (obj instanceof String && def instanceof Double) {
-				obj = Double.parseDouble((String) obj);
-			}
-			if (obj instanceof String && def instanceof Float) {
-				obj = Double.parseDouble((String) obj);
-			}
-			return (T) obj;
-		}
-	}
+    @Override
+    public void setDefault(String key, Object value) {
+        if (!contains(key)) {
+            set(key, value, getConfigSettings());
+        }
+    }
 
-
-	@Override
-	public List<String> getHeader() {
-		if (ConfigSettings.SKIP_COMMENTS == getConfigSettings()) {
-			return new ArrayList<>();
-		}
-
-		if (!shouldReload()) {
-			return header;
-		}
-		try {
-			return getYamlEditor().readHeader();
-		} catch (IOException e) {
-			System.err.println("Couldn't get header of '" + getFile().getName() + "'.");
-			e.printStackTrace();
-		}
-		return new ArrayList<>();
-	}
-
-	@SuppressWarnings("unused")
-	public void setHeader(List<String> header) {
-		List<String> tmp = new ArrayList<>();
-		//Updating the values to have a comments, if someone forgets to set them
-		for (String line : header) {
-			if (!line.startsWith("#")) {
-				tmp.add("#" + line);
-			} else {
-				tmp.add(line);
-			}
-		}
-		this.header = tmp;
-
-		if (getFile().length() == 0) {
-			try {
-				getYamlEditor().write(this.header);
-			} catch (IOException e) {
-				System.err.println("Error while setting header of '" + getName() + "'");
-				e.printStackTrace();
-			}
-			return;
-		}
-
-		try {
-			final List<String> lines = getYamlEditor().read();
-			final List<String> oldHeader = getYamlEditor().readHeader();
-			final List<String> footer = getYamlEditor().readFooter();
-			lines.removeAll(oldHeader);
-			lines.removeAll(footer);
-
-			lines.addAll(header);
-			lines.addAll(footer);
-
-			getYamlEditor().write(lines);
-		} catch (IOException e) {
-			System.err.println("Exception while modifying header of '" + getName() + "'");
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public <T> T getOrSetDefault(String key, T def) {
+        reload();
+        if (!contains(key)) {
+            set(key, def, getConfigSettings());
+            return def;
+        } else {
+            Object obj = get(key); //
+            return Primitive.getFromDef(key, def);
+        }
+    }
 }
