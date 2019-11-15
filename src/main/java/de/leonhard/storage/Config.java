@@ -2,6 +2,8 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "unused"})
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Config extends Yaml {
 	private List<String> header;
 
@@ -23,10 +27,10 @@ public class Config extends Yaml {
 	}
 
 	public Config(String name,
-                  String path,
-                  InputStream inputStream,
-                  ReloadSettings reloadSettings,
-                  ConfigSettings configSettings) {
+	              String path,
+	              InputStream inputStream,
+	              ReloadSettings reloadSettings,
+	              ConfigSettings configSettings) {
 		super(name, path, inputStream, reloadSettings, configSettings);
 		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}
@@ -67,7 +71,7 @@ public class Config extends Yaml {
 
 	@Override
 	public List<String> getHeader() {
-		if (getConfigSettings().equals(ConfigSettings.SKIP_COMMENTS)) {
+		if (ConfigSettings.SKIP_COMMENTS == getConfigSettings()) {
 			return new ArrayList<>();
 		}
 
@@ -107,34 +111,19 @@ public class Config extends Yaml {
 		}
 
 		try {
-			List<String> lines = getYamlEditor().read();
-
-			List<String> oldHeader = getYamlEditor().readHeader();
-			List<String> footer = getYamlEditor().readFooter();
+			final List<String> lines = getYamlEditor().read();
+			final List<String> oldHeader = getYamlEditor().readHeader();
+			final List<String> footer = getYamlEditor().readFooter();
 			lines.removeAll(oldHeader);
 			lines.removeAll(footer);
 
 			lines.addAll(header);
-
 			lines.addAll(footer);
 
 			getYamlEditor().write(lines);
 		} catch (IOException e) {
 			System.err.println("Exception while modifying header of '" + getName() + "'");
 			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			Yaml config = (Config) obj;
-			return this.header.equals(config.getHeader())
-					&& super.equals(config);
 		}
 	}
 }

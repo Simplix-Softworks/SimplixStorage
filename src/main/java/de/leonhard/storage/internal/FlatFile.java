@@ -39,28 +39,68 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 		this.file = file;
 	}
 
-	public final String getName() {
-		return this.file.getName();
-	}
-
-	public final String getFilePath() {
-		return file.getAbsolutePath();
-	}
-
-	public void replace(CharSequence target, CharSequence replacement) throws IOException {
-		List<String> lines = Files.readAllLines(file.toPath());
-		List<String> result = new ArrayList<>();
-		for (String line : lines) {
-			result.add(line.replace(target, replacement));
-		}
-		Files.write(file.toPath(), result);
-	}
-
 	public void reload() {
 		if (shouldReload()) {
 			forceReload();
 		}
 	}
+
+	//Should the file be re-read before the next get() operation?
+	protected final boolean shouldReload() {
+		if (ReloadSettings.AUTOMATICALLY.equals(reloadSettings)) {
+			return true;
+		} else if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
+			return FileUtils.hasChanged(file, lastModified);
+		} else {
+			return false;
+		}
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	//  Creating out file
+	// ----------------------------------------------------------------------------------------------------
+
+	/**
+	 * Creates an empty .yml or .json file.
+	 *
+	 * @return true if file was created.
+	 */
+	protected final synchronized boolean create() {
+		return createFile(this.file);
+	}
+
+	private synchronized boolean createFile(File file) {
+		if (file.exists()) {
+			lastModified = System.currentTimeMillis();
+			return false;
+		} else {
+			FileUtils.getAndMake(file);
+			lastModified = System.currentTimeMillis();
+			return true;
+		}
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Abstract methods (Reading & Writing)
+	// ----------------------------------------------------------------------------------------------------
+
+	/**
+	 * Forces Re-read/load the content of our flat file
+	 * Should be used to put the data from the file to our FileData
+	 */
+	protected abstract void forceReload();
+
+	/**
+	 * Write our data to file
+	 *
+	 * @param data Our data
+	 */
+	protected abstract void write(final FileData data) throws IOException;
+
+
+	// ----------------------------------------------------------------------------------------------------
+	// Overridden methods from IStorage
+	// ----------------------------------------------------------------------------------------------------
 
 	@Override
 	public Object get(String key) {
@@ -70,7 +110,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	/**
-	 * Checks wheter a key exists in the file
+	 * Checks whether a key exists in the file
 	 *
 	 * @param key Key to check
 	 * @return Returned value
@@ -106,22 +146,69 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	@Override
-	public synchronized int compareTo(FlatFile flatFile) {
+	public void remove(String key) {
+		fileData.remove(key);
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Pretty nice utility methods
+	// ----------------------------------------------------------------------------------------------------
+
+	public synchronized final String getName() {
+		return this.file.getName();
+	}
+
+	public synchronized final String getFilePath() {
+		return file.getAbsolutePath();
+	}
+
+	public synchronized void replace(CharSequence target, CharSequence replacement) throws IOException {
+		List<String> lines = Files.readAllLines(file.toPath());
+		List<String> result = new ArrayList<>();
+		for (String line : lines) {
+			result.add(line.replace(target, replacement));
+		}
+		Files.write(file.toPath(), result);
+	}
+
+	public void write() {
+		try {
+			write(fileData);
+		} catch (IOException ex) {
+			System.err.println("Exception writing to file '" + getName() + "'");
+			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+			ex.printStackTrace();
+		}
+	}
+
+	public void removeAll(final String... keys) {
+		for (String key : keys) {
+			fileData.remove(key);
+		}
+		write();
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Overridden Object-Methods
+	// ----------------------------------------------------------------------------------------------------
+
+	@Override
+	public int compareTo(FlatFile flatFile) {
 		return this.file.compareTo(flatFile.file);
 	}
 
 	@Override
-	public synchronized int hashCode() {
+	public int hashCode() {
 		return this.file.hashCode();
 	}
 
 	@Override
-	public synchronized String toString() {
+	public String toString() {
 		return this.file.getAbsolutePath();
 	}
 
 	@Override
-	public synchronized boolean equals(Object obj) {
+	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -132,47 +219,6 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 					&& this.lastModified == flatFile.lastModified
 					&& reloadSettings.equals(flatFile.reloadSettings)
 					&& fileType.equals(flatFile.fileType);
-		}
-	}
-
-	/**
-	 * Forces Re- read/load the content of our flat file
-	 * Should be used to put the data from the file to our FileData
-	 */
-	protected abstract void forceReload();
-
-	/**
-	 * Creates an empty .yml or .json file.
-	 *
-	 * @return true if file was created.
-	 */
-	protected final synchronized boolean create() {
-		return createFile(this.file);
-	}
-
-	protected final boolean shouldReload() {
-		if (reloadSettings.equals(ReloadSettings.AUTOMATICALLY)) {
-			return true;
-		} else if (reloadSettings.equals(ReloadSettings.INTELLIGENT)) {
-			return hasChanged();
-		} else {
-			return false;
-		}
-	}
-
-
-	private boolean hasChanged() {
-		return FileUtils.hasChanged(file, lastModified);
-	}
-
-	private synchronized boolean createFile(File file) {
-		if (file.exists()) {
-			lastModified = System.currentTimeMillis();
-			return false;
-		} else {
-			FileUtils.getAndMake(file);
-			lastModified = System.currentTimeMillis();
-			return true;
 		}
 	}
 }

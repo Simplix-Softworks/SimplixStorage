@@ -1,8 +1,17 @@
 package de.leonhard.storage.utils;
 
 @SuppressWarnings("unchecked")
-public class Primitive {
+public final class Primitive {
 
+	/**
+	 * Method to cast an object to a given datatype
+	 * Used for example in {@link de.leonhard.storage.internal.IStorage}
+	 * to cast the results of get() to for example a String
+	 *
+	 * @param obj Object to cast
+	 * @param def type of result
+	 * @return Casted object
+	 */
 	public static <T> T getFromDef(Object obj, final T def) {
 		if (obj instanceof String && def instanceof Integer) {
 			obj = Integer.parseInt((String) obj);
@@ -14,6 +23,16 @@ public class Primitive {
 			return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
 		}
 		return (T) obj;
+	}
+
+	public static <T> T getFromDef(final Object obj, final Class<T> clazz) {
+		try {
+			return getFromDef(obj, clazz.newInstance());
+		} catch (InstantiationException | IllegalAccessException ex) {
+			System.err.println("Wasn't able to instantiate '" + clazz.getSimpleName() + "'");
+			ex.printStackTrace();
+			throw new IllegalStateException();
+		}
 	}
 
 	public static class LONG {

@@ -10,7 +10,7 @@ import java.util.*;
 
 @SuppressWarnings({"unchecked", "WeakerAccess"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JsonUtils {
+public final class JsonUtils {
 
 	public static Map<String, Object> jsonToMap(JSONObject jsonObject) throws JSONException {
 		Map<String, Object> retMap = new HashMap<>();

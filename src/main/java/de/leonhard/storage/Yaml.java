@@ -11,168 +11,139 @@ import de.leonhard.storage.internal.editor.YamlParser;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Synchronized;
+import lombok.*;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Yaml extends FlatFile implements IStorage {
-    private final YamlEditor yamlEditor;
-    private final YamlParser parser;
-    @Setter
-    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+	private final YamlEditor yamlEditor;
+	private final YamlParser parser;
+	@Setter
+	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-    public Yaml(String name, String path) {
-        this(name, path, null, null, null);
-    }
+	public Yaml(String name, String path) {
+		this(name, path, null, null, null);
+	}
 
-    public Yaml(String name, String path, InputStream inputStream) {
-        this(name, path, inputStream, null, null);
-    }
+	public Yaml(String name, String path, InputStream inputStream) {
+		this(name, path, inputStream, null, null);
+	}
 
-    public Yaml(final String name,
-                final String path,
-                final InputStream inputStream,
-                final ReloadSettings reloadSettings,
-                final ConfigSettings configSettings) {
-        super(name, path, FileType.YAML);
+	public Yaml(String name,
+	            String path,
+	            InputStream inputStream,
+	            ReloadSettings reloadSettings,
+	            ConfigSettings configSettings) {
+		super(name, path, FileType.YAML);
 
-        if (create()) {
-            if (inputStream != null) {
-                FileUtils.writeToFile(file, inputStream);
-            }
-        }
+		if (create()) {
+			if (inputStream != null) {
+				FileUtils.writeToFile(file, inputStream);
+			}
+		}
 
-        yamlEditor = new YamlEditor(file);
-        parser = new YamlParser(yamlEditor);
-        forceReload();
-        if (reloadSettings != null) {
-            this.reloadSettings = reloadSettings;
-        }
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+		forceReload();
+		if (reloadSettings != null) {
+			this.reloadSettings = reloadSettings;
+		}
 
-        if (configSettings != null) {
-            this.configSettings = configSettings;
-        }
-    }
+		if (configSettings != null) {
+			this.configSettings = configSettings;
+		}
+	}
 
-    public static boolean isYaml(String fileName) {
-        return (fileName.lastIndexOf(".") > 0 ? fileName.substring(fileName.lastIndexOf(".") + 1) : "").equals("yml");
-    }
+	public List<String> getHeader() {
+		try {
+			return yamlEditor.readHeader();
+		} catch (IOException e) {
+			System.err.println("Error while getting header of '" + getName() + "'");
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
+	}
 
-    protected final boolean isYaml(File file) {
-        return isYaml(file.getName());
-    }
+	@Override
+	public void set(String key, Object value) {
+		set(key, value, this.configSettings);
+	}
 
-    @Override
-    public void set(String key, Object value) {
-        set(key, value, this.configSettings);
-    }
+	@Synchronized
+	public void set(String key, Object value, ConfigSettings configSettings) {
+		reload();
 
-    @Synchronized
-    public void set(String key, Object value, ConfigSettings configSettings) {
-        reload();
-
-        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-        String old = fileData.toString();
-        fileData.insert(finalKey, value);
+		fileData.insert(finalKey, value);
 
-        if (fileData != null && old.equals(fileData.toString())) {
-            return;
-        }
+		try {
+			//If Comments shouldn't be preserved
+			if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+				write(fileData);
+				return;
+			}
 
-        try {
-            if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-                write(Objects.requireNonNull(fileData).toMap());
-                return;
-            }
-            List<String> unEdited = yamlEditor.read();
-            List<String> header = yamlEditor.readHeader();
-            List<String> footer = yamlEditor.readFooter();
-            write(fileData.toMap());
-            header.addAll(yamlEditor.read());
-            if (!header.containsAll(footer)) {
-                header.addAll(footer);
-            }
-            yamlEditor.write(parser.parseComments(unEdited, header));
-            write(Objects.requireNonNull(fileData).toMap());
-        } catch (IOException e) {
-            System.err.println("Error while writing '" + getName() + "'");
-        }
-    }
 
-    private void write(Map data) throws IOException {
-        final YamlWriter writer = new YamlWriter(new FileWriter(getFile()));
-        writer.write(data);
-        writer.close();
-    }
+			final List<String> unEdited = yamlEditor.read();
+			final List<String> header = yamlEditor.readHeader();
+			final List<String> footer = yamlEditor.readFooter();
+			write(fileData);
+			header.addAll(yamlEditor.read());
+			if (!header.containsAll(footer)) {
+				header.addAll(footer);
+			}
+			write(fileData);
+			yamlEditor.write(parser.parseComments(unEdited, header));
+		} catch (IOException ex) {
+			System.err.println("Error while writing '" + getName() + "'");
+			ex.printStackTrace();
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void forceReload() {
-        YamlReader reader = null;
-        try {
-            reader = new YamlReader(new FileReader(getFile()));// Needed?
-            Map<String, Object> map = (Map<String, Object>) reader.read();
-            if (map == null) {
-                map = new HashMap<>();
-            }
-            fileData = new FileData(map);
-        } catch (IOException e) {
-            System.err.println("Exception while reloading yaml");
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                System.err.println("Exception while closing yaml: '" + file.getName() + "'");
-                //FileUtils.getParentDirPath(file)
-                System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
-                e.printStackTrace();
-            }
-        }
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	protected void forceReload() {
+		YamlReader reader = null;
+		try {
+			reader = new YamlReader(new FileReader(getFile()));// Needed?
+			Map<String, Object> map = (Map<String, Object>) reader.read();
+			if (map == null) {
+				map = new HashMap<>();
+			}
+			fileData = new FileData(map);
+		} catch (IOException e) {
+			System.err.println("Exception while reloading yaml");
+			e.printStackTrace();
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+				System.err.println("Exception while closing yaml: '" + file.getName() + "'");
+				//FileUtils.getParentDirPath(file)
+				System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
+				e.printStackTrace();
+			}
+		}
+	}
 
-    public List<String> getHeader() {
-        try {
-            return yamlEditor.readHeader();
-        } catch (IOException e) {
-            System.err.println("Error while getting header of '" + getName() + "'");
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public void remove(String key) {
-        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        fileData.remove(finalKey);
-
-        try {
-            write(fileData.toMap());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj == null || this.getClass() != obj.getClass()) {
-            return false;
-        } else {
-            Yaml yaml = (Yaml) obj;
-            return this.fileData.equals(yaml.fileData)
-                    && this.pathPrefix.equals(yaml.pathPrefix)
-                    && this.configSettings.equals(yaml.configSettings)
-                    && super.equals(yaml);
-        }
-    }
+	@Override
+	protected void write(FileData data) throws IOException {
+		YamlWriter writer = new YamlWriter(new FileWriter(getFile())); //Doesn't implement auto-closable
+		writer.write(data.toMap());
+		writer.close();
+	}
 }

@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.editor;
 
 import de.leonhard.storage.utils.FileUtils;
+import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,14 +11,12 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"unused", "Duplicates", "WeakerAccess"})
+@RequiredArgsConstructor
 public class YamlEditor {
 
 	private final File file;
 
-	public YamlEditor(final File file) {
-		this.file = file;
-	}
-
+	//Methods for usage without a YAML-File Object
 	public static List<String> getCommentsFromLines(final List<String> lines) {
 		final List<String> result = new ArrayList<>();
 
@@ -91,6 +90,8 @@ public class YamlEditor {
 		return result;
 	}
 
+
+	//Methods for usage with YAML-File Object
 	public List<String> read() throws IOException {
 //        return Files.readAllLines(file.toPath());
 		return FileUtils.readAllLines(file);

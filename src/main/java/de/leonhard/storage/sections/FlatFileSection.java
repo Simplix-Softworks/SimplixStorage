@@ -2,6 +2,7 @@ package de.leonhard.storage.sections;
 
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.IStorage;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class FlatFileSection implements IStorage {
 	private final FlatFile flatFile;
+	@Getter
 	private final String pathPrefix;
 
 	@Override

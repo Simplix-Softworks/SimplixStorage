@@ -5,14 +5,18 @@ import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Synchronized;
+import lombok.ToString;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 @Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Toml extends FlatFile {
 
 	public Toml(String name, String path) {
@@ -101,19 +105,5 @@ public class Toml extends FlatFile {
 		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 		fileData.remove(finalKey);
 		write(fileData.toMap());
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		} else if (obj == null || this.getClass() != obj.getClass()) {
-			return false;
-		} else {
-			Toml toml = (Toml) obj;
-			return this.fileData.equals(toml.fileData)
-					&& this.pathPrefix.equals(toml.pathPrefix)
-					&& super.equals(toml);
-		}
 	}
 }

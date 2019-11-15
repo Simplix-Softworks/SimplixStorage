@@ -7,11 +7,11 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Provider {
+public final class LightningProvider {
 	private final Map<Class<?>, Object> CLASS_OBJECT_MAP = Collections.synchronizedMap(new HashMap<>());
 
 
-	public final boolean registerProvider(final Class<?> key, final Object value) {
+	public boolean registerProvider(final Class<?> key, final Object value) {
 		if (CLASS_OBJECT_MAP.containsKey(key)) {
 			return false;
 		}
@@ -20,14 +20,14 @@ public class Provider {
 		return true;
 	}
 
-	public final Map<String, Object> getDefaultMapImplementation() {
+	public Map<String, Object> getDefaultMapImplementation() {
 		if (!CLASS_OBJECT_MAP.containsKey(Map.class)) {
 			return new HashMap<>();
 		}
 		return (Map<String, Object>) CLASS_OBJECT_MAP.get(Map.class);
 	}
 
-	public final List<?> getDefaultListImplementation() {
+	public List<?> getDefaultListImplementation() {
 		if (!CLASS_OBJECT_MAP.containsKey(List.class)) {
 			return new ArrayList<>();
 		}

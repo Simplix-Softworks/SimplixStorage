@@ -13,11 +13,11 @@ import java.util.*;
 
 /**
  * Class for parsing a Lightning-Type File
+ * Written by Zeanon
  */
 @SuppressWarnings("unchecked")
 @RequiredArgsConstructor
 public class LightningEditor {
-
 	private final File file;
 
 	/**
