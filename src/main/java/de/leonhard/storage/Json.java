@@ -22,77 +22,76 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class Json extends FlatFile implements IStorage {
 
-    public Json(String name, String path) {
-        this(name, path, null);
-    }
+	public Json(String name, String path) {
+		this(name, path, null);
+	}
 
-    public Json(String name, String path, ReloadSettings reloadSettings) {
-        super(name, path, FileType.JSON);
-        if (create() || file.length() == 0) {
-            try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
-                writer.write(new JSONObject().toString(2));
-            } catch (Exception ex) {
-                System.err.println("Error creating JSON '" + file.getName() + "'");
-                System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-                ex.printStackTrace();
-            }
-        }
-        if (reloadSettings != null) {
-            this.reloadSettings = reloadSettings;
-        }
-        forceReload();
-    }
+	public Json(String name, String path, ReloadSettings reloadSettings) {
+		super(name, path, FileType.JSON);
+		if (create() || file.length() == 0) {
+			try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
+				writer.write(new JSONObject().toString(2));
+			} catch (Exception ex) {
+				System.err.println("Error creating JSON '" + file.getName() + "'");
+				System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+				ex.printStackTrace();
+			}
+		}
+		if (reloadSettings != null) {
+			this.reloadSettings = reloadSettings;
+		}
+		reRead();
+	}
 
-    public Json(File file) {
-        super(file, FileType.JSON);
-        create();
-        forceReload();
-    }
-
-
-    // ----------------------------------------------------------------------------------------------------
-    // Methods to override (Points where JSON is unspecific for typical FlatFiles)
-    // ----------------------------------------------------------------------------------------------------
+	public Json(File file) {
+		super(file, FileType.JSON);
+		create();
+		reRead();
+	}
 
 
-    /**
-     * Gets a Map by key Although used to get nested objects {@link Json}
-     *
-     * @param key Path to Map-List in JSON
-     * @return Map
-     */
-    @Override
-    public Map getMap(String key) {
-        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        if (!contains(finalKey)) {
-            return new HashMap();
-        } else {
-            final Object map = get(key);
-            if (map instanceof Map) {
-                return (Map<?, ?>) fileData.get(key);
-            } else if (map instanceof JSONObject) {
-                return JsonUtils.jsonToMap((JSONObject) map);
-            }
-            //Exception in casting
-            throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' But it is not a Map");
-        }
-    }
+	// ----------------------------------------------------------------------------------------------------
+	// Methods to override (Points where JSON is unspecific for typical FlatFiles)
+	// ----------------------------------------------------------------------------------------------------
 
-    // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to implement
-    // ----------------------------------------------------------------------------------------------------
+	/**
+	 * Gets a Map by key Although used to get nested objects {@link Json}
+	 *
+	 * @param key Path to Map-List in JSON
+	 * @return Map
+	 */
+	@Override
+	public Map getMap(String key) {
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		if (!contains(finalKey)) {
+			return new HashMap();
+		} else {
+			final Object map = get(key);
+			if (map instanceof Map) {
+				return (Map<?, ?>) fileData.get(key);
+			} else if (map instanceof JSONObject) {
+				return JsonUtils.jsonToMap((JSONObject) map);
+			}
+			//Exception in casting
+			throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' But it is not a Map");
+		}
+	}
 
-    @Override
-    protected void forceReload() {
-        final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
-        fileData = new FileData(new JSONObject(jsonTokener));
-    }
+	// ----------------------------------------------------------------------------------------------------
+	// Abstract methods to implement
+	// ----------------------------------------------------------------------------------------------------
 
-    @Override
-    protected void write(FileData data) throws IOException {
-        try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
-            writer.write(data.toJsonObject().toString(3));
-            writer.flush();
-        }
-    }
+	@Override
+	protected void reRead() {
+		final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
+		fileData = new FileData(new JSONObject(jsonTokener));
+	}
+
+	@Override
+	protected void write(FileData data) throws IOException {
+		try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
+			writer.write(data.toJsonObject().toString(3));
+			writer.flush();
+		}
+	}
 }

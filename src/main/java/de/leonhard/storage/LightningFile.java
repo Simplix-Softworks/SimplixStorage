@@ -23,43 +23,43 @@ import java.io.InputStream;
 @EqualsAndHashCode(callSuper = true)
 public class LightningFile extends FlatFile {
 
-    private final LightningEditor lightningEditor;
-    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+	private final LightningEditor lightningEditor;
+	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-    public LightningFile(String name, String path) {
-        this(name, path, null, null, null);
-    }
+	public LightningFile(String name, String path) {
+		this(name, path, null, null, null);
+	}
 
-    public LightningFile(String name, String path, InputStream inputStream,
-                         ReloadSettings reloadSetting,
-                         ConfigSettings configSettings) {
-        super(name, path, FileType.LS);
-        lightningEditor = new LightningEditor(file);
-        if (create() && inputStream != null) {
-            FileUtils.writeToFile(this.file, inputStream);
-        }
+	public LightningFile(String name, String path, InputStream inputStream,
+	                     ReloadSettings reloadSetting,
+	                     ConfigSettings configSettings) {
+		super(name, path, FileType.LS);
+		lightningEditor = new LightningEditor(file);
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(this.file, inputStream);
+		}
 
-        if (configSettings != null) {
-            this.configSettings = configSettings;
-        }
+		if (configSettings != null) {
+			this.configSettings = configSettings;
+		}
 
-        forceReload();
-        if (reloadSetting != null) {
-            this.reloadSettings = reloadSetting;
-        }
-    }
+		reRead();
+		if (reloadSetting != null) {
+			this.reloadSettings = reloadSetting;
+		}
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to implement
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Abstract methods to implement
+	// ----------------------------------------------------------------------------------------------------
 
-    @Override
-    protected void forceReload() {
-        this.fileData = new FileData(lightningEditor.readData());
-    }
+	@Override
+	protected void reRead() {
+		this.fileData = new FileData(lightningEditor.readData());
+	}
 
-    @Override
-    protected void write(FileData data) {
-        lightningEditor.writeData(data.toMap(), configSettings);
-    }
+	@Override
+	protected void write(FileData data) {
+		lightningEditor.writeData(data.toMap(), configSettings);
+	}
 }

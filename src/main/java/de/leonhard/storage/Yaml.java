@@ -24,113 +24,113 @@ import java.util.Map;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Yaml extends FlatFile implements IStorage {
-    protected final YamlEditor yamlEditor;
-    protected final YamlParser parser;
-    @Setter
-    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+	protected final YamlEditor yamlEditor;
+	protected final YamlParser parser;
+	@Setter
+	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-    public Yaml(String name, String path) {
-        this(name, path, null, null, null);
-    }
+	public Yaml(String name, String path) {
+		this(name, path, null, null, null);
+	}
 
-    public Yaml(String name, String path, InputStream inputStream) {
-        this(name, path, inputStream, null, null);
-    }
+	public Yaml(String name, String path, InputStream inputStream) {
+		this(name, path, inputStream, null, null);
+	}
 
-    public Yaml(String name,
-                String path,
-                InputStream inputStream,
-                ReloadSettings reloadSettings,
-                ConfigSettings configSettings) {
-        super(name, path, FileType.YAML);
+	public Yaml(String name,
+	            String path,
+	            InputStream inputStream,
+	            ReloadSettings reloadSettings,
+	            ConfigSettings configSettings) {
+		super(name, path, FileType.YAML);
 
-        if (create()) {
-            if (inputStream != null) {
-                FileUtils.writeToFile(file, inputStream);
-            }
-        }
+		if (create()) {
+			if (inputStream != null) {
+				FileUtils.writeToFile(file, inputStream);
+			}
+		}
 
-        yamlEditor = new YamlEditor(file);
-        parser = new YamlParser(yamlEditor);
-        forceReload();
-        if (reloadSettings != null) {
-            this.reloadSettings = reloadSettings;
-        }
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
+		reRead();
+		if (reloadSettings != null) {
+			this.reloadSettings = reloadSettings;
+		}
 
-        if (configSettings != null) {
-            this.configSettings = configSettings;
-        }
-    }
+		if (configSettings != null) {
+			this.configSettings = configSettings;
+		}
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Methods to override (Points where YAML is unspecific for typical FlatFiles)
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Methods to override (Points where YAML is unspecific for typical FlatFiles)
+	// ----------------------------------------------------------------------------------------------------
 
-    @Override
-    public void set(String key, Object value) {
-        set(key, value, this.configSettings);
-    }
+	@Override
+	public void set(String key, Object value) {
+		set(key, value, this.configSettings);
+	}
 
-    @Synchronized
-    public void set(String key, Object value, ConfigSettings configSettings) {
-        reload();
+	@Synchronized
+	public void set(String key, Object value, ConfigSettings configSettings) {
+		reloadIfNeeded();
 
-        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        fileData.insert(finalKey, value);
-
-        try {
-            //If Comments shouldn't be preserved
-            if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-                write(fileData);
-                return;
-            }
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-            final List<String> unEdited = yamlEditor.read();
-            final List<String> header = yamlEditor.readHeader();
-            final List<String> footer = yamlEditor.readFooter();
-            write();
-            header.addAll(yamlEditor.read());
-            if (!header.containsAll(footer)) {
-                header.addAll(footer);
-            }
-            write();
-            yamlEditor.write(parser.parseComments(unEdited, header));
-        } catch (IOException ex) {
-            System.err.println("Error while writing '" + getName() + "'");
-            ex.printStackTrace();
-        }
-    }
+		fileData.insert(finalKey, value);
 
-    // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to implement
-    // ----------------------------------------------------------------------------------------------------
+		try {
+			//If Comments shouldn't be preserved
+			if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+				write(fileData);
+				return;
+			}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void forceReload() {
-        try (final YamlReader reader = new YamlReader(new FileReader(getFile()))) {
-            fileData = new FileData((Map<String, Object>) reader.read());
-        } catch (final IOException ex) {
-            System.err.println("Error reloading Yaml '" + getName() + "'");
-            System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-        }
-    }
 
-    @Override
-    protected void write(FileData data) throws IOException {
-        final YamlWriter writer = new YamlWriter(new FileWriter(file));
-        writer.write(data.toMap());
-        writer.close();
-    }
+			final List<String> unEdited = yamlEditor.read();
+			final List<String> header = yamlEditor.readHeader();
+			final List<String> footer = yamlEditor.readFooter();
+			write();
+			header.addAll(yamlEditor.read());
+			if (!header.containsAll(footer)) {
+				header.addAll(footer);
+			}
+			write();
+			yamlEditor.write(parser.parseComments(unEdited, header));
+		} catch (IOException ex) {
+			System.err.println("Error while writing '" + getName() + "'");
+			ex.printStackTrace();
+		}
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Specific utility methods for YAML
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Abstract methods to implement
+	// ----------------------------------------------------------------------------------------------------
 
-    public List<String> getHeader() {
-        return yamlEditor.readHeader();
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	protected void reRead() {
+		try (final YamlReader reader = new YamlReader(new FileReader(getFile()))) {
+			fileData = new FileData((Map<String, Object>) reader.read());
+		} catch (final IOException ex) {
+			System.err.println("Error reloading Yaml '" + getName() + "'");
+			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+		}
+	}
+
+	@Override
+	protected void write(FileData data) throws IOException {
+		final YamlWriter writer = new YamlWriter(new FileWriter(file));
+		writer.write(data.toMap());
+		writer.close();
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Specific utility methods for YAML
+	// ----------------------------------------------------------------------------------------------------
+
+	public List<String> getHeader() {
+		return yamlEditor.readHeader();
+	}
 }
