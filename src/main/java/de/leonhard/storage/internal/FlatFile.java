@@ -91,7 +91,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	@Synchronized
 	public void set(String key, Object value) {
 		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		fileData.insert(key, value);
+		fileData.insert(finalKey, value);
 		write();
 		lastModified = System.currentTimeMillis();
 	}
@@ -175,6 +175,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
 			ex.printStackTrace();
 		}
+		lastModified = System.currentTimeMillis();
 	}
 
 	public void removeAll(final String... keys) {
