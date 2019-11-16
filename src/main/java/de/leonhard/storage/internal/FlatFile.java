@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal;
 
+import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
 import lombok.Getter;
@@ -20,6 +21,8 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
     protected FileData fileData = new FileData();
     protected File file;
     protected FileType fileType;
+    @Setter
+    protected DataType dataType;
     @Setter
     protected String pathPrefix;
     private long lastModified;

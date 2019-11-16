@@ -60,8 +60,13 @@ public class YamlEditor {
 
         //Adding new header in front
         for (int i = 0; i < header.size(); i++) {
-            lines.add(i, header.get(i));
+            String toAdd = header.get(i);
+            if (!toAdd.replaceAll("\\s+", "").startsWith("#"))
+                toAdd = "#" + toAdd;
+            lines.add(i, toAdd);
         }
+
+        System.out.println(lines);
 
         //Write to file
         write(lines);

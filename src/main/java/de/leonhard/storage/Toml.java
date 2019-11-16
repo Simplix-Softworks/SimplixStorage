@@ -3,6 +3,7 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
 import lombok.EqualsAndHashCode;
@@ -17,26 +18,31 @@ import java.io.IOException;
 @EqualsAndHashCode(callSuper = true)
 public class Toml extends FlatFile {
 
-    public Toml(String name, String path) {
-        this(name, path, null);
+    public Toml(File file) {
+        super(file, FileType.TOML);
+        create();
+        forceReload();
     }
 
-    public Toml(String name, String path, ReloadSettings reloadSettings) {
+    public Toml(String name, String path) {
+        this(name, path, null, null);
+    }
+
+    public Toml(String name, String path, ReloadSettings reloadSettings, final DataType dataType) {
         super(name, path, FileType.TOML);
         create();
         if (reloadSettings != null) {
             this.reloadSettings = reloadSettings;
         }
 
+        if (dataType != null)
+            this.dataType = dataType;
+        else
+            this.dataType = DataType.INTELLIGENT;
         create();
         forceReload();
     }
 
-    public Toml(File file) {
-        super(file, FileType.TOML);
-        create();
-        forceReload();
-    }
 
     // ----------------------------------------------------------------------------------------------------
     // Abstract methods to implement

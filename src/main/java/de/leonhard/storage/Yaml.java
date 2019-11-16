@@ -9,16 +9,15 @@ import de.leonhard.storage.internal.editor.yaml.YamlParser;
 import de.leonhard.storage.internal.editor.yaml.YamlReader;
 import de.leonhard.storage.internal.editor.yaml.YamlWriter;
 import de.leonhard.storage.internal.settings.ConfigSettings;
+import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
 import lombok.*;
 
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @ToString(callSuper = true)
@@ -30,18 +29,19 @@ public class Yaml extends FlatFile implements IStorage {
     private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
     public Yaml(String name, String path) {
-        this(name, path, null, null, null);
+        this(name, path, null, null, null, null);
     }
 
     public Yaml(String name, String path, InputStream inputStream) {
-        this(name, path, inputStream, null, null);
+        this(name, path, inputStream, null, null, null);
     }
 
     public Yaml(String name,
                 String path,
                 InputStream inputStream,
                 ReloadSettings reloadSettings,
-                ConfigSettings configSettings) {
+                ConfigSettings configSettings,
+                DataType dataType) {
         super(name, path, FileType.YAML);
 
         if (create()) {
@@ -53,6 +53,7 @@ public class Yaml extends FlatFile implements IStorage {
         yamlEditor = new YamlEditor(file);
         parser = new YamlParser(yamlEditor);
         forceReload();
+
         if (reloadSettings != null) {
             this.reloadSettings = reloadSettings;
         }
@@ -60,6 +61,11 @@ public class Yaml extends FlatFile implements IStorage {
         if (configSettings != null) {
             this.configSettings = configSettings;
         }
+
+        if (dataType != null)
+            this.dataType = dataType;
+        else
+            this.dataType = DataType.INTELLIGENT;
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -105,14 +111,13 @@ public class Yaml extends FlatFile implements IStorage {
     }
 
     // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to override
+    // Abstract methods to implement
     // ----------------------------------------------------------------------------------------------------
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void forceReload() {
         try (final YamlReader reader = new YamlReader(new FileReader(getFile()))) {
-            fileData = new FileData((Map<String, Object>) reader.read());
+            fileData = new FileData(reader.readToMap());
         } catch (final IOException ex) {
             System.err.println("Error reloading Yaml '" + getName() + "'");
             System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
@@ -121,7 +126,7 @@ public class Yaml extends FlatFile implements IStorage {
 
     @Override
     protected void write(FileData data) throws IOException {
-        final YamlWriter writer = new YamlWriter(new FileWriter(file));
+        final YamlWriter writer = new YamlWriter(file);
         writer.write(data.toMap());
         writer.close();
     }
@@ -132,5 +137,13 @@ public class Yaml extends FlatFile implements IStorage {
 
     public List<String> getHeader() {
         return yamlEditor.readHeader();
+    }
+
+    public void setHeader(final List<String> header) {
+        yamlEditor.setHeader(header);
+    }
+
+    public void addHeader(final List<String> header) {
+        yamlEditor.addHeader(header);
     }
 }
