@@ -13,53 +13,53 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Config extends Yaml {
-    private List<String> header;
+	private List<String> header;
 
-    public Config(String name, String path) {
+	public Config(String name, String path) {
 
-        super(name, path);
-        this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
-    }
+		super(name, path);
+		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+	}
 
-    public Config(String name, String path, InputStream inputStream) {
-        super(name, path, inputStream);
-        this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
-    }
+	public Config(String name, String path, InputStream inputStream) {
+		super(name, path, inputStream);
+		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+	}
 
-    public Config(String name,
-                  String path,
-                  InputStream inputStream,
-                  ReloadSettings reloadSettings,
-                  ConfigSettings configSettings) {
-        super(name, path, inputStream, reloadSettings, configSettings);
-        this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
-    }
+	public Config(String name,
+	              String path,
+	              InputStream inputStream,
+	              ReloadSettings reloadSettings,
+	              ConfigSettings configSettings) {
+		super(name, path, inputStream, reloadSettings, configSettings);
+		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Methods to override (Points where Config is unspecific for typical FlatFiles)
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Methods to override (Points where Config is unspecific for typical FlatFiles)
+	// ----------------------------------------------------------------------------------------------------
 
-    @Override
-    public void set(String key, Object value) {
-        super.set(key, value, getConfigSettings());
-    }
+	@Override
+	public void set(String key, Object value) {
+		super.set(key, value, getConfigSettings());
+	}
 
-    @Override
-    public void setDefault(String key, Object value) {
-        if (!contains(key)) {
-            set(key, value, getConfigSettings());
-        }
-    }
+	@Override
+	public void setDefault(String key, Object value) {
+		if (!contains(key)) {
+			set(key, value, getConfigSettings());
+		}
+	}
 
-    @Override
-    public <T> T getOrSetDefault(String key, T def) {
-        reload();
-        if (!contains(key)) {
-            set(key, def, getConfigSettings());
-            return def;
-        } else {
-            Object obj = get(key); //
-            return Primitive.getFromDef(key, def);
-        }
-    }
+	@Override
+	public <T> T getOrSetDefault(String key, T def) {
+		reloadIfNeeded();
+		if (!contains(key)) {
+			set(key, def, getConfigSettings());
+			return def;
+		} else {
+			Object obj = get(key); //
+			return Primitive.getFromDef(key, def);
+		}
+	}
 }

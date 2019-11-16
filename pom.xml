@@ -198,11 +198,6 @@
 			<id>json</id>
 			<url>https://mvnrepository.com/artifact/org.json/json</url>
 		</repository>
-
-		<repository>
-			<id>csv</id>
-			<url>https://mvnrepository.com/artifact/org.apache.commons/commons-csv</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
