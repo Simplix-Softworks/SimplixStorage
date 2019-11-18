@@ -45,11 +45,11 @@ public class Toml extends FlatFile {
 	@Override
 	protected void reRead() {
 		try {
-			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()));
-		} catch (IOException e) {
+			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()), dataType);
+		} catch (IOException ex) {
 			System.err.println("Exception while reloading '" + getName() + "'");
 			System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
-			e.printStackTrace();
+			ex.printStackTrace();
 		}
 	}
 

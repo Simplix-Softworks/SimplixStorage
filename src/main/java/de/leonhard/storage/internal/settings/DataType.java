@@ -4,54 +4,35 @@ import de.leonhard.storage.utils.LightningProvider;
 
 import java.util.Map;
 
+/**
+ * An Enum defining how the Data should be stored
+ */
+@SuppressWarnings("unchecked")
 public enum DataType {
-    SORTED {
-        @Override
-        public Map getMapImplementation() {
-            return getMapImplementation(null);
-        }
+	SORTED {
+		@Override
+		public Map<String, Object> getMapImplementation() {
+			return LightningProvider.getSortedMapImplementation();
+		}
+	},
 
-        @Override
-        public Map getMapImplementation(ConfigSettings configSettings) {
-            return LightningProvider.getDefaultMapImplementation();
-        }
-    },
+	UNSORTED {
+		@Override
+		public Map<String, Object> getMapImplementation() {
+			return LightningProvider.getDefaultMapImplementation();
+		}
+	};
 
-    AUTOMATIC {
-        @Override
-        public Map getMapImplementation() {
-            return getMapImplementation(null);
-        }
+	public static DataType fromConfigSettings(ConfigSettings configSettings) {
+		//Only Configs needs the preservation of the order of the keys
+		if (ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+			return SORTED;
+		}
+		//In all other cases using the normal HashMap is better to save memory.
+		return UNSORTED;
+	}
 
-        @Override
-        public Map getMapImplementation(ConfigSettings configSettings) {
-            return LightningProvider.getDefaultMapImplementation();
-        }
-    },
-    INTELLIGENT {
-        @Override
-        public Map getMapImplementation() {
-            return getMapImplementation(null);
-        }
-
-        @Override
-        public Map getMapImplementation(ConfigSettings configSettings) {
-            if (configSettings == null) {
-                return LightningProvider.getDefaultMapImplementation();
-            }
-            if (ConfigSettings.PRESERVE_COMMENTS == configSettings) {
-                return LightningProvider.getSortedMapImplementation();
-            }
-            return LightningProvider.getDefaultMapImplementation();
-        }
-    };
-
-
-    public Map getMapImplementation() {
-        throw new AbstractMethodError("Not implemented");
-    }
-
-    public Map getMapImplementation(ConfigSettings configSettings) {
-        throw new AbstractMethodError("Not implemented");
-    }
+	public Map<String, Object> getMapImplementation() {
+		throw new AbstractMethodError("Not implemented");
+	}
 }

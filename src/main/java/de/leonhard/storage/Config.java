@@ -1,6 +1,7 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.internal.settings.ConfigSettings;
+import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.Primitive;
 import lombok.EqualsAndHashCode;
@@ -15,23 +16,22 @@ import java.util.List;
 public class Config extends Yaml {
 	private List<String> header;
 
-	public Config(String name, String path) {
 
-		super(name, path);
-		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+	public Config(String name, String path) {
+		this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
 	}
 
 	public Config(String name, String path, InputStream inputStream) {
-		super(name, path, inputStream);
-		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+		this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
 	}
 
 	public Config(String name,
 	              String path,
 	              InputStream inputStream,
 	              ReloadSettings reloadSettings,
-	              ConfigSettings configSettings) {
-		super(name, path, inputStream, reloadSettings, configSettings);
+	              ConfigSettings configSettings,
+	              DataType dataType) {
+		super(name, path, inputStream, reloadSettings, configSettings, dataType);
 		this.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}
 
@@ -58,7 +58,7 @@ public class Config extends Yaml {
 			set(key, def, getConfigSettings());
 			return def;
 		} else {
-			Object obj = get(key); //
+			Object obj = get(key);
 			return Primitive.getFromDef(key, def);
 		}
 	}

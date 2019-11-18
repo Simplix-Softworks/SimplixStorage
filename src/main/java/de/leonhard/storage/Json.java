@@ -73,7 +73,7 @@ public class Json extends FlatFile implements IStorage {
 				return JsonUtils.jsonToMap((JSONObject) map);
 			}
 			//Exception in casting
-			throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' But it is not a Map");
+			throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
 		}
 	}
 
@@ -84,12 +84,12 @@ public class Json extends FlatFile implements IStorage {
 	@Override
 	protected void reRead() {
 		final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
-		fileData = new FileData(new JSONObject(jsonTokener));
+		fileData = new FileData(new JSONObject(jsonTokener), dataType);
 	}
 
 	@Override
 	protected void write(FileData data) throws IOException {
-		try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
+		try (Writer writer = FileUtils.createWriter(file)) {
 			writer.write(data.toJsonObject().toString(3));
 			writer.flush();
 		}

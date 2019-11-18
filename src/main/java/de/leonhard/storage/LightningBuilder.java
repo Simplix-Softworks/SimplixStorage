@@ -1,6 +1,7 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.internal.settings.ConfigSettings;
+import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.utils.FileUtils;
 import de.leonhard.storage.utils.Valid;
@@ -15,11 +16,16 @@ public class LightningBuilder {
 	private InputStream inputStream;
 	private ReloadSettings reloadSettings;
 	private ConfigSettings configSettings;
+	private DataType dataType;
 
 	private LightningBuilder(String name, String path) {
 		this.name = name;
 		this.path = path;
 	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Createing our Builder
+	// ----------------------------------------------------------------------------------------------------
 
 	public static LightningBuilder fromPath(String name, String path) {
 		Valid.notNull(name, "Name mustn't be null");
@@ -40,6 +46,10 @@ public class LightningBuilder {
 		}
 		return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), path);
 	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Adding out settings
+	// ----------------------------------------------------------------------------------------------------
 
 	public LightningBuilder addInputStreamFromFile(File file) {
 		Valid.notNull(file, "File mustn't be null");
@@ -79,6 +89,13 @@ public class LightningBuilder {
 		return this;
 	}
 
+	public LightningBuilder setDataType(DataType dataType) {
+		Valid.notNull(dataType, "DataType mustn't be null");
+
+		this.dataType = dataType;
+		return this;
+	}
+
 	public LightningFile createLightningFile() {
 		return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
 	}
@@ -89,11 +106,11 @@ public class LightningBuilder {
 	// ----------------------------------------------------------------------------------------------------
 
 	public Config createConfig() {
-		return new Config(name, path, inputStream, reloadSettings, configSettings);
+		return new Config(name, path, inputStream, reloadSettings, configSettings, dataType);
 	}
 
 	public Yaml createYaml() {
-		return new Yaml(name, path, inputStream, reloadSettings, configSettings);
+		return new Yaml(name, path, inputStream, reloadSettings, configSettings, dataType);
 	}
 
 	public Toml createToml() {
