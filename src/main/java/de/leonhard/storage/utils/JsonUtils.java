@@ -12,50 +12,50 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JsonUtils {
 
-	public static Map<String, Object> jsonToMap(JSONObject jsonObject) throws JSONException {
-		Map<String, Object> retMap = new HashMap<>();
+    public static Map<String, Object> jsonToMap(JSONObject jsonObject) throws JSONException {
+        Map<String, Object> retMap = new HashMap<>();
 
-		if (jsonObject != JSONObject.NULL) {
-			retMap = toMap(jsonObject);
-		}
-		return retMap;
-	}
+        if (jsonObject != JSONObject.NULL) {
+            retMap = toMap(jsonObject);
+        }
+        return retMap;
+    }
 
-	public static JSONObject getJsonFromMap(Map<String, Object> map) throws JSONException {
-		JSONObject jsonData = new JSONObject();
-		for (String key : map.keySet()) {
-			Object value = map.get(key);
-			if (value instanceof Map<?, ?>) {
-				value = getJsonFromMap((Map<String, Object>) value);
-			}
-			jsonData.put(key, value);
-		}
-		return jsonData;
-	}
+    public static JSONObject getJsonFromMap(Map<String, Object> map) throws JSONException {
+        JSONObject jsonData = new JSONObject();
+        for (String key : map.keySet()) {
+            Object value = map.get(key);
+            if (value instanceof Map) {
+                value = getJsonFromMap((Map<String, Object>) value);
+            }
+            jsonData.put(key, value);
+        }
+        return jsonData;
+    }
 
-	public static Map<String, Object> toMap(JSONObject jsonObject) throws JSONException {
-		Map<String, Object> map = new HashMap<>();
+    public static Map<String, Object> toMap(JSONObject jsonObject) throws JSONException {
+        Map<String, Object> map = new HashMap<>();
 
-		Iterator<String> keysItr = jsonObject.keys();
-		keysItr.forEachRemaining(key -> map.put(key, getValue(jsonObject.get(key))));
-		return map;
-	}
+        Iterator<String> keysItr = jsonObject.keys();
+        keysItr.forEachRemaining(key -> map.put(key, getValue(jsonObject.get(key))));
+        return map;
+    }
 
-	public static List<Object> toList(JSONArray array) throws JSONException {
-		List<Object> list = new ArrayList<>();
-		for (int i = 0; i < array.length(); i++) {
-			list.add(getValue(array.get(i)));
-		}
-		return list;
-	}
+    public static List<Object> toList(JSONArray array) throws JSONException {
+        List<Object> list = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            list.add(getValue(array.get(i)));
+        }
+        return list;
+    }
 
-	private static Object getValue(Object obj) {
-		if (obj instanceof JSONArray) {
-			return toList((JSONArray) obj);
-		} else if (obj instanceof JSONObject) {
-			return toMap((JSONObject) obj);
-		} else {
-			return obj;
-		}
-	}
+    private static Object getValue(Object obj) {
+        if (obj instanceof JSONArray) {
+            return toList((JSONArray) obj);
+        } else if (obj instanceof JSONObject) {
+            return toMap((JSONObject) obj);
+        } else {
+            return obj;
+        }
+    }
 }
