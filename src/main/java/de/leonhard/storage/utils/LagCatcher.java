@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * Utility Class to take benchmarks
  */
-@SuppressWarnings("WeakerAccess")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LagCatcher {
     private static final HashMap<String, Long> startTimes = new HashMap<>();

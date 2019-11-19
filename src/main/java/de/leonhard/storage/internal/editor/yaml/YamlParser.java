@@ -1,14 +1,16 @@
 package de.leonhard.storage.internal.editor.yaml;
 
+import lombok.Getter;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
+@Getter
 @SuppressWarnings("unused")
 public class YamlParser {
 
-    final private YamlEditor yamlEditor;
-    final private File file;
+    private final YamlEditor yamlEditor;
+    private final File file;
 
     public YamlParser(final YamlEditor yamlEditor) {
         this.yamlEditor = yamlEditor;
@@ -17,16 +19,11 @@ public class YamlParser {
 
     /**
      * Method to assign a comment to a key
-     *
-     * @return
-     * @throws IOException
      */
-    @SuppressWarnings("JavaDoc")
     private Map<String, List<String>> assignCommentsToKey() {
         return assignCommentsToKey(yamlEditor.read());
     }
 
-    @SuppressWarnings("UnusedAssignment")
     public List<String> parseComments(final List<String> comments, final List<String> updated) {
         final List<String> keys;
         final Map<String, List<String>> parsed;
