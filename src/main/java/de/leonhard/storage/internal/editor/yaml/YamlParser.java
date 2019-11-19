@@ -1,21 +1,13 @@
 package de.leonhard.storage.internal.editor.yaml;
 
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import java.io.File;
 import java.util.*;
 
-@Getter
 @SuppressWarnings("unused")
+@RequiredArgsConstructor
 public class YamlParser {
-
     private final YamlEditor yamlEditor;
-    private final File file;
-
-    public YamlParser(final YamlEditor yamlEditor) {
-        this.yamlEditor = yamlEditor;
-        this.file = yamlEditor.getFile();
-    }
 
     /**
      * Method to assign a comment to a key
