@@ -191,6 +191,7 @@ public interface IStorage {
 	 * @param key   Key to set the value
 	 * @param value Value to set
 	 */
+
 	default void setDefault(String key, Object value) {
 		if (!contains(key)) {
 			set(key, value);
