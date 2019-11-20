@@ -183,6 +183,7 @@ public final class FileUtils {
     public static void copyFolder(File source, File destination) throws IOException {
         Valid.notNull(source);
         Valid.notNull(destination);
+
         if (source.isDirectory()) {
             if (!destination.exists()) {
                 destination.mkdirs();
