@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal;
 
-import de.leonhard.storage.utils.Primitive;
+import de.leonhard.storage.utils.ClassWrapper;
 import de.leonhard.storage.utils.Valid;
 
 import java.util.ArrayList;
@@ -41,14 +41,12 @@ public interface IStorage {
 
 	/**
 	 * Get a value or a default one
+	 *
 	 * @param key Path to value in data-structure
 	 * @param def Default value & type of it
 	 */
 	default <T> T get(String key, T def) {
-		if (!contains(key)) {
-			return def;
-		}
-		return Primitive.getFromDef(get(key), def);
+		return contains(key) ? ClassWrapper.getFromDef(get(key), def) : def;
 	}
 
 	/**
@@ -58,11 +56,7 @@ public interface IStorage {
 	 * @return Returns the value
 	 */
 	default String getString(String key) {
-		if (!contains(key)) {
-			return "";
-		} else {
-			return get(key).toString();
-		}
+		return contains(key) ? ClassWrapper.STRING.getString(get(key)) : "";
 	}
 
 	/**
@@ -72,11 +66,7 @@ public interface IStorage {
 	 * @return String from data-structure
 	 */
 	default long getLong(String key) {
-		if (!contains(key)) {
-			return 0L;
-		} else {
-			return Primitive.LONG.getLong(get(key));
-		}
+		return contains(key) ? ClassWrapper.LONG.getLong(get(key)) : 0L;
 	}
 
 	/**
@@ -86,11 +76,7 @@ public interface IStorage {
 	 * @return Int from data-structure
 	 */
 	default int getInt(String key) {
-		if (!contains(key)) {
-			return 0;
-		} else {
-			return Primitive.INTEGER.getInt(get(key));
-		}
+		return contains(key) ? ClassWrapper.INTEGER.getInt(key) : 0;
 	}
 
 	/**
@@ -100,11 +86,7 @@ public interface IStorage {
 	 * @return Byte from data-structure
 	 */
 	default byte getByte(String key) {
-		if (!contains(key)) {
-			return 0;
-		} else {
-			return Primitive.BYTE.getByte(get(key));
-		}
+		return contains(key) ? ClassWrapper.BYTE.getByte(get(key)) : 0;
 	}
 
 	/**
@@ -114,11 +96,7 @@ public interface IStorage {
 	 * @return Boolean from data-structure
 	 */
 	default boolean getBoolean(String key) {
-		if (!contains(key)) {
-			return false;
-		} else {
-			return get(key).toString().equalsIgnoreCase("true");
-		}
+		return contains(key) ? getString(key).equalsIgnoreCase("true") : false;
 	}
 
 	/**
@@ -128,11 +106,7 @@ public interface IStorage {
 	 * @return Float from data-structure
 	 */
 	default float getFloat(String key) {
-		if (!contains(key)) {
-			return 0F;
-		} else {
-			return Primitive.FLOAT.getFloat(get(key));
-		}
+		return contains(key) ? ClassWrapper.FLOAT.getFloat(get(key)) : 0F;
 	}
 
 
@@ -143,11 +117,7 @@ public interface IStorage {
 	 * @return Double from data-structure
 	 */
 	default double getDouble(String key) {
-		if (!contains(key)) {
-			return 0D;
-		} else {
-			return Primitive.DOUBLE.getDouble(get(key));
-		}
+		return contains(key) ? ClassWrapper.DOUBLE.getDouble(get(key)) : 0D;
 	}
 
 	/**
@@ -232,7 +202,7 @@ public interface IStorage {
 			set(key, def);
 			return def;
 		} else {
-			return Primitive.getFromDef(get(key), def);
+			return ClassWrapper.getFromDef(get(key), def);
 		}
 	}
 }

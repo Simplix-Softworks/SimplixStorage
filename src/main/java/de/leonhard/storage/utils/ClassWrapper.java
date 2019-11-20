@@ -1,7 +1,9 @@
 package de.leonhard.storage.utils;
 
+import java.util.List;
+
 @SuppressWarnings("unchecked")
-public final class Primitive {
+public final class ClassWrapper {
 
 	/**
 	 * Method to cast an object to a given datatype
@@ -12,20 +14,20 @@ public final class Primitive {
 	 * @param def type of result
 	 * @return Casted object
 	 */
-	public static <T> T getFromDef(Object obj, final T def) {
+	public static <T> T getFromDef(Object obj, T def) {
 		if (obj instanceof String && def instanceof Integer) {
 			obj = Integer.parseInt((String) obj);
 		} else if (obj instanceof String && def instanceof Double) {
 			obj = Double.parseDouble((String) obj);
 		} else if (obj instanceof String && def instanceof Float) {
 			obj = Double.parseDouble((String) obj);
-		} else if (obj instanceof String && def instanceof Boolean) {
+		} else if (obj instanceof STRING && def instanceof Boolean) {
 			return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
 		}
 		return (T) obj;
 	}
 
-	public static <T> T getFromDef(final Object obj, final Class<T> clazz) {
+	public static <T> T getFromDef(Object obj, Class<T> clazz) {
 		try {
 			return getFromDef(obj, clazz.newInstance());
 		} catch (InstantiationException | IllegalAccessException ex) {
@@ -101,11 +103,20 @@ public final class Primitive {
 		public static byte getByte(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).byteValue();
-			} else if (obj instanceof String) {
+			} else if (obj instanceof STRING) {
 				return Byte.parseByte(obj.toString());
 			} else {
 				return Byte.parseByte(obj.toString());
 			}
+		}
+	}
+
+	public static class STRING {
+		public static String getString(Object obj) {
+			if (obj instanceof List && ((List) obj).size() == 1) {
+				return ((List) obj).get(0).toString();
+			}
+			return obj.toString();
 		}
 	}
 }

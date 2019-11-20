@@ -3,7 +3,7 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.utils.Primitive;
+import de.leonhard.storage.utils.ClassWrapper;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -59,7 +59,7 @@ public class Config extends Yaml {
 			return def;
 		} else {
 			Object obj = get(key);
-			return Primitive.getFromDef(key, def);
+			return ClassWrapper.getFromDef(key, def);
 		}
 	}
 }

@@ -42,7 +42,6 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 		this.file = file;
 	}
 
-
 	// ----------------------------------------------------------------------------------------------------
 	// Abstract methods (Reading & Writing)
 	// ----------------------------------------------------------------------------------------------------
