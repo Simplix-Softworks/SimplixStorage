@@ -186,7 +186,7 @@ public interface IStorage {
 
 	/**
 	 * Sets a value to the data-structure if the data-structure doesn't already contain the value
-	 * (Not mix up with Bukkit addDefault)
+	 * (Don't mix up with Bukkit addDefault)
 	 *
 	 * @param key   Key to set the value
 	 * @param value Value to set
