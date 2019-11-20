@@ -17,6 +17,11 @@ import java.io.IOException;
 @EqualsAndHashCode(callSuper = true)
 public class Toml extends FlatFile {
 
+	public Toml(Toml toml) {
+		super(toml.getFile(), toml.fileType);
+		this.fileData = toml.getFileData();
+	}
+
 	public Toml(String name, String path) {
 		this(name, path, null);
 	}

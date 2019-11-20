@@ -27,6 +27,14 @@ public class Yaml extends FlatFile {
     @Setter
     private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
+    public Yaml(Yaml yaml) {
+        super(yaml.getFile(), yaml.fileType);
+        this.fileData = yaml.getFileData();
+        this.yamlEditor = yaml.getYamlEditor();
+        this.parser = yaml.getParser();
+        this.configSettings = yaml.getConfigSettings();
+    }
+
     public Yaml(String name, String path) {
         this(name, path, null, null, null, null);
     }
@@ -95,9 +103,9 @@ public class Yaml extends FlatFile {
             }
 
 
-            final List<String> unEdited = yamlEditor.read();
-            final List<String> header = yamlEditor.readHeader();
-            final List<String> footer = yamlEditor.readFooter();
+            List<String> unEdited = yamlEditor.read();
+            List<String> header = yamlEditor.readHeader();
+            List<String> footer = yamlEditor.readFooter();
             write();
             header.addAll(yamlEditor.read());
             if (!header.containsAll(footer)) {
@@ -118,9 +126,9 @@ public class Yaml extends FlatFile {
     @Override
     @SuppressWarnings("unchecked")
     protected void reRead() {
-        try (final YamlReader reader = new YamlReader(new FileReader(getFile()))) {
+        try (YamlReader reader = new YamlReader(new FileReader(getFile()))) {
             fileData = new FileData(reader.readToMap(), dataType);
-        } catch (final IOException ex) {
+        } catch (IOException ex) {
             System.err.println("Error reloading Yaml '" + getName() + "'");
             System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
             ex.printStackTrace();
@@ -129,7 +137,7 @@ public class Yaml extends FlatFile {
 
     @Override
     protected void write(FileData data) throws IOException {
-        try (final YamlWriter writer = new YamlWriter(file)) {
+        try (YamlWriter writer = new YamlWriter(file)) {
             writer.write(data.toMap());
         }
     }
@@ -142,11 +150,11 @@ public class Yaml extends FlatFile {
         return yamlEditor.readHeader();
     }
 
-    public void setHeader(final List<String> header) {
+    public void setHeader(List<String> header) {
         yamlEditor.setHeader(header);
     }
 
-    public void addHeader(final List<String> toAdd) {
+    public void addHeader(List<String> toAdd) {
         yamlEditor.addHeader(toAdd);
     }
 }

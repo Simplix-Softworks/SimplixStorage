@@ -21,7 +21,7 @@ public final class ClassWrapper {
 			obj = Double.parseDouble((String) obj);
 		} else if (obj instanceof String && def instanceof Float) {
 			obj = Double.parseDouble((String) obj);
-		} else if (obj instanceof STRING && def instanceof Boolean) {
+		} else if (obj instanceof String && def instanceof Boolean) {
 			return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
 		}
 		return (T) obj;

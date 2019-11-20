@@ -16,6 +16,9 @@ import java.util.List;
 public class Config extends Yaml {
 	private List<String> header;
 
+	public Config(Config config) {
+		super(config);
+	}
 
 	public Config(String name, String path) {
 		this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
