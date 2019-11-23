@@ -1,7 +1,6 @@
 package de.leonhard.storage.internal.serialize;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,35 +9,36 @@ import java.util.List;
 /**
  *
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class LightningSerializer {
-    private static final List<LightningSerializable> serializables = Collections.synchronizedList(new ArrayList<>());
+@UtilityClass
+public class LightningSerializer {
+	private final List<LightningSerializable> serializes = Collections.synchronizedList(new ArrayList<>());
 
 
-    /**
-     * Register a serializable to our list
-     *
-     * @param lightningSerializable Serializable to register
-     */
-    public static void registerSerializable(LightningSerializable lightningSerializable) {
-        serializables.add(lightningSerializable);
-    }
+	/**
+	 * Register a serializable to our list
+	 *
+	 * @param lightningSerializable Serializable to register
+	 */
+	public void registerSerializable(LightningSerializable lightningSerializable) {
+		serializes.add(lightningSerializable);
+	}
 
-    public static LightningSerializable getSerializable(Class<?> clazz) {
-        for (final LightningSerializable serializable : serializables) {
-            if (serializable.getClazz().equals(clazz))
-                return serializable;
-        }
-        return null;
-    }
+	public LightningSerializable getSerializable(Class<?> clazz) {
+		for (final LightningSerializable serializable : serializes) {
+			if (serializable.getClazz().equals(clazz)) {
+				return serializable;
+			}
+		}
+		return null;
+	}
 
-    @SuppressWarnings("unchecked")
-    public static <T> T serialize(Object obj, Class<T> clazz) {
-        final LightningSerializable serializable = getSerializable(clazz);
-        if (serializable == null) {
-            throw new IllegalStateException("No serializable found for '" + clazz.getSimpleName() + "'");
-        }
+	@SuppressWarnings("unchecked")
+	public <T> T serialize(Object obj, Class<T> clazz) {
+		final LightningSerializable serializable = getSerializable(clazz);
+		if (serializable == null) {
+			throw new IllegalStateException("No serializable found for '" + clazz.getSimpleName() + "'");
+		}
 
-        return (T) serializable.serialize();
-    }
+		return (T) serializable.serialize(obj);
+	}
 }

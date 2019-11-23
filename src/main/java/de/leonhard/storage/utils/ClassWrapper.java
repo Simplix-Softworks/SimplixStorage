@@ -1,9 +1,12 @@
 package de.leonhard.storage.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public final class ClassWrapper {
+@UtilityClass
+public class ClassWrapper {
 
 	/**
 	 * Method to cast an object to a given datatype
@@ -14,7 +17,7 @@ public final class ClassWrapper {
 	 * @param def type of result
 	 * @return Casted object
 	 */
-	public static <T> T getFromDef(Object obj, T def) {
+	public <T> T getFromDef(Object obj, T def) {
 		if (obj instanceof String && def instanceof Integer) {
 			obj = Integer.parseInt((String) obj);
 		} else if (obj instanceof String && def instanceof Double) {
@@ -27,7 +30,7 @@ public final class ClassWrapper {
 		return (T) obj;
 	}
 
-	public static <T> T getFromDef(Object obj, Class<T> clazz) {
+	public <T> T getFromDef(Object obj, Class<T> clazz) {
 		try {
 			return getFromDef(obj, clazz.newInstance());
 		} catch (InstantiationException | IllegalAccessException ex) {
@@ -37,8 +40,9 @@ public final class ClassWrapper {
 		}
 	}
 
-	public static class LONG {
-		public static long getLong(Object obj) {
+	@UtilityClass
+	public class LONG {
+		public long getLong(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).longValue();
 			} else if (obj instanceof String) {
@@ -49,8 +53,9 @@ public final class ClassWrapper {
 		}
 	}
 
-	public static class DOUBLE {
-		public static double getDouble(Object obj) {
+	@UtilityClass
+	public class DOUBLE {
+		public double getDouble(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).longValue();
 			} else if (obj instanceof String) {
@@ -62,8 +67,9 @@ public final class ClassWrapper {
 		}
 	}
 
-	public static class FLOAT {
-		public static float getFloat(Object obj) {
+	@UtilityClass
+	public class FLOAT {
+		public float getFloat(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).floatValue();
 			} else if (obj instanceof String) {
@@ -74,8 +80,9 @@ public final class ClassWrapper {
 		}
 	}
 
-	public static class INTEGER {
-		public static int getInt(Object obj) {
+	@UtilityClass
+	public class INTEGER {
+		public int getInt(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).intValue();
 			} else if (obj instanceof String) {
@@ -86,9 +93,10 @@ public final class ClassWrapper {
 		}
 	}
 
+	@UtilityClass
 	@SuppressWarnings("unused")
-	public static class SHORT {
-		public static short getShort(Object obj) {
+	public class SHORT {
+		public short getShort(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).shortValue();
 			} else if (obj instanceof String) {
@@ -99,8 +107,9 @@ public final class ClassWrapper {
 		}
 	}
 
-	public static class BYTE {
-		public static byte getByte(Object obj) {
+	@UtilityClass
+	public class BYTE {
+		public byte getByte(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).byteValue();
 			} else if (obj instanceof STRING) {
@@ -111,8 +120,9 @@ public final class ClassWrapper {
 		}
 	}
 
-	public static class STRING {
-		public static String getString(Object obj) {
+	@UtilityClass
+	public class STRING {
+		public String getString(Object obj) {
 			if (obj instanceof List && ((List) obj).size() == 1) {
 				return ((List) obj).get(0).toString();
 			}
@@ -120,3 +130,4 @@ public final class ClassWrapper {
 		}
 	}
 }
+

@@ -190,7 +190,6 @@ public interface IStorage {
 		return LightningSerializer.serialize(get(key), clazz);
 	}
 
-
 	/**
 	 * Get a List from a data-structure
 	 *

@@ -1,41 +1,41 @@
 package de.leonhard.storage.utils;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class Valid {
+@UtilityClass
+public class Valid {
 
-    public static void checkBoolean(boolean condition) {
-        checkBoolean(condition, "Valid.checkBoolean(): Condition is False.");
-    }
+	public void checkBoolean(boolean condition) {
+		checkBoolean(condition, "Valid.checkBoolean(): Condition is False.");
+	}
 
-    public static void checkBoolean(boolean condition, String... errorMessage) {
-        if (!condition)
+	public void checkBoolean(boolean condition, String... errorMessage) {
+		if (!condition) {
             throw new LightningException(errorMessage);
-    }
-
-    public static <T> void notNull(T object) {
-        if (object != null) {
-            return;
         }
-        throw new LightningException("Valid.notNull(): Validated Object is null");
-    }
+	}
 
-    public static <T> void notNull(T object, String... message) {
-        if (object != null) {
-            return;
-        }
-        throw new LightningException(message);
-    }
+	public <T> void notNull(T object) {
+		if (object != null) {
+			return;
+		}
+		throw new LightningException("Valid.notNull(): Validated Object is null");
+	}
 
-    private static class LightningException extends RuntimeException {
-        private static final long serialVersionUID = -7961367314553460325L;
+	public <T> void notNull(T object, String... message) {
+		if (object != null) {
+			return;
+		}
+		throw new LightningException(message);
+	}
 
-        private LightningException(String... message) {
-            for (String part : message) {
-                System.out.println(part);
-            }
-        }
-    }
+	private class LightningException extends RuntimeException {
+		private final long serialVersionUID = -7961367314553460325L;
+
+		private LightningException(String... message) {
+			for (String part : message) {
+				System.out.println(part);
+			}
+		}
+	}
 }

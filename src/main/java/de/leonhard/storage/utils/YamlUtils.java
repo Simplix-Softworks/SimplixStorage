@@ -1,16 +1,15 @@
 package de.leonhard.storage.utils;
 
 import com.esotericsoftware.yamlbeans.YamlConfig;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public final class YamlUtils {
+@UtilityClass
+public class YamlUtils {
 	@Setter
-	private static YamlConfig yamlConfig;
+	private YamlConfig yamlConfig;
 
-	public static YamlConfig getDefaultYamlConfig() {
+	public YamlConfig getDefaultYamlConfig() {
 		if (yamlConfig != null) {
 			return yamlConfig;
 		}

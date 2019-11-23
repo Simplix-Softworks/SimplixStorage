@@ -1,7 +1,6 @@
 package de.leonhard.storage.utils;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 import java.util.*;
 
@@ -11,60 +10,60 @@ import java.util.*;
  * Used in {@link de.leonhard.storage.internal.settings.DataType} Enum
  */
 @SuppressWarnings("unchecked")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class LightningProvider {
+@UtilityClass
+public class LightningProvider {
 
-    private static final Map<Class<?>, Object> CLASS_OBJECT_MAP = Collections.synchronizedMap(new HashMap<>());
+	private static final Map<Class<?>, Object> CLASS_OBJECT_MAP = Collections.synchronizedMap(new HashMap<>());
 
-    // ----------------------------------------------------------------------------------------------------
-    // Registering and getting Providers
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Registering and getting Providers
+	// ----------------------------------------------------------------------------------------------------
 
-    public <T> T getProvider(Class<T> clazz) {
-        if (!CLASS_OBJECT_MAP.containsKey(clazz)) {
-            return null;
-        }
-        return (T) CLASS_OBJECT_MAP.get(clazz);
-    }
+	public <T> T getProvider(Class<T> clazz) {
+		if (!CLASS_OBJECT_MAP.containsKey(clazz)) {
+			return null;
+		}
+		return (T) CLASS_OBJECT_MAP.get(clazz);
+	}
 
-    public static boolean registerProvider(final Class<?> key, final Object value) {
-        if (CLASS_OBJECT_MAP.containsKey(key)) {
-            return false;
-        }
+	public static boolean registerProvider(final Class<?> key, final Object value) {
+		if (CLASS_OBJECT_MAP.containsKey(key)) {
+			return false;
+		}
 
-        CLASS_OBJECT_MAP.put(key, value);
-        return true;
-    }
+		CLASS_OBJECT_MAP.put(key, value);
+		return true;
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Utility methods to get our default Providers more easily
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Utility methods to get our default Providers more easily
+	// ----------------------------------------------------------------------------------------------------
 
-    public static Map getDefaultMapImplementation() {
-        if (!CLASS_OBJECT_MAP.containsKey(Map.class)) {
-            return new HashMap<>();
-        }
-        return (Map) CLASS_OBJECT_MAP.get(Map.class);
-    }
+	public static Map getDefaultMapImplementation() {
+		if (!CLASS_OBJECT_MAP.containsKey(Map.class)) {
+			return new HashMap<>();
+		}
+		return (Map) CLASS_OBJECT_MAP.get(Map.class);
+	}
 
-    public static Map getSortedMapImplementation() {
-        if (!CLASS_OBJECT_MAP.containsKey(SortedMap.class)) {
-            return new LinkedHashMap<>();
-        }
-        return (Map) CLASS_OBJECT_MAP.get(Map.class);
-    }
+	public static Map getSortedMapImplementation() {
+		if (!CLASS_OBJECT_MAP.containsKey(SortedMap.class)) {
+			return new LinkedHashMap<>();
+		}
+		return (Map) CLASS_OBJECT_MAP.get(Map.class);
+	}
 
-    public static List<?> getDefaultListImplementation() {
-        if (!CLASS_OBJECT_MAP.containsKey(List.class)) {
-            return new ArrayList<>();
-        }
-        return (List) CLASS_OBJECT_MAP.get(List.class);
-    }
+	public static List<?> getDefaultListImplementation() {
+		if (!CLASS_OBJECT_MAP.containsKey(List.class)) {
+			return new ArrayList<>();
+		}
+		return (List) CLASS_OBJECT_MAP.get(List.class);
+	}
 
-    public static List getSortedListImplementation() {
-        if (!CLASS_OBJECT_MAP.containsKey(LinkedList.class)) {
-            return new ArrayList<>();
-        }
-        return (List) CLASS_OBJECT_MAP.get(LinkedList.class);
-    }
+	public static List getSortedListImplementation() {
+		if (!CLASS_OBJECT_MAP.containsKey(LinkedList.class)) {
+			return new ArrayList<>();
+		}
+		return (List) CLASS_OBJECT_MAP.get(LinkedList.class);
+	}
 }

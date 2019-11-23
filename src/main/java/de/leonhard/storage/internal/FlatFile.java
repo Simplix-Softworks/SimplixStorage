@@ -6,6 +6,7 @@ import de.leonhard.storage.utils.FileUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
+import lombok.ToString;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
+@ToString
 public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	@Setter
 	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
@@ -57,7 +59,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	 *
 	 * @param data Our data
 	 */
-	protected abstract void write(final FileData data) throws IOException;
+	protected abstract void write(FileData data) throws IOException;
 
 	// ----------------------------------------------------------------------------------------------------
 	//  Creating out file
@@ -179,7 +181,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 		lastModified = System.currentTimeMillis();
 	}
 
-	public void removeAll(final String... keys) {
+	public void removeAll(String... keys) {
 		for (String key : keys) {
 			fileData.remove(key);
 		}

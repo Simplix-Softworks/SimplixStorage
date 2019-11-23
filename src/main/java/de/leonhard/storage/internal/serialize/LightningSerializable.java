@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.serialize;
 
 public interface LightningSerializable<T> {
-    T serialize() throws ClassCastException;
+	T serialize(Object obj) throws ClassCastException;
 
-    Class<T> getClazz();
+	Class<T> getClazz();
 }
