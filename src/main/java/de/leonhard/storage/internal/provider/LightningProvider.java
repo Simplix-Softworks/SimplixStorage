@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.provider;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
@@ -18,10 +18,10 @@ import java.util.Map;
 public class LightningProvider {
 	@Getter
 	@Setter
-	@NotNull
+	@NonNull
 	private Map<String, Object> defaultMapImplementation = new HashMap<>();
 	@Getter
 	@Setter
-	@NotNull
+	@NonNull
 	private Map<String, Object> sortedMapImplementation = new LinkedHashMap<>();
 }
