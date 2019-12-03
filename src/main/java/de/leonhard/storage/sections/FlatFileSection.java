@@ -1,14 +1,14 @@
 package de.leonhard.storage.sections;
 
 import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.IStorage;
+import de.leonhard.storage.internal.Storage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
 
 @RequiredArgsConstructor
-public class FlatFileSection implements IStorage {
+public class FlatFileSection implements Storage {
 	private final FlatFile flatFile;
 	@Getter
 	private final String pathPrefix;
@@ -53,7 +53,7 @@ public class FlatFileSection implements IStorage {
 		return flatFile.get(createFinalKey(key));
 	}
 
-	private String createFinalKey(final String key) {
+	private String createFinalKey(String key) {
 		return pathPrefix == null || pathPrefix.isEmpty() ? key : pathPrefix + "." + key;
 	}
 }

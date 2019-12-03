@@ -4,21 +4,18 @@ import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.utils.FileUtils;
-import lombok.EqualsAndHashCode;
+import de.leonhard.storage.util.FileUtils;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 public class Toml extends FlatFile {
 
 	public Toml(Toml toml) {
-		super(toml.getFile(), toml.fileType);
+		super(toml.getFile());
 		this.fileData = toml.getFileData();
 	}
 
@@ -29,18 +26,18 @@ public class Toml extends FlatFile {
 	public Toml(String name, String path, ReloadSettings reloadSettings) {
 		super(name, path, FileType.TOML);
 		create();
+
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
 
-		create();
-		reRead();
+		forceReload();
 	}
 
 	public Toml(File file) {
-		super(file, FileType.TOML);
+		super(file);
 		create();
-		reRead();
+		forceReload();
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -48,14 +45,8 @@ public class Toml extends FlatFile {
 	// ----------------------------------------------------------------------------------------------------
 
 	@Override
-	protected void reRead() {
-		try {
-			fileData = new FileData(com.electronwill.toml.Toml.read(getFile()), dataType);
-		} catch (IOException ex) {
-			System.err.println("Exception while reloading '" + getName() + "'");
-			System.err.println("Directory: '" + FileUtils.getParentDirPath(file) + "'");
-			ex.printStackTrace();
-		}
+	protected Map<String, Object> readToMap() throws IOException {
+		return com.electronwill.toml.Toml.read(getFile());
 	}
 
 	@Override

@@ -3,16 +3,12 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.utils.ClassWrapper;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import de.leonhard.storage.util.ClassWrapper;
 
 import java.io.InputStream;
 import java.util.List;
 
 @SuppressWarnings({"unused"})
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 public class Config extends Yaml {
 	private List<String> header;
 

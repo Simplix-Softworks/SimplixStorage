@@ -1,8 +1,7 @@
 package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.DataType;
-import de.leonhard.storage.utils.JsonUtils;
-import lombok.Synchronized;
+import de.leonhard.storage.util.JsonUtils;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -11,23 +10,22 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration files.
+ * An extended HashMap, to easily process
+ * the nested HashMaps created by reading the Configuration files.
  */
 @SuppressWarnings("unused")
 public class FileData {
-
 	private final Map<String, Object> localMap;
 
 	public FileData() {
 		this.localMap = new HashMap<>();
 	}
 
-	public FileData(final Map<String, Object> map) {
+	public FileData(Map<String, Object> map) {
 		this.localMap = new HashMap<>(map);
 	}
 
-
-	public FileData(Map<String, Object> map, final DataType dataType) {
+	public FileData(Map<String, Object> map, DataType dataType) {
 		this.localMap = dataType.getMapImplementation();
 		localMap.putAll(map);
 	}
@@ -47,12 +45,12 @@ public class FileData {
 	 * @param key the key to look for.
 	 * @return the value assigned to the given key or null if the key does not exist.
 	 */
-	public Object get(final String key) {
-		final String[] parts = key.split("\\.");
+	public Object get(String key) {
+		String[] parts = key.split("\\.");
 		return get(localMap, parts, 0);
 	}
 
-	private Object get(final Map<String, Object> map, final String[] key, final int id) {
+	private Object get(Map<String, Object> map, String[] key, int id) {
 		if (id < key.length - 1) {
 			if (map.get(key[id]) instanceof Map) {
 				@SuppressWarnings("unchecked") Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
@@ -71,26 +69,25 @@ public class FileData {
 	 * @param key   the key to be used.
 	 * @param value the value to be assigned to the key.
 	 */
-	@Synchronized
-	public void insert(final String key, final Object value) {
-		final String[] parts = key.split("\\.");
+	public synchronized void insert(String key, Object value) {
+		String[] parts = key.split("\\.");
 		//noinspection unchecked
 		localMap.put(parts[0],
-				localMap.containsKey(parts[0])
-						&& localMap.get(parts[0]) instanceof Map
-						? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-						: insert(new HashMap<>(), parts, value, 1));
+			localMap.containsKey(parts[0])
+				&& localMap.get(parts[0]) instanceof Map
+				? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
+				: insert(new HashMap<>(), parts, value, 1));
 	}
 
-	private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
+	private Object insert(Map<String, Object> map, String[] key, Object value, int id) {
 		if (id < key.length) {
 			Map<String, Object> tempMap = new HashMap<>(map);
 			//noinspection unchecked
 			Map<String, Object> childMap =
-					map.containsKey(key[id])
-							&& map.get(key[id]) instanceof Map
-							? (Map<String, Object>) map.get(key[id])
-							: new HashMap<>();
+				map.containsKey(key[id])
+					&& map.get(key[id]) instanceof Map
+					? (Map<String, Object>) map.get(key[id])
+					: new HashMap<>();
 			tempMap.put(key[id], insert(childMap, key, value, id + 1));
 			return tempMap;
 		} else {
@@ -98,19 +95,18 @@ public class FileData {
 		}
 	}
 
-
 	/**
 	 * Check whether the map contains a certain key.
 	 *
 	 * @param key the key to be looked for.
 	 * @return true if the key exists, otherwise false.
 	 */
-	public boolean containsKey(final String key) {
+	public boolean containsKey(String key) {
 		String[] parts = key.split("\\.");
 		return containsKey(localMap, parts, 0);
 	}
 
-	private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
+	private boolean containsKey(Map<String, Object> map, String[] key, int id) {
 		if (id < key.length - 1) {
 			if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
 				//noinspection unchecked
@@ -124,20 +120,19 @@ public class FileData {
 		}
 	}
 
-
 	/**
 	 * Remove a key with its assigned value from the map if given key exists.
 	 *
 	 * @param key the key to be removed from the map.
 	 */
-	public synchronized void remove(final String key) {
+	public synchronized void remove(String key) {
 		if (containsKey(key)) {
-			final String[] parts = key.split("\\.");
+			String[] parts = key.split("\\.");
 			remove(localMap, parts, 0);
 		}
 	}
 
-	private synchronized void remove(final Map<String, Object> map, final String[] key, final int id) {
+	private synchronized void remove(Map<String, Object> map, String[] key, int id) {
 		Map tempMap = map;
 		for (int i = 0; i < key.length - (1 + id); i++) {
 			if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
@@ -166,7 +161,7 @@ public class FileData {
 	 * @param key the key of the layer.
 	 * @return the keySet of the given layer or an empty set if the key does not exist.
 	 */
-	public Set<String> singleLayerKeySet(final String key) {
+	public Set<String> singleLayerKeySet(String key) {
 		//noinspection unchecked
 		return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
 	}
@@ -186,12 +181,12 @@ public class FileData {
 	 * @param key the key of the layer
 	 * @return the keySet of all sublayers of the given key or an empty set if the key does not exist (Format: key.subkey).
 	 */
-	public Set<String> keySet(final String key) {
+	public Set<String> keySet(String key) {
 		//noinspection unchecked
 		return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
 	}
 
-	private Set<String> keySet(final Map<String, Object> map) {
+	private Set<String> keySet(Map<String, Object> map) {
 		Set<String> localSet = new HashSet<>();
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
@@ -205,7 +200,6 @@ public class FileData {
 		}
 		return localSet;
 	}
-
 
 	/**
 	 * Get the size of a single layer of the map.
@@ -222,7 +216,7 @@ public class FileData {
 	 * @param key the key of the layer.
 	 * @return the size of the given layer or 0 if the key does not exist.
 	 */
-	public int singleLayerSize(final String key) {
+	public int singleLayerSize(String key) {
 		return get(key) instanceof Map ? ((Map) get(key)).size() : 0;
 	}
 
@@ -241,11 +235,11 @@ public class FileData {
 	 * @param key the key of the layer
 	 * @return the size of all sublayers of the given key or 0 if the key does not exist.
 	 */
-	public int size(final String key) {
+	public int size(String key) {
 		return localMap.size();
 	}
 
-	private int size(final Map<String, Object> map) {
+	private int size(Map<String, Object> map) {
 		int size = map.size();
 		for (String key : map.keySet()) {
 			if (map.get(key) instanceof Map) {
@@ -256,6 +250,9 @@ public class FileData {
 		return size;
 	}
 
+	// ----------------------------------------------------------------------------------------------------
+	// Utility functions
+	// ----------------------------------------------------------------------------------------------------
 
 	public Map<String, Object> toMap() {
 		if (localMap != null) {
@@ -269,9 +266,18 @@ public class FileData {
 		return JsonUtils.getJsonFromMap(localMap);
 	}
 
+	@Override
+	public int hashCode() {
+		return this.localMap.hashCode();
+	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public String toString() {
+		return this.localMap.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
 		} else if (obj == null || this.getClass() != obj.getClass()) {
@@ -280,20 +286,5 @@ public class FileData {
 			FileData fileData = (FileData) obj;
 			return this.localMap.equals(fileData.localMap);
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		return this.localMap.hashCode();
-	}
-
-	/**
-	 * convert FileData to string.
-	 *
-	 * @return the String value of localMap.
-	 */
-	@Override
-	public String toString() {
-		return this.localMap.toString();
 	}
 }

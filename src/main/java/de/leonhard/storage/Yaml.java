@@ -10,151 +10,147 @@ import de.leonhard.storage.internal.editor.yaml.YamlWriter;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.utils.FileUtils;
-import lombok.*;
+import de.leonhard.storage.util.FileUtils;
+import lombok.Cleanup;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Synchronized;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 public class Yaml extends FlatFile {
-    protected final YamlEditor yamlEditor;
-    protected final YamlParser parser;
-    @Setter
-    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+	protected final YamlEditor yamlEditor;
+	protected final YamlParser parser;
+	@Setter
+	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-    public Yaml(Yaml yaml) {
-        super(yaml.getFile(), yaml.fileType);
-        this.fileData = yaml.getFileData();
-        this.yamlEditor = yaml.getYamlEditor();
-        this.parser = yaml.getParser();
-        this.configSettings = yaml.getConfigSettings();
-    }
+	public Yaml(Yaml yaml) {
+		super(yaml.getFile());
+		this.fileData = yaml.getFileData();
+		this.yamlEditor = yaml.getYamlEditor();
+		this.parser = yaml.getParser();
+		this.configSettings = yaml.getConfigSettings();
+	}
 
-    public Yaml(String name, String path) {
-        this(name, path, null, null, null, null);
-    }
+	public Yaml(String name, String path) {
+		this(name, path, null, null, null, null);
+	}
 
-    public Yaml(String name, String path, InputStream inputStream) {
-        this(name, path, inputStream, null, null, null);
-    }
+	public Yaml(String name, String path, InputStream inputStream) {
+		this(name, path, inputStream, null, null, null);
+	}
 
-    public Yaml(String name,
-                String path,
-                InputStream inputStream,
-                ReloadSettings reloadSettings,
-                ConfigSettings configSettings,
-                DataType dataType) {
-        super(name, path, FileType.YAML);
+	public Yaml(String name,
+	            String path,
+	            InputStream inputStream,
+	            ReloadSettings reloadSettings,
+	            ConfigSettings configSettings,
+	            DataType dataType) {
+		super(name, path, FileType.YAML);
 
-        if (create()) {
-            if (inputStream != null) {
-                FileUtils.writeToFile(file, inputStream);
-            }
-        }
+		if (create()) {
+			if (inputStream != null) {
+				FileUtils.writeToFile(file, inputStream);
+			}
+		}
 
+		yamlEditor = new YamlEditor(file);
+		parser = new YamlParser(yamlEditor);
 
-        if (reloadSettings != null) {
-            this.reloadSettings = reloadSettings;
-        }
+		if (reloadSettings != null) {
+			this.reloadSettings = reloadSettings;
+		}
 
-        if (configSettings != null) {
-            this.configSettings = configSettings;
-        }
+		if (configSettings != null) {
+			this.configSettings = configSettings;
+		}
 
-        if (dataType != null) {
-            this.dataType = dataType;
-        } else {
-            this.dataType = DataType.fromConfigSettings(configSettings);
-        }
+		if (dataType != null) {
+			this.dataType = dataType;
+		} else {
+			this.dataType = DataType.fromConfigSettings(configSettings);
+		}
 
-        yamlEditor = new YamlEditor(file);
-        parser = new YamlParser(yamlEditor);
-        reRead();
-    }
+		forceReload();
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Methods to override (Points where YAML is unspecific for typical FlatFiles)
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Methods to override (Points where YAML is unspecific for typical FlatFiles)
+	// ----------------------------------------------------------------------------------------------------
 
-    @Override
-    public void set(String key, Object value) {
-        set(key, value, this.configSettings);
-    }
+	@Override
+	public void set(String key, Object value) {
+		set(key, value, this.configSettings);
+	}
 
-    @Synchronized
-    public void set(String key, Object value, ConfigSettings configSettings) {
-        reloadIfNeeded();
+	@Synchronized
+	public void set(String key, Object value, ConfigSettings configSettings) {
+		reloadIfNeeded();
 
-        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-
-        fileData.insert(finalKey, value);
-
-        try {
-            //If Comments shouldn't be preserved
-            if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-                write(fileData);
-                return;
-            }
+		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 
-            List<String> unEdited = yamlEditor.read();
-            List<String> header = yamlEditor.readHeader();
-            List<String> footer = yamlEditor.readFooter();
-            write();
-            header.addAll(yamlEditor.read());
-            if (!header.containsAll(footer)) {
-                header.addAll(footer);
-            }
-            write();
-            yamlEditor.write(parser.parseComments(unEdited, header));
-        } catch (IOException ex) {
-            System.err.println("Error while writing '" + getName() + "'");
-            ex.printStackTrace();
-        }
-    }
+		fileData.insert(finalKey, value);
 
-    // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to implement
-    // ----------------------------------------------------------------------------------------------------
+		try {
+			//If Comments shouldn't be preserved
+			if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+				write(fileData);
+				return;
+			}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void reRead() {
-        try (YamlReader reader = new YamlReader(new FileReader(getFile()))) {
-            fileData = new FileData(reader.readToMap(), dataType);
-        } catch (IOException ex) {
-            System.err.println("Error reloading Yaml '" + getName() + "'");
-            System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-            ex.printStackTrace();
-        }
-    }
 
-    @Override
-    protected void write(FileData data) throws IOException {
-        try (YamlWriter writer = new YamlWriter(file)) {
-            writer.write(data.toMap());
-        }
-    }
+			List<String> unEdited = yamlEditor.read();
+			List<String> header = yamlEditor.readHeader();
+			List<String> footer = yamlEditor.readFooter();
+			write();
+			header.addAll(yamlEditor.read());
+			if (!header.containsAll(footer)) {
+				header.addAll(footer);
+			}
+			write();
+			yamlEditor.write(parser.parseComments(unEdited, header));
+		} catch (IOException ex) {
+			System.err.println("Error while writing '" + getName() + "'");
+			ex.printStackTrace();
+		}
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Specific utility methods for YAML
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Abstract methods to implement
+	// ----------------------------------------------------------------------------------------------------
 
-    public List<String> getHeader() {
-        return yamlEditor.readHeader();
-    }
+	@Override
+	protected Map<String, Object> readToMap() throws IOException {
+		@Cleanup YamlReader reader = new YamlReader(new FileReader(getFile()));
+		return reader.readToMap();
+	}
 
-    public void setHeader(List<String> header) {
-        yamlEditor.setHeader(header);
-    }
+	@Override
+	protected void write(FileData data) throws IOException {
+		try (YamlWriter writer = new YamlWriter(file)) {
+			writer.write(data.toMap());
+		}
+	}
 
-    public void addHeader(List<String> toAdd) {
-        yamlEditor.addHeader(toAdd);
-    }
+	// ----------------------------------------------------------------------------------------------------
+	// Specific utility methods for YAML
+	// ----------------------------------------------------------------------------------------------------
+
+	public List<String> getHeader() {
+		return yamlEditor.readHeader();
+	}
+
+	public void setHeader(List<String> header) {
+		yamlEditor.setHeader(header);
+	}
+
+	public void addHeader(List<String> toAdd) {
+		yamlEditor.addHeader(toAdd);
+	}
 }

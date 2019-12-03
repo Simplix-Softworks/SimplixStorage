@@ -2,22 +2,22 @@ package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.utils.FileUtils;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Synchronized;
-import lombok.ToString;
+import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.util.Valid;
+import lombok.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
 @ToString
-public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
+@EqualsAndHashCode
+public abstract class FlatFile implements Storage, Comparable<FlatFile> {
 	@Setter
 	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
 	protected FileData fileData = new FileData();
@@ -29,6 +29,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	private long lastModified;
 
 	protected FlatFile(String name, String path, FileType fileType) {
+		Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
 		this.fileType = fileType;
 		if (path == null || path.isEmpty()) {
 			this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
@@ -38,10 +39,26 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	protected FlatFile(File file, FileType fileType) {
-		if (!fileType.getExtension().equals(FileUtils.getExtension(file))) {
-			throw new IllegalStateException("Invalid FileType for File '" + file.getName() + "'");
-		}
+		Valid.notNull(file);
+		Valid.notNull(fileType);
 		this.file = file;
+		this.fileType = fileType;
+
+		Valid.checkBoolean(!(fileType == FileType.fromExtension(file)),
+			"Invalid file-extension for file type: '" + fileType + "'");
+	}
+
+	/**
+	 * This constructor should only be used to
+	 * store for example YAML-LIKE data in a .db file
+	 * <p>
+	 * Therefor no validation is possible.
+	 * Might be unsafe.
+	 */
+	protected FlatFile(File file) {
+		this.file = file;
+		//Might be null
+		this.fileType = FileType.fromFile(file);
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -52,7 +69,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	 * Forces Re-read/load the content of our flat file
 	 * Should be used to put the data from the file to our FileData
 	 */
-	protected abstract void reRead();
+	protected abstract Map<String, Object> readToMap() throws IOException;
 
 	/**
 	 * Write our data to file
@@ -192,9 +209,14 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 		return FileUtils.hasChanged(file, lastModified);
 	}
 
-
 	public final void forceReload() {
-		reRead();
+		try {
+			fileData = new FileData(readToMap(), dataType);
+		} catch (IOException ex) {
+			System.err.println("Error reloading " + fileType.name().toLowerCase() + "'" + getName() + "'");
+			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+			ex.printStackTrace();
+		}
 		lastModified = System.currentTimeMillis();
 	}
 
@@ -209,6 +231,7 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	}
 
 	//Should the file be re-read before the next get() operation?
+	//Can be used as utility method for implementations of FlatFile
 	protected boolean shouldReload() {
 		if (ReloadSettings.AUTOMATICALLY.equals(reloadSettings)) {
 			return true;
@@ -226,27 +249,5 @@ public abstract class FlatFile implements IStorage, Comparable<FlatFile> {
 	@Override
 	public int compareTo(FlatFile flatFile) {
 		return this.file.compareTo(flatFile.file);
-	}
-
-	@Override
-	public int hashCode() {
-		return this.file.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj instanceof File) {
-			return obj.equals(file);
-		}
-		if (obj instanceof FlatFile) {
-			return ((FlatFile) obj).file.equals(file);
-		}
-		return false;
 	}
 }

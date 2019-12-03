@@ -1,5 +1,6 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.util;
 
+import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 
 import java.io.*;
@@ -61,7 +62,7 @@ public class FileUtils {
 		return fileName.replace(getExtension(fileName), "");
 	}
 
-	public String getParentDirPath(final File file) {
+	public String getParentDirPath(File file) {
 		Valid.notNull(file);
 		return getParentDirPath(file.getAbsolutePath());
 	}
@@ -78,7 +79,7 @@ public class FileUtils {
 		Valid.notNull(fileOrDirPath);
 		boolean endsWithSlash = fileOrDirPath.endsWith(File.separator);
 		return fileOrDirPath.substring(0, fileOrDirPath.lastIndexOf(File.separatorChar,
-				endsWithSlash ? fileOrDirPath.length() - 2 : fileOrDirPath.length() - 1));
+			endsWithSlash ? fileOrDirPath.length() - 2 : fileOrDirPath.length() - 1));
 	}
 
 	public boolean hasChanged(File file, long timeStamp) {
@@ -114,7 +115,7 @@ public class FileUtils {
 		}
 	}
 
-	public Reader createReader(final File file) {
+	public Reader createReader(File file) {
 		try {
 			return new FileReader(file);
 		} catch (FileNotFoundException ex) {
@@ -125,7 +126,7 @@ public class FileUtils {
 		}
 	}
 
-	public Writer createWriter(final File file) {
+	public Writer createWriter(File file) {
 		try {
 			return new FileWriter(file);
 		} catch (IOException ex) {
@@ -136,17 +137,17 @@ public class FileUtils {
 		}
 	}
 
-	public void write(final File file, final List<String> lines) {
+	public void write(File file, List<String> lines) {
 		try {
 			Files.write(file.toPath(), lines);
-		} catch (final IOException ex) {
+		} catch (IOException ex) {
 			System.err.println("Exception while writing to file '" + file.getName() + "'");
 			System.err.println("In " + FileUtils.getParentDirPath(file) + "'");
 		}
 	}
 
 	public void writeToFile(File file, InputStream inputStream) {
-		try (final FileOutputStream outputStream = new FileOutputStream(file)) {
+		try (FileOutputStream outputStream = new FileOutputStream(file)) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());
 			} else {
@@ -194,6 +195,10 @@ public class FileUtils {
 
 			String[] files = source.list();
 
+			if (files == null) {
+				return;
+			}
+
 			for (String file : files) {
 				File srcFile = new File(source, file);
 				File destFile = new File(destination, file);
@@ -201,17 +206,14 @@ public class FileUtils {
 				copyFolder(srcFile, destFile);
 			}
 		} else {
-			final InputStream in = createInputStream(source);
-			final OutputStream out = createOutputStream(destination);
+
+			@Cleanup InputStream in = createInputStream(source);
+			@Cleanup OutputStream out = createOutputStream(destination);
 			byte[] buffer = new byte[1024];
 
 			int length;
-			while (true) {
-				if (!((length = in.read(buffer)) > 0)) {
-                    break;
-                }
+			while ((length = in.read(buffer)) > 0) {
 				out.write(buffer, 0, length);
-
 			}
 		}
 	}

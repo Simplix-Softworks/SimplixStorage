@@ -1,4 +1,4 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.util;
 
 import lombok.experimental.UtilityClass;
 
@@ -11,8 +11,8 @@ public class Valid {
 
 	public void checkBoolean(boolean condition, String... errorMessage) {
 		if (!condition) {
-            throw new LightningException(errorMessage);
-        }
+			throw new LightningException(errorMessage);
+		}
 	}
 
 	public <T> void notNull(T object) {
@@ -34,7 +34,7 @@ public class Valid {
 
 		private LightningException(String... message) {
 			for (String part : message) {
-				System.out.println(part);
+				System.err.println(part);
 			}
 		}
 	}

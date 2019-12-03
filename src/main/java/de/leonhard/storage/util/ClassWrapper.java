@@ -1,7 +1,9 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.util;
 
+import de.leonhard.storage.internal.Storage;
 import lombok.experimental.UtilityClass;
 
+import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
@@ -10,7 +12,7 @@ public class ClassWrapper {
 
 	/**
 	 * Method to cast an object to a given datatype
-	 * Used for example in {@link de.leonhard.storage.internal.IStorage}
+	 * Used for example in {@link Storage}
 	 * to cast the results of get() to for example a String
 	 *
 	 * @param obj Object to cast
@@ -18,31 +20,47 @@ public class ClassWrapper {
 	 * @return Casted object
 	 */
 	public <T> T getFromDef(Object obj, T def) {
-		if (obj instanceof String && def instanceof Integer) {
-			obj = Integer.parseInt((String) obj);
-		} else if (obj instanceof String && def instanceof Double) {
-			obj = Double.parseDouble((String) obj);
-		} else if (obj instanceof String && def instanceof Float) {
-			obj = Double.parseDouble((String) obj);
-		} else if (obj instanceof String && def instanceof Boolean) {
-			return (T) (Boolean) obj.equals("true"); // Mustn't be primitive
+		if (def instanceof Integer) {
+			return (T) INTEGER.getInt(obj);
+		} else if (def instanceof Float) {
+			return (T) FLOAT.getFloat(obj);
+		} else if (def instanceof Double) {
+			return (T) DOUBLE.getDouble(obj);
+		} else if (def instanceof Long) {
+			return (T) LONG.getLong(obj);
+		} else if (def instanceof Boolean) {
+			return (T) (Boolean) obj.toString().equalsIgnoreCase("true");
 		}
 		return (T) obj;
 	}
 
+	/**
+	 * Method to cast an object to a given datatype
+	 * Used for example in {@link Storage}
+	 * to cast the results of get() to for example a String
+	 *
+	 * @param obj   Object to cast
+	 * @param clazz class of result
+	 * @return Casted object
+	 */
 	public <T> T getFromDef(Object obj, Class<T> clazz) {
-		try {
-			return getFromDef(obj, clazz.newInstance());
-		} catch (InstantiationException | IllegalAccessException ex) {
-			System.err.println("Wasn't able to instantiate '" + clazz.getSimpleName() + "'");
-			ex.printStackTrace();
-			throw new IllegalStateException();
+		if (clazz == int.class || clazz == Integer.class) {
+			return (T) INTEGER.getInt(obj);
+		} else if (clazz == float.class || clazz == Float.class) {
+			return (T) FLOAT.getFloat(obj);
+		} else if (clazz == double.class || clazz == Double.class) {
+			return (T) DOUBLE.getDouble(obj);
+		} else if (clazz == long.class || clazz == Long.class) {
+			return (T) LONG.getLong(obj);
+		} else if (clazz == boolean.class || clazz == Boolean.class) {
+			return (T) (Boolean) obj.toString().equalsIgnoreCase("true");
 		}
+		return (T) obj;
 	}
 
 	@UtilityClass
 	public class LONG {
-		public long getLong(Object obj) {
+		public Long getLong(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).longValue();
 			} else if (obj instanceof String) {
@@ -55,9 +73,9 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class DOUBLE {
-		public double getDouble(Object obj) {
+		public Double getDouble(Object obj) {
 			if (obj instanceof Number) {
-				return ((Number) obj).longValue();
+				return ((Number) obj).doubleValue();
 			} else if (obj instanceof String) {
 				return Double.parseDouble((String) obj);
 			} else {
@@ -69,7 +87,7 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class FLOAT {
-		public float getFloat(Object obj) {
+		public Float getFloat(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).floatValue();
 			} else if (obj instanceof String) {
@@ -82,7 +100,7 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class INTEGER {
-		public int getInt(Object obj) {
+		public Integer getInt(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).intValue();
 			} else if (obj instanceof String) {
@@ -96,7 +114,7 @@ public class ClassWrapper {
 	@UtilityClass
 	@SuppressWarnings("unused")
 	public class SHORT {
-		public short getShort(Object obj) {
+		public Short getShort(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).shortValue();
 			} else if (obj instanceof String) {
@@ -109,7 +127,7 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class BYTE {
-		public byte getByte(Object obj) {
+		public Byte getByte(Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).byteValue();
 			} else if (obj instanceof STRING) {
@@ -123,7 +141,7 @@ public class ClassWrapper {
 	@UtilityClass
 	public class STRING {
 		public String getString(Object obj) {
-			if (obj instanceof List && ((List) obj).size() == 1) {
+			if (obj instanceof Collection && ((Collection) obj).size() == 1) {
 				return ((List) obj).get(0).toString();
 			}
 			return obj.toString();

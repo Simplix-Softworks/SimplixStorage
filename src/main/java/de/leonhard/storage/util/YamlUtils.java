@@ -1,4 +1,4 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.util;
 
 import com.esotericsoftware.yamlbeans.YamlConfig;
 import lombok.Setter;
@@ -14,8 +14,12 @@ public class YamlUtils {
 			return yamlConfig;
 		}
 		YamlConfig config = new YamlConfig();
+		//Use unicode
 		config.writeConfig.setEscapeUnicode(false);
+		//Don't use anchors
 		config.writeConfig.setAutoAnchor(false);
+		//Never use write the classname above keys
+		config.writeConfig.setWriteClassname(YamlConfig.WriteClassName.NEVER);
 		return yamlConfig = config;
 	}
 }

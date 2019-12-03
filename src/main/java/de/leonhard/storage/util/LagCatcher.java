@@ -1,4 +1,4 @@
-package de.leonhard.storage.utils;
+package de.leonhard.storage.util;
 
 import lombok.experimental.UtilityClass;
 

@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal;
 
-import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.util.FileUtils;
 import lombok.Getter;
 import lombok.ToString;
 

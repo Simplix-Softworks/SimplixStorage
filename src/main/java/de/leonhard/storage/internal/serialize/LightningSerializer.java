@@ -7,12 +7,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * Class to register serializable's
  */
 @UtilityClass
 public class LightningSerializer {
 	private final List<LightningSerializable> serializes = Collections.synchronizedList(new ArrayList<>());
-
 
 	/**
 	 * Register a serializable to our list
@@ -24,7 +23,7 @@ public class LightningSerializer {
 	}
 
 	public LightningSerializable getSerializable(Class<?> clazz) {
-		for (final LightningSerializable serializable : serializes) {
+		for (LightningSerializable serializable : serializes) {
 			if (serializable.getClazz().equals(clazz)) {
 				return serializable;
 			}
@@ -34,7 +33,7 @@ public class LightningSerializer {
 
 	@SuppressWarnings("unchecked")
 	public <T> T serialize(Object obj, Class<T> clazz) {
-		final LightningSerializable serializable = getSerializable(clazz);
+		LightningSerializable serializable = getSerializable(clazz);
 		if (serializable == null) {
 			throw new IllegalStateException("No serializable found for '" + clazz.getSimpleName() + "'");
 		}

@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal.editor.yaml;
 
-import de.leonhard.storage.utils.FileUtils;
-import de.leonhard.storage.utils.YamlUtils;
+import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.util.YamlUtils;
 
 import java.io.File;
 import java.io.Writer;

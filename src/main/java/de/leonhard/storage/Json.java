@@ -4,11 +4,9 @@ import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.utils.FileUtils;
-import de.leonhard.storage.utils.JsonUtils;
-import lombok.EqualsAndHashCode;
+import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.util.JsonUtils;
 import lombok.Getter;
-import lombok.ToString;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -17,8 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 public class Json extends FlatFile {
 
 	public Json(Json json) {
@@ -32,6 +28,7 @@ public class Json extends FlatFile {
 
 	public Json(String name, String path, ReloadSettings reloadSettings) {
 		super(name, path, FileType.JSON);
+
 		if (create() || file.length() == 0) {
 			try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
 				writer.write(new JSONObject().toString(2));
@@ -41,18 +38,23 @@ public class Json extends FlatFile {
 				ex.printStackTrace();
 			}
 		}
+
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
-		reRead();
+
+		forceReload();
 	}
 
 	public Json(File file) {
 		super(file, FileType.JSON);
 		create();
-		reRead();
+		try {
+			readToMap();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
 
 	// ----------------------------------------------------------------------------------------------------
 	// Methods to override (Points where JSON is unspecific for typical FlatFiles)
@@ -64,6 +66,7 @@ public class Json extends FlatFile {
 	 * @param key Path to Map-List in JSON
 	 * @return Map
 	 */
+
 	@Override
 	public Map getMap(String key) {
 		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
@@ -86,9 +89,9 @@ public class Json extends FlatFile {
 	// ----------------------------------------------------------------------------------------------------
 
 	@Override
-	protected void reRead() {
+	protected Map<String, Object> readToMap() throws IOException {
 		JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
-		fileData = new FileData(new JSONObject(jsonTokener), dataType);
+		return new JSONObject(jsonTokener).toMap();
 	}
 
 	@Override

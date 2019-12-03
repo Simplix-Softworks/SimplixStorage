@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.settings;
 
-import de.leonhard.storage.utils.LightningProvider;
+import de.leonhard.storage.internal.provider.LightningProvider;
 
 import java.util.Map;
 

@@ -1,8 +1,8 @@
 package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.serialize.LightningSerializer;
-import de.leonhard.storage.utils.ClassWrapper;
-import de.leonhard.storage.utils.Valid;
+import de.leonhard.storage.util.ClassWrapper;
+import de.leonhard.storage.util.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unchecked")
-public interface IStorage {
+public interface Storage {
 
 	Set<String> singleLayerKeySet();
 
@@ -181,7 +181,7 @@ public interface IStorage {
 	 * @param key   Path to serializable
 	 * @param clazz Class to serialize
 	 * @param <T>   Type of Class
-	 * @return Serialized instance of class
+	 * @return Serialized instance of class.
 	 */
 	default <T> T getSerializable(String key, Class<T> clazz) {
 		if (!contains(key)) {
@@ -253,6 +253,16 @@ public interface IStorage {
 		}
 	}
 
+	/**
+	 * Sets a value to the data-structure if the data-structure doesn't already contain the value
+	 * Returns a default value if the data-structure doesn't already contain the key.
+	 * <p>
+	 * If the key is already contained by the data-structure the value of assigned to
+	 * the key will be returned and casted to the type of your def.
+	 *
+	 * @param key Key to set the value
+	 * @param def Value to set or return
+	 */
 	default <T> T getOrSetDefault(String key, T def) {
 		if (!contains(key)) {
 			set(key, def);

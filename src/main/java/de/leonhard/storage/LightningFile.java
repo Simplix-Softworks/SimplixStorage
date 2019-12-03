@@ -6,12 +6,13 @@ import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.editor.lighningfile.LightningEditor;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.utils.FileUtils;
+import de.leonhard.storage.util.FileUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.io.InputStream;
+import java.util.Map;
 
 
 /**
@@ -26,6 +27,12 @@ public class LightningFile extends FlatFile {
 	private final LightningEditor lightningEditor;
 	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
+	public LightningFile(LightningFile lightningFile) {
+		super(lightningFile.getFile());
+		this.lightningEditor = lightningFile.getLightningEditor();
+		this.configSettings = lightningFile.getConfigSettings();
+	}
+
 	public LightningFile(String name, String path) {
 		this(name, path, null, null, null);
 	}
@@ -34,7 +41,9 @@ public class LightningFile extends FlatFile {
 	                     ReloadSettings reloadSetting,
 	                     ConfigSettings configSettings) {
 		super(name, path, FileType.LS);
+
 		lightningEditor = new LightningEditor(file);
+
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(this.file, inputStream);
 		}
@@ -43,10 +52,11 @@ public class LightningFile extends FlatFile {
 			this.configSettings = configSettings;
 		}
 
-		reRead();
 		if (reloadSetting != null) {
 			this.reloadSettings = reloadSetting;
 		}
+
+		forceReload();
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -54,8 +64,8 @@ public class LightningFile extends FlatFile {
 	// ----------------------------------------------------------------------------------------------------
 
 	@Override
-	protected void reRead() {
-		this.fileData = new FileData(lightningEditor.readData());
+	protected Map<String, Object> readToMap() {
+		return lightningEditor.readData();
 	}
 
 	@Override

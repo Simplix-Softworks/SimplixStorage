@@ -23,4 +23,5 @@ LightningStorageWallpaper.png
 LICENSE
 README.md
 
-!/src/
+/src/main/java/de/leonhard/storage/Main.java
+/src/main/java/de/leonhard/storage/dev/
