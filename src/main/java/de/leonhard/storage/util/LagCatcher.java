@@ -43,7 +43,7 @@ public class LagCatcher {
 			long end = value2;
 			long took = end - start;
 			System.out.println((Object) ("Test '" + name + "' took " + TimeUnit.NANOSECONDS.toMicros(took) +
-					" micro-seconds. That's " + TimeUnit.NANOSECONDS.toMillis(took) + " ms."));
+				" micro-seconds. That's " + TimeUnit.NANOSECONDS.toMillis(took) + " ms."));
 			LagCatcher.stopTimes.remove(name);
 			LagCatcher.startTimes.remove(name);
 		}
@@ -62,8 +62,8 @@ public class LagCatcher {
 			nanosTook += System.nanoTime() - nanoTime;
 		}
 		System.out.println((Object) ("Average time: " + TimeUnit.NANOSECONDS.toMicros(nanosTook / cycles)
-				+ " micros - " + TimeUnit.NANOSECONDS.toMillis(nanosTook / cycles) + " ms."));
+			+ " micros - " + TimeUnit.NANOSECONDS.toMillis(nanosTook / cycles) + " ms."));
 		System.out.println((Object) ("Test took: " + TimeUnit.NANOSECONDS.toMicros(nanosTook) + " micros " +
-				"- " + TimeUnit.NANOSECONDS.toMillis(nanosTook) + " ms"));
+			"- " + TimeUnit.NANOSECONDS.toMillis(nanosTook) + " ms"));
 	}
 }

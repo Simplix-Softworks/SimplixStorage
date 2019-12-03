@@ -58,7 +58,7 @@ public class Config extends Yaml {
 			return def;
 		} else {
 			Object obj = get(key);
-			return ClassWrapper.getFromDef(key, def);
+			return ClassWrapper.getFromDef(obj, def);
 		}
 	}
 }
