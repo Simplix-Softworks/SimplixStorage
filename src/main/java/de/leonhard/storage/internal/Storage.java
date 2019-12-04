@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings("unchecked")
 public interface Storage {
 
 	Set<String> singleLayerKeySet();
@@ -41,7 +40,7 @@ public interface Storage {
 	Object get(String key);
 
 	// ----------------------------------------------------------------------------------------------------
-	// Getting ClassWrapper types from data-structure
+	// Getting primitive types from data-structure
 	// ----------------------------------------------------------------------------------------------------
 
 	/**
@@ -64,11 +63,7 @@ public interface Storage {
 	 * @return Returns the value
 	 */
 	default String getString(String key) {
-		if (!contains(key)) {
-			return "";
-		} else {
-			return get(key).toString();
-		}
+		return getOrDefault(key, "");
 	}
 
 	/**
@@ -78,11 +73,7 @@ public interface Storage {
 	 * @return String from data-structure
 	 */
 	default long getLong(String key) {
-		if (!contains(key)) {
-			return 0L;
-		} else {
-			return ClassWrapper.LONG.getLong(get(key));
-		}
+		return getOrDefault(key, 0L);
 	}
 
 	/**
@@ -92,11 +83,7 @@ public interface Storage {
 	 * @return Int from data-structure
 	 */
 	default int getInt(String key) {
-		if (!contains(key)) {
-			return 0;
-		} else {
-			return ClassWrapper.INTEGER.getInt(get(key));
-		}
+		return getOrDefault(key, 0);
 	}
 
 	/**
@@ -106,11 +93,7 @@ public interface Storage {
 	 * @return Byte from data-structure
 	 */
 	default byte getByte(String key) {
-		if (!contains(key)) {
-			return 0;
-		} else {
-			return ClassWrapper.BYTE.getByte(get(key));
-		}
+		return getOrDefault(key, (byte) 0);
 	}
 
 	/**
@@ -120,11 +103,7 @@ public interface Storage {
 	 * @return Boolean from data-structure
 	 */
 	default boolean getBoolean(String key) {
-		if (!contains(key)) {
-			return false;
-		} else {
-			return get(key).toString().equalsIgnoreCase("true");
-		}
+		return getOrDefault(key, false);
 	}
 
 	/**
@@ -134,11 +113,7 @@ public interface Storage {
 	 * @return Float from data-structure
 	 */
 	default float getFloat(String key) {
-		if (!contains(key)) {
-			return 0F;
-		} else {
-			return ClassWrapper.FLOAT.getFloat(get(key));
-		}
+		return getOrDefault(key, 0F);
 	}
 
 
@@ -149,16 +124,42 @@ public interface Storage {
 	 * @return Double from data-structure
 	 */
 	default double getDouble(String key) {
-		if (!contains(key)) {
-			return 0D;
-		} else {
-			return ClassWrapper.DOUBLE.getDouble(get(key));
-		}
+		return getOrDefault(key, 0D);
 	}
 
 	// ----------------------------------------------------------------------------------------------------
 	// Getting Lists and non-ClassWrapper types from data-structure
 	// ----------------------------------------------------------------------------------------------------
+
+	/**
+	 * Get a List from a data-structure
+	 *
+	 * @param key Path to StringList in data-structure.
+	 * @return List
+	 */
+	default List<?> getList(String key) {
+		return getOrDefault(key, new ArrayList<>());
+	}
+
+	default List<String> getStringList(String key) {
+		return getOrDefault(key, new ArrayList<>());
+	}
+
+	default List<Integer> getIntegerList(String key) {
+		return getOrDefault(key, new ArrayList<>());
+	}
+
+	default List<Byte> getByteList(String key) {
+		return getOrDefault(key, new ArrayList<>());
+	}
+
+	default List<Long> getLongList(String key) {
+		return getOrDefault(key, new ArrayList<>());
+	}
+
+	default Map getMap(String key) {
+		return (Map) get(key);
+	}
 
 	/**
 	 * Serialize an Enum from entry in the data-structure
@@ -170,7 +171,7 @@ public interface Storage {
 	 */
 	default <E extends Enum<E>> E getEnum(String key, Class<E> enumType) {
 		Object object = get(key);
-		Valid.checkBoolean(object instanceof String, "No Enum-Value found for key '" + key + "'.");
+		Valid.checkBoolean(object instanceof String, "No usable Enum-Value found for '" + key + "'.");
 		return Enum.valueOf(enumType, (String) object);
 	}
 
@@ -178,74 +179,38 @@ public interface Storage {
 	 * Method to serialize a Class using the {@link LightningSerializer} Class
 	 * You will need to register your serializable in the {@link LightningSerializer} before.
 	 *
-	 * @param key   Path to serializable
-	 * @param clazz Class to serialize
-	 * @param <T>   Type of Class
 	 * @return Serialized instance of class.
 	 */
 	default <T> T getSerializable(String key, Class<T> clazz) {
 		if (!contains(key)) {
 			return null;
+
 		}
 		return LightningSerializer.serialize(get(key), clazz);
 	}
 
+	// ----------------------------------------------------------------------------------------------------
+	// Advanced methods to save time.
+	// ----------------------------------------------------------------------------------------------------
+
 	/**
-	 * Get a List from a data-structure
-	 *
-	 * @param key Path to StringList in data-structure
-	 * @return List
+	 * @param key Key to data in our data-structure.
+	 * @param def Default value, if data-structure doesn't contain key.
+	 * @param <T> Type of default-value.
 	 */
-	default List<?> getList(String key) {
+	default <T> T getOrDefault(String key, T def) {
 		if (!contains(key)) {
-			return new ArrayList<>();
-		} else {
-			return (List<?>) get(key);
+			return def;
 		}
-	}
-
-	default List<String> getStringList(String key) {
-		if (!contains(key)) {
-			return new ArrayList<>();
-		} else {
-			return (List<String>) get(key);
-		}
-	}
-
-	default List<Integer> getIntegerList(String key) {
-		if (!contains(key)) {
-			return new ArrayList<>();
-		} else {
-			return (List<Integer>) get(key);
-		}
-	}
-
-	default List<Byte> getByteList(String key) {
-		if (!contains(key)) {
-			return new ArrayList<>();
-		} else {
-			return (List<Byte>) get(key);
-		}
-	}
-
-	default List<Long> getLongList(String key) {
-		if (!contains(key)) {
-			return new ArrayList<>();
-		} else {
-			return (List<Long>) get(key);
-		}
-	}
-
-	default Map getMap(String key) {
-		return (Map) get(key);
+		return ClassWrapper.getFromDef(get(key), def);
 	}
 
 	/**
 	 * Sets a value to the data-structure if the data-structure doesn't already contain the value
-	 * (Not mix up with Bukkit addDefault)
+	 * Has nothing to do with Bukkit't 'addDefault'
 	 *
 	 * @param key   Key to set the value
-	 * @param value Value to set
+	 * @param value Value to set.
 	 */
 	default void setDefault(String key, Object value) {
 		if (!contains(key)) {
@@ -254,6 +219,8 @@ public interface Storage {
 	}
 
 	/**
+	 * Mix of setDefault & getDefault.
+	 * <p>
 	 * Sets a value to the data-structure if the data-structure doesn't already contain the value
 	 * Returns a default value if the data-structure doesn't already contain the key.
 	 * <p>
@@ -261,7 +228,7 @@ public interface Storage {
 	 * the key will be returned and casted to the type of your def.
 	 *
 	 * @param key Key to set the value
-	 * @param def Value to set or return
+	 * @param def Value to set or return.
 	 */
 	default <T> T getOrSetDefault(String key, T def) {
 		if (!contains(key)) {

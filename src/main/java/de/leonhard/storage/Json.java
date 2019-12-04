@@ -5,7 +5,6 @@ import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
-import de.leonhard.storage.util.JsonUtils;
 import lombok.Getter;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -77,7 +76,7 @@ public class Json extends FlatFile {
 			if (map instanceof Map) {
 				return (Map<?, ?>) fileData.get(key);
 			} else if (map instanceof JSONObject) {
-				return JsonUtils.jsonToMap((JSONObject) map);
+				return ((JSONObject) map).toMap();
 			}
 			//Exception in casting
 			throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
