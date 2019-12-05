@@ -20,6 +20,8 @@ public class LightningSerializer {
 	 * @param lightningSerializable Serializable to register
 	 */
 	public void registerSerializable(LightningSerializable lightningSerializable) {
+		Valid.notNull(lightningSerializable, "Serializable mustn't be null");
+		Valid.notNull(lightningSerializable.getClazz(), "Class mustn't be null");
 		serializes.add(lightningSerializable);
 	}
 
@@ -39,9 +41,10 @@ public class LightningSerializer {
 		return (T) serializable.deserialize(obj);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object deserialize(Object obj) {
 		LightningSerializable serializable = findSerializable(obj.getClass());
 		Valid.checkBoolean(serializable != null, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
-		return serializable.serialize();
+		return serializable.serialize(obj);
 	}
 }

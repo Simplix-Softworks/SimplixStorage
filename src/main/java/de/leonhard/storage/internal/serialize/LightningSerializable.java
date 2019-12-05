@@ -15,7 +15,7 @@ public interface LightningSerializable<T> {
 	 *
 	 * @throws ClassCastException Exception thrown when serialization failed.
 	 */
-	Object serialize() throws ClassCastException;
+	Object serialize(T t) throws ClassCastException;
 
 	Class<T> getClazz();
 }
