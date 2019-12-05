@@ -25,15 +25,27 @@ public interface Storage {
 	 * Set an object to your data-structure
 	 *
 	 * @param key   The key your value should be associated with
-	 * @param value The value you want to set in your data-structure
+	 * @param value The value you want to set in your data-structure.
 	 */
 	void set(String key, Object value);
+
+	/**
+	 * Method to deserialize a class using the {@link LightningSerializer}.
+	 * You will need to register your serializable in the {@link LightningSerializer} before.
+	 *
+	 * @param key   The key your value should be associated with.
+	 * @param value The value you want to set in your data-structure.
+	 */
+	default void setSerializable(String key, Object value) {
+		final Object data = LightningSerializer.deserialize(value);
+		set(key, data);
+	}
 
 	/**
 	 * Checks whether a key exists in the data-structure
 	 *
 	 * @param key Key to check
-	 * @return Returned value
+	 * @return Returned value.
 	 */
 	boolean contains(String key);
 
@@ -176,7 +188,7 @@ public interface Storage {
 	}
 
 	/**
-	 * Method to serialize a Class using the {@link LightningSerializer} Class
+	 * Method to serialize a Class using the {@link LightningSerializer}.
 	 * You will need to register your serializable in the {@link LightningSerializer} before.
 	 *
 	 * @return Serialized instance of class.

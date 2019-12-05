@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.serialize;
 
+import de.leonhard.storage.util.Valid;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class LightningSerializer {
 		serializes.add(lightningSerializable);
 	}
 
-	public LightningSerializable getSerializable(Class<?> clazz) {
+	public LightningSerializable findSerializable(Class<?> clazz) {
 		for (LightningSerializable serializable : serializes) {
 			if (serializable.getClazz().equals(clazz)) {
 				return serializable;
@@ -33,11 +34,14 @@ public class LightningSerializer {
 
 	@SuppressWarnings("unchecked")
 	public <T> T serialize(Object obj, Class<T> clazz) {
-		LightningSerializable serializable = getSerializable(clazz);
-		if (serializable == null) {
-			throw new IllegalStateException("No serializable found for '" + clazz.getSimpleName() + "'");
-		}
+		LightningSerializable serializable = findSerializable(clazz);
+		Valid.checkBoolean(serializable != null, "No serializable found for '" + clazz.getSimpleName() + "'");
+		return (T) serializable.deserialize(obj);
+	}
 
-		return (T) serializable.serialize(obj);
+	public Object deserialize(Object obj) {
+		LightningSerializable serializable = findSerializable(obj.getClass());
+		Valid.checkBoolean(serializable != null, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
+		return serializable.serialize();
 	}
 }

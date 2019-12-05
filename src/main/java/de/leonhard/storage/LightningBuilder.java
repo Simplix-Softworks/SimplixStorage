@@ -98,14 +98,13 @@ public final class LightningBuilder {
 		return this;
 	}
 
-	public LightningFile createLightningFile() {
-		return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
-	}
-
-
 	// ----------------------------------------------------------------------------------------------------
 	// Create the objects of our FileTypes
 	// ----------------------------------------------------------------------------------------------------
+
+	public LightningFile createLightningFile() {
+		return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
+	}
 
 	public Config createConfig() {
 		return new Config(name, path, inputStream, reloadSettings, configSettings, dataType);
@@ -116,11 +115,11 @@ public final class LightningBuilder {
 	}
 
 	public Toml createToml() {
-		return new Toml(name, path);
+		return new Toml(name, path, inputStream, reloadSettings);
 	}
 
 	public Json createJson() {
-		return new Json(name, path, reloadSettings);
+		return new Json(name, path, inputStream, reloadSettings);
 	}
 }
 

@@ -9,6 +9,7 @@ import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 @Getter
@@ -23,9 +24,15 @@ public class Toml extends FlatFile {
 		this(name, path, null);
 	}
 
-	public Toml(String name, String path, ReloadSettings reloadSettings) {
+	public Toml(String name, String path, InputStream inputStream) {
+		this(name, path, inputStream, null);
+	}
+
+	public Toml(String name, String path, InputStream inputStream, ReloadSettings reloadSettings) {
 		super(name, path, FileType.TOML);
-		create();
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(file, inputStream);
+		}
 
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;

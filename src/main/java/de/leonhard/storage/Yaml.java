@@ -53,10 +53,8 @@ public class Yaml extends FlatFile {
 	            DataType dataType) {
 		super(name, path, FileType.YAML);
 
-		if (create()) {
-			if (inputStream != null) {
-				FileUtils.writeToFile(file, inputStream);
-			}
+		if (create() && inputStream != null) {
+			FileUtils.writeToFile(file, inputStream);
 		}
 
 		yamlEditor = new YamlEditor(file);

@@ -9,7 +9,12 @@ import lombok.Getter;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,17 +30,25 @@ public class Json extends FlatFile {
 		this(name, path, null);
 	}
 
-	public Json(String name, String path, ReloadSettings reloadSettings) {
+	public Json(String name, String path, InputStream inputStream) {
+		this(name, path, inputStream, null);
+	}
+
+	public Json(String name, String path, InputStream inputStream, ReloadSettings reloadSettings) {
 		super(name, path, FileType.JSON);
 
 		if (create() || file.length() == 0) {
-			try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
-				writer.write(new JSONObject().toString(2));
-			} catch (Exception ex) {
-				System.err.println("Error creating JSON '" + file.getName() + "'");
-				System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-				ex.printStackTrace();
+			if (inputStream != null) {
+				FileUtils.writeToFile(file, inputStream);
 			}
+
+//			try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
+//				writer.write(new JSONObject().toString(2));
+//			} catch (Exception ex) {
+//				System.err.println("Error creating JSON '" + file.getName() + "'");
+//				System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+//				ex.printStackTrace();
+//			}
 		}
 
 		if (reloadSettings != null) {
@@ -89,6 +102,10 @@ public class Json extends FlatFile {
 
 	@Override
 	protected Map<String, Object> readToMap() throws IOException {
+		if (file.length() == 0) {
+			Files.write(file.toPath(), Collections.singletonList("{}"));
+		}
+
 		JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
 		return new JSONObject(jsonTokener).toMap();
 	}
