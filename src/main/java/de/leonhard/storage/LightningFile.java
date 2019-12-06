@@ -7,9 +7,7 @@ import de.leonhard.storage.internal.editor.lighningfile.LightningEditor;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -20,8 +18,6 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 @Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 public class LightningFile extends FlatFile {
 
 	private final LightningEditor lightningEditor;

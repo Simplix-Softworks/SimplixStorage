@@ -2,6 +2,7 @@ package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
+import de.leonhard.storage.sections.FlatFileSection;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
 import lombok.*;
@@ -17,12 +18,12 @@ import java.util.Set;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract class FlatFile implements Storage, Comparable<FlatFile> {
+public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 	@Setter
 	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
 	protected FileData fileData = new FileData();
-	protected File file;
-	protected FileType fileType;
+	protected final File file;
+	protected final FileType fileType;
 	protected DataType dataType = DataType.UNSORTED;
 	@Setter
 	protected String pathPrefix;
@@ -220,6 +221,11 @@ public abstract class FlatFile implements Storage, Comparable<FlatFile> {
 		lastModified = System.currentTimeMillis();
 	}
 
+	public final void clear() {
+		fileData.clear();
+		write();
+	}
+
 	// ----------------------------------------------------------------------------------------------------
 	// Internal stuff
 	// ----------------------------------------------------------------------------------------------------
@@ -246,8 +252,12 @@ public abstract class FlatFile implements Storage, Comparable<FlatFile> {
 	// Misc
 	// ----------------------------------------------------------------------------------------------------
 
+	public final FlatFileSection getSection(String pathPrefix) {
+		return new FlatFileSection(this, pathPrefix);
+	}
+
 	@Override
-	public int compareTo(FlatFile flatFile) {
+	public final int compareTo(FlatFile flatFile) {
 		return this.file.compareTo(flatFile.file);
 	}
 }

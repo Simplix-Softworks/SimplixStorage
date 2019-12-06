@@ -18,6 +18,6 @@ public class YamlWriter extends com.esotericsoftware.yamlbeans.YamlWriter implem
 	}
 
 	public YamlWriter(File file) {
-		super(FileUtils.createWriter(file), YamlUtils.getDefaultYamlConfig());
+		this(FileUtils.createWriter(file));
 	}
 }

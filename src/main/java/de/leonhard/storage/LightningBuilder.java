@@ -39,7 +39,7 @@ public final class LightningBuilder {
 	public static LightningBuilder fromFile(File file) {
 		Valid.notNull(file, "File mustn't be null");
 
-		String path = "";
+		String path;
 		if (file.isDirectory()) {
 			path = file.getAbsolutePath();
 		} else {
@@ -67,12 +67,14 @@ public final class LightningBuilder {
 
 	public LightningBuilder setName(String name) {
 		Valid.notNull(name, "Name mustn't be null.");
+
 		this.name = name;
 		return this;
 	}
 
 	public LightningBuilder addInputStream(InputStream inputStream) {
 		Valid.notNull(inputStream, "InputStream mustn't be null");
+
 		this.inputStream = inputStream;
 		return this;
 	}

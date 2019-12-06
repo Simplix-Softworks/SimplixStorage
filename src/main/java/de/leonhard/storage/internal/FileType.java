@@ -2,12 +2,12 @@ package de.leonhard.storage.internal;
 
 import de.leonhard.storage.util.FileUtils;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 
 @Getter
-@ToString
+@RequiredArgsConstructor
 public enum FileType {
 	JSON("json"),
 	YAML("yml"),
@@ -16,10 +16,6 @@ public enum FileType {
 	LS("ls");
 
 	private final String extension;
-
-	FileType(String extension) {
-		this.extension = extension;
-	}
 
 	public static FileType fromFile(File file) {
 		return fromExtension(FileUtils.getExtension(file));

@@ -39,6 +39,11 @@ public class FileData {
 		localMap.putAll(jsonObject.toMap());
 	}
 
+	public void clear() {
+		this.localMap.clear();
+	}
+
+
 	/**
 	 * Method to get the object assign to a key from a FileData Object.
 	 *

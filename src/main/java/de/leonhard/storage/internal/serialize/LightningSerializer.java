@@ -37,14 +37,14 @@ public class LightningSerializer {
 	@SuppressWarnings("unchecked")
 	public <T> T serialize(Object obj, Class<T> clazz) {
 		LightningSerializable serializable = findSerializable(clazz);
-		Valid.checkBoolean(serializable != null, "No serializable found for '" + clazz.getSimpleName() + "'");
+		Valid.notNull(serializable, "No serializable found for '" + clazz.getSimpleName() + "'");
 		return (T) serializable.deserialize(obj);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Object deserialize(Object obj) {
 		LightningSerializable serializable = findSerializable(obj.getClass());
-		Valid.checkBoolean(serializable != null, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
+		Valid.notNull(serializable, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
 		return serializable.serialize(obj);
 	}
 }

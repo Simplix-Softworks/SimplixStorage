@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface Storage {
+public interface DataStorage {
 
 	Set<String> singleLayerKeySet();
 
@@ -37,7 +37,7 @@ public interface Storage {
 	 * @param value The value you want to set in your data-structure.
 	 */
 	default void setSerializable(String key, Object value) {
-		final Object data = LightningSerializer.deserialize(value);
+		Object data = LightningSerializer.deserialize(value);
 		set(key, data);
 	}
 

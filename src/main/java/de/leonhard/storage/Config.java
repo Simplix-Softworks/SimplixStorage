@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
@@ -48,6 +49,12 @@ public class Config extends Yaml {
 		if (!contains(key)) {
 			set(key, value, getConfigSettings());
 		}
+	}
+
+	@Override
+	public void setSerializable(String key, Object value) {
+		Object data = LightningSerializer.deserialize(value);
+		set(key, data, getConfigSettings());
 	}
 
 	@Override

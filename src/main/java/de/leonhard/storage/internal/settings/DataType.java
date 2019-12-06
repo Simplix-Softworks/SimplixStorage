@@ -7,7 +7,6 @@ import java.util.Map;
 /**
  * An Enum defining how the Data should be stored
  */
-@SuppressWarnings("unchecked")
 public enum DataType {
 	SORTED {
 		@Override

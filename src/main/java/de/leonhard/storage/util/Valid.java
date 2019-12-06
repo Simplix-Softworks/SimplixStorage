@@ -16,10 +16,7 @@ public class Valid {
 	}
 
 	public <T> void notNull(T object) {
-		if (object != null) {
-			return;
-		}
-		throw new LightningException("Valid.notNull(): Validated Object is null");
+		notNull(object, "Valid.notNull(): Validated Object is null");
 	}
 
 	public <T> void notNull(T object, String... message) {

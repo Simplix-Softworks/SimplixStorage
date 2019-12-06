@@ -1,6 +1,6 @@
 package de.leonhard.storage.util;
 
-import de.leonhard.storage.internal.Storage;
+import de.leonhard.storage.internal.DataStorage;
 import lombok.experimental.UtilityClass;
 
 import java.util.Collection;
@@ -12,7 +12,7 @@ public class ClassWrapper {
 
 	/**
 	 * Method to cast an object to a given datatype
-	 * Used for example in {@link Storage}
+	 * Used for example in {@link DataStorage}
 	 * to cast the results of get() to for example a String
 	 *
 	 * @param obj Object to cast
@@ -36,7 +36,7 @@ public class ClassWrapper {
 
 	/**
 	 * Method to cast an object to a given datatype
-	 * Used for example in {@link Storage}
+	 * Used for example in {@link DataStorage}
 	 * to cast the results of get() to for example a String
 	 *
 	 * @param obj   Object to cast
