@@ -1,7 +1,5 @@
 package de.leonhard.storage.internal.provider;
 
-import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
@@ -16,12 +14,27 @@ import java.util.Map;
  */
 @UtilityClass
 public class LightningProvider {
-	@Getter
 	@Setter
-	@NonNull
-	private Map<String, Object> defaultMapImplementation = new HashMap<>();
-	@Getter
+	private Map<String, Object> defaultMapImplementation;
 	@Setter
-	@NonNull
-	private Map<String, Object> sortedMapImplementation = new LinkedHashMap<>();
+	private Map<String, Object> sortedMapImplementation;
+
+	public Map<String, Object> getDefaultMapImplementation() {
+		if (defaultMapImplementation != null) {
+			//Cloning our values
+			return new HashMap<>(defaultMapImplementation);
+		}
+
+		return defaultMapImplementation = new HashMap<>();
+
+	}
+
+	public Map<String, Object> getSortedMapImplementation() {
+		if (defaultMapImplementation != null) {
+			//Cloning our values
+			return new LinkedHashMap<>(sortedMapImplementation);
+		}
+
+		return defaultMapImplementation = new LinkedHashMap<>();
+	}
 }
