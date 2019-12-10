@@ -14,27 +14,24 @@ import java.util.Map;
  */
 @UtilityClass
 public class LightningProvider {
-	@Setter
-	private Map<String, Object> defaultMapImplementation;
-	@Setter
-	private Map<String, Object> sortedMapImplementation;
+    @Setter
+    private Map<String, Object> defaultMapImplementation;
+    @Setter
+    private Map<String, Object> sortedMapImplementation;
 
-	public Map<String, Object> getDefaultMapImplementation() {
-		if (defaultMapImplementation != null) {
-			//Cloning our values
-			return new HashMap<>(defaultMapImplementation);
-		}
+    public Map<String, Object> getDefaultMapImplementation() {
+        if (defaultMapImplementation != null) {
+            return defaultMapImplementation;
+        }
 
-		return defaultMapImplementation = new HashMap<>();
+        return defaultMapImplementation = new HashMap<>();
+    }
 
-	}
+    public Map<String, Object> getSortedMapImplementation() {
+        if (defaultMapImplementation != null) {
+            return sortedMapImplementation;
+        }
 
-	public Map<String, Object> getSortedMapImplementation() {
-		if (defaultMapImplementation != null) {
-			//Cloning our values
-			return new LinkedHashMap<>(sortedMapImplementation);
-		}
-
-		return defaultMapImplementation = new LinkedHashMap<>();
-	}
+        return defaultMapImplementation = new LinkedHashMap<>();
+    }
 }
