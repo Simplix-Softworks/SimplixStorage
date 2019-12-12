@@ -5,6 +5,7 @@ import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
+import lombok.Cleanup;
 import lombok.Getter;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -23,7 +24,7 @@ public class Json extends FlatFile {
 
     public Json(Json json) {
         super(json.getFile(), json.fileType);
-		fileData = json.getFileData();
+        fileData = json.getFileData();
     }
 
     public Json(String name, String path) {
@@ -42,13 +43,6 @@ public class Json extends FlatFile {
                 FileUtils.writeToFile(file, inputStream);
             }
 
-//			try (Writer writer = new PrintWriter(new FileWriter(getFile().getAbsolutePath()))) {
-//				writer.write(new JSONObject().toString(2));
-//			} catch (Exception ex) {
-//				System.err.println("Error creating JSON '" + file.getName() + "'");
-//				System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-//				ex.printStackTrace();
-//			}
         }
 
         if (reloadSettings != null) {
@@ -110,9 +104,8 @@ public class Json extends FlatFile {
 
     @Override
     protected void write(FileData data) throws IOException {
-        try (Writer writer = FileUtils.createWriter(file)) {
-            writer.write(data.toJsonObject().toString(3));
-            writer.flush();
-        }
+        @Cleanup Writer writer = FileUtils.createWriter(file);
+        writer.write(data.toJsonObject().toString(3));
+        writer.flush();
     }
 }

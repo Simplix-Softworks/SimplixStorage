@@ -31,10 +31,10 @@ public class Yaml extends FlatFile {
 
     public Yaml(Yaml yaml) {
         super(yaml.getFile());
-		fileData = yaml.getFileData();
-		yamlEditor = yaml.getYamlEditor();
-		parser = yaml.getParser();
-		configSettings = yaml.getConfigSettings();
+        fileData = yaml.getFileData();
+        yamlEditor = yaml.getYamlEditor();
+        parser = yaml.getParser();
+        configSettings = yaml.getConfigSettings();
     }
 
     public Yaml(String name, String path) {
@@ -123,15 +123,14 @@ public class Yaml extends FlatFile {
 
     @Override
     protected Map<String, Object> readToMap() throws IOException {
-        @Cleanup YamlReader reader = new YamlReader(new FileReader(getFile()));
+        @Cleanup final YamlReader reader = new YamlReader(new FileReader(getFile()));
         return reader.readToMap();
     }
 
     @Override
     protected void write(FileData data) throws IOException {
-        try (YamlWriter writer = new YamlWriter(file)) {
-            writer.write(data.toMap());
-        }
+        @Cleanup final YamlWriter writer = new YamlWriter(file);
+        writer.write(data.toMap());
     }
 
     // ----------------------------------------------------------------------------------------------------

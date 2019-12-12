@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * An extended HashMap, to easily process
@@ -18,18 +17,9 @@ import java.util.stream.Collectors;
 public class FileData {
     private final Map<String, Object> localMap;
 
-    public FileData() {
-        localMap = new HashMap<>();
-    }
-
     public FileData(Map<String, Object> map, DataType dataType) {
-        localMap = dataType
-                //Cloning out map. We don't want to edit the StorageProvider map.
-                .getMapImplementation()
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey,
-                        Map.Entry::getValue));
+        localMap = dataType.getMapImplementation();
+
         localMap.putAll(map);
     }
 
@@ -48,6 +38,7 @@ public class FileData {
 
     public void loadData(final Map<String, Object> map) {
         clear();
+
         if (map != null) {
             localMap.putAll(map);
         }
