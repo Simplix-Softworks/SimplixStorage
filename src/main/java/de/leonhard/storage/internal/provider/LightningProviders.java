@@ -1,5 +1,6 @@
 package de.leonhard.storage.internal.provider;
 
+import com.esotericsoftware.yamlbeans.YamlConfig;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
@@ -12,6 +13,8 @@ import lombok.experimental.UtilityClass;
 public class LightningProviders {
 	@Setter
 	private MapProvider mapProvider;
+	@Setter
+	private YamlConfig yamlConfig;
 
 	public MapProvider getMapProvider() {
 		if (mapProvider != null) {
@@ -20,5 +23,19 @@ public class LightningProviders {
 
 		return mapProvider = new MapProvider() {
 		};
+	}
+
+	public YamlConfig getYamlConfig() {
+		if (yamlConfig != null) {
+			return yamlConfig;
+		}
+		YamlConfig config = new YamlConfig();
+		//Use unicode
+		config.writeConfig.setEscapeUnicode(false);
+		//Don't use anchors
+		config.writeConfig.setAutoAnchor(false);
+		//Never use write the classname above keys
+		config.writeConfig.setWriteClassname(YamlConfig.WriteClassName.NEVER);
+		return yamlConfig = config;
 	}
 }
