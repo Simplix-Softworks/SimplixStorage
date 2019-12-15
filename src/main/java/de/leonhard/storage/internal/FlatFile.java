@@ -8,6 +8,7 @@ import de.leonhard.storage.util.Valid;
 import lombok.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 		if (path == null || path.isEmpty()) {
 			file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
 		} else {
-			file = new File(path, FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
+			file = new File(path + "/", FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
 		}
 
 		forceReload();
@@ -225,7 +226,10 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 				fileData.loadData(readToMap());
 			}
 		} catch (IOException ex) {
-			System.err.println("Error reloading " + fileType.name().toLowerCase() + "'" + getName() + "'");
+			if (ex instanceof FileNotFoundException) {
+				return;
+			}
+			System.err.println("Error reloading " + fileType.name().toLowerCase() + " '" + getName() + "'");
 			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
 			ex.printStackTrace();
 		}
