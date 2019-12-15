@@ -36,10 +36,9 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 		if (path == null || path.isEmpty()) {
 			file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
 		} else {
-			file = new File(path + "/", FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
+			final String fixedPath = path.replace("\\", "/");
+			file = new File(fixedPath + File.separator + name + "." + fileType.getExtension());
 		}
-
-		forceReload();
 	}
 
 	protected FlatFile(File file, FileType fileType) {
@@ -51,7 +50,6 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 		Valid.checkBoolean(!(fileType == FileType.fromExtension(file)),
 			"Invalid file-extension for file type: '" + fileType + "'");
 
-		forceReload();
 	}
 
 	/**
@@ -65,7 +63,6 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 		this.file = file;
 		//Might be null
 		fileType = FileType.fromFile(file);
-		forceReload();
 	}
 
 
