@@ -131,9 +131,8 @@ public class Yaml extends FlatFile {
 
 	@Override
 	protected void write(FileData data) throws IOException {
-		try (YamlWriter writer = new YamlWriter(file)) {
-			writer.write(data.toMap());
-		}
+		@Cleanup YamlWriter writer = new YamlWriter(file);
+		writer.write(data.toMap());
 	}
 
 	// ----------------------------------------------------------------------------------------------------

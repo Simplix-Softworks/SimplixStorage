@@ -19,11 +19,11 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode
 public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
+	protected final File file;
+	protected final FileType fileType;
 	@Setter
 	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
 	protected FileData fileData = new FileData();
-	protected final File file;
-	protected final FileType fileType;
 	protected DataType dataType = DataType.UNSORTED;
 	@Setter
 	protected String pathPrefix;

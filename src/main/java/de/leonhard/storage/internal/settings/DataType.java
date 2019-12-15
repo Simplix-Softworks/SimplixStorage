@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.settings;
 
-import de.leonhard.storage.internal.provider.LightningProvider;
+import de.leonhard.storage.internal.provider.LightningProviders;
 
 import java.util.Map;
 
@@ -11,14 +11,14 @@ public enum DataType {
 	SORTED {
 		@Override
 		public Map<String, Object> getMapImplementation() {
-			return LightningProvider.getSortedMapImplementation();
+			return LightningProviders.getMapProvider().getSortedMapImplementation();
 		}
 	},
 
 	UNSORTED {
 		@Override
 		public Map<String, Object> getMapImplementation() {
-			return LightningProvider.getDefaultMapImplementation();
+			return LightningProviders.getMapProvider().getSortedMapImplementation();
 		}
 	};
 
