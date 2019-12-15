@@ -8,6 +8,7 @@ import java.util.Map;
  * An Enum defining how the Data should be stored
  */
 public enum DataType {
+
 	SORTED {
 		@Override
 		public Map<String, Object> getMapImplementation() {
