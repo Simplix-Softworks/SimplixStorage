@@ -15,6 +15,8 @@ public class LightningProviders {
 	private MapProvider mapProvider;
 	@Setter
 	private YamlConfig yamlConfig;
+	@Setter
+	private InputStreamProvider inputStreamProvider;
 
 	public MapProvider getMapProvider() {
 		if (mapProvider != null) {
@@ -37,5 +39,14 @@ public class LightningProviders {
 		//Never use write the classname above keys
 		config.writeConfig.setWriteClassname(YamlConfig.WriteClassName.NEVER);
 		return yamlConfig = config;
+	}
+
+	public InputStreamProvider getInputStreamProvider() {
+		if (inputStreamProvider != null) {
+			return inputStreamProvider;
+		}
+
+		return inputStreamProvider = new InputStreamProvider() {
+		};
 	}
 }

@@ -23,7 +23,7 @@ public class LightningEditor {
 	/**
 	 * Write the given Data to a File.
 	 *
-	 * @param map           a HashMap containing the Data to be written.
+	 * @param map           A HashMap containing the Data to be written.
 	 * @param configSetting the ConfigSetting to be used.
 	 */
 	public void writeData(Map<String, Object> map, ConfigSettings configSetting) {

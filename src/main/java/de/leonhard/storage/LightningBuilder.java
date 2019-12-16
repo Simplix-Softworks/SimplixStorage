@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
@@ -38,14 +39,25 @@ public final class LightningBuilder {
 
 	public static LightningBuilder fromFile(File file) {
 		Valid.notNull(file, "File mustn't be null");
+		//File shouldn't be a directory
+		Valid.checkBoolean(!file.isDirectory(),
+			"File mustn't be a directory.",
+			"Please use from Directory to use a directory",
+			"This is due to Java-Internals");
 
-		String path;
-		if (file.isDirectory()) {
-			path = file.getAbsolutePath();
-		} else {
-			path = file.getParentFile().getAbsolutePath();
+		return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file));
+	}
+
+	public static LightningBuilder fromDirectory(final File file) {
+		Valid.notNull(file, "File mustn't be null");
+		Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
+
+		if (!file.exists()) {
+			file.mkdirs();
 		}
-		return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), path);
+
+		//Will return the name of the folder as default name
+		return new LightningBuilder(file.getName(), file.getAbsolutePath());
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -60,7 +72,8 @@ public final class LightningBuilder {
 	}
 
 	public LightningBuilder addInputStreamFromResource(String resource) {
-		this.inputStream = getClass().getClassLoader().getResourceAsStream(resource);
+		this.inputStream = LightningProviders.getInputStreamProvider().createInputStreamFromInnerResource(resource);
+
 		Valid.notNull(inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
 		return this;
 	}
