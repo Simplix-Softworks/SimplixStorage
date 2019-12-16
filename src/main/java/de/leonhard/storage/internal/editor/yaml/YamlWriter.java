@@ -6,7 +6,6 @@ import de.leonhard.storage.util.FileUtils;
 import java.io.File;
 import java.io.Writer;
 
-
 /**
  * Enhanced Version of YamlWriter of EsotericSoftware which
  * implements AutoClosable
