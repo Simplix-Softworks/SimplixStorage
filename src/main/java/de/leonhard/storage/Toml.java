@@ -3,6 +3,7 @@ package de.leonhard.storage;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.editor.toml.TomlManager;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 
@@ -28,6 +29,7 @@ public class Toml extends FlatFile {
 
 	public Toml(String name, String path, InputStream inputStream, ReloadSettings reloadSettings) {
 		super(name, path, FileType.TOML);
+
 		if (create() && inputStream != null) {
 			FileUtils.writeToFile(file, inputStream);
 		}
@@ -50,13 +52,13 @@ public class Toml extends FlatFile {
 
 	@Override
 	protected Map<String, Object> readToMap() throws IOException {
-		return com.electronwill.toml.Toml.read(getFile());
+		return TomlManager.read(getFile());
 	}
 
 	@Override
 	protected void write(FileData data) {
 		try {
-			com.electronwill.toml.Toml.write(data.toMap(), getFile());
+			TomlManager.write(data.toMap(), getFile());
 		} catch (IOException ex) {
 			System.err.println("Exception while writing fileData to file '" + getName() + "'");
 			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");

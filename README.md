@@ -119,7 +119,9 @@ The relocation is optional but heavily recommended.
 
 **Library's used**
 
-LightningStorage uses a powerful combination of libraries to provide best usability: 
+LightningStorage uses a powerful combination of libraries to provide the best usability: 
 
 >MIT-org.json Copyright (c) 2002 JSON.org <br>
 >YAMLBEANS - Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini <br>
+>TOML-Lib - Copyright (c) 2016 Guillaume Raffin.
+

@@ -203,14 +203,6 @@
     </repositories>
 
     <dependencies>
-        <!-- TOML -->
-        <dependency>
-            <groupId>de.leonhard</groupId>
-            <artifactId>toml</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- YAML -->
         <dependency>
             <groupId>com.esotericsoftware.yamlbeans</groupId>
