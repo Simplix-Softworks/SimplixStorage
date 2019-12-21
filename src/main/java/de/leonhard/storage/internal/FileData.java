@@ -238,6 +238,10 @@ public class FileData {
         return localMap.size();
     }
 
+    public void putAll(final Map<String, Object> map) {
+        localMap.putAll(map);
+    }
+
     private int size(Map<String, Object> map) {
         int size = map.size();
         for (String key : map.keySet()) {

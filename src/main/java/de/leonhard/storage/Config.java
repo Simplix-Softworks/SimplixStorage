@@ -32,7 +32,7 @@ public class Config extends Yaml {
                   ConfigSettings configSettings,
                   DataType dataType) {
         super(name, path, inputStream, reloadSettings, configSettings, dataType);
-		setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+        setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -40,25 +40,25 @@ public class Config extends Yaml {
     // ----------------------------------------------------------------------------------------------------
 
     @Override
-    public void set(String key, Object value) {
+    public final void set(final String key, final Object value) {
         super.set(key, value, getConfigSettings());
     }
 
     @Override
-    public void setDefault(String key, Object value) {
+    public final void setDefault(final String key, final Object value) {
         if (!contains(key)) {
             set(key, value, getConfigSettings());
         }
     }
 
     @Override
-    public void setSerializable(String key, Object value) {
+    public final void setSerializable(final String key, final Object value) {
         final Object data = LightningSerializer.deserialize(value);
         set(key, data, getConfigSettings());
     }
 
     @Override
-    public <T> T getOrSetDefault(String key, T def) {
+    public final <T> T getOrSetDefault(final String key, final T def) {
         reloadIfNeeded();
         if (!contains(key)) {
             set(key, def, getConfigSettings());

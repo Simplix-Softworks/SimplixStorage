@@ -12,129 +12,129 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 public final class LightningBuilder {
-	private final String path;
-	private String name;
-	private InputStream inputStream;
-	private ReloadSettings reloadSettings;
-	private ConfigSettings configSettings;
-	private DataType dataType;
+    private final String path;
+    private String name;
+    private InputStream inputStream;
+    private ReloadSettings reloadSettings;
+    private ConfigSettings configSettings;
+    private DataType dataType;
 
-	private LightningBuilder(String name, String path) {
-		this.name = name;
-		this.path = path;
-	}
+    private LightningBuilder(String name, String path) {
+        this.name = name;
+        this.path = path;
+    }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Creating our Builder
-	// ----------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------
+    // Creating our Builder
+    // ----------------------------------------------------------------------------------------------------
 
-	public static LightningBuilder fromPath(String name, String path) {
-		Valid.notNull(name, "Name mustn't be null");
-		return new LightningBuilder(name, path);
-	}
+    public static LightningBuilder fromPath(final String name, final String path) {
+        Valid.notNull(name, "Name mustn't be null");
+        return new LightningBuilder(name, path);
+    }
 
-	public static LightningBuilder fromPath(Path path) {
-		return fromFile(path.toFile());
-	}
+    public static LightningBuilder fromPath(final Path path) {
+        return fromFile(path.toFile());
+    }
 
-	public static LightningBuilder fromFile(File file) {
-		Valid.notNull(file, "File mustn't be null");
-		//File shouldn't be a directory
-		Valid.checkBoolean(!file.isDirectory(),
-			"File mustn't be a directory.",
-			"Please use from Directory to use a directory",
-			"This is due to Java-Internals");
+    public static LightningBuilder fromFile(final File file) {
+        Valid.notNull(file, "File mustn't be null");
+        //File shouldn't be a directory
+        Valid.checkBoolean(!file.isDirectory(),
+                "File mustn't be a directory.",
+                "Please use from Directory to use a directory",
+                "This is due to Java-Internals");
 
-		return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file));
-	}
+        return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file));
+    }
 
-	public static LightningBuilder fromDirectory(final File file) {
-		Valid.notNull(file, "File mustn't be null");
-		Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
+    public static LightningBuilder fromDirectory(final File file) {
+        Valid.notNull(file, "File mustn't be null");
+        Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
-		if (!file.exists()) {
-			file.mkdirs();
-		}
+        if (!file.exists()) {
+            file.mkdirs();
+        }
 
-		//Will return the name of the folder as default name
-		return new LightningBuilder(file.getName(), file.getAbsolutePath());
-	}
+        //Will return the name of the folder as default name
+        return new LightningBuilder(file.getName(), file.getAbsolutePath());
+    }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Adding out settings
-	// ----------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------
+    // Adding out settings
+    // ----------------------------------------------------------------------------------------------------
 
-	public LightningBuilder addInputStreamFromFile(File file) {
-		Valid.notNull(file, "File mustn't be null");
+    public LightningBuilder addInputStreamFromFile(final File file) {
+        Valid.notNull(file, "File mustn't be null");
 
-		this.inputStream = FileUtils.createInputStream(file);
-		return this;
-	}
+		inputStream = FileUtils.createInputStream(file);
+        return this;
+    }
 
-	public LightningBuilder addInputStreamFromResource(String resource) {
-		this.inputStream = LightningProviders.getInputStreamProvider().createInputStreamFromInnerResource(resource);
+    public LightningBuilder addInputStreamFromResource(final String resource) {
+		inputStream = LightningProviders.getInputStreamProvider().createInputStreamFromInnerResource(resource);
 
-		Valid.notNull(inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
-		return this;
-	}
+        Valid.notNull(inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
+        return this;
+    }
 
-	public LightningBuilder setName(String name) {
-		Valid.notNull(name, "Name mustn't be null.");
+    public LightningBuilder setName(final String name) {
+        Valid.notNull(name, "Name mustn't be null.");
 
-		this.name = name;
-		return this;
-	}
+        this.name = name;
+        return this;
+    }
 
-	public LightningBuilder addInputStream(InputStream inputStream) {
-		Valid.notNull(inputStream, "InputStream mustn't be null");
+    public LightningBuilder addInputStream(final InputStream inputStream) {
+        Valid.notNull(inputStream, "InputStream mustn't be null");
 
-		this.inputStream = inputStream;
-		return this;
-	}
+        this.inputStream = inputStream;
+        return this;
+    }
 
-	public LightningBuilder setConfigSettings(ConfigSettings configSettings) {
-		Valid.notNull(configSettings, "ConfigSettings mustn't be null");
+    public LightningBuilder setConfigSettings(final ConfigSettings configSettings) {
+        Valid.notNull(configSettings, "ConfigSettings mustn't be null");
 
-		this.configSettings = configSettings;
-		return this;
-	}
+        this.configSettings = configSettings;
+        return this;
+    }
 
-	public LightningBuilder setReloadSettings(ReloadSettings reloadSettings) {
-		Valid.notNull(reloadSettings, "ReloadSettings mustn't be null");
+    public LightningBuilder setReloadSettings(final ReloadSettings reloadSettings) {
+        Valid.notNull(reloadSettings, "ReloadSettings mustn't be null");
 
-		this.reloadSettings = reloadSettings;
-		return this;
-	}
+        this.reloadSettings = reloadSettings;
+        return this;
+    }
 
-	public LightningBuilder setDataType(DataType dataType) {
-		Valid.notNull(dataType, "DataType mustn't be null");
+    public LightningBuilder setDataType(final DataType dataType) {
+        Valid.notNull(dataType, "DataType mustn't be null");
 
-		this.dataType = dataType;
-		return this;
-	}
+        this.dataType = dataType;
+        return this;
+    }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Create the objects of our FileTypes
-	// ----------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------
+    // Create the objects of our FileTypes
+    // ----------------------------------------------------------------------------------------------------
 
-	public LightningFile createLightningFile() {
-		return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
-	}
+    public LightningFile createLightningFile() {
+        return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
+    }
 
-	public Config createConfig() {
-		return new Config(name, path, inputStream, reloadSettings, configSettings, dataType);
-	}
+    public Config createConfig() {
+        return new Config(name, path, inputStream, reloadSettings, configSettings, dataType);
+    }
 
-	public Yaml createYaml() {
-		return new Yaml(name, path, inputStream, reloadSettings, configSettings, dataType);
-	}
+    public Yaml createYaml() {
+        return new Yaml(name, path, inputStream, reloadSettings, configSettings, dataType);
+    }
 
-	public Toml createToml() {
-		return new Toml(name, path, inputStream, reloadSettings);
-	}
+    public Toml createToml() {
+        return new Toml(name, path, inputStream, reloadSettings);
+    }
 
-	public Json createJson() {
-		return new Json(name, path, inputStream, reloadSettings);
-	}
+    public Json createJson() {
+        return new Json(name, path, inputStream, reloadSettings);
+    }
 }
 
