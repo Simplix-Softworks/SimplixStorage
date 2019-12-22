@@ -98,10 +98,6 @@
                             <shadedPattern>de.leonhard.storage.shaded.json</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>com.esotericsoftware</pattern>
-                            <shadedPattern>de.leonhard.storage.shaded.esotericsoftware</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>com.electronwill</pattern>
                             <shadedPattern>de.leonhard.storage.shaded.electronwill</shadedPattern>
                         </relocation>
