@@ -7,18 +7,13 @@ package de.leonhard.storage.internal.exception;
  */
 public class TomlException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public TomlException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public TomlException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public TomlException(String message) {
-		super(message);
-	}
-
-	public TomlException(Throwable cause) {
-		super(cause);
-	}
-
+    public TomlException(String message) {
+        super(message);
+    }
 }

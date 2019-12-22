@@ -12,7 +12,6 @@ import lombok.Getter;
 import java.io.InputStream;
 import java.util.Map;
 
-
 /**
  * Class to manager Lightning-Type Files
  */
@@ -20,58 +19,58 @@ import java.util.Map;
 @Getter
 public class LightningFile extends FlatFile {
 
-	private final LightningEditor lightningEditor;
-	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+    private final LightningEditor lightningEditor;
+    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-	public LightningFile(LightningFile lightningFile) {
-		super(lightningFile.getFile());
-		this.lightningEditor = lightningFile.getLightningEditor();
-		this.configSettings = lightningFile.getConfigSettings();
-	}
+    public LightningFile(LightningFile lightningFile) {
+        super(lightningFile.getFile());
+		lightningEditor = lightningFile.getLightningEditor();
+		configSettings = lightningFile.getConfigSettings();
+    }
 
-	public LightningFile(String name, String path) {
-		this(name, path, null, null, null);
-	}
+    public LightningFile(String name, String path) {
+        this(name, path, null, null, null);
+    }
 
-	public LightningFile(String name, String path, InputStream inputStream) {
-		this(name, path, inputStream, null, null);
-	}
+    public LightningFile(String name, String path, InputStream inputStream) {
+        this(name, path, inputStream, null, null);
+    }
 
-	public LightningFile(String name,
-	                     String path,
-	                     InputStream inputStream,
-	                     ReloadSettings reloadSetting,
-	                     ConfigSettings configSettings) {
-		super(name, path, FileType.LS);
+    public LightningFile(String name,
+                         String path,
+                         InputStream inputStream,
+                         ReloadSettings reloadSetting,
+                         ConfigSettings configSettings) {
+        super(name, path, FileType.LS);
 
-		lightningEditor = new LightningEditor(file);
+        lightningEditor = new LightningEditor(file);
 
-		if (create() && inputStream != null) {
-			FileUtils.writeToFile(this.file, inputStream);
-		}
+        if (create() && inputStream != null) {
+            FileUtils.writeToFile(file, inputStream);
+        }
 
-		if (configSettings != null) {
-			this.configSettings = configSettings;
-		}
+        if (configSettings != null) {
+            this.configSettings = configSettings;
+        }
 
-		if (reloadSetting != null) {
-			this.reloadSettings = reloadSetting;
-		}
+        if (reloadSetting != null) {
+			reloadSettings = reloadSetting;
+        }
 
-		forceReload();
-	}
+        forceReload();
+    }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Abstract methods to implement
-	// ----------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------
+    // Abstract methods to implement
+    // ----------------------------------------------------------------------------------------------------
 
-	@Override
-	protected Map<String, Object> readToMap() {
-		return lightningEditor.readData();
-	}
+    @Override
+    protected Map<String, Object> readToMap() {
+        return lightningEditor.readData();
+    }
 
-	@Override
-	protected void write(FileData data) {
-		lightningEditor.writeData(data.toMap(), configSettings);
-	}
+    @Override
+    protected void write(FileData data) {
+        lightningEditor.writeData(data.toMap(), configSettings);
+    }
 }
