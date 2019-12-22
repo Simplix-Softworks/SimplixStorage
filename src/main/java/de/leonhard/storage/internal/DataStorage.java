@@ -230,6 +230,7 @@ public interface DataStorage {
 		}
 	}
 
+
 	/**
 	 * Mix of setDefault & getDefault.
 	 * <p>
