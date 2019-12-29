@@ -11,10 +11,10 @@ import java.util.List;
  */
 @UtilityClass
 public class YamlStringEditor {
-	public List<String> getCommentsFromLines(List<String> lines) {
-		List<String> result = new ArrayList<>();
+	public List<String> getCommentsFromLines(final List<String> lines) {
+		final List<String> result = new ArrayList<>();
 
-		for (String line : lines) {
+		for (final String line : lines) {
 			if (line.startsWith("#")) {
 				result.add(line);
 			}
@@ -22,10 +22,10 @@ public class YamlStringEditor {
 		return result;
 	}
 
-	public List<String> getFooterFromLines(List<String> lines) {
-		List<String> result = new ArrayList<>();
+	public List<String> getFooterFromLines(final List<String> lines) {
+		final List<String> result = new ArrayList<>();
 		Collections.reverse(lines);
-		for (String line : lines) {
+		for (final String line : lines) {
 			if (!line.startsWith("#")) {
 				Collections.reverse(result);
 				return result;
@@ -36,10 +36,10 @@ public class YamlStringEditor {
 		return result;
 	}
 
-	public List<String> getHeaderFromLines(List<String> lines) {
-		List<String> result = new ArrayList<>();
+	public List<String> getHeaderFromLines(final List<String> lines) {
+		final List<String> result = new ArrayList<>();
 
-		for (String line : lines) {
+		for (final String line : lines) {
 			if (!line.startsWith("#")) {
 				return result;
 			}
@@ -51,10 +51,10 @@ public class YamlStringEditor {
 	/**
 	 * @return List of comments that don't belong to header or footer
 	 */
-	public List<String> getPureCommentsFromLines(List<String> lines) {
-		List<String> comments = getCommentsFromLines(lines);
-		List<String> header = getHeaderFromLines(lines);
-		List<String> footer = getFooterFromLines(lines);
+	public List<String> getPureCommentsFromLines(final List<String> lines) {
+		final List<String> comments = getCommentsFromLines(lines);
+		final List<String> header = getHeaderFromLines(lines);
+		final List<String> footer = getFooterFromLines(lines);
 
 		comments.removeAll(header);
 		comments.removeAll(footer);
@@ -62,9 +62,9 @@ public class YamlStringEditor {
 		return comments;
 	}
 
-	public List<String> getLinesWithoutFooterAndHeaderFromLines(List<String> lines) {
-		List<String> header = getHeaderFromLines(lines);
-		List<String> footer = getFooterFromLines(lines);
+	public List<String> getLinesWithoutFooterAndHeaderFromLines(final List<String> lines) {
+		final List<String> header = getHeaderFromLines(lines);
+		final List<String> footer = getFooterFromLines(lines);
 
 		lines.removeAll(header);
 		lines.removeAll(footer);
@@ -72,10 +72,10 @@ public class YamlStringEditor {
 		return lines;
 	}
 
-	public List<String> getKeys(List<String> lines) {
-		List<String> result = new ArrayList<>();
+	public List<String> getKeys(final List<String> lines) {
+		final List<String> result = new ArrayList<>();
 
-		for (String line : lines) {
+		for (final String line : lines) {
 			if (!line.replaceAll("\\s+", "").startsWith("#")) {
 				result.add(line);
 			}

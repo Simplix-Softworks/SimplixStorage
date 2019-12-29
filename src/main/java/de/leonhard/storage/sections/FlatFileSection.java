@@ -19,7 +19,7 @@ public class FlatFileSection implements DataStorage {
 	}
 
 	@Override
-	public Set<String> singleLayerKeySet(String key) {
+	public Set<String> singleLayerKeySet(final String key) {
 		return flatFile.singleLayerKeySet(createFinalKey(key));
 	}
 
@@ -29,31 +29,31 @@ public class FlatFileSection implements DataStorage {
 	}
 
 	@Override
-	public Set<String> keySet(String key) {
+	public Set<String> keySet(final String key) {
 		return flatFile.keySet(createFinalKey(key));
 	}
 
 	@Override
-	public void remove(String key) {
+	public void remove(final String key) {
 		flatFile.remove(createFinalKey(key));
 	}
 
 	@Override
-	public void set(String key, Object value) {
+	public void set(final String key, final Object value) {
 		flatFile.set(createFinalKey(key), value);
 	}
 
 	@Override
-	public boolean contains(String key) {
+	public boolean contains(final String key) {
 		return flatFile.contains(createFinalKey(key));
 	}
 
 	@Override
-	public Object get(String key) {
+	public Object get(final String key) {
 		return flatFile.get(createFinalKey(key));
 	}
 
-	private String createFinalKey(String key) {
+	private String createFinalKey(final String key) {
 		return pathPrefix == null || pathPrefix.isEmpty() ? key : pathPrefix + "." + key;
 	}
 }

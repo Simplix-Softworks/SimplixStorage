@@ -12,21 +12,21 @@ import java.util.List;
  */
 @UtilityClass
 public class LightningSerializer {
-	private final List<LightningSerializable> serializes = Collections.synchronizedList(new ArrayList<>());
+	private final List<LightningSerializable<?>> serializes = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * Register a serializable to our list
 	 *
 	 * @param lightningSerializable Serializable to register
 	 */
-	public void registerSerializable(LightningSerializable lightningSerializable) {
+	public void registerSerializable(final LightningSerializable<?> lightningSerializable) {
 		Valid.notNull(lightningSerializable, "Serializable mustn't be null");
 		Valid.notNull(lightningSerializable.getClazz(), "Class mustn't be null");
 		serializes.add(lightningSerializable);
 	}
 
-	public LightningSerializable findSerializable(Class<?> clazz) {
-		for (LightningSerializable serializable : serializes) {
+	public LightningSerializable<?> findSerializable(final Class<?> clazz) {
+		for (final LightningSerializable<?> serializable : serializes) {
 			if (serializable.getClazz().equals(clazz)) {
 				return serializable;
 			}
@@ -34,17 +34,16 @@ public class LightningSerializer {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> T serialize(Object obj, Class<T> clazz) {
-		LightningSerializable serializable = findSerializable(clazz);
+	@SuppressWarnings("ALL")
+	public <T> T serialize(final Object obj, final Class<T> clazz) {
+		final LightningSerializable serializable = findSerializable(clazz);
 		Valid.notNull(serializable, "No serializable found for '" + clazz.getSimpleName() + "'");
-		return (T) serializable.deserialize(obj);
+		return (T) serializable.serialize(obj);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object deserialize(Object obj) {
-		LightningSerializable serializable = findSerializable(obj.getClass());
+	public Object deserialize(final Object obj) {
+		final LightningSerializable<?> serializable = findSerializable(obj.getClass());
 		Valid.notNull(serializable, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
-		return serializable.serialize(obj);
+		return serializable.deserialize(obj);
 	}
 }

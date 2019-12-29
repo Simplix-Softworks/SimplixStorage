@@ -31,7 +31,7 @@ public class LightningProviders {
 		if (yamlConfig != null) {
 			return yamlConfig;
 		}
-		YamlConfig config = new YamlConfig();
+		final YamlConfig config = new YamlConfig();
 		//Use unicode
 		config.writeConfig.setEscapeUnicode(false);
 		//Don't use anchors

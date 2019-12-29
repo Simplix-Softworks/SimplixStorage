@@ -47,27 +47,27 @@ public class YamlEditor {
 	// ----------------------------------------------------------------------------------------------------
 	// Writing specific things from File
 	// ----------------------------------------------------------------------------------------------------
-	public void write(List<String> lines) {
+	public void write(final List<String> lines) {
 		FileUtils.write(file, lines);
 	}
 
-	public void setHeader(List<String> header) {
-		List<String> lines = read();
+	public void setHeader(final List<String> header) {
+		final List<String> lines = read();
 
-		//Remove old header
+		// Remove old header
 		lines.removeAll(readHeader());
 
-		//Adding new header in front
+		// Adding new header in front
 		for (int i = 0; i < header.size(); i++) {
 			lines.add(i, header.get(i));
 		}
 
-		//Write to file
+		// Write to file
 		write(lines);
 	}
 
-	public void addHeader(List<String> header) {
-		List<String> lines = read();
+	public void addHeader(final List<String> header) {
+		final List<String> lines = read();
 		for (int i = 0; i < header.size(); i++) {
 			lines.add(i, header.get(i));
 		}

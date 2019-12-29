@@ -29,7 +29,7 @@ public class Yaml extends FlatFile {
 	@Setter
 	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-	public Yaml(Yaml yaml) {
+	public Yaml(final Yaml yaml) {
 		super(yaml.getFile());
 		this.fileData = yaml.getFileData();
 		this.yamlEditor = yaml.getYamlEditor();
@@ -37,20 +37,16 @@ public class Yaml extends FlatFile {
 		this.configSettings = yaml.getConfigSettings();
 	}
 
-	public Yaml(String name, String path) {
+	public Yaml(final String name, final String path) {
 		this(name, path, null, null, null, null);
 	}
 
-	public Yaml(String name, String path, InputStream inputStream) {
+	public Yaml(final String name, final String path, final InputStream inputStream) {
 		this(name, path, inputStream, null, null, null);
 	}
 
-	public Yaml(String name,
-	            String path,
-	            InputStream inputStream,
-	            ReloadSettings reloadSettings,
-	            ConfigSettings configSettings,
-	            DataType dataType) {
+	public Yaml(final String name, final String path, final InputStream inputStream,
+	            final ReloadSettings reloadSettings, final ConfigSettings configSettings, final DataType dataType) {
 		super(name, path, FileType.YAML);
 
 		if (create() && inputStream != null) {
@@ -82,30 +78,28 @@ public class Yaml extends FlatFile {
 	// ----------------------------------------------------------------------------------------------------
 
 	@Override
-	public void set(String key, Object value) {
+	public void set(final String key, final Object value) {
 		set(key, value, this.configSettings);
 	}
 
 	@Synchronized
-	public void set(String key, Object value, ConfigSettings configSettings) {
+	public void set(final String key, final Object value, final ConfigSettings configSettings) {
 		reloadIfNeeded();
 
-		String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
+		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
 		fileData.insert(finalKey, value);
 
 		try {
-			//If Comments shouldn't be preserved
+			// If Comments shouldn't be preserved
 			if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
 				write(fileData);
 				return;
 			}
 
-
-			List<String> unEdited = yamlEditor.read();
-			List<String> header = yamlEditor.readHeader();
-			List<String> footer = yamlEditor.readFooter();
+			final List<String> unEdited = yamlEditor.read();
+			final List<String> header = yamlEditor.readHeader();
+			final List<String> footer = yamlEditor.readFooter();
 			write();
 			header.addAll(yamlEditor.read());
 			if (!header.containsAll(footer)) {
@@ -113,7 +107,7 @@ public class Yaml extends FlatFile {
 			}
 			write();
 			yamlEditor.write(parser.parseComments(unEdited, header));
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			System.err.println("Error while writing '" + getName() + "'");
 			ex.printStackTrace();
 		}
@@ -125,13 +119,13 @@ public class Yaml extends FlatFile {
 
 	@Override
 	protected Map<String, Object> readToMap() throws IOException {
-		@Cleanup YamlReader reader = new YamlReader(new FileReader(getFile()));
+		@Cleanup final YamlReader reader = new YamlReader(new FileReader(getFile()));
 		return reader.readToMap();
 	}
 
 	@Override
-	protected void write(FileData data) throws IOException {
-		@Cleanup YamlWriter writer = new YamlWriter(file);
+	protected void write(final FileData data) throws IOException {
+		@Cleanup final YamlWriter writer = new YamlWriter(file);
 		writer.write(data.toMap());
 	}
 
@@ -143,11 +137,11 @@ public class Yaml extends FlatFile {
 		return yamlEditor.readHeader();
 	}
 
-	public void setHeader(List<String> header) {
+	public void setHeader(final List<String> header) {
 		yamlEditor.setHeader(header);
 	}
 
-	public void addHeader(List<String> toAdd) {
+	public void addHeader(final List<String> toAdd) {
 		yamlEditor.addHeader(toAdd);
 	}
 }

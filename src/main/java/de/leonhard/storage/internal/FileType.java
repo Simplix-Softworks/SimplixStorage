@@ -9,29 +9,29 @@ import java.io.File;
 @Getter
 @RequiredArgsConstructor
 public enum FileType {
-    JSON("json"),
-    YAML("yml"),
-    TOML("toml"),
-    CSV("csv"),
-    LS("ls");
+	JSON("json"),
+	YAML("yml"),
+	TOML("toml"),
+	CSV("csv"),
+	LS("ls");
 
-    private final String extension;
+	private final String extension;
 
-    public static FileType fromFile(File file) {
-        return fromExtension(FileUtils.getExtension(file));
-    }
+	public static FileType fromFile(File file) {
+		return fromExtension(FileUtils.getExtension(file));
+	}
 
-    public static FileType fromExtension(String type) {
-        for (final FileType value : values()) {
-            if (!value.extension.equalsIgnoreCase(type)) {
-                continue;
-            }
-            return value;
-        }
-        return null;
-    }
+	public static FileType fromExtension(String type) {
+		for (final FileType value : values()) {
+			if (!value.extension.equalsIgnoreCase(type)) {
+				continue;
+			}
+			return value;
+		}
+		return null;
+	}
 
-    public static FileType fromExtension(File file) {
-        return fromExtension(FileUtils.getExtension(file));
-    }
+	public static FileType fromExtension(File file) {
+		return fromExtension(FileUtils.getExtension(file));
+	}
 }

@@ -12,11 +12,11 @@ import java.io.Writer;
  */
 public class YamlWriter extends com.esotericsoftware.yamlbeans.YamlWriter implements AutoCloseable {
 
-	public YamlWriter(Writer writer) {
+	public YamlWriter(final Writer writer) {
 		super(writer, LightningProviders.getYamlConfig());
 	}
 
-	public YamlWriter(File file) {
+	public YamlWriter(final File file) {
 		this(FileUtils.createWriter(file));
 	}
 }

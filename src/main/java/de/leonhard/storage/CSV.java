@@ -7,7 +7,7 @@ import de.leonhard.storage.internal.FlatFile;
 import java.util.Map;
 
 class CSV extends FlatFile {
-	private CSV(String name, String path) {
+	private CSV(final String name, final String path) {
 		super(name, path, FileType.CSV);
 	}
 
@@ -17,7 +17,7 @@ class CSV extends FlatFile {
 	}
 
 	@Override
-	protected void write(FileData data) {
+	protected void write(final FileData data) {
 
 	}
 }

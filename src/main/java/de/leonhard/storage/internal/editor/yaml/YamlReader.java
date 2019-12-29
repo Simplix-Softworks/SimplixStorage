@@ -13,21 +13,21 @@ import java.util.Map;
  * implements AutoClosable
  */
 public class YamlReader extends com.esotericsoftware.yamlbeans.YamlReader implements AutoCloseable {
-	public YamlReader(Reader reader) {
+	public YamlReader(final Reader reader) {
 		super(reader);
 	}
 
-	public YamlReader(File file) {
+	public YamlReader(final File file) {
 		super(FileUtils.createReader(file));
 	}
 
-	public YamlReader(String yaml) {
+	public YamlReader(final String yaml) {
 		super(yaml);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> readToMap() throws YamlException {
-		Object obj = read();
+		final Object obj = read();
 		return obj == null ? new HashMap<>() : (Map<String, Object>) obj;
 	}
 }

@@ -22,87 +22,88 @@ import java.util.Map;
 @Getter
 public class Json extends FlatFile {
 
-    public Json(Json json) {
-        super(json.getFile(), json.fileType);
-        fileData = json.getFileData();
-    }
+	public Json(final Json json) {
+		super(json.getFile(), json.fileType);
+		fileData = json.getFileData();
+	}
 
-    public Json(String name, String path) {
-        this(name, path, null);
-    }
+	public Json(final String name, final String path) {
+		this(name, path, null);
+	}
 
-    public Json(String name, String path, InputStream inputStream) {
-        this(name, path, inputStream, null);
-    }
+	public Json(final String name, final String path, final InputStream inputStream) {
+		this(name, path, inputStream, null);
+	}
 
-    public Json(String name, String path, InputStream inputStream, ReloadSettings reloadSettings) {
-        super(name, path, FileType.JSON);
+	public Json(final String name, final String path, final InputStream inputStream,
+	            final ReloadSettings reloadSettings) {
+		super(name, path, FileType.JSON);
 
-        if (create() || file.length() == 0) {
-            if (inputStream != null) {
-                FileUtils.writeToFile(file, inputStream);
-            }
+		if (create() || file.length() == 0) {
+			if (inputStream != null) {
+				FileUtils.writeToFile(file, inputStream);
+			}
 
-        }
+		}
 
-        if (reloadSettings != null) {
-            this.reloadSettings = reloadSettings;
-        }
-        forceReload();
-    }
+		if (reloadSettings != null) {
+			this.reloadSettings = reloadSettings;
+		}
+		forceReload();
+	}
 
-    public Json(File file) {
-        super(file, FileType.JSON);
-        create();
-        forceReload();
-    }
+	public Json(final File file) {
+		super(file, FileType.JSON);
+		create();
+		forceReload();
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Methods to override (Points where JSON is unspecific for typical FlatFiles)
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Methods to override (Points where JSON is unspecific for typical FlatFiles)
+	// ----------------------------------------------------------------------------------------------------
 
-    /**
-     * Gets a Map by key Although used to get nested objects {@link Json}
-     *
-     * @param key Path to Map-List in JSON
-     * @return Map
-     */
+	/**
+	 * Gets a Map by key Although used to get nested objects {@link Json}
+	 *
+	 * @param key Path to Map-List in JSON
+	 * @return Map
+	 */
 
-    @Override
-    public Map getMap(String key) {
-        String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-        if (!contains(finalKey)) {
-            return new HashMap();
-        } else {
-            Object map = get(key);
-            if (map instanceof Map) {
-                return (Map<?, ?>) fileData.get(key);
-            } else if (map instanceof JSONObject) {
-                return ((JSONObject) map).toMap();
-            }
-            //Exception in casting
-            throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
-        }
-    }
+	@Override
+	public Map getMap(final String key) {
+		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+		if (!contains(finalKey)) {
+			return new HashMap();
+		} else {
+			final Object map = get(key);
+			if (map instanceof Map) {
+				return (Map<?, ?>) fileData.get(key);
+			} else if (map instanceof JSONObject) {
+				return ((JSONObject) map).toMap();
+			}
+			// Exception in casting
+			throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
+		}
+	}
 
-    // ----------------------------------------------------------------------------------------------------
-    // Abstract methods to implement
-    // ----------------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------------
+	// Abstract methods to implement
+	// ----------------------------------------------------------------------------------------------------
 
-    @Override
-    protected Map<String, Object> readToMap() throws IOException {
-        if (file.length() == 0) {
-            Files.write(file.toPath(), Collections.singletonList("{}"));
-        }
+	@Override
+	protected Map<String, Object> readToMap() throws IOException {
+		if (file.length() == 0) {
+			Files.write(file.toPath(), Collections.singletonList("{}"));
+		}
 
-        final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
-        return new JSONObject(jsonTokener).toMap();
-    }
+		final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
+		return new JSONObject(jsonTokener).toMap();
+	}
 
-    @Override
-    protected void write(FileData data) throws IOException {
-        @Cleanup Writer writer = FileUtils.createWriter(file);
-        writer.write(data.toJsonObject().toString(3));
-        writer.flush();
-    }
+	@Override
+	protected void write(final FileData data) throws IOException {
+		@Cleanup final Writer writer = FileUtils.createWriter(file);
+		writer.write(data.toJsonObject().toString(3));
+		writer.flush();
+	}
 }
