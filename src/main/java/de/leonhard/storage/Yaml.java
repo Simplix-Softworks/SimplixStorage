@@ -45,8 +45,12 @@ public class Yaml extends FlatFile {
 		this(name, path, inputStream, null, null, null);
 	}
 
-	public Yaml(final String name, final String path, final InputStream inputStream,
-	            final ReloadSettings reloadSettings, final ConfigSettings configSettings, final DataType dataType) {
+	public Yaml(final String name,
+	            final String path,
+	            final InputStream inputStream,
+	            final ReloadSettings reloadSettings,
+	            final ConfigSettings configSettings,
+	            final DataType dataType) {
 		super(name, path, FileType.YAML);
 
 		if (create() && inputStream != null) {

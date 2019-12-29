@@ -27,7 +27,9 @@ public class Toml extends FlatFile {
 		this(name, path, inputStream, null);
 	}
 
-	public Toml(final String name, final String path, final InputStream inputStream,
+	public Toml(final String name,
+	            final String path,
+	            final InputStream inputStream,
 	            final ReloadSettings reloadSettings) {
 		super(name, path, FileType.TOML);
 

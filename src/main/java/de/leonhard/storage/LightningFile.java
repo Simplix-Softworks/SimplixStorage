@@ -36,8 +36,11 @@ public class LightningFile extends FlatFile {
 		this(name, path, inputStream, null, null);
 	}
 
-	public LightningFile(final String name, final String path, final InputStream inputStream,
-	                     final ReloadSettings reloadSetting, final ConfigSettings configSettings) {
+	public LightningFile(final String name,
+	                     final String path,
+	                     final InputStream inputStream,
+	                     final ReloadSettings reloadSetting,
+	                     final ConfigSettings configSettings) {
 		super(name, path, FileType.LS);
 
 		lightningEditor = new LightningEditor(file);

@@ -35,7 +35,9 @@ public class Json extends FlatFile {
 		this(name, path, inputStream, null);
 	}
 
-	public Json(final String name, final String path, final InputStream inputStream,
+	public Json(final String name,
+	            final String path,
+	            final InputStream inputStream,
 	            final ReloadSettings reloadSettings) {
 		super(name, path, FileType.JSON);
 

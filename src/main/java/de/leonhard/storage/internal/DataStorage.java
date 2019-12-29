@@ -37,7 +37,7 @@ public interface DataStorage {
 	 * @param value The value you want to set in your data-structure.
 	 */
 	default void setSerializable(final String key, final Object value) {
-		Object data = LightningSerializer.deserialize(value);
+		final Object data = LightningSerializer.deserialize(value);
 		set(key, data);
 	}
 
@@ -169,8 +169,8 @@ public interface DataStorage {
 		return getOrDefault(key, new ArrayList<>());
 	}
 
-	default Map getMap(final String key) {
-		return (Map) get(key);
+	default Map<?, ?> getMap(final String key) {
+		return (Map<?, ?>) get(key);
 	}
 
 	/**
@@ -182,7 +182,7 @@ public interface DataStorage {
 	 * @return Serialized Enum
 	 */
 	default <E extends Enum<E>> E getEnum(final String key, final Class<E> enumType) {
-		Object object = get(key);
+		final Object object = get(key);
 		Valid.checkBoolean(object instanceof String, "No usable Enum-Value found for '" + key + "'.");
 		return Enum.valueOf(enumType, (String) object);
 	}

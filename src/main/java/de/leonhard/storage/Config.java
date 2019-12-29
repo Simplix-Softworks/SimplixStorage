@@ -25,8 +25,12 @@ public class Config extends Yaml {
 		this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
 	}
 
-	public Config(final String name, final String path, final InputStream inputStream,
-	              final ReloadSettings reloadSettings, final ConfigSettings configSettings, final DataType dataType) {
+	public Config(final String name,
+	              final String path,
+	              final InputStream inputStream,
+	              final ReloadSettings reloadSettings,
+	              final ConfigSettings configSettings,
+	              final DataType dataType) {
 		super(name, path, inputStream, reloadSettings, configSettings, dataType);
 		setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}
