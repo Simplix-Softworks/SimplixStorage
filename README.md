@@ -79,7 +79,7 @@ LightningFile is our own implementation of a config file format. It has quite go
 
 3. Important! Use a shade plugin to make sure that the library is shaded into your final .jar file when your
 plugin is compiled. 
-The relocation is optional but heavily recommended. (Just change 'yourpackage.yourname') 
+The relocation is optional but heavily recommended. (Just change 'yourpackage.yourname' to the needed values) 
 
 ```xml
 <plugin>
