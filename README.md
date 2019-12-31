@@ -107,7 +107,7 @@ The relocation is optional but heavily recommended. (Just change 'yourpackage.yo
 ```      
 
 
-**Library's used**
+**Library's used:**
 
 LightningStorage uses a powerful combination of libraries to provide the best usability: 
 
