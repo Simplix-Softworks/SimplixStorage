@@ -36,7 +36,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 			file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
 		} else {
 			final String fixedPath = path.replace("\\", "/");
-			file = new File(fixedPath + File.separator + name + "." + fileType.getExtension());
+			file = new File(fixedPath + File.separator + FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
 		}
 	}
 

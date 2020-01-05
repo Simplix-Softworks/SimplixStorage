@@ -59,7 +59,7 @@ public class FileUtils {
 		if (!fileName.contains(".")) {
 			return fileName;
 		}
-		return fileName.replace(getExtension(fileName), "");
+		return fileName.replace("." + getExtension(fileName), "");
 	}
 
 	public String getParentDirPath(final File file) {
@@ -145,7 +145,7 @@ public class FileUtils {
 	}
 
 	public void writeToFile(final File file, final InputStream inputStream) {
-		try (FileOutputStream outputStream = new FileOutputStream(file)) {
+		try (final FileOutputStream outputStream = new FileOutputStream(file)) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());
 			} else {
