@@ -15,6 +15,43 @@ import java.util.List;
 @UtilityClass
 public class FileUtils {
 
+	// ----------------------------------------------------------------------------------------------------
+	// Getting Files
+	// ----------------------------------------------------------------------------------------------------
+
+	public List<File> listFiles(final File folder) {
+		return listFiles(folder, null);
+	}
+
+	/**
+	 * Returns a List of Files in a folder which
+	 * ends with a specific extension.
+	 * <p>
+	 * If there are no files in the folder or the folder is not found,
+	 * an empty list is returned instead of null.
+	 *
+	 * @param folder    Folder to search in.
+	 * @param extension Extension to search for. Set to null to skip extension validation.
+	 */
+	public List<File> listFiles(final File folder, final String extension) {
+		final List<File> result = new ArrayList<>();
+
+		final File[] files = folder.listFiles();
+
+		if (files == null) {
+			return result;
+		}
+
+		for (final File file : files) {
+			//if the extension is null we always add the file.
+			if (extension == null || file.getName().endsWith(extension)) {
+				result.add(file);
+			}
+		}
+
+		return result;
+	}
+
 	public File getAndMake(final String name, final String path) {
 		Valid.notNull(name);
 		Valid.notNull(path);
