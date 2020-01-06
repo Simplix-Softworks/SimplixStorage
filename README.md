@@ -72,7 +72,7 @@ LightningFile is our own implementation of a config file format. It has quite go
 <dependency>
   <groupId>com.github.JavaFactoryDev</groupId>
   <artifactId>LightningStorage</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
 </dependency>
 ```       
     
