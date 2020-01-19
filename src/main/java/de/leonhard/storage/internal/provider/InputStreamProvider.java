@@ -2,9 +2,9 @@ package de.leonhard.storage.internal.provider;
 
 import java.io.InputStream;
 
-public interface InputStreamProvider {
+public abstract class InputStreamProvider {
 
-	default InputStream createInputStreamFromInnerResource(final String resourceName) {
+	public InputStream createInputStreamFromInnerResource(final String resourceName) {
 		return getClass().getClassLoader().getResourceAsStream(resourceName);
 	}
 }
