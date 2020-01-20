@@ -1,29 +1,35 @@
 package de.leonhard.storage.internal.settings;
 
 import de.leonhard.storage.internal.provider.LightningProviders;
+import de.leonhard.storage.internal.provider.MapProvider;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
 /**
  * An Enum defining how the Data should be stored
  */
+@RequiredArgsConstructor
 public enum DataType {
+
 
 	SORTED {
 		@Override
 		public Map<String, Object> getMapImplementation() {
-			return LightningProviders.getMapProvider().getSortedMapImplementation();
+			return mapProvider.getSortedMapImplementation();
 		}
 	},
 
 	UNSORTED {
 		@Override
 		public Map<String, Object> getMapImplementation() {
-			return LightningProviders.getMapProvider().getSortedMapImplementation();
+			return mapProvider.getSortedMapImplementation();
 		}
 	};
 
-	public static DataType fromConfigSettings(ConfigSettings configSettings) {
+	private static final MapProvider mapProvider = LightningProviders.mapProvider();
+
+	public static DataType fromConfigSettings(final ConfigSettings configSettings) {
 		//Only Configs needs the preservation of the order of the keys
 		if (ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
 			return SORTED;

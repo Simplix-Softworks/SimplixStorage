@@ -73,7 +73,9 @@ public final class TomlWriter {
 	 * @param indentWithSpaces true to indent with spaces, false to indent with tabs
 	 * @param lineSeparator    the String to write to break lines
 	 */
-	public TomlWriter(final Writer writer, final int indentSize, final boolean indentWithSpaces,
+	public TomlWriter(final Writer writer,
+	                  final int indentSize,
+	                  final boolean indentWithSpaces,
 	                  final String lineSeparator) {
 		this.writer = writer;
 		this.indentSize = indentSize;
@@ -81,31 +83,31 @@ public final class TomlWriter {
 		this.lineSeparator = lineSeparator;
 	}
 
-	private static void addEscaped(final char c, final StringBuilder sb) {
+	private static void addEscaped(final StringBuilder stringBuilder, final char c) {
 		switch (c) {
 			case '\b':
-				sb.append("\\b");
+				stringBuilder.append("\\b");
 				break;
 			case '\t':
-				sb.append("\\t");
+				stringBuilder.append("\\t");
 				break;
 			case '\n':
-				sb.append("\\n");
+				stringBuilder.append("\\n");
 				break;
 			case '\\':
-				sb.append("\\\\");
+				stringBuilder.append("\\\\");
 				break;
 			case '\r':
-				sb.append("\\r");
+				stringBuilder.append("\\r");
 				break;
 			case '\f':
-				sb.append("\\f");
+				stringBuilder.append("\\f");
 				break;
 			case '"':
-				sb.append("\\\"");
+				stringBuilder.append("\\\"");
 				break;
 			default:
-				sb.append(c);
+				stringBuilder.append(c);
 				break;
 		}
 	}
@@ -262,17 +264,17 @@ public final class TomlWriter {
 	}
 
 	private void writeString(final String str) throws IOException {
-		final StringBuilder sb = new StringBuilder();
-		sb.append('"');
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append('"');
 		for (int i = 0; i < str.length(); i++) {
 			final char c = str.charAt(i);
-			addEscaped(c, sb);
+			addEscaped(stringBuilder, c);
 		}
-		sb.append('"');
-		write(sb.toString());
+		stringBuilder.append('"');
+		write(stringBuilder.toString());
 	}
 
-	private void writeArray(final Collection c) throws IOException {
+	private void writeArray(final Collection<?> c) throws IOException {
 		write('[');
 		for (final Object element : c) {
 			writeValue(element);

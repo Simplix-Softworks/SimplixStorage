@@ -2,6 +2,7 @@ package de.leonhard.storage.internal.provider;
 
 import com.esotericsoftware.yamlbeans.YamlConfig;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -10,6 +11,7 @@ import lombok.experimental.UtilityClass;
  * Used in {@link de.leonhard.storage.internal.settings.DataType} Enum
  */
 @UtilityClass
+@Accessors(fluent = true, chain = true)
 public class LightningProviders {
 	@Setter
 	private MapProvider mapProvider;
@@ -18,7 +20,7 @@ public class LightningProviders {
 	@Setter
 	private InputStreamProvider inputStreamProvider;
 
-	public MapProvider getMapProvider() {
+	public MapProvider mapProvider() {
 		if (mapProvider != null) {
 			return mapProvider;
 		}
@@ -27,7 +29,7 @@ public class LightningProviders {
 		};
 	}
 
-	public YamlConfig getYamlConfig() {
+	public YamlConfig yamlConfig() {
 		if (yamlConfig != null) {
 			return yamlConfig;
 		}
@@ -41,7 +43,7 @@ public class LightningProviders {
 		return yamlConfig = config;
 	}
 
-	public InputStreamProvider getInputStreamProvider() {
+	public InputStreamProvider inputStreamProvider() {
 		if (inputStreamProvider != null) {
 			return inputStreamProvider;
 		}

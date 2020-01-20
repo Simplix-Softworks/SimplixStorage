@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.internal.provider.InputStreamProvider;
 import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
@@ -12,6 +13,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 public final class LightningBuilder {
+	private final InputStreamProvider inputStreamProvider;
+
 	private final String path;
 	private String name;
 	private InputStream inputStream;
@@ -19,9 +22,10 @@ public final class LightningBuilder {
 	private ConfigSettings configSettings;
 	private DataType dataType;
 
-	private LightningBuilder(final String name, final String path) {
+	private LightningBuilder(final String name, final String path, final InputStreamProvider inputStreamProvider) {
 		this.name = name;
 		this.path = path;
+		this.inputStreamProvider = inputStreamProvider;
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -30,7 +34,7 @@ public final class LightningBuilder {
 
 	public static LightningBuilder fromPath(final String name, final String path) {
 		Valid.notNull(name, "Name mustn't be null");
-		return new LightningBuilder(name, path);
+		return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
 	}
 
 	public static LightningBuilder fromPath(final Path path) {
@@ -45,7 +49,11 @@ public final class LightningBuilder {
 				"Please use from Directory to use a directory",
 				"This is due to Java-Internals");
 
-		return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file));
+		return new LightningBuilder(
+				FileUtils.replaceExtensions(file.getName()),
+				FileUtils.getParentDirPath(file),
+				LightningProviders.inputStreamProvider()
+		);
 	}
 
 	public static LightningBuilder fromDirectory(final File file) {
@@ -57,7 +65,7 @@ public final class LightningBuilder {
 		}
 
 		//Will return the name of the folder as default name
-		return new LightningBuilder(file.getName(), file.getAbsolutePath());
+		return new LightningBuilder(file.getName(), file.getAbsolutePath(), LightningProviders.inputStreamProvider());
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -72,7 +80,7 @@ public final class LightningBuilder {
 	}
 
 	public LightningBuilder addInputStreamFromResource(final String resource) {
-		inputStream = LightningProviders.getInputStreamProvider().createInputStreamFromInnerResource(resource);
+		inputStream = inputStreamProvider.createInputStreamFromInnerResource(resource);
 
 		Valid.notNull(inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
 		return this;
