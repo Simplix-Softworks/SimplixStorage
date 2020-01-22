@@ -6,6 +6,10 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Valid {
 
+	public void error(final String... errorMessage) {
+		throw new LightningValidationException(errorMessage);
+	}
+
 	public void checkBoolean(final boolean condition) {
 		checkBoolean(condition, "Valid.checkBoolean(): Condition is False.");
 	}
