@@ -135,7 +135,7 @@ public class FileUtils {
 			System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
 			System.err.println("At: '" + file.getAbsolutePath() + "'");
 			ex.printStackTrace();
-			throw new IllegalStateException("InputStream would be null");
+			throw new IllegalStateException(ex);
 		}
 	}
 
@@ -146,7 +146,7 @@ public class FileUtils {
 			System.err.println("Exception while creating OutputStream from '" + file.getName() + "'");
 			System.err.println("At: '" + file.getAbsolutePath() + "'");
 			ex.printStackTrace();
-			throw new IllegalStateException("OutputStream would be null");
+			throw new IllegalStateException(ex);
 		}
 	}
 
@@ -157,7 +157,7 @@ public class FileUtils {
 			System.err.println("Error while creating reader for '" + file.getName() + "'");
 			System.err.println("In '" + getParentDirPath(file) + "'");
 			ex.printStackTrace();
-			throw new IllegalStateException("Can't return null as reader");
+			throw new IllegalStateException(ex);
 		}
 	}
 
@@ -168,7 +168,7 @@ public class FileUtils {
 			System.err.println("Error while creating reader for '" + file.getName() + "'");
 			System.err.println("In '" + getParentDirPath(file) + "'");
 			ex.printStackTrace();
-			throw new IllegalStateException("Can't return null as writer");
+			throw new IllegalStateException(ex);
 		}
 	}
 

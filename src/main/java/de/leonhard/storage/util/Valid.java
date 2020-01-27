@@ -6,6 +6,10 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Valid {
 
+	public void error(final Throwable cause, final String... messages) {
+		throw new LightningValidationException(cause, messages);
+	}
+
 	public void error(final String... errorMessage) {
 		throw new LightningValidationException(errorMessage);
 	}

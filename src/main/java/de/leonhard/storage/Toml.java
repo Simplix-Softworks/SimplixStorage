@@ -40,6 +40,7 @@ public class Toml extends FlatFile {
 		if (reloadSettings != null) {
 			this.reloadSettings = reloadSettings;
 		}
+
 		forceReload();
 	}
 
