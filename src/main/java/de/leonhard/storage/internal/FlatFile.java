@@ -40,9 +40,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 		}
 	}
 
-	protected FlatFile(final File file, final FileType fileType) {
-		Valid.notNull(file);
-		Valid.notNull(fileType);
+	protected FlatFile(@NonNull final File file, @NonNull final FileType fileType) {
 		this.file = file;
 		this.fileType = fileType;
 

@@ -7,6 +7,7 @@ import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
+import lombok.NonNull;
 
 import java.io.File;
 import java.io.InputStream;
@@ -32,17 +33,15 @@ public final class LightningBuilder {
 	// Creating our Builder
 	// ----------------------------------------------------------------------------------------------------
 
-	public static LightningBuilder fromPath(final String name, final String path) {
-		Valid.notNull(name, "Name mustn't be null");
+	public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path) {
 		return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
 	}
 
-	public static LightningBuilder fromPath(final Path path) {
+	public static LightningBuilder fromPath(@NonNull final Path path) {
 		return fromFile(path.toFile());
 	}
 
-	public static LightningBuilder fromFile(final File file) {
-		Valid.notNull(file, "File mustn't be null");
+	public static LightningBuilder fromFile(@NonNull final File file) {
 		//File shouldn't be a directory
 		Valid.checkBoolean(!file.isDirectory(),
 				"File mustn't be a directory.",
@@ -56,8 +55,7 @@ public final class LightningBuilder {
 		);
 	}
 
-	public static LightningBuilder fromDirectory(final File file) {
-		Valid.notNull(file, "File mustn't be null");
+	public static LightningBuilder fromDirectory(@NonNull final File file) {
 		Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
 		if (!file.exists()) {
@@ -72,51 +70,39 @@ public final class LightningBuilder {
 	// Adding out settings
 	// ----------------------------------------------------------------------------------------------------
 
-	public LightningBuilder addInputStreamFromFile(final File file) {
-		Valid.notNull(file, "File mustn't be null");
-
+	public LightningBuilder addInputStreamFromFile(@NonNull final File file) {
 		inputStream = FileUtils.createInputStream(file);
 		return this;
 	}
 
-	public LightningBuilder addInputStreamFromResource(final String resource) {
+	public LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
 		inputStream = inputStreamProvider.createInputStreamFromInnerResource(resource);
 
 		Valid.notNull(inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
 		return this;
 	}
 
-	public LightningBuilder setName(final String name) {
-		Valid.notNull(name, "Name mustn't be null.");
-
+	public LightningBuilder setName(@NonNull final String name) {
 		this.name = name;
 		return this;
 	}
 
-	public LightningBuilder addInputStream(final InputStream inputStream) {
-		Valid.notNull(inputStream, "InputStream mustn't be null");
-
+	public LightningBuilder addInputStream(@NonNull final InputStream inputStream) {
 		this.inputStream = inputStream;
 		return this;
 	}
 
-	public LightningBuilder setConfigSettings(final ConfigSettings configSettings) {
-		Valid.notNull(configSettings, "ConfigSettings mustn't be null");
-
+	public LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings) {
 		this.configSettings = configSettings;
 		return this;
 	}
 
-	public LightningBuilder setReloadSettings(final ReloadSettings reloadSettings) {
-		Valid.notNull(reloadSettings, "ReloadSettings mustn't be null");
-
+	public LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings) {
 		this.reloadSettings = reloadSettings;
 		return this;
 	}
 
-	public LightningBuilder setDataType(final DataType dataType) {
-		Valid.notNull(dataType, "DataType mustn't be null");
-
+	public LightningBuilder setDataType(@NonNull final DataType dataType) {
 		this.dataType = dataType;
 		return this;
 	}

@@ -1,6 +1,7 @@
 package de.leonhard.storage.util;
 
 import lombok.Cleanup;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.io.*;
@@ -19,7 +20,7 @@ public class FileUtils {
 	// Getting Files
 	// ----------------------------------------------------------------------------------------------------
 
-	public List<File> listFiles(final File folder) {
+	public List<File> listFiles(@NonNull final File folder) {
 		return listFiles(folder, null);
 	}
 
@@ -33,7 +34,7 @@ public class FileUtils {
 	 * @param folder    Folder to search in.
 	 * @param extension Extension to search for. Set to null to skip extension validation.
 	 */
-	public List<File> listFiles(final File folder, final String extension) {
+	public List<File> listFiles(@NonNull final File folder, @NonNull final String extension) {
 		final List<File> result = new ArrayList<>();
 
 		final File[] files = folder.listFiles();
@@ -52,14 +53,11 @@ public class FileUtils {
 		return result;
 	}
 
-	public File getAndMake(final String name, final String path) {
-		Valid.notNull(name);
-		Valid.notNull(path);
+	public File getAndMake(@NonNull final String name, @NonNull final String path) {
 		return getAndMake(new File(path, name));
 	}
 
-	public File getAndMake(final File file) {
-		Valid.notNull(file);
+	public File getAndMake(@NonNull final File file) {
 		try {
 			if (file.getParentFile() != null && !file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
@@ -81,26 +79,22 @@ public class FileUtils {
 	// Methods for handling the extension of files
 	// ----------------------------------------------------------------------------------------------------
 
-	public String getExtension(final String path) {
-		Valid.notNull(path);
+	public String getExtension(@NonNull final String path) {
 		return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1) : "";
 	}
 
-	public String getExtension(final File file) {
-		Valid.notNull(file);
+	public String getExtension(@NonNull final File file) {
 		return getExtension(file.getName());
 	}
 
-	public String replaceExtensions(final String fileName) {
-		Valid.notNull(fileName, "FileName mustn't be null");
+	public String replaceExtensions(@NonNull final String fileName) {
 		if (!fileName.contains(".")) {
 			return fileName;
 		}
 		return fileName.replace("." + getExtension(fileName), "");
 	}
 
-	public String getParentDirPath(final File file) {
-		Valid.notNull(file);
+	public String getParentDirPath(@NonNull final File file) {
 		return getParentDirPath(file.getAbsolutePath());
 	}
 
@@ -111,15 +105,16 @@ public class FileUtils {
 	 * @param fileOrDirPath Path to file
 	 * @return Path to file as String
 	 */
-	public String getParentDirPath(final String fileOrDirPath) {
-		Valid.notNull(fileOrDirPath);
+	public String getParentDirPath(@NonNull final String fileOrDirPath) {
 		final boolean endsWithSlash = fileOrDirPath.endsWith(File.separator);
 		return fileOrDirPath.substring(0, fileOrDirPath.lastIndexOf(File.separatorChar,
 				endsWithSlash ? fileOrDirPath.length() - 2 : fileOrDirPath.length() - 1));
 	}
 
 	public boolean hasChanged(final File file, final long timeStamp) {
-		Valid.notNull(file);
+		if (file == null) {
+			return false;
+		}
 		return timeStamp < file.lastModified();
 	}
 
@@ -127,8 +122,7 @@ public class FileUtils {
 	// Methods for reading & writing a file
 	// ----------------------------------------------------------------------------------------------------
 
-	public InputStream createInputStream(final File file) {
-		Valid.notNull(file);
+	public InputStream createInputStream(@NonNull final File file) {
 		try {
 			return Files.newInputStream(file.toPath());
 		} catch (final IOException ex) {
@@ -139,7 +133,7 @@ public class FileUtils {
 		}
 	}
 
-	public OutputStream createOutputStream(final File file) {
+	public OutputStream createOutputStream(@NonNull final File file) {
 		try {
 			return new FileOutputStream(file);
 		} catch (final FileNotFoundException ex) {
@@ -150,7 +144,7 @@ public class FileUtils {
 		}
 	}
 
-	public Reader createReader(final File file) {
+	public Reader createReader(@NonNull final File file) {
 		try {
 			return new FileReader(file);
 		} catch (final FileNotFoundException ex) {
@@ -161,7 +155,7 @@ public class FileUtils {
 		}
 	}
 
-	public Writer createWriter(final File file) {
+	public Writer createWriter(@NonNull final File file) {
 		try {
 			return new FileWriter(file);
 		} catch (final IOException ex) {
@@ -172,7 +166,7 @@ public class FileUtils {
 		}
 	}
 
-	public void write(final File file, final List<String> lines) {
+	public void write(@NonNull final File file, @NonNull final List<String> lines) {
 		try {
 			Files.write(file.toPath(), lines);
 		} catch (final IOException ex) {
@@ -181,7 +175,7 @@ public class FileUtils {
 		}
 	}
 
-	public void writeToFile(final File file, final InputStream inputStream) {
+	public void writeToFile(@NonNull final File file, @NonNull final InputStream inputStream) {
 		try (final FileOutputStream outputStream = new FileOutputStream(file)) {
 			if (!file.exists()) {
 				Files.copy(inputStream, file.toPath());
@@ -199,13 +193,13 @@ public class FileUtils {
 		}
 	}
 
-	public byte[] readAllBytes(final File file) {
+	public byte[] readAllBytes(@NonNull final File file) {
 		try {
 			return Files.readAllBytes(file.toPath());
 		} catch (final IOException ex) {
 			System.err.println("Exception while reading '" + file.getName() + "'");
 			System.err.println("In '" + getParentDirPath(file) + "'");
-			throw new IllegalStateException("Can't return null as byte[]");
+			throw new IllegalStateException(ex);
 		}
 	}
 
@@ -219,9 +213,7 @@ public class FileUtils {
 	// Misc
 	// ----------------------------------------------------------------------------------------------------
 
-	public void copyFolder(final File source, final File destination) throws IOException {
-		Valid.notNull(source);
-		Valid.notNull(destination);
+	public void copyFolder(@NonNull final File source, @NonNull final File destination) throws IOException {
 
 		if (source.isDirectory()) {
 			if (!destination.exists()) {

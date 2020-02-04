@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.serialize;
 
 import de.leonhard.storage.util.Valid;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Class to register serializable's
  */
+
 @UtilityClass
 public class LightningSerializer {
 	private final List<LightningSerializable<?>> serializes = Collections.synchronizedList(new ArrayList<>());
@@ -19,9 +21,8 @@ public class LightningSerializer {
 	 *
 	 * @param lightningSerializable Serializable to register
 	 */
-	public void registerSerializable(final LightningSerializable<?> lightningSerializable) {
-		Valid.notNull(lightningSerializable, "Serializable mustn't be null");
-		Valid.notNull(lightningSerializable.getClazz(), "Class mustn't be null");
+	public void registerSerializable(@NonNull final LightningSerializable<?> lightningSerializable) {
+		Valid.notNull(lightningSerializable.getClazz(), "Class of serializable mustn't be null");
 		serializes.add(lightningSerializable);
 	}
 
