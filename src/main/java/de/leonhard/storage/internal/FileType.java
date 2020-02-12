@@ -17,11 +17,11 @@ public enum FileType {
 
 	private final String extension;
 
-	public static FileType fromFile(File file) {
+	public static FileType fromFile(final File file) {
 		return fromExtension(FileUtils.getExtension(file));
 	}
 
-	public static FileType fromExtension(String type) {
+	public static FileType fromExtension(final String type) {
 		for (final FileType value : values()) {
 			if (!value.extension.equalsIgnoreCase(type)) {
 				continue;
@@ -31,7 +31,7 @@ public enum FileType {
 		return null;
 	}
 
-	public static FileType fromExtension(File file) {
+	public static FileType fromExtension(final File file) {
 		return fromExtension(FileUtils.getExtension(file));
 	}
 }

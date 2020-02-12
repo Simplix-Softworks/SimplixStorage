@@ -92,6 +92,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <minimizeJar>true</minimizeJar>
                     <relocations>
                         <relocation>
                             <pattern>org.json</pattern>
@@ -100,6 +101,10 @@
                         <relocation>
                             <pattern>com.esotericsoftware</pattern>
                             <shadedPattern>de.leonhard.storage.shaded.esotericsoftware</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.jetbrains</pattern>
+                            <shadedPattern>de.leonhard.storage.shaded.jetbrains</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -183,11 +188,6 @@
 
     <repositories>
         <repository>
-            <id>thewarking</id>
-            <url>http://thewarking.de:8081/repository/Storage/</url>
-        </repository>
-
-        <repository>
             <id>yamlbeans</id>
             <url>https://mvnrepository.com/artifact/com.esotericsoftware.yamlbeans/yamlbeans</url>
         </repository>
@@ -221,6 +221,13 @@
             <artifactId>lombok</artifactId>
             <version>1.18.10</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- JetBrains Annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>18.0.0</version>
         </dependency>
     </dependencies>
 </project>
