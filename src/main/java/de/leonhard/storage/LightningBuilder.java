@@ -8,6 +8,7 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
 import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -87,7 +88,7 @@ public final class LightningBuilder {
 		return this;
 	}
 
-	public LightningBuilder addInputStream(@NonNull final InputStream inputStream) {
+	public LightningBuilder addInputStream(@Nullable final InputStream inputStream) {
 		this.inputStream = inputStream;
 		return this;
 	}

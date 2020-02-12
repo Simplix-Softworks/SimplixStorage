@@ -5,6 +5,7 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.ClassWrapper;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.List;
@@ -21,16 +22,18 @@ public class Config extends Yaml {
 		this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
 	}
 
-	public Config(final String name, final String path, final InputStream inputStream) {
+	public Config(final String name,
+	              @Nullable final String path,
+	              @Nullable final InputStream inputStream) {
 		this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
 	}
 
 	public Config(final String name,
-	              final String path,
-	              final InputStream inputStream,
-	              final ReloadSettings reloadSettings,
-	              final ConfigSettings configSettings,
-	              final DataType dataType) {
+	              @Nullable final String path,
+	              @Nullable final InputStream inputStream,
+	              @Nullable final ReloadSettings reloadSettings,
+	              @Nullable final ConfigSettings configSettings,
+	              @Nullable final DataType dataType) {
 		super(name, path, inputStream, reloadSettings, configSettings, dataType);
 		setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 	}

@@ -15,6 +15,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,20 +38,22 @@ public class Yaml extends FlatFile {
 		this.configSettings = yaml.getConfigSettings();
 	}
 
-	public Yaml(final String name, final String path) {
+	public Yaml(final String name, @Nullable final String path) {
 		this(name, path, null, null, null, null);
 	}
 
-	public Yaml(final String name, final String path, final InputStream inputStream) {
+	public Yaml(final String name,
+	            @Nullable final String path,
+	            @Nullable final InputStream inputStream) {
 		this(name, path, inputStream, null, null, null);
 	}
 
 	public Yaml(final String name,
-	            final String path,
-	            final InputStream inputStream,
-	            final ReloadSettings reloadSettings,
-	            final ConfigSettings configSettings,
-	            final DataType dataType) {
+	            @Nullable final String path,
+	            @Nullable final InputStream inputStream,
+	            @Nullable final ReloadSettings reloadSettings,
+	            @Nullable final ConfigSettings configSettings,
+	            @Nullable final DataType dataType) {
 		super(name, path, FileType.YAML);
 
 		if (create() && inputStream != null) {

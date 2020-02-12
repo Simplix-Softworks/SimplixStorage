@@ -8,6 +8,7 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -32,15 +33,17 @@ public class LightningFile extends FlatFile {
 		this(name, path, null, null, null);
 	}
 
-	public LightningFile(final String name, final String path, final InputStream inputStream) {
+	public LightningFile(final String name,
+	                     @Nullable final String path,
+	                     @Nullable final InputStream inputStream) {
 		this(name, path, inputStream, null, null);
 	}
 
 	public LightningFile(final String name,
-	                     final String path,
-	                     final InputStream inputStream,
-	                     final ReloadSettings reloadSetting,
-	                     final ConfigSettings configSettings) {
+	                     @Nullable final String path,
+	                     @Nullable final InputStream inputStream,
+	                     @Nullable final ReloadSettings reloadSetting,
+	                     @Nullable final ConfigSettings configSettings) {
 		super(name, path, FileType.LS);
 
 		lightningEditor = new LightningEditor(file);

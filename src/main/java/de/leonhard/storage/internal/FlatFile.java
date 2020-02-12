@@ -29,7 +29,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 	protected String pathPrefix;
 	private long lastLoaded;
 
-	protected FlatFile(final String name, final String path, final FileType fileType) {
+	protected FlatFile(@NonNull final String name, final String path, @NonNull final FileType fileType) {
 		Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
 		this.fileType = fileType;
 		if (path == null || path.isEmpty()) {

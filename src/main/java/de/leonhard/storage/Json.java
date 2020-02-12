@@ -7,6 +7,7 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import lombok.Cleanup;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -36,9 +37,9 @@ public class Json extends FlatFile {
 	}
 
 	public Json(final String name,
-	            final String path,
-	            final InputStream inputStream,
-	            final ReloadSettings reloadSettings) {
+	            @Nullable final String path,
+	            @Nullable final InputStream inputStream,
+	            @Nullable final ReloadSettings reloadSettings) {
 		super(name, path, FileType.JSON);
 
 		if (create() || file.length() == 0) {
