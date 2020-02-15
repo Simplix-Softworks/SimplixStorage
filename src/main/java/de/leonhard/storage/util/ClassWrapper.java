@@ -11,15 +11,15 @@ import java.util.List;
 public class ClassWrapper {
 
 	/**
-	 * Method to cast an object to a given datatype
-	 * Used for example in {@link DataStorage}
-	 * to cast the results of get() to for example a String
+	 * Method to cast an object to a given datatype Used for example in
+	 * {@link DataStorage} to cast the results of get() to for example a String
 	 *
 	 * @param obj Object to cast
 	 * @param def type of result
 	 * @return Casted object
 	 */
 	public <T> T getFromDef(final Object obj, final T def) {
+		System.out.println("OBJ: " + obj.getClass().getSimpleName() + " T: " + def.getClass().getSimpleName());
 		if (def instanceof Integer) {
 			return (T) INTEGER.getInt(obj);
 		} else if (def instanceof Float) {
@@ -30,14 +30,26 @@ public class ClassWrapper {
 			return (T) LONG.getLong(obj);
 		} else if (def instanceof Boolean) {
 			return (T) (Boolean) obj.toString().equalsIgnoreCase("true");
+		} else if (def instanceof String[]) {
+			return (T) STRING.getStringArray(obj);
+		} else if (def instanceof Long[] || def instanceof long[]) {
+			return (T) LONG.getLongArray(obj);
+		} else if (def instanceof Double[] || def instanceof double[]) {
+			return (T) DOUBLE.getDoubleArray(obj);
+		} else if (def instanceof Float[] || def instanceof float[]) {
+			return (T) FLOAT.getFloatArray(obj);
+		} else if (def instanceof Short[] || def instanceof short[]) {
+			return (T) SHORT.getShortArray(obj);
+		} else if (def instanceof Byte[] || def instanceof byte[]) {
+			return (T) BYTE.getByteArray(obj);
 		}
+
 		return (T) obj;
 	}
 
 	/**
-	 * Method to cast an object to a given datatype
-	 * Used for example in {@link DataStorage}
-	 * to cast the results of get() to for example a String
+	 * Method to cast an object to a given datatype Used for example in
+	 * {@link DataStorage} to cast the results of get() to for example a String
 	 *
 	 * @param obj   Object to cast
 	 * @param clazz class of result
@@ -54,12 +66,34 @@ public class ClassWrapper {
 			return (T) LONG.getLong(obj);
 		} else if (clazz == boolean.class || clazz == Boolean.class) {
 			return (T) (Boolean) obj.toString().equalsIgnoreCase("true");
+		} else if (clazz == String[].class) {
+			return (T) STRING.getStringArray(obj);
+		} else if (clazz == Double[].class || clazz == double[].class) {
+			return (T) DOUBLE.getDoubleArray(obj);
+		} else if (clazz == Float[].class || clazz == float[].class) {
+			return (T) FLOAT.getFloatArray(obj);
+		} else if (clazz == Integer[].class || clazz == int[].class) {
+			return (T) INTEGER.getIntArray(obj);
+		} else if (clazz == Short[].class || clazz == short[].class) {
+			return (T) SHORT.getShortArray(obj);
+		} else if (clazz == Byte[].class || clazz == byte[].class) {
+			return (T) BYTE.getByteArray(obj);
 		}
 		return (T) obj;
 	}
 
 	@UtilityClass
 	public class LONG {
+
+		public Long[] getLongArray(final Object obj) {
+			if (obj instanceof List) {
+				final List<Long> list = (List<Long>) obj;
+				return list.toArray(new Long[0]);
+			}
+
+			return new Long[0];
+		}
+
 		public Long getLong(final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).longValue();
@@ -73,6 +107,16 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class DOUBLE {
+
+		public Double[] getDoubleArray(final Object obj) {
+			if (obj instanceof List) {
+				final List<Double> list = (List<Double>) obj;
+				return list.toArray(new Double[0]);
+			}
+
+			return new Double[0];
+		}
+
 		public Double getDouble(final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).doubleValue();
@@ -87,6 +131,16 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class FLOAT {
+
+		public Float[] getFloatArray(final Object obj) {
+			if (obj instanceof List) {
+				final List<Float> list = (List<Float>) obj;
+				return list.toArray(new Float[0]);
+			}
+
+			return new Float[0];
+		}
+
 		public Float getFloat(final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).floatValue();
@@ -100,6 +154,15 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class INTEGER {
+		public Integer[] getIntArray(final Object obj) {
+			if (obj instanceof List) {
+				final List<Integer> list = (List<Integer>) obj;
+				return list.toArray(new Integer[0]);
+			}
+
+			return new Integer[0];
+		}
+
 		public Integer getInt(final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).intValue();
@@ -114,6 +177,16 @@ public class ClassWrapper {
 	@UtilityClass
 	@SuppressWarnings("unused")
 	public class SHORT {
+
+		public Short[] getShortArray(final Object obj) {
+			if (obj instanceof List) {
+				final List<Short> list = (List<Short>) obj;
+				return list.toArray(new Short[0]);
+			}
+
+			return new Short[0];
+		}
+
 		public Short getShort(final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).shortValue();
@@ -127,6 +200,16 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class BYTE {
+
+		public Byte[] getByteArray(final Object obj) {
+			if (obj instanceof List) {
+				final List<Byte> list = (List<Byte>) obj;
+				return list.toArray(new Byte[0]);
+			}
+
+			return new Byte[0];
+		}
+
 		public Byte getByte(final Object obj) {
 			if (obj instanceof Number) {
 				return ((Number) obj).byteValue();
@@ -140,12 +223,22 @@ public class ClassWrapper {
 
 	@UtilityClass
 	public class STRING {
+
+		public String[] getStringArray(final Object obj) {
+			if (obj instanceof List) {
+				final List<String> list = (List<String>) obj;
+				return list.toArray(new String[0]);
+			}
+
+			return new String[0];
+		}
+
 		public String getString(final Object obj) {
-			if (obj instanceof Collection && ((Collection) obj).size() == 1) {
-				return ((List) obj).get(0).toString();
+			if (obj instanceof Collection && ((Collection<?>) obj).size() == 1) {
+				return ((List<?>) obj).get(0).toString();
 			}
 			return obj.toString();
 		}
 	}
-}
 
+}
