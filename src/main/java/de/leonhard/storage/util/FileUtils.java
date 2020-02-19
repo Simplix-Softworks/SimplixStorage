@@ -75,6 +75,11 @@ public class FileUtils {
 		return file;
 	}
 
+	public void extractInnerResource(@NonNull final String resource, final File destinationDirectory) {
+
+
+	}
+
 	// ----------------------------------------------------------------------------------------------------
 	// Methods for handling the extension of files
 	// ----------------------------------------------------------------------------------------------------
@@ -108,7 +113,7 @@ public class FileUtils {
 	public String getParentDirPath(@NonNull final String fileOrDirPath) {
 		final boolean endsWithSlash = fileOrDirPath.endsWith(File.separator);
 		return fileOrDirPath.substring(0, fileOrDirPath.lastIndexOf(File.separatorChar,
-				endsWithSlash ? fileOrDirPath.length() - 2 : fileOrDirPath.length() - 1));
+			endsWithSlash ? fileOrDirPath.length() - 2 : fileOrDirPath.length() - 1));
 	}
 
 	public boolean hasChanged(final File file, final long timeStamp) {

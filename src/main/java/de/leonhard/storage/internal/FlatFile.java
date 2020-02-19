@@ -44,8 +44,10 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 		this.file = file;
 		this.fileType = fileType;
 
-		Valid.checkBoolean(!(fileType == FileType.fromExtension(file)),
-				"Invalid file-extension for file type: '" + fileType + "'");
+		Valid.checkBoolean(fileType == FileType.fromExtension(file),
+			"Invalid file-extension for file type: '" + fileType + "'",
+			"Extension: '" + FileUtils.getExtension(file) + "'"
+		);
 
 	}
 
