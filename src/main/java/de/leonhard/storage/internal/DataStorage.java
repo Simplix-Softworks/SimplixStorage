@@ -173,6 +173,11 @@ public interface DataStorage {
 		return (Map<?, ?>) get(key);
 	}
 
+	@SuppressWarnings("unchecked")
+	default <K, V> Map<K, V> getMap(final String key, final Class<K> keyType, final Class<K> valueType) {
+		return (Map<K, V>) getMap(key);
+	}
+
 	/**
 	 * Serialize an Enum from entry in the data-structure
 	 *
