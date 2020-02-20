@@ -19,7 +19,6 @@ public class ClassWrapper {
 	 * @return Casted object
 	 */
 	public <T> T getFromDef(final Object obj, final T def) {
-		System.out.println("OBJ: " + obj.getClass().getSimpleName() + " T: " + def.getClass().getSimpleName());
 		if (def instanceof Integer) {
 			return (T) INTEGER.getInt(obj);
 		} else if (def instanceof Float) {
