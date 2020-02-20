@@ -2,6 +2,7 @@ package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.util.JsonUtils;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -78,17 +79,17 @@ public class FileData {
 	public synchronized void insert(final String key, final Object value) {
 		final String[] parts = key.split("\\.");
 		localMap.put(parts[0],
-				localMap.containsKey(parts[0]) && localMap.get(parts[0]) instanceof Map
-						? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
-						: insert(new HashMap<>(), parts, value, 1));
+			localMap.containsKey(parts[0]) && localMap.get(parts[0]) instanceof Map
+				? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
+				: insert(new HashMap<>(), parts, value, 1));
 	}
 
 	private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
 		if (id < key.length) {
 			final Map<String, Object> tempMap = new HashMap<>(map);
 			final Map<String, Object> childMap = map.containsKey(key[id]) && map.get(key[id]) instanceof Map
-					? (Map<String, Object>) map.get(key[id])
-					: new HashMap<>();
+				? (Map<String, Object>) map.get(key[id])
+				: new HashMap<>();
 			tempMap.put(key[id], insert(childMap, key, value, id + 1));
 			return tempMap;
 		} else {
@@ -128,22 +129,43 @@ public class FileData {
 	public synchronized void remove(final String key) {
 		if (containsKey(key)) {
 			final String[] parts = key.split("\\.");
-			remove(localMap, parts, 0);
+			remove(parts);
 		}
 	}
 
-	private synchronized void remove(final Map<String, Object> map, final String[] key, final int id) {
-		Map tempMap = map;
-		for (int i = 0; i < key.length - (1 + id); i++) {
-			if (tempMap.containsKey(key[i]) && tempMap.get(key[i]) instanceof Map) {
-				tempMap = (Map) tempMap.get(key[i]);
+	private void remove(final @NotNull String[] key) {
+		if (key.length == 1) {
+			this.localMap.remove(key[0]);
+		} else {
+			final Object tempValue = this.localMap.get(key[0]);
+			if (tempValue instanceof Map) {
+				//noinspection unchecked
+				this.localMap.put(key[0], this.remove((Map) tempValue, key, 1));
+				if (((Map) this.localMap.get(key[0])).isEmpty()) {
+					this.localMap.remove(key[0]);
+				}
 			}
 		}
-		if (tempMap.keySet().size() <= 1) {
-			map.remove(key[key.length - (1 + id)]);
-			remove(map, key, id + 1);
-		}
 	}
+
+	private Map<String, Object> remove(final Map<String, Object> map,
+	                                   final String[] key,
+	                                   final int keyIndex) {
+		if (keyIndex < key.length - 1) {
+			final Object tempValue = map.get(key[keyIndex]);
+			if (tempValue instanceof Map) {
+				//noinspection unchecked
+				map.put(key[keyIndex], this.remove((Map) tempValue, key, keyIndex + 1));
+				if (((Map) map.get(key[keyIndex])).isEmpty()) {
+					map.remove(key[keyIndex]);
+				}
+			}
+		} else {
+			map.remove(key[keyIndex]);
+		}
+		return map;
+	}
+
 
 	/**
 	 * get the keySet of a single layer of the map.

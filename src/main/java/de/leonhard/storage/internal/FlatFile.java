@@ -166,7 +166,9 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 	@Override
 	@Synchronized
 	public void remove(final String key) {
+		reloadIfNeeded();
 		fileData.remove(key);
+		write();
 	}
 
 	// ----------------------------------------------------------------------------------------------------
