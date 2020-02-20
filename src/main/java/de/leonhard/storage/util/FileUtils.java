@@ -2,13 +2,20 @@ package de.leonhard.storage.util;
 
 import lombok.Cleanup;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Class for easier, more convenient & strait interaction with files
@@ -69,15 +76,9 @@ public class FileUtils {
 		} catch (final IOException ex) {
 			System.err.println("Error while creating file '" + file.getName() + "'.");
 			System.err.println("In: '" + getParentDirPath(file) + "'");
-			ex.printStackTrace();
-			throw new IllegalStateException();
+			throw new IllegalStateException(ex);
 		}
 		return file;
-	}
-
-	public void extractInnerResource(@NonNull final String resource, final File destinationDirectory) {
-
-
 	}
 
 	// ----------------------------------------------------------------------------------------------------
@@ -133,7 +134,6 @@ public class FileUtils {
 		} catch (final IOException ex) {
 			System.err.println("Exception while creating InputStream from '" + file.getName() + "'");
 			System.err.println("At: '" + file.getAbsolutePath() + "'");
-			ex.printStackTrace();
 			throw new IllegalStateException(ex);
 		}
 	}
@@ -212,6 +212,70 @@ public class FileUtils {
 		final byte[] fileBytes = readAllBytes(file);
 		final String asString = new String(fileBytes);
 		return new ArrayList<>(Arrays.asList(asString.split("\n")));
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Archiving
+	// ----------------------------------------------------------------------------------------------------
+
+	@SneakyThrows
+	public void zipFile(final String sourceDirectory, final String to) {
+		final File fileTo = getAndMake(new File(to + ".zip"));
+
+		@Cleanup final ZipOutputStream zipOutputStream = new ZipOutputStream(createOutputStream(fileTo));
+		final Path pathFrom = Paths.get(new File(sourceDirectory).toURI());
+
+		Files.walk(pathFrom).filter(path -> !Files.isDirectory(path)).forEach(path -> {
+			final ZipEntry zipEntry = new ZipEntry(pathFrom.relativize(path).toString());
+
+			try {
+				zipOutputStream.putNextEntry(zipEntry);
+
+				Files.copy(path, zipOutputStream);
+				zipOutputStream.closeEntry();
+			} catch (final IOException ex) {
+				ex.printStackTrace();
+			}
+		});
+
+	}
+
+	// ----------------------------------------------------------------------------------------------------
+	// Checksums
+	// ----------------------------------------------------------------------------------------------------
+
+
+	public String md5ChecksumAsString(@NonNull final File filename) {
+		final byte[] checkSum = md5Checksum(filename);
+		final StringBuilder result = new StringBuilder();
+
+		for (final byte b : checkSum) {
+			result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+		}
+
+		return result.toString();
+	}
+
+	public byte[] md5Checksum(@NonNull final File file) {
+		try (final InputStream fileInputStream = new FileInputStream(file)) {
+			final byte[] buffer = new byte[1024];
+			final MessageDigest complete = MessageDigest.getInstance("MD5");
+			int numRead;
+
+			do {
+				numRead = fileInputStream.read(buffer);
+
+				if (numRead > 0) {
+					complete.update(buffer, 0, numRead);
+				}
+			} while (numRead != -1);
+
+			return complete.digest();
+		} catch (final IOException | NoSuchAlgorithmException ex) {
+			System.err.println("Exception while creating checksum of '" + file.getName() + "'");
+			System.err.println("In '" + getParentDirPath(file) + "'");
+			throw new IllegalStateException(ex);
+		}
 	}
 
 	// ----------------------------------------------------------------------------------------------------
