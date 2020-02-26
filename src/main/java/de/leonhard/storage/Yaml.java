@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -140,15 +141,23 @@ public class Yaml extends FlatFile {
 	// Specific utility methods for YAML
 	// ----------------------------------------------------------------------------------------------------
 
-	public List<String> getHeader() {
+	public final List<String> getHeader() {
 		return yamlEditor.readHeader();
 	}
 
-	public void setHeader(final List<String> header) {
+	public final void setHeader(final List<String> header) {
 		yamlEditor.setHeader(header);
 	}
 
-	public void addHeader(final List<String> toAdd) {
+	public final void setHeader(final String... header) {
+		setHeader(Arrays.asList(header));
+	}
+
+	public final void addHeader(final List<String> toAdd) {
 		yamlEditor.addHeader(toAdd);
+	}
+
+	public final void addHeader(final String... header) {
+		addHeader(Arrays.asList(header));
 	}
 }

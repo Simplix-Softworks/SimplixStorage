@@ -59,7 +59,8 @@ public class YamlEditor {
 
 		// Adding new header in front
 		for (int i = 0; i < header.size(); i++) {
-			lines.add(i, header.get(i));
+			final String toAdd = header.get(i);
+			lines.add(i, toAdd.startsWith("#") ? toAdd : "#" + toAdd);
 		}
 
 		// Write to file
@@ -69,7 +70,8 @@ public class YamlEditor {
 	public void addHeader(final List<String> header) {
 		final List<String> lines = read();
 		for (int i = 0; i < header.size(); i++) {
-			lines.add(i, header.get(i));
+			final String toAdd = header.get(i);
+			lines.add(i, toAdd.startsWith("#") ? toAdd : "#" + toAdd);
 		}
 
 		//Write to file
