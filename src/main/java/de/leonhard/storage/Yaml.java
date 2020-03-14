@@ -26,138 +26,137 @@ import java.util.Map;
 
 @Getter
 public class Yaml extends FlatFile {
-	protected final YamlEditor yamlEditor;
-	protected final YamlParser parser;
-	@Setter
-	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+  protected final YamlEditor yamlEditor;
+  protected final YamlParser parser;
+  @Setter private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-	public Yaml(final Yaml yaml) {
-		super(yaml.getFile());
-		this.fileData = yaml.getFileData();
-		this.yamlEditor = yaml.getYamlEditor();
-		this.parser = yaml.getParser();
-		this.configSettings = yaml.getConfigSettings();
-	}
+  public Yaml(final Yaml yaml) {
+    super(yaml.getFile());
+    this.fileData = yaml.getFileData();
+    this.yamlEditor = yaml.getYamlEditor();
+    this.parser = yaml.getParser();
+    this.configSettings = yaml.getConfigSettings();
+  }
 
-	public Yaml(final String name, @Nullable final String path) {
-		this(name, path, null, null, null, null);
-	}
+  public Yaml(final String name, @Nullable final String path) {
+    this(name, path, null, null, null, null);
+  }
 
-	public Yaml(final String name,
-	            @Nullable final String path,
-	            @Nullable final InputStream inputStream) {
-		this(name, path, inputStream, null, null, null);
-	}
+  public Yaml(
+      final String name, @Nullable final String path, @Nullable final InputStream inputStream) {
+    this(name, path, inputStream, null, null, null);
+  }
 
-	public Yaml(final String name,
-	            @Nullable final String path,
-	            @Nullable final InputStream inputStream,
-	            @Nullable final ReloadSettings reloadSettings,
-	            @Nullable final ConfigSettings configSettings,
-	            @Nullable final DataType dataType) {
-		super(name, path, FileType.YAML);
+  public Yaml(
+      final String name,
+      @Nullable final String path,
+      @Nullable final InputStream inputStream,
+      @Nullable final ReloadSettings reloadSettings,
+      @Nullable final ConfigSettings configSettings,
+      @Nullable final DataType dataType) {
+    super(name, path, FileType.YAML);
 
-		if (create() && inputStream != null) {
-			FileUtils.writeToFile(file, inputStream);
-		}
+    if (create() && inputStream != null) {
+      FileUtils.writeToFile(file, inputStream);
+    }
 
-		yamlEditor = new YamlEditor(file);
-		parser = new YamlParser(yamlEditor);
+    yamlEditor = new YamlEditor(file);
+    parser = new YamlParser(yamlEditor);
 
-		if (reloadSettings != null) {
-			this.reloadSettings = reloadSettings;
-		}
+    if (reloadSettings != null) {
+      this.reloadSettings = reloadSettings;
+    }
 
-		if (configSettings != null) {
-			this.configSettings = configSettings;
-		}
+    if (configSettings != null) {
+      this.configSettings = configSettings;
+    }
 
-		if (dataType != null) {
-			this.dataType = dataType;
-		} else {
-			this.dataType = DataType.fromConfigSettings(configSettings);
-		}
+    if (dataType != null) {
+      this.dataType = dataType;
+    } else {
+      this.dataType = DataType.fromConfigSettings(configSettings);
+    }
 
-		forceReload();
-	}
+    forceReload();
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Methods to override (Points where YAML is unspecific for typical FlatFiles)
-	// ----------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------
+  // Methods to override (Points where YAML is unspecific for typical FlatFiles)
+  // ----------------------------------------------------------------------------------------------------
 
-	@Override
-	public void set(final String key, final Object value) {
-		set(key, value, this.configSettings);
-	}
+  @Override
+  public void set(final String key, final Object value) {
+    set(key, value, this.configSettings);
+  }
 
-	@Synchronized
-	public void set(final String key, final Object value, final ConfigSettings configSettings) {
-		reloadIfNeeded();
+  @Synchronized
+  public void set(final String key, final Object value, final ConfigSettings configSettings) {
+    reloadIfNeeded();
 
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
-		fileData.insert(finalKey, value);
+    fileData.insert(finalKey, value);
 
-		try {
-			// If Comments shouldn't be preserved
-			if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-				write(fileData);
-				return;
-			}
+    try {
+      // If Comments shouldn't be preserved
+      if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+        write(fileData);
+        return;
+      }
 
-			final List<String> unEdited = yamlEditor.read();
-			final List<String> header = yamlEditor.readHeader();
-			final List<String> footer = yamlEditor.readFooter();
-			write();
-			header.addAll(yamlEditor.read());
-			if (!header.containsAll(footer)) {
-				header.addAll(footer);
-			}
-			write();
-			yamlEditor.write(parser.parseComments(unEdited, header));
-		} catch (final IOException ex) {
-			System.err.println("Error while writing '" + getName() + "'");
-			ex.printStackTrace();
-		}
-	}
+      final List<String> unEdited = yamlEditor.read();
+      final List<String> header = yamlEditor.readHeader();
+      final List<String> footer = yamlEditor.readFooter();
+      write();
+      header.addAll(yamlEditor.read());
+      if (!header.containsAll(footer)) {
+        header.addAll(footer);
+      }
+      write();
+      yamlEditor.write(parser.parseComments(unEdited, header));
+    } catch (final IOException ex) {
+      System.err.println("Error while writing '" + getName() + "'");
+      ex.printStackTrace();
+    }
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Abstract methods to implement
-	// ----------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------
+  // Abstract methods to implement
+  // ----------------------------------------------------------------------------------------------------
 
-	@Override
-	protected Map<String, Object> readToMap() throws IOException {
-		@Cleanup final YamlReader reader = new YamlReader(new FileReader(getFile()));
-		return reader.readToMap();
-	}
+  @Override
+  protected Map<String, Object> readToMap() throws IOException {
+    @Cleanup final YamlReader reader = new YamlReader(new FileReader(getFile()));
+    return reader.readToMap();
+  }
 
-	@Override
-	protected void write(final FileData data) throws IOException {
-		@Cleanup final YamlWriter writer = new YamlWriter(file);
-		writer.write(data.toMap());
-	}
+  @Override
+  protected void write(final FileData data) throws IOException {
+    @Cleanup final YamlWriter writer = new YamlWriter(file);
+    writer.write(data.toMap());
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Specific utility methods for YAML
-	// ----------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------
+  // Specific utility methods for YAML
+  // ----------------------------------------------------------------------------------------------------
 
-	public final List<String> getHeader() {
-		return yamlEditor.readHeader();
-	}
+  public final List<String> getHeader() {
+    return yamlEditor.readHeader();
+  }
 
-	public final void setHeader(final List<String> header) {
-		yamlEditor.setHeader(header);
-	}
+  public final void setHeader(final List<String> header) {
+    yamlEditor.setHeader(header);
+  }
 
-	public final void setHeader(final String... header) {
-		setHeader(Arrays.asList(header));
-	}
+  public final void setHeader(final String... header) {
+    setHeader(Arrays.asList(header));
+  }
 
-	public final void addHeader(final List<String> toAdd) {
-		yamlEditor.addHeader(toAdd);
-	}
+  public final void addHeader(final List<String> toAdd) {
+    yamlEditor.addHeader(toAdd);
+  }
 
-	public final void addHeader(final String... header) {
-		addHeader(Arrays.asList(header));
-	}
+  public final void addHeader(final String... header) {
+    addHeader(Arrays.asList(header));
+  }
 }

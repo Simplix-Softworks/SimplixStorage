@@ -7,65 +7,73 @@ import java.util.*;
 @SuppressWarnings("unused")
 @RequiredArgsConstructor
 public final class YamlParser {
-	private final YamlEditor yamlEditor;
+  private final YamlEditor yamlEditor;
 
+  public List<String> parseComments(final List<String> comments, final List<String> updated) {
+    final List<String> keys;
+    final Map<String, List<String>> parsed = assignCommentsToKey(comments);
 
-	public List<String> parseComments(final List<String> comments, final List<String> updated) {
-		final List<String> keys;
-		final Map<String, List<String>> parsed = assignCommentsToKey(comments);
+    for (final String key : parsed.keySet()) {
+      final int i = 0;
+      for (final String line : parsed.get(key)) {
+        if (line.isEmpty()) {
+          continue;
+        }
+        if (updated.contains(key + " ")) {
+          updated.add(updated.indexOf(key + " ") + i, line);
+          continue;
+        }
+        if (updated.contains(" " + key)) {
+          updated.add(updated.indexOf(" " + key) + i, line);
+        }
+      }
+    }
+    return updated;
+  }
 
-		for (final String key : parsed.keySet()) {
-			final int i = 0;
-			for (final String line : parsed.get(key)) {
-				if (line.isEmpty()) {
-					continue;
-				}
-				if (updated.contains(key + " ")) {
-					updated.add(updated.indexOf(key + " ") + i, line);
-					continue;
-				}
-				if (updated.contains(" " + key)) {
-					updated.add(updated.indexOf(" " + key) + i, line);
-				}
+  private Map<String, List<String>> assignCommentsToKey() {
+    return assignCommentsToKey(yamlEditor.read());
+  }
 
-			}
-		}
-		return updated;
-	}
+  // Method to assign the comments in a YAML to their appropriate keys
 
-	private Map<String, List<String>> assignCommentsToKey() {
-		return assignCommentsToKey(yamlEditor.read());
-	}
+  /*
 
-	// Method to assign the comments in a YAML to their appropriate keys
-	private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
-		List<String> storage = new ArrayList<>();
-		final List<String> lines = YamlStringEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
-		final Map<String, List<String>> result = new HashMap<>();
+  #comment1
+  #comment2
+  #comment3
+  key: true
 
-		// Loop over the remaining lines
-		Collections.reverse(lines);// Reverse -> Should start from the end
-		for (final String line : lines) {
-			if (line.replaceAll("\\s+", "").startsWith("#") || line.isEmpty()) { // Replacing the whitespaces
-				storage.add(line);
-				continue;
-			}
-			result.put(line, storage);
-			storage = new ArrayList<>();
-		}
+  */
+  private Map<String, List<String>> assignCommentsToKey(final List<String> fileLines) {
+    List<String> storage = new ArrayList<>();
+    final List<String> lines = YamlStringEditor.getLinesWithoutFooterAndHeaderFromLines(fileLines);
+    final Map<String, List<String>> result = new HashMap<>();
 
-		// Removing keys without comments
-		final List<String> keysToRemove = new ArrayList<>();
-		for (final String line : result.keySet()) {
-			if (result.get(line).equals(new ArrayList<>())) {
-				keysToRemove.add(line);
-			}
-		}
+    // Loop over the remaining lines
+    Collections.reverse(lines); // Reverse -> Should start from the end
+    for (final String line : lines) {
+      if (line.replaceAll("\\s+", "").startsWith("#")
+          || line.isEmpty()) { // Replacing the whitespaces
+        storage.add(line);
+        continue;
+      }
+      result.put(line, storage);
+      storage = new ArrayList<>();
+    }
 
-		for (final String key : keysToRemove) {
-			result.remove(key);
-		}
+    // Removing keys without comments
+    final List<String> keysToRemove = new ArrayList<>();
+    for (final String line : result.keySet()) {
+      if (result.get(line).equals(new ArrayList<>())) {
+        keysToRemove.add(line);
+      }
+    }
 
-		return result;
-	}
+    for (final String key : keysToRemove) {
+      result.remove(key);
+    }
+
+    return result;
+  }
 }

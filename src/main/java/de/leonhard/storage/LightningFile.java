@@ -13,67 +13,65 @@ import org.jetbrains.annotations.Nullable;
 import java.io.InputStream;
 import java.util.Map;
 
-/**
- * Class to manager Lightning-Type Files
- */
+/** Class to manager Lightning-Type Files */
 @SuppressWarnings("unused")
 @Getter
 public class LightningFile extends FlatFile {
 
-	private final LightningEditor lightningEditor;
-	private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+  private final LightningEditor lightningEditor;
+  private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-	public LightningFile(final LightningFile lightningFile) {
-		super(lightningFile.getFile());
-		lightningEditor = lightningFile.getLightningEditor();
-		configSettings = lightningFile.getConfigSettings();
-	}
+  public LightningFile(final LightningFile lightningFile) {
+    super(lightningFile.getFile());
+    lightningEditor = lightningFile.getLightningEditor();
+    configSettings = lightningFile.getConfigSettings();
+  }
 
-	public LightningFile(final String name, final String path) {
-		this(name, path, null, null, null);
-	}
+  public LightningFile(final String name, final String path) {
+    this(name, path, null, null, null);
+  }
 
-	public LightningFile(final String name,
-	                     @Nullable final String path,
-	                     @Nullable final InputStream inputStream) {
-		this(name, path, inputStream, null, null);
-	}
+  public LightningFile(
+      final String name, @Nullable final String path, @Nullable final InputStream inputStream) {
+    this(name, path, inputStream, null, null);
+  }
 
-	public LightningFile(final String name,
-	                     @Nullable final String path,
-	                     @Nullable final InputStream inputStream,
-	                     @Nullable final ReloadSettings reloadSetting,
-	                     @Nullable final ConfigSettings configSettings) {
-		super(name, path, FileType.LS);
+  public LightningFile(
+      final String name,
+      @Nullable final String path,
+      @Nullable final InputStream inputStream,
+      @Nullable final ReloadSettings reloadSetting,
+      @Nullable final ConfigSettings configSettings) {
+    super(name, path, FileType.LS);
 
-		lightningEditor = new LightningEditor(file);
+    lightningEditor = new LightningEditor(file);
 
-		if (create() && inputStream != null) {
-			FileUtils.writeToFile(file, inputStream);
-		}
+    if (create() && inputStream != null) {
+      FileUtils.writeToFile(file, inputStream);
+    }
 
-		if (configSettings != null) {
-			this.configSettings = configSettings;
-		}
+    if (configSettings != null) {
+      this.configSettings = configSettings;
+    }
 
-		if (reloadSetting != null) {
-			reloadSettings = reloadSetting;
-		}
+    if (reloadSetting != null) {
+      reloadSettings = reloadSetting;
+    }
 
-		forceReload();
-	}
+    forceReload();
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Abstract methods to implement
-	// ----------------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------------
+  // Abstract methods to implement
+  // ----------------------------------------------------------------------------------------------------
 
-	@Override
-	protected Map<String, Object> readToMap() {
-		return lightningEditor.readData();
-	}
+  @Override
+  protected Map<String, Object> readToMap() {
+    return lightningEditor.readData();
+  }
 
-	@Override
-	protected void write(final FileData data) {
-		lightningEditor.writeData(data.toMap(), configSettings);
-	}
+  @Override
+  protected void write(final FileData data) {
+    lightningEditor.writeData(data.toMap(), configSettings);
+  }
 }

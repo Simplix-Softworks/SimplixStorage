@@ -2,12 +2,12 @@ package de.leonhard.storage.internal.exception;
 
 public class LightningFileException extends RuntimeException {
 
-	private static final long serialVersionUID = 781871632995757470L;
+  private static final long serialVersionUID = 781871632995757470L;
 
-	public LightningFileException(final String... message) {
+  public LightningFileException(final String... message) {
 
-		for (final String part : message) {
-			System.err.println(part);
-		}
-	}
+    for (final String part : message) {
+      System.err.println(part);
+    }
+  }
 }

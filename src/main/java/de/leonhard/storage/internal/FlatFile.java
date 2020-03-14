@@ -19,288 +19,289 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode
 public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
-	protected final File file;
-	protected final FileType fileType;
-	@Setter
-	protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
-	protected DataType dataType = DataType.UNSORTED;
-	protected FileData fileData;
-	@Setter
-	protected String pathPrefix;
-	private long lastLoaded;
+  protected final File file;
+  protected final FileType fileType;
+  @Setter protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+  protected DataType dataType = DataType.UNSORTED;
+  protected FileData fileData;
+  @Setter protected String pathPrefix;
+  private long lastLoaded;
 
-	protected FlatFile(@NonNull final String name, final String path, @NonNull final FileType fileType) {
-		Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
-		this.fileType = fileType;
-		if (path == null || path.isEmpty()) {
-			file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
-		} else {
-			final String fixedPath = path.replace("\\", "/");
-			file = new File(fixedPath + File.separator + FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
-		}
-	}
+  protected FlatFile(
+      @NonNull final String name, final String path, @NonNull final FileType fileType) {
+    Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
+    this.fileType = fileType;
+    if (path == null || path.isEmpty()) {
+      file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
+    } else {
+      final String fixedPath = path.replace("\\", "/");
+      file =
+          new File(
+              fixedPath
+                  + File.separator
+                  + FileUtils.replaceExtensions(name)
+                  + "."
+                  + fileType.getExtension());
+    }
+  }
 
-	protected FlatFile(@NonNull final File file, @NonNull final FileType fileType) {
-		this.file = file;
-		this.fileType = fileType;
+  protected FlatFile(@NonNull final File file, @NonNull final FileType fileType) {
+    this.file = file;
+    this.fileType = fileType;
 
-		Valid.checkBoolean(fileType == FileType.fromExtension(file),
-			"Invalid file-extension for file type: '" + fileType + "'",
-			"Extension: '" + FileUtils.getExtension(file) + "'"
-		);
+    Valid.checkBoolean(
+        fileType == FileType.fromExtension(file),
+        "Invalid file-extension for file type: '" + fileType + "'",
+        "Extension: '" + FileUtils.getExtension(file) + "'");
+  }
 
-	}
+  /**
+   * This constructor should only be used to store for example YAML-LIKE data in a .db file
+   *
+   * <p>Therefor no validation is possible. Might be unsafe.
+   */
+  protected FlatFile(final File file) {
+    this.file = file;
+    // Might be null
+    fileType = FileType.fromFile(file);
+  }
 
-	/**
-	 * This constructor should only be used to
-	 * store for example YAML-LIKE data in a .db file
-	 * <p>
-	 * Therefor no validation is possible.
-	 * Might be unsafe.
-	 */
-	protected FlatFile(final File file) {
-		this.file = file;
-		//Might be null
-		fileType = FileType.fromFile(file);
-	}
+  // ----------------------------------------------------------------------------------------------------
+  // Abstract methods (Reading & Writing)
+  // ----------------------------------------------------------------------------------------------------
 
+  /**
+   * Forces Re-read/load the content of our flat file Should be used to put the data from the file
+   * to our FileData
+   */
+  protected abstract Map<String, Object> readToMap() throws IOException;
 
-	// ----------------------------------------------------------------------------------------------------
-	// Abstract methods (Reading & Writing)
-	// ----------------------------------------------------------------------------------------------------
+  /**
+   * Write our data to file
+   *
+   * @param data Our data
+   */
+  protected abstract void write(final FileData data) throws IOException;
 
-	/**
-	 * Forces Re-read/load the content of our flat file
-	 * Should be used to put the data from the file to our FileData
-	 */
-	protected abstract Map<String, Object> readToMap() throws IOException;
+  // ----------------------------------------------------------------------------------------------------
+  //  Creating out file
+  // ----------------------------------------------------------------------------------------------------
 
-	/**
-	 * Write our data to file
-	 *
-	 * @param data Our data
-	 */
-	protected abstract void write(final FileData data) throws IOException;
+  /**
+   * Creates an empty .yml or .json file.
+   *
+   * @return true if file was created.
+   */
+  protected final boolean create() {
+    return createFile(file);
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	//  Creating out file
-	// ----------------------------------------------------------------------------------------------------
+  @Synchronized
+  private boolean createFile(final File file) {
+    if (file.exists()) {
+      lastLoaded = System.currentTimeMillis();
+      return false;
+    } else {
+      FileUtils.getAndMake(file);
+      lastLoaded = System.currentTimeMillis();
+      return true;
+    }
+  }
 
-	/**
-	 * Creates an empty .yml or .json file.
-	 *
-	 * @return true if file was created.
-	 */
-	protected final boolean create() {
-		return createFile(file);
-	}
+  // ----------------------------------------------------------------------------------------------------
+  // Overridden methods from DataStorage
+  // ---------------------------------------------------------------------------------------------------->
 
-	@Synchronized
-	private boolean createFile(final File file) {
-		if (file.exists()) {
-			lastLoaded = System.currentTimeMillis();
-			return false;
-		} else {
-			FileUtils.getAndMake(file);
-			lastLoaded = System.currentTimeMillis();
-			return true;
-		}
-	}
+  @Override
+  @Synchronized
+  public void set(final String key, final Object value) {
+    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+    fileData.insert(finalKey, value);
+    write();
+    lastLoaded = System.currentTimeMillis();
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Overridden methods from DataStorage
-	// ---------------------------------------------------------------------------------------------------->
+  @Override
+  public Object get(final String key) {
+    reloadIfNeeded();
+    final String finalKey = pathPrefix == null ? key : pathPrefix + "." + key;
+    return fileData.get(finalKey);
+  }
 
-	@Override
-	@Synchronized
-	public void set(final String key, final Object value) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		fileData.insert(finalKey, value);
-		write();
-		lastLoaded = System.currentTimeMillis();
-	}
+  /**
+   * Checks whether a key exists in the file
+   *
+   * @param key Key to check
+   * @return Returned value
+   */
+  @Override
+  public boolean contains(final String key) {
+    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+    return fileData.containsKey(finalKey);
+  }
 
-	@Override
-	public Object get(final String key) {
-		reloadIfNeeded();
-		final String finalKey = pathPrefix == null ? key : pathPrefix + "." + key;
-		return fileData.get(finalKey);
-	}
+  @Override
+  public Set<String> singleLayerKeySet() {
+    reloadIfNeeded();
+    return fileData.singleLayerKeySet();
+  }
 
-	/**
-	 * Checks whether a key exists in the file
-	 *
-	 * @param key Key to check
-	 * @return Returned value
-	 */
-	@Override
-	public boolean contains(final String key) {
-		final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-		return fileData.containsKey(finalKey);
-	}
+  @Override
+  public Set<String> singleLayerKeySet(final String key) {
+    reloadIfNeeded();
+    return fileData.singleLayerKeySet(key);
+  }
 
-	@Override
-	public Set<String> singleLayerKeySet() {
-		reloadIfNeeded();
-		return fileData.singleLayerKeySet();
-	}
+  @Override
+  public Set<String> keySet() {
+    reloadIfNeeded();
+    return fileData.keySet();
+  }
 
-	@Override
-	public Set<String> singleLayerKeySet(final String key) {
-		reloadIfNeeded();
-		return fileData.singleLayerKeySet(key);
-	}
+  @Override
+  public Set<String> keySet(final String key) {
+    reloadIfNeeded();
+    return fileData.keySet(key);
+  }
 
-	@Override
-	public Set<String> keySet() {
-		reloadIfNeeded();
-		return fileData.keySet();
-	}
+  @Override
+  @Synchronized
+  public void remove(final String key) {
+    reloadIfNeeded();
+    fileData.remove(key);
+    write();
+  }
 
-	@Override
-	public Set<String> keySet(final String key) {
-		reloadIfNeeded();
-		return fileData.keySet(key);
-	}
+  // ----------------------------------------------------------------------------------------------------
+  // More advanced & FlatFile specific operations to add data.
+  // ----------------------------------------------------------------------------------------------------
 
-	@Override
-	@Synchronized
-	public void remove(final String key) {
-		reloadIfNeeded();
-		fileData.remove(key);
-		write();
-	}
+  /**
+   * Method to insert the data of a map to our FlatFile
+   *
+   * @param map Map to insert.
+   */
+  public final void putAll(final Map<String, Object> map) {
+    fileData.putAll(map);
+    write();
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// More advanced & FlatFile specific operations to add data.
-	// ----------------------------------------------------------------------------------------------------
+  /** @return The data of our file as a Map<String, Object> */
+  public final Map<String, Object> getData() {
+    return getFileData().toMap();
+  }
 
-	/**
-	 * Method to insert the data of a map to our FlatFile
-	 *
-	 * @param map Map to insert.
-	 */
-	public final void putAll(final Map<String, Object> map) {
-		fileData.putAll(map);
-		write();
-	}
+  // For performance separated from get(String key)
+  public final List<Object> getAll(final String... keys) {
+    final List<Object> result = new ArrayList<>();
+    reloadIfNeeded();
 
-	/**
-	 * @return The data of our file as a Map<String, Object>
-	 */
-	public final Map<String, Object> getData() {
-		return getFileData().toMap();
-	}
+    for (final String key : keys) {
+      result.add(get(key));
+    }
 
-	// For performance separated from get(String key)
-	public final List<Object> getAll(final String... keys) {
-		final List<Object> result = new ArrayList<>();
-		reloadIfNeeded();
+    return result;
+  }
 
-		for (final String key : keys) {
-			result.add(get(key));
-		}
+  public void removeAll(final String... keys) {
+    for (final String key : keys) {
+      fileData.remove(key);
+    }
+    write();
+  }
 
-		return result;
-	}
+  // ----------------------------------------------------------------------------------------------------
+  // Pretty nice utility methods for FlatFile
+  // ----------------------------------------------------------------------------------------------------
 
-	public void removeAll(final String... keys) {
-		for (final String key : keys) {
-			fileData.remove(key);
-		}
-		write();
-	}
+  public final String getName() {
+    return file.getName();
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Pretty nice utility methods for FlatFile
-	// ----------------------------------------------------------------------------------------------------
+  public final String getFilePath() {
+    return file.getAbsolutePath();
+  }
 
-	public final String getName() {
-		return file.getName();
-	}
+  @Synchronized
+  public void replace(final CharSequence target, final CharSequence replacement)
+      throws IOException {
+    final List<String> lines = Files.readAllLines(file.toPath());
+    final List<String> result = new ArrayList<>();
+    for (final String line : lines) {
+      result.add(line.replace(target, replacement));
+    }
+    Files.write(file.toPath(), result);
+  }
 
-	public final String getFilePath() {
-		return file.getAbsolutePath();
-	}
+  public void write() {
+    try {
+      write(fileData);
+    } catch (final IOException ex) {
+      System.err.println("Exception writing to file '" + getName() + "'");
+      System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+      ex.printStackTrace();
+    }
+    lastLoaded = System.currentTimeMillis();
+  }
 
-	@Synchronized
-	public void replace(final CharSequence target, final CharSequence replacement) throws IOException {
-		final List<String> lines = Files.readAllLines(file.toPath());
-		final List<String> result = new ArrayList<>();
-		for (final String line : lines) {
-			result.add(line.replace(target, replacement));
-		}
-		Files.write(file.toPath(), result);
-	}
+  public final boolean hasChanged() {
+    return FileUtils.hasChanged(file, lastLoaded);
+  }
 
-	public void write() {
-		try {
-			write(fileData);
-		} catch (final IOException ex) {
-			System.err.println("Exception writing to file '" + getName() + "'");
-			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-			ex.printStackTrace();
-		}
-		lastLoaded = System.currentTimeMillis();
-	}
+  public final void forceReload() {
+    try {
+      if (fileData == null) {
+        fileData = new FileData(readToMap(), dataType);
+      } else {
+        fileData.loadData(readToMap());
+      }
+    } catch (final IOException ex) {
+      final String fileName =
+          fileType == null ? "File" : fileType.name().toLowerCase(); // fileType might be null
+      System.err.println("Error reloading " + fileName + " '" + getName() + "'");
+      System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+      ex.printStackTrace();
+    }
+    lastLoaded = System.currentTimeMillis();
+  }
 
-	public final boolean hasChanged() {
-		return FileUtils.hasChanged(file, lastLoaded);
-	}
+  public final void clear() {
+    fileData.clear();
+    write();
+  }
 
-	public final void forceReload() {
-		try {
-			if (fileData == null) {
-				fileData = new FileData(readToMap(), dataType);
-			} else {
-				fileData.loadData(readToMap());
-			}
-		} catch (final IOException ex) {
-			final String fileName = fileType == null ? "File" : fileType.name().toLowerCase(); // fileType might be null
-			System.err.println("Error reloading " + fileName + " '" + getName() + "'");
-			System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-			ex.printStackTrace();
-		}
-		lastLoaded = System.currentTimeMillis();
-	}
+  // ----------------------------------------------------------------------------------------------------
+  // Internal stuff
+  // ----------------------------------------------------------------------------------------------------
 
-	public final void clear() {
-		fileData.clear();
-		write();
-	}
+  protected final void reloadIfNeeded() {
+    if (shouldReload()) {
+      forceReload();
+    }
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Internal stuff
-	// ----------------------------------------------------------------------------------------------------
+  // Should the file be re-read before the next get() operation?
+  // Can be used as utility method for implementations of FlatFile
+  protected boolean shouldReload() {
+    if (ReloadSettings.AUTOMATICALLY.equals(reloadSettings)) {
+      return true;
+    } else if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
+      return FileUtils.hasChanged(file, lastLoaded);
+    } else {
+      return false;
+    }
+  }
 
-	protected final void reloadIfNeeded() {
-		if (shouldReload()) {
-			forceReload();
-		}
-	}
+  // ----------------------------------------------------------------------------------------------------
+  // Misc
+  // ----------------------------------------------------------------------------------------------------
 
-	// Should the file be re-read before the next get() operation?
-	// Can be used as utility method for implementations of FlatFile
-	protected boolean shouldReload() {
-		if (ReloadSettings.AUTOMATICALLY.equals(reloadSettings)) {
-			return true;
-		} else if (ReloadSettings.INTELLIGENT.equals(reloadSettings)) {
-			return FileUtils.hasChanged(file, lastLoaded);
-		} else {
-			return false;
-		}
-	}
+  public final FlatFileSection getSection(final String pathPrefix) {
+    return new FlatFileSection(this, pathPrefix);
+  }
 
-	// ----------------------------------------------------------------------------------------------------
-	// Misc
-	// ----------------------------------------------------------------------------------------------------
-
-	public final FlatFileSection getSection(final String pathPrefix) {
-		return new FlatFileSection(this, pathPrefix);
-	}
-
-	@Override
-	public final int compareTo(final FlatFile flatFile) {
-		return file.compareTo(flatFile.file);
-	}
+  @Override
+  public final int compareTo(final FlatFile flatFile) {
+    return file.compareTo(flatFile.file);
+  }
 }

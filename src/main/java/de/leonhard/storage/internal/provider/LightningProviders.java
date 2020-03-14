@@ -7,48 +7,43 @@ import lombok.experimental.UtilityClass;
 
 /**
  * Interface for registering more powerful Map/List implementation than the default JDK one's
- * examples for these implementations are FastUtils & Trove
- * Used in {@link de.leonhard.storage.internal.settings.DataType} Enum
+ * examples for these implementations are FastUtils & Trove Used in {@link
+ * de.leonhard.storage.internal.settings.DataType} Enum
  */
 @UtilityClass
 @Accessors(fluent = true, chain = true)
 public class LightningProviders {
-	@Setter
-	private MapProvider mapProvider;
-	@Setter
-	private YamlConfig yamlConfig;
-	@Setter
-	private InputStreamProvider inputStreamProvider;
+  @Setter private MapProvider mapProvider;
+  @Setter private YamlConfig yamlConfig;
+  @Setter private InputStreamProvider inputStreamProvider;
 
-	public MapProvider mapProvider() {
-		if (mapProvider != null) {
-			return mapProvider;
-		}
+  public MapProvider mapProvider() {
+    if (mapProvider != null) {
+      return mapProvider;
+    }
 
-		return mapProvider = new MapProvider() {
-		};
-	}
+    return mapProvider = new MapProvider() {};
+  }
 
-	public YamlConfig yamlConfig() {
-		if (yamlConfig != null) {
-			return yamlConfig;
-		}
-		final YamlConfig config = new YamlConfig();
-		//Use unicode
-		config.writeConfig.setEscapeUnicode(false);
-		//Don't use anchors
-		config.writeConfig.setAutoAnchor(false);
-		//Never use write the classname above keys
-		config.writeConfig.setWriteClassname(YamlConfig.WriteClassName.NEVER);
-		return yamlConfig = config;
-	}
+  public YamlConfig yamlConfig() {
+    if (yamlConfig != null) {
+      return yamlConfig;
+    }
+    final YamlConfig config = new YamlConfig();
+    // Use unicode
+    config.writeConfig.setEscapeUnicode(false);
+    // Don't use anchors
+    config.writeConfig.setAutoAnchor(false);
+    // Never use write the classname above keys
+    config.writeConfig.setWriteClassname(YamlConfig.WriteClassName.NEVER);
+    return yamlConfig = config;
+  }
 
-	public InputStreamProvider inputStreamProvider() {
-		if (inputStreamProvider != null) {
-			return inputStreamProvider;
-		}
+  public InputStreamProvider inputStreamProvider() {
+    if (inputStreamProvider != null) {
+      return inputStreamProvider;
+    }
 
-		return inputStreamProvider = new InputStreamProvider() {
-		};
-	}
+    return inputStreamProvider = new InputStreamProvider() {};
+  }
 }
