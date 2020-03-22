@@ -58,16 +58,28 @@ LightningFile is our own implementation of a config file format. It has quite go
 
 1. Place this in your repository-section: 
 
+Maven:
 ```xml
 <!-- JitPack-Repo -->
 <repository>
   <id>jitpack.io</id>
   <url>https://jitpack.io</url>
 </repository>
-```       
+```  
+ 
+Gradle:
+```groovy
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+```    
+
 
 2. Place this in your dependency-section: 
 
+Maven:
 ```xml
 <dependency>
   <groupId>com.github.JavaFactoryDev</groupId>
@@ -75,12 +87,20 @@ LightningFile is our own implementation of a config file format. It has quite go
   <version>3.0.3</version>
 </dependency>
 ```       
+
+Gradle:
+```groovy
+dependencies {
+    compile 'com.github.JavaFactoryDev:LightningStorage:3.0.3'
+}
+```
     
 
 3. Important! Use a shade plugin to make sure that the library is shaded into your final .jar file when your
 plugin is compiled. 
 The relocation is optional but heavily recommended. (Just change 'yourpackage.yourname' to the needed values) 
 
+Maven:
 ```xml
 <plugin>
   <groupId>org.apache.maven.plugins</groupId>
@@ -105,6 +125,17 @@ The relocation is optional but heavily recommended. (Just change 'yourpackage.yo
   </configuration>
 </plugin>
 ```      
+
+Gradle:
+```groovy
+plugins {
+    id 'java'
+    id 'application'
+    
+    // This is the 'shadow' plugin to shadow 'LightningStorage' directly into your jar.
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+```
 
 
 **Library's used:**
