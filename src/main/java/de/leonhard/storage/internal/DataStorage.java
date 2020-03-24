@@ -4,10 +4,7 @@ import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public interface DataStorage {
 
@@ -169,13 +166,7 @@ public interface DataStorage {
   }
 
   default Map<?, ?> getMap(final String key) {
-    return (Map<?, ?>) get(key);
-  }
-
-  @SuppressWarnings("unchecked")
-  default <K, V> Map<K, V> getMap(
-      final String key, final Class<K> keyType, final Class<K> valueType) {
-    return (Map<K, V>) getMap(key);
+    return getOrDefault(key, new HashMap<>());
   }
 
   /**
