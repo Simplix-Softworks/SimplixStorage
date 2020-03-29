@@ -79,19 +79,23 @@ repositories {
 
 2. Place this in your dependency-section: 
 
+Version:
+Find the latest version of LightningStorage [here](https://jitpack.io/#javafactorydev/lightningstorage)
+
 Maven:
+
 ```xml
 <dependency>
   <groupId>com.github.JavaFactoryDev</groupId>
-  <artifactId>LightningStorage</artifactId>
-  <version>3.0.3</version>
+  <artifactId>LightningStorage</artifactId> 
+  <version>VERSION <!-- Replace me with the current version --></version> 
 </dependency>
 ```       
 
 Gradle:
 ```groovy
 dependencies {
-    compile 'com.github.JavaFactoryDev:LightningStorage:3.0.3'
+    compile 'com.github.JavaFactoryDev:LightningStorage:VERSION /* Replace me with the current version */'
 }
 ```
     
