@@ -7,6 +7,7 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.ClassWrapper;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -36,6 +37,10 @@ public class Config extends Yaml {
       @Nullable final DataType dataType) {
     super(name, path, inputStream, reloadSettings, configSettings, dataType);
     setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+  }
+
+  public Config(final File file) {
+    super(file);
   }
 
   // ----------------------------------------------------------------------------------------------------

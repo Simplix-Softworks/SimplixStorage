@@ -46,7 +46,7 @@ public class Toml extends FlatFile {
   }
 
   public Toml(final File file) {
-    super(file);
+    super(file, FileType.TOML);
     create();
     forceReload();
   }

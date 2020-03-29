@@ -17,6 +17,7 @@ import lombok.Setter;
 import lombok.Synchronized;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,10 +33,10 @@ public class Yaml extends FlatFile {
 
   public Yaml(final Yaml yaml) {
     super(yaml.getFile());
-    this.fileData = yaml.getFileData();
-    this.yamlEditor = yaml.getYamlEditor();
-    this.parser = yaml.getParser();
-    this.configSettings = yaml.getConfigSettings();
+    fileData = yaml.getFileData();
+    yamlEditor = yaml.getYamlEditor();
+    parser = yaml.getParser();
+    configSettings = yaml.getConfigSettings();
   }
 
   public Yaml(final String name, @Nullable final String path) {
@@ -80,13 +81,17 @@ public class Yaml extends FlatFile {
     forceReload();
   }
 
+  public Yaml(final File file) {
+    this(file.getName(), FileUtils.getParentDirPath(file));
+  }
+
   // ----------------------------------------------------------------------------------------------------
   // Methods to override (Points where YAML is unspecific for typical FlatFiles)
   // ----------------------------------------------------------------------------------------------------
 
   @Override
   public void set(final String key, final Object value) {
-    set(key, value, this.configSettings);
+    set(key, value, configSettings);
   }
 
   @Synchronized
