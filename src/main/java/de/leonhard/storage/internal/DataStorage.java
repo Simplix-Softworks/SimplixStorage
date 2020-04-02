@@ -3,8 +3,12 @@ package de.leonhard.storage.internal;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.jetbrains.annotations.Nullable;
 
 public interface DataStorage {
 
@@ -21,16 +25,17 @@ public interface DataStorage {
   /**
    * Set an object to your data-structure
    *
-   * @param key The key your value should be associated with
+   * @param key   The key your value should be associated with
    * @param value The value you want to set in your data-structure.
    */
   void set(final String key, final Object value);
 
   /**
-   * Method to deserialize a class using the {@link LightningSerializer}. You will need to register
-   * your serializable in the {@link LightningSerializer} before.
+   * Method to deserialize a class using the {@link LightningSerializer}. You
+   * will need to register your serializable in the {@link LightningSerializer}
+   * before.
    *
-   * @param key The key your value should be associated with.
+   * @param key   The key your value should be associated with.
    * @param value The value you want to set in your data-structure.
    */
   default void setSerializable(final String key, final Object value) {
@@ -46,6 +51,13 @@ public interface DataStorage {
    */
   boolean contains(final String key);
 
+  /**
+   * Basic method to receive data from your data-structure
+   *
+   * @param key Key to search data for
+   * @return Object in data-structure. Null if nothing was found!
+   */
+  @Nullable
   Object get(final String key);
 
   // ----------------------------------------------------------------------------------------------------
@@ -59,10 +71,8 @@ public interface DataStorage {
    * @param def Default value & type of it
    */
   default <T> T get(final String key, final T def) {
-    if (!contains(key)) {
-      return def;
-    }
-    return ClassWrapper.getFromDef(get(key), def);
+    final Object raw = get(key);
+    return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }
 
   /**
@@ -172,20 +182,23 @@ public interface DataStorage {
   /**
    * Serialize an Enum from entry in the data-structure
    *
-   * @param key Path to Enum
+   * @param key      Path to Enum
    * @param enumType Class of the Enum
-   * @param <E> EnumType
+   * @param <E>      EnumType
    * @return Serialized Enum
    */
-  default <E extends Enum<E>> E getEnum(final String key, final Class<E> enumType) {
+  default <E extends Enum<E>> E getEnum(final String key,
+      final Class<E> enumType) {
     final Object object = get(key);
-    Valid.checkBoolean(object instanceof String, "No usable Enum-Value found for '" + key + "'.");
+    Valid.checkBoolean(object instanceof String,
+        "No usable Enum-Value found for '" + key + "'.");
     return Enum.valueOf(enumType, (String) object);
   }
 
   /**
-   * Method to serialize a Class using the {@link LightningSerializer}. You will need to register
-   * your serializable in the {@link LightningSerializer} before.
+   * Method to serialize a Class using the {@link LightningSerializer}. You will
+   * need to register your serializable in the {@link LightningSerializer}
+   * before.
    *
    * @return Serialized instance of class.
    */
@@ -206,17 +219,15 @@ public interface DataStorage {
    * @param <T> Type of default-value.
    */
   default <T> T getOrDefault(final String key, final T def) {
-    if (!contains(key)) {
-      return def;
-    }
-    return ClassWrapper.getFromDef(get(key), def);
+    final Object raw = get(key);
+    return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }
 
   /**
-   * Sets a value to the data-structure if the data-structure doesn't already contain the value Has
-   * nothing to do with Bukkit't 'addDefault'
+   * Sets a value to the data-structure if the data-structure doesn't already
+   * contain the value Has nothing to do with Bukkit't 'addDefault'
    *
-   * @param key Key to set the value
+   * @param key   Key to set the value
    * @param value Value to set.
    */
   default void setDefault(final String key, final Object value) {
@@ -228,17 +239,20 @@ public interface DataStorage {
   /**
    * Mix of setDefault & getDefault.
    *
-   * <p>Sets a value to the data-structure if the data-structure doesn't already contain the value
-   * Returns a default value if the data-structure doesn't already contain the key.
+   * <p>Sets a value to the data-structure if the data-structure doesn't
+   * already contain the value Returns a default value if the data-structure
+   * doesn't already contain the key.
    *
-   * <p>If the key is already contained by the data-structure the value of assigned to the key will
-   * be returned and casted to the type of your def.
+   * <p>If the key is already contained by the data-structure the value of
+   * assigned to the key will be returned and casted to the type of your def.
    *
    * @param key Key to set the value
    * @param def Value to set or return.
    */
   default <T> T getOrSetDefault(final String key, final T def) {
-    if (!contains(key)) {
+    final Object raw = get(key);
+    //Key it not yet present in data-structure
+    if (raw == null) {
       set(key, def);
       return def;
     } else {

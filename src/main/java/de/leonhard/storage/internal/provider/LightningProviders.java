@@ -18,6 +18,7 @@ public class LightningProviders {
   @Setter private InputStreamProvider inputStreamProvider;
 
   public MapProvider mapProvider() {
+
     if (mapProvider != null) {
       return mapProvider;
     }

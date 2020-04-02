@@ -5,8 +5,6 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.sections.FlatFileSection;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
-import lombok.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.Synchronized;
+import lombok.ToString;
 
 @Getter
 @ToString
@@ -136,6 +140,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
    */
   @Override
   public boolean contains(final String key) {
+    reloadIfNeeded();
     final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
     return fileData.containsKey(finalKey);
   }
