@@ -1,14 +1,22 @@
 package de.leonhard.storage.internal.editor.toml;
 
-import de.leonhard.storage.internal.exception.TomlException;
+import de.leonhard.storage.internal.exceptions.TomlException;
 import de.leonhard.storage.util.FastStringWriter;
-import lombok.experimental.UtilityClass;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 
 /**
  * Utility class for reading and writing TOML v0.4.0. This class internally uses {@link TomlReader}

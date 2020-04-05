@@ -1,11 +1,14 @@
 package de.leonhard.storage.internal.editor.toml;
 
-import de.leonhard.storage.internal.exception.TomlException;
-
+import de.leonhard.storage.internal.exceptions.TomlException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class for reading TOML v0.4.0.
@@ -512,7 +515,8 @@ public final class TomlReader {
       }
 
     } catch (final Exception ex) {
-      throw new TomlException("Invalid value: \"" + valueStr + "\" at line " + line, ex);
+      throw new TomlException(ex,
+          "Invalid value: \"" + valueStr + "\" at line " + line);
     }
 
     throw new TomlException("Invalid value: \"" + valueStr + "\" at line " + line);
@@ -691,7 +695,8 @@ public final class TomlReader {
             final int hexVal = Integer.parseInt(unicode, 16);
             return (char) hexVal;
           } catch (final NumberFormatException ex) {
-            throw new TomlException("Invalid unicode code point at line " + line, ex);
+            throw new TomlException(ex,
+                "Invalid unicode code point at line " + line);
           }
         }
       case 'U':
@@ -705,7 +710,8 @@ public final class TomlReader {
             final int hexVal = Integer.parseInt(unicode, 16);
             return (char) hexVal;
           } catch (final NumberFormatException ex) {
-            throw new TomlException("Invalid unicode code point at line " + line, ex);
+            throw new TomlException(ex,
+                "Invalid unicode code point at line " + line);
           }
         }
       default:

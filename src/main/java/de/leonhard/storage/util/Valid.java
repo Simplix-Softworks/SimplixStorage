@@ -1,6 +1,6 @@
 package de.leonhard.storage.util;
 
-import de.leonhard.storage.internal.exception.LightningValidationException;
+import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
