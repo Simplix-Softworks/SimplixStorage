@@ -1,0 +1,6 @@
+<factorypath>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/esotericsoftware/yamlbeans/yamlbeans/1.13/yamlbeans-1.13.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/json/json/20190722/json-20190722.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/org/jetbrains/annotations/18.0.0/annotations-18.0.0.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>
