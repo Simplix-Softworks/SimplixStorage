@@ -15,11 +15,11 @@ public class LightningException extends RuntimeException {
   protected LightningException(
       @NonNull final Throwable throwable,
       @NonNull final String... messages) {
-    super(String.join("\n", messages), throwable, true, true);
+    super(String.join("\n", messages), throwable, false, true);
   }
 
   protected LightningException(final String... messages) {
-    super(String.join("\n", messages), null, true, false);
+    super(String.join("\n", messages), null, false, true);
   }
 
   protected LightningException(
