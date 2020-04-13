@@ -80,7 +80,7 @@ repositories {
 2. Place this in your dependency-section: 
 
 Version:
-Find the latest version of LightningStorage [here](https://jitpack.io/#javafactorydev/lightningstorage)
+Find the latest version of LightningStorage [here](https://github.com/JavaFactoryDev/LightningStorage/releases)
 
 Maven:
 
