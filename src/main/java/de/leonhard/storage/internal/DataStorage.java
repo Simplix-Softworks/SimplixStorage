@@ -256,7 +256,7 @@ public interface DataStorage {
       set(key, def);
       return def;
     } else {
-      return ClassWrapper.getFromDef(get(key), def);
+      return (T) ClassWrapper.getFromDef(raw, def);
     }
   }
 }
