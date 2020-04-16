@@ -1,18 +1,17 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.DataStorage;
-import lombok.experimental.UtilityClass;
-
 import java.util.Collection;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 
 @SuppressWarnings("unchecked")
 @UtilityClass
 public class ClassWrapper {
 
   /**
-   * Method to cast an object to a given datatype Used for example in {@link DataStorage} to cast
-   * the results of get() to for example a String
+   * Method to cast an object to a given datatype Used for example in {@link
+   * DataStorage} to cast the results of get() to for example a String
    *
    * @param obj Object to cast
    * @param def type of result
@@ -42,15 +41,14 @@ public class ClassWrapper {
     } else if (def instanceof Byte[] || def instanceof byte[]) {
       return (T) BYTE.getByteArray(obj);
     }
-
     return (T) obj;
   }
 
   /**
-   * Method to cast an object to a given datatype Used for example in {@link DataStorage} to cast
-   * the results of get() to for example a String
+   * Method to cast an object to a given datatype Used for example in {@link
+   * DataStorage} to cast the results of get() to for example a String
    *
-   * @param obj Object to cast
+   * @param obj   Object to cast
    * @param clazz class of result
    * @return Casted object
    */
@@ -106,6 +104,7 @@ public class ClassWrapper {
 
   @UtilityClass
   public class DOUBLE {
+
     public Double[] getDoubleArray(final Object obj) {
       if (obj instanceof List) {
         final List<Double> list = (List<Double>) obj;
@@ -128,6 +127,7 @@ public class ClassWrapper {
 
   @UtilityClass
   public class FLOAT {
+
     public Float[] getFloatArray(final Object obj) {
       if (obj instanceof List) {
         final List<Float> list = (List<Float>) obj;
@@ -150,6 +150,7 @@ public class ClassWrapper {
 
   @UtilityClass
   public class INTEGER {
+
     public Integer[] getIntArray(final Object obj) {
       if (obj instanceof List) {
         final List<Integer> list = (List<Integer>) obj;
@@ -173,6 +174,7 @@ public class ClassWrapper {
   @UtilityClass
   @SuppressWarnings("unused")
   public class SHORT {
+
     public Short[] getShortArray(final Object obj) {
       if (obj instanceof List) {
         final List<Short> list = (List<Short>) obj;
@@ -195,6 +197,7 @@ public class ClassWrapper {
 
   @UtilityClass
   public class BYTE {
+
     public Byte[] getByteArray(final Object obj) {
       if (obj instanceof List) {
         final List<Byte> list = (List<Byte>) obj;
@@ -217,6 +220,7 @@ public class ClassWrapper {
 
   @UtilityClass
   public class STRING {
+
     public String[] getStringArray(final Object obj) {
       if (obj instanceof List) {
         final List<String> list = (List<String>) obj;
