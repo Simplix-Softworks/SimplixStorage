@@ -7,10 +7,36 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 public interface DataStorage {
+
+  /**
+   * Basic method to receive data from your data-structure
+   *
+   * @param key Key to search data for
+   * @return Object in data-structure. Null if nothing was found!
+   */
+  @Nullable
+  Object get(final String key);
+
+  /**
+   * Checks whether a key exists in the data-structure
+   *
+   * @param key Key to check
+   * @return Returned value.
+   */
+  boolean contains(final String key);
+
+  /**
+   * Set an object to your data-structure
+   *
+   * @param key   The key your value should be associated with
+   * @param value The value you want to set in your data-structure.
+   */
+  void set(final String key, final Object value);
 
   Set<String> singleLayerKeySet();
 
@@ -22,13 +48,26 @@ public interface DataStorage {
 
   void remove(final String key);
 
+  // ----------------------------------------------------------------------------------------------------
+  //
+  // Default-Implementations
+  //
+  // ----------------------------------------------------------------------------------------------------
+
   /**
-   * Set an object to your data-structure
-   *
-   * @param key   The key your value should be associated with
-   * @param value The value you want to set in your data-structure.
+   * Method to get a value of a predefined type from our data structure
+   * will return {@link Optional#empty()} if the value wasn't found.
+   * @param key Key to search the value for
+   * @param type Type of the value
    */
-  void set(final String key, final Object value);
+  default <T> Optional<T> find(final String key, final Class<T> type) {
+    final Object raw = get(key);
+    //Key wasn't found
+    if (raw == null) {
+      return Optional.empty();
+    }
+    return Optional.of(ClassWrapper.getFromDef(raw, type));
+  }
 
   /**
    * Method to deserialize a class using the {@link LightningSerializer}. You
@@ -43,25 +82,8 @@ public interface DataStorage {
     set(key, data);
   }
 
-  /**
-   * Checks whether a key exists in the data-structure
-   *
-   * @param key Key to check
-   * @return Returned value.
-   */
-  boolean contains(final String key);
-
-  /**
-   * Basic method to receive data from your data-structure
-   *
-   * @param key Key to search data for
-   * @return Object in data-structure. Null if nothing was found!
-   */
-  @Nullable
-  Object get(final String key);
-
   // ----------------------------------------------------------------------------------------------------
-  // Getting primitive types from data-structure
+  // Getting Strings & primitive types from data-structure
   // ----------------------------------------------------------------------------------------------------
 
   /**
