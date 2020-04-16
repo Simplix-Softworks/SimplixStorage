@@ -1,16 +1,18 @@
 package de.leonhard.storage.internal.serialize;
 
 import de.leonhard.storage.util.Valid;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
-/** Class to register serializable's */
+/**
+ * Class to register serializable's
+ */
 @UtilityClass
 public class LightningSerializer {
+
   private final List<LightningSerializable<?>> serializes =
       Collections.synchronizedList(new ArrayList<>());
 
@@ -19,8 +21,10 @@ public class LightningSerializer {
    *
    * @param lightningSerializable Serializable to register
    */
-  public void registerSerializable(@NonNull final LightningSerializable<?> lightningSerializable) {
-    Valid.notNull(lightningSerializable.getClazz(), "Class of serializable mustn't be null");
+  public void registerSerializable(
+      @NonNull final LightningSerializable<?> lightningSerializable) {
+    Valid.notNull(lightningSerializable.getClazz(),
+        "Class of serializable mustn't be null");
     serializes.add(lightningSerializable);
   }
 
@@ -36,14 +40,17 @@ public class LightningSerializer {
   @SuppressWarnings("ALL")
   public <T> T serialize(final Object obj, final Class<T> clazz) {
     final LightningSerializable serializable = findSerializable(clazz);
-    Valid.notNull(serializable, "No serializable found for '" + clazz.getSimpleName() + "'");
+    Valid.notNull(serializable,
+        "No serializable found for '" + clazz.getSimpleName() + "'");
     return (T) serializable.serialize(obj);
   }
 
   public Object deserialize(final Object obj) {
-    final LightningSerializable<?> serializable = findSerializable(obj.getClass());
+    final LightningSerializable<?> serializable = findSerializable(
+        obj.getClass());
     Valid.notNull(
-        serializable, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
+        serializable,
+        "No serializable found for '" + obj.getClass().getSimpleName() + "'");
     return serializable.deserialize(obj);
   }
 }
