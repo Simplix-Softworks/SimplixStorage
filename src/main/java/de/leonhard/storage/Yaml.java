@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -199,6 +200,38 @@ public class Yaml extends FlatFile {
   public final void addHeader(final String... header) {
     addHeader(Arrays.asList(header));
   }
+
+	public final void framedHeader (final String... header) {
+		List <String> stringList = new ArrayList <>();
+		String border = "# +----------------------------------------------------+ #";
+		stringList.add(border);
+
+		for (String line : header) {
+			StringBuilder builder = new StringBuilder();
+			if (line.length() > 50) {
+				continue;
+			}
+
+			int length = (50 - line.length()) / 2;
+			StringBuilder finalLine = new StringBuilder(line);
+
+			for (int i = 0; i < length; i++) {
+				finalLine.append(" ");
+				finalLine.reverse();
+				finalLine.append(" ");
+				finalLine.reverse();
+			}
+
+			if (line.length() % 2 != 0) {
+				finalLine.append(" ");
+			}
+
+			builder.append("# < ").append(finalLine.toString()).append(" > #");
+			stringList.add(builder.toString());
+		}
+		stringList.add(border);
+		setHeader(stringList);
+	}
 
   public final Optional<InputStream> getInputStream() {
     return Optional.ofNullable(inputStream);
