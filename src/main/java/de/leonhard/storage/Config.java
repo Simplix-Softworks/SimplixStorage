@@ -1,10 +1,8 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import de.leonhard.storage.util.ClassWrapper;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -12,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"unused"})
 public class Config extends Yaml {
+
   private List<String> header;
 
   public Config(final Config config) {
@@ -23,7 +22,8 @@ public class Config extends Yaml {
   }
 
   public Config(
-      final String name, @Nullable final String path, @Nullable final InputStream inputStream) {
+      final String name, @Nullable final String path,
+      @Nullable final InputStream inputStream) {
     this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
   }
 
@@ -43,36 +43,30 @@ public class Config extends Yaml {
   }
 
   // ----------------------------------------------------------------------------------------------------
-  // Methods to override (Points where Config is unspecific for typical FlatFiles)
+  // Method overridden from Yaml
   // ----------------------------------------------------------------------------------------------------
 
   @Override
-  public final void set(final String key, final Object value) {
-    super.set(key, value, getConfigSettings());
+  public Config addDefaultsFromInputStream() {
+    return (Config) super.addDefaultsFromInputStream();
   }
 
   @Override
-  public final void setDefault(final String key, final Object value) {
-    if (!contains(key)) {
-      set(key, value, getConfigSettings());
+  public Config addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
+    return (Config) super.addDefaultsFromInputStream(inputStream);
+  }
+
+  @Override
+  protected final void writeWithComments() {
+    final List<String> unEdited = yamlEditor.read();
+    final List<String> header = yamlEditor.readHeader();
+    final List<String> footer = yamlEditor.readFooter();
+    write();
+    header.addAll(yamlEditor.read());
+    if (!header.containsAll(footer)) {
+      header.addAll(footer);
     }
-  }
-
-  @Override
-  public final void setSerializable(final String key, final Object value) {
-    final Object data = LightningSerializer.deserialize(value);
-    set(key, data, getConfigSettings());
-  }
-
-  @Override
-  public final <T> T getOrSetDefault(final String key, final T def) {
-    reloadIfNeeded();
-    if (!contains(key)) {
-      set(key, def, getConfigSettings());
-      return def;
-    } else {
-      final Object obj = get(key);
-      return ClassWrapper.getFromDef(obj, def);
-    }
+    write();
+    yamlEditor.write(parser.parseComments(unEdited, header));
   }
 }

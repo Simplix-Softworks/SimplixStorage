@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import com.esotericsoftware.yamlbeans.YamlException;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
@@ -11,25 +12,30 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Synchronized;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 @Getter
 public class Yaml extends FlatFile {
+
+  protected final InputStream inputStream;
   protected final YamlEditor yamlEditor;
   protected final YamlParser parser;
-  @Setter private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+  @Setter
+  private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
   public Yaml(final Yaml yaml) {
     super(yaml.getFile());
@@ -37,6 +43,7 @@ public class Yaml extends FlatFile {
     yamlEditor = yaml.getYamlEditor();
     parser = yaml.getParser();
     configSettings = yaml.getConfigSettings();
+    inputStream = yaml.getInputStream().orElse(null);
   }
 
   public Yaml(final String name, @Nullable final String path) {
@@ -44,7 +51,8 @@ public class Yaml extends FlatFile {
   }
 
   public Yaml(
-      final String name, @Nullable final String path, @Nullable final InputStream inputStream) {
+      final String name, @Nullable final String path,
+      @Nullable final InputStream inputStream) {
     this(name, path, inputStream, null, null, null);
   }
 
@@ -56,6 +64,7 @@ public class Yaml extends FlatFile {
       @Nullable final ConfigSettings configSettings,
       @Nullable final DataType dataType) {
     super(name, path, FileType.YAML);
+    this.inputStream = inputStream;
 
     if (create() && inputStream != null) {
       FileUtils.writeToFile(file, inputStream);
@@ -89,40 +98,66 @@ public class Yaml extends FlatFile {
   // Methods to override (Points where YAML is unspecific for typical FlatFiles)
   // ----------------------------------------------------------------------------------------------------
 
-  @Override
-  public void set(final String key, final Object value) {
-    set(key, value, configSettings);
+  public Yaml addDefaultsFromInputStream() {
+    return addDefaultsFromInputStream(getInputStream().orElse(null));
   }
 
+  public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
+    reloadIfNeeded();
+    // Creating & setting defaults
+    if (inputStream == null) {
+      return this;
+    }
+    try {
+      final Map<String, Object> data = new YamlReader(
+          new InputStreamReader(inputStream)).readToMap();
+
+      // Merging
+      for (final Entry<String, Object> entry : data.entrySet()) {
+        if (!fileData.containsKey(entry.getKey())) {
+          fileData.insert(entry.getKey(), entry.getValue());
+        }
+      }
+      writeWithComments();
+    } catch (final YamlException e) {
+      e.printStackTrace();
+    }
+
+    return this;
+  }
+
+  @Override
   @Synchronized
-  public void set(final String key, final Object value, final ConfigSettings configSettings) {
+  public void set(final String key, final Object value) {
     reloadIfNeeded();
 
     final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
 
     fileData.insert(finalKey, value);
+    writeWithComments();
+  }
 
-    try {
-      // If Comments shouldn't be preserved
-      if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-        write(fileData);
-        return;
-      }
 
-      final List<String> unEdited = yamlEditor.read();
-      final List<String> header = yamlEditor.readHeader();
-      final List<String> footer = yamlEditor.readFooter();
+  /**
+   * Method to write to file while preserving comments if set
+   */
+  protected void writeWithComments() {
+    // If Comments shouldn't be preserved
+    if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
       write();
-      header.addAll(yamlEditor.read());
-      if (!header.containsAll(footer)) {
-        header.addAll(footer);
-      }
-      write();
-      yamlEditor.write(parser.parseComments(unEdited, header));
-    } catch (final IOException ex) {
-      System.err.println("Error while writing '" + getName() + "'");
-      ex.printStackTrace();
+      return;
     }
+
+    final List<String> unEdited = yamlEditor.read();
+    final List<String> header = yamlEditor.readHeader();
+    final List<String> footer = yamlEditor.readFooter();
+    write();
+    header.addAll(yamlEditor.read());
+    if (!header.containsAll(footer)) {
+      header.addAll(footer);
+    }
+    write();
+    yamlEditor.write(parser.parseComments(unEdited, header));
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -163,5 +198,9 @@ public class Yaml extends FlatFile {
 
   public final void addHeader(final String... header) {
     addHeader(Arrays.asList(header));
+  }
+
+  public final Optional<InputStream> getInputStream() {
+    return Optional.ofNullable(inputStream);
   }
 }
