@@ -1,0 +1,135 @@
+# !-------------------------------------------------------------------------------------------------!
+#                       Welcome to the main configuration of PunishControl PRO
+# !-------------------------------------------------------------------------------------------------!
+#
+#    For support and documentation, please visit:
+#    - https://github.com/kangarko/PunishControl-Pro/wiki
+#
+# !-------------------------------------------------------------------------------------------------!
+#
+#    1) COLOR CODES are supported with the '&' character. See
+#       - http://minecraftwiki.net/wiki/Formatting_codes
+#       [!] When you use them, omit the message with " " or ' '.
+#
+#    2) TO HIDE a message, set it to 'none'.
+#
+#    3) For UNICODE CHARACTERS (smileys, symbols, ..), save the file in UTF-8 encoding. See
+#       - https://github.com/kangarko/ChatControl-Pro/wiki/Use-Right-Encoding
+#
+#    4) SOUND NAMES had changed as per Minecraft 1.9, compare:
+#       - 1.9 and newer: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+#       - 1.8 and older: https://goo.gl/ArzbZA
+#
+#    PS: The information above applies for all files within the PunishControl folder.
+#
+#    !! Messages (e.g. 'Please wait 2 seconds [...]') are stored in localization, see:
+#       - https://github.com/kangarko/PunishControl-Pro/wiki/Localization
+#
+# !-------------------------------------------------------------------------------------------------!
+
+Prefix: '&8&lPUNISHCONTROL &8//&7'
+
+Locale: en
+
+Command_Aliases: [punishcontrol,phc, pun, pc]
+
+#JSON/MYSQL
+Storage: JSON
+
+MySQL:
+  Host: ''
+  Database: ''
+  Port: 3306
+  User: ''
+  Password: ''
+
+Punishes:
+  # Should punishing only be possible with an template
+  OnlyTemplate: false
+  Ban:
+    #Should stuff be notified
+    #if an punish of this type is created?
+    Permission: punishcontrol.command.ban
+    Enabled: true
+    Apply_On_Ip: true
+  Mute:
+    # Commands the player should be disallowed to use
+    Allowed_Commands:
+      - /msg
+      - /r
+    Permission: punishcontrol.command.mute
+    Enabled: true
+    Apply_On_Ip: false
+  Warn:
+    Permission: punishcontrol.command.warn
+    Enabled: true
+    #Types: ACTION_BAR, TITLE, CHAT
+    Message_Type: TITLE
+Notifications:
+  Punish:
+    Enabled: true
+    Permission: punishcontrol.notifications.punish
+  Silent-Punish:
+    Enabled: true
+    Permission: punishcontrol.notifications.silent-punish
+
+Groups:
+  Admin:
+    #The group with the highest priority will be p
+    Priority: 0
+    Permission: punishcontrol.group.admin
+    # May the group override an existing punishment?
+    # For example ban a already banned player again?
+    Override_Punishes: true
+
+    Template_Only: false
+    #Set to -1 to disable
+    Limits:
+      Ban: -1
+      Mute: -1
+      Warn: -1
+    # Templates the Group should always be able to use.
+    # Even if the Limits would prohibit the usage. (For example by the duration of the punish)
+    # Set to * to enable all
+    Template_Bypasses: ['*']
+
+  Moderator:
+    Priority: 1
+    Permission: punishcontrol.group.moderator
+    Override_Punishes: false
+    Template_Only: false
+    Limits:
+      Ban: 1 year
+      Mute: 1 year
+      Warn: 2 year
+    Template_Bypasses: ['*']
+
+  Supporter:
+    Priority: 2
+    Permission: punishcontrol.group.supporter
+    Override_Punishes: false
+    Template_Only: true
+    Limits:
+      Ban: 1 month
+      Mute: 2 month
+      Warn: 3 month
+    Template_Bypasses: ['*']
+
+#
+# Advanced settings for PunishControl PRO
+# -> Don't change them unless you really know, what you are doing.
+#
+Advanced:
+
+  # Define how similar-strings need to be using the /search command
+  Min_Similarity_Needed: 0.85
+
+  Cache_Results: true
+  API:
+    #You can disable the API for security reasons
+    Enabled: True
+
+Debug: ['*']
+
+# Do not change this value, otherwise it will corrupt your plugin installation!
+Version: 2

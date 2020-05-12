@@ -1,15 +1,15 @@
 package de.leonhard.storage.internal.editor.yaml;
 
 import de.leonhard.storage.util.FileUtils;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.io.File;
 import java.util.List;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
 public class YamlEditor {
+
   private final File file;
 
   public List<String> read() {

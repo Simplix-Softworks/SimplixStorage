@@ -157,7 +157,7 @@ public class Yaml extends FlatFile {
       header.addAll(footer);
     }
     write();
-    yamlEditor.write(parser.parseComments(unEdited, header));
+    yamlEditor.write(parser.parseLines(unEdited, header));
   }
 
   // ----------------------------------------------------------------------------------------------------

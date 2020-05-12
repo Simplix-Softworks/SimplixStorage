@@ -1,10 +1,9 @@
 package de.leonhard.storage.internal.editor.yaml;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 
 /** Class to work with the parts of the lines of a YAML-file */
 @UtilityClass
@@ -72,7 +71,7 @@ public class YamlStringEditor {
     final List<String> result = new ArrayList<>();
 
     for (final String line : lines) {
-      if (!line.replaceAll("\\s+", "").startsWith("#")) {
+      if (!line.trim().startsWith("#")) {
         result.add(line);
       }
     }

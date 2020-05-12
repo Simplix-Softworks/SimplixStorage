@@ -22,7 +22,8 @@ public class Config extends Yaml {
   }
 
   public Config(
-      final String name, @Nullable final String path,
+      final String name,
+      @Nullable final String path,
       @Nullable final InputStream inputStream) {
     this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
   }
@@ -59,14 +60,7 @@ public class Config extends Yaml {
   @Override
   protected final void writeWithComments() {
     final List<String> unEdited = yamlEditor.read();
-    final List<String> header = yamlEditor.readHeader();
-    final List<String> footer = yamlEditor.readFooter();
     write();
-    header.addAll(yamlEditor.read());
-    if (!header.containsAll(footer)) {
-      header.addAll(footer);
-    }
-    write();
-    yamlEditor.write(parser.parseComments(unEdited, header));
+    yamlEditor.write(parser.parseLines(unEdited, yamlEditor.readKeys()));
   }
 }
