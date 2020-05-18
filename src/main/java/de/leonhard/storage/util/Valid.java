@@ -2,6 +2,7 @@ package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public class Valid {
@@ -24,11 +25,11 @@ public class Valid {
     }
   }
 
-  public <T> void notNull(final T object) {
+  public <T> void notNull(@Nullable final T object) {
     notNull(object, "Valid.notNull(): Validated Object is null");
   }
 
-  public <T> void notNull(final T object, final String... message) {
+  public <T> void notNull(@Nullable final T object, @Nullable final String... message) {
     if (object != null) {
       return;
     }

@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import lombok.Cleanup;
 import lombok.Getter;
@@ -112,12 +111,14 @@ public class Yaml extends FlatFile {
       final Map<String, Object> data = new YamlReader(
           new InputStreamReader(inputStream)).readToMap();
 
-      // Merging
-      for (final Entry<String, Object> entry : data.entrySet()) {
-        if (!fileData.containsKey(entry.getKey())) {
-          fileData.insert(entry.getKey(), entry.getValue());
+      final FileData newData = new FileData(data, DataType.UNSORTED);
+
+      for (final String key : newData.keySet()) {
+        if (!fileData.containsKey(key)) {
+          fileData.insert(key, newData.get(key));
         }
       }
+
       writeWithComments();
     } catch (final YamlException e) {
       e.printStackTrace();
