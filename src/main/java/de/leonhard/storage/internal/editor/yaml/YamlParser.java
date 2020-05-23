@@ -8,7 +8,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
-@SuppressWarnings("unused")
 @RequiredArgsConstructor
 public final class YamlParser {
 
@@ -56,16 +55,11 @@ public final class YamlParser {
     return assignCommentsToKey(yamlEditor.read());
   }
 
-  // Method to assign the comments in a YAML to their appropriate keys
-
-  /*
-
-  #comment1
-  #comment2
-  #comment3
-  key: true
-
-  */
+  /**
+   * Method to map the #-comments in your YAML-File to the according key
+   * @param lines Initial lines to read
+   * @return Mapped comments (Key, comments)
+   */
   public Map<String, List<String>> assignCommentsToKey(final List<String> lines) {
     final Map<String, List<String>> out = new HashMap<>();
 
@@ -81,9 +75,7 @@ public final class YamlParser {
         } else {
           storage.add(line);
         }
-
       } else {
-        //
         currentKey = line;
       }
     }

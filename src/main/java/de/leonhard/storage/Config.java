@@ -56,11 +56,4 @@ public class Config extends Yaml {
   public Config addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
     return (Config) super.addDefaultsFromInputStream(inputStream);
   }
-
-  @Override
-  protected final void writeWithComments() {
-    final List<String> unEdited = yamlEditor.read();
-    write();
-    yamlEditor.write(parser.parseLines(unEdited, yamlEditor.readKeys()));
-  }
 }

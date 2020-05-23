@@ -13,23 +13,22 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class LightningSerializer {
 
-  private final List<LightningSerializable<?>> serializes =
-      Collections.synchronizedList(new ArrayList<>());
+  private final List<LightningSerializable<?>> serializables = Collections.synchronizedList(new ArrayList<>());
 
   /**
    * Register a serializable to our list
    *
-   * @param lightningSerializable Serializable to register
+   * @param serializable Serializable to register
    */
-  public void registerSerializable(
-      @NonNull final LightningSerializable<?> lightningSerializable) {
-    Valid.notNull(lightningSerializable.getClazz(),
+  public void registerSerializable(@NonNull final LightningSerializable<?> serializable) {
+    Valid.notNull(
+        serializable.getClazz(),
         "Class of serializable mustn't be null");
-    serializes.add(lightningSerializable);
+    serializables.add(serializable);
   }
 
   public LightningSerializable<?> findSerializable(final Class<?> clazz) {
-    for (final LightningSerializable<?> serializable : serializes) {
+    for (final LightningSerializable<?> serializable : serializables) {
       if (serializable.getClazz().equals(clazz)) {
         return serializable;
       }
@@ -40,14 +39,14 @@ public class LightningSerializer {
   @SuppressWarnings("ALL")
   public <T> T serialize(final Object obj, final Class<T> clazz) {
     final LightningSerializable serializable = findSerializable(clazz);
-    Valid.notNull(serializable,
+    Valid.notNull(
+        serializable,
         "No serializable found for '" + clazz.getSimpleName() + "'");
     return (T) serializable.serialize(obj);
   }
 
   public Object deserialize(final Object obj) {
-    final LightningSerializable<?> serializable = findSerializable(
-        obj.getClass());
+    final LightningSerializable<?> serializable = findSerializable(obj.getClass());
     Valid.notNull(
         serializable,
         "No serializable found for '" + obj.getClass().getSimpleName() + "'");

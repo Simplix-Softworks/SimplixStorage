@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.editor.yaml;
 
 import de.leonhard.storage.util.FileUtils;
+import de.leonhard.storage.util.YamlUtils;
 import java.io.File;
 import java.util.List;
 import lombok.Getter;
@@ -21,27 +22,27 @@ public class YamlEditor {
   // ----------------------------------------------------------------------------------------------------
 
   public List<String> readKeys() {
-    return YamlStringEditor.getKeys(read());
+    return YamlUtils.getKeys(read());
   }
 
   public List<String> readComments() {
-    return YamlStringEditor.getKeys(read());
+    return YamlUtils.getKeys(read());
   }
 
   public List<String> readHeader() {
-    return YamlStringEditor.getHeaderFromLines(read());
+    return YamlUtils.getHeaderFromLines(read());
   }
 
   public List<String> readFooter() {
-    return YamlStringEditor.getFooterFromLines(read());
+    return YamlUtils.getFooterFromLines(read());
   }
 
   public List<String> readPureComments() {
-    return YamlStringEditor.getPureCommentsFromLines(read());
+    return YamlUtils.getPureCommentsFromLines(read());
   }
 
   public List<String> readWithoutHeaderAndFooter() {
-    return YamlStringEditor.getLinesWithoutFooterAndHeaderFromLines(read());
+    return YamlUtils.getLinesWithoutFooterAndHeaderFromLines(read());
   }
 
   // ----------------------------------------------------------------------------------------------------

@@ -37,6 +37,11 @@ public class FileData {
     localMap.clear();
   }
 
+  /**
+   * Loads data from a map
+   * clears our current data before
+   * @param map Map to load data from
+   */
   public void loadData(final Map<String, Object> map) {
     clear();
 

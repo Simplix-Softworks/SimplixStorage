@@ -115,10 +115,6 @@ public final class LightningBuilder {
   // Create the objects of our FileTypes
   // ----------------------------------------------------------------------------------------------------
 
-  public LightningFile createLightningFile() {
-    return new LightningFile(name, path, inputStream, reloadSettings, configSettings);
-  }
-
   public Config createConfig() {
     return new Config(name, path, inputStream, reloadSettings, configSettings, dataType);
   }

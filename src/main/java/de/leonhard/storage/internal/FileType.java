@@ -11,9 +11,7 @@ import java.io.File;
 public enum FileType {
   JSON("json"),
   YAML("yml"),
-  TOML("toml"),
-  CSV("csv"),
-  LS("ls");
+  TOML("toml");
 
   private final String extension;
 
