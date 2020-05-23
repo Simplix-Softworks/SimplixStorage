@@ -16,7 +16,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.Synchronized;
 import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,8 +88,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     return createFile(file);
   }
 
-  @Synchronized
-  private boolean createFile(final File file) {
+  private synchronized boolean createFile(final File file) {
     if (file.exists()) {
       lastLoaded = System.currentTimeMillis();
       return false;
@@ -124,8 +122,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   // ---------------------------------------------------------------------------------------------------->
 
   @Override
-  @Synchronized
-  public final void set(final String key, final Object value) {
+  public synchronized final void set(final String key, final Object value) {
+    reloadIfNeeded();
     final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
     fileData.insert(finalKey, value);
     write();
@@ -177,8 +175,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   @Override
-  @Synchronized
-  public final void remove(final String key) {
+  public synchronized final void remove(final String key) {
     reloadIfNeeded();
     fileData.remove(key);
     write();
@@ -253,9 +250,9 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     return file.getAbsolutePath();
   }
 
-  @Synchronized
-  public void replace(final CharSequence target, final CharSequence replacement)
-      throws IOException {
+  public synchronized void replace(
+      final CharSequence target,
+      final CharSequence replacement) throws IOException {
     final List<String> lines = Files.readAllLines(file.toPath());
     final List<String> result = new ArrayList<>();
     for (final String line : lines) {

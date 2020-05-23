@@ -24,7 +24,6 @@ import java.util.Optional;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Synchronized;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
@@ -108,6 +107,7 @@ public class Yaml extends FlatFile {
     if (inputStream == null) {
       return this;
     }
+
     try {
       final Map<String, Object> data = new SimpleYamlReader(
           new InputStreamReader(inputStream)).readToMap();
@@ -126,17 +126,6 @@ public class Yaml extends FlatFile {
     }
 
     return this;
-  }
-
-  @Override
-  @Synchronized
-  public void set(final String key, final Object value) {
-    reloadIfNeeded();
-
-    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-    fileData.insert(finalKey, value);
-    write();
   }
 
   // ----------------------------------------------------------------------------------------------------
