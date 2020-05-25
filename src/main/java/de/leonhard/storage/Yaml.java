@@ -1,6 +1,5 @@
 package de.leonhard.storage;
 
-import com.esotericsoftware.yamlbeans.YamlException;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
@@ -121,8 +120,8 @@ public class Yaml extends FlatFile {
       }
 
       write();
-    } catch (final YamlException e) {
-      e.printStackTrace();
+    } catch (final Exception ex) {
+      ex.printStackTrace();
     }
 
     return this;
@@ -153,7 +152,7 @@ public class Yaml extends FlatFile {
   }
 
   // Writing without comments
-  protected final void write0(final FileData fileData) throws IOException {
+  private void write0(final FileData fileData) throws IOException {
     @Cleanup final SimpleYamlWriter writer = new SimpleYamlWriter(file);
     writer.write(fileData.toMap());
   }

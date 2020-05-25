@@ -75,7 +75,7 @@ public class Json extends FlatFile {
   public Map getMap(final String key) {
     final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
     if (!contains(finalKey)) {
-      return new HashMap();
+      return new HashMap<>();
     } else {
       final Object map = get(key);
       if (map instanceof Map) {

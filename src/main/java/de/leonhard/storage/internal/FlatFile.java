@@ -116,13 +116,12 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
    */
   protected abstract void write(final FileData data) throws IOException;
 
-
   // ----------------------------------------------------------------------------------------------------
   // Overridden methods from DataStorage
   // ---------------------------------------------------------------------------------------------------->
 
   @Override
-  public synchronized final void set(final String key, final Object value) {
+  public synchronized void set(final String key, final Object value) {
     reloadIfNeeded();
     final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
     fileData.insert(finalKey, value);
@@ -151,7 +150,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   @Override
-  public final  Set<String> singleLayerKeySet() {
+  public final Set<String> singleLayerKeySet() {
     reloadIfNeeded();
     return fileData.singleLayerKeySet();
   }
@@ -285,9 +284,9 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
       }
     } catch (final IOException ex) {
       final String fileName = fileType == null
-              ? "File"
-              : fileType.name().toLowerCase(); // fileType might be null
-      System.err.println("Error reloading " + fileName + " '" + getName() + "'");
+          ? "File"
+          : fileType.name().toLowerCase(); // fileType might be null
+      System.err.println("Exception reloading " + fileName + " '" + getName() + "'");
       System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
       ex.printStackTrace();
     }
