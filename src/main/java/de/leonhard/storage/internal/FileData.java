@@ -2,20 +2,22 @@ package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.util.JsonUtils;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
-
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 /**
- * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration
- * files.
+ * An extended HashMap, to easily process the nested HashMaps created by reading the
+ * Configuration files.
  */
 @SuppressWarnings("unchecked")
 public class FileData {
+
   private final Map<String, Object> localMap;
 
   public FileData(final Map<String, Object> map, final DataType dataType) {
@@ -38,8 +40,8 @@ public class FileData {
   }
 
   /**
-   * Loads data from a map
-   * clears our current data before
+   * Loads data from a map clears our current data before
+   *
    * @param map Map to load data from
    */
   public void loadData(final Map<String, Object> map) {
@@ -77,7 +79,7 @@ public class FileData {
   /**
    * Method to assign a value to a key.
    *
-   * @param key the key to be used.
+   * @param key   the key to be used.
    * @param value the value to be assigned to the key.
    */
   public synchronized void insert(final String key, final Object value) {
@@ -90,7 +92,8 @@ public class FileData {
   }
 
   private Object insert(
-      final Map<String, Object> map, final String[] key, final Object value, final int id) {
+      final Map<String, Object> map, final String[] key, final Object value,
+      final int id) {
     if (id < key.length) {
       final Map<String, Object> tempMap = new HashMap<>(map);
       final Map<String, Object> childMap =
@@ -115,7 +118,8 @@ public class FileData {
     return containsKey(localMap, parts, 0);
   }
 
-  private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
+  private boolean containsKey(final Map<String, Object> map, final String[] key,
+      final int id) {
     if (id < key.length - 1) {
       if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
         final Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
@@ -156,7 +160,9 @@ public class FileData {
   }
 
   private Map<String, Object> remove(
-      final Map<String, Object> map, final String[] key, final int keyIndex) {
+      final Map<String, Object> map,
+      final String[] key,
+      final int keyIndex) {
     if (keyIndex < key.length - 1) {
       final Object tempValue = map.get(key[keyIndex]);
       if (tempValue instanceof Map) {
@@ -188,7 +194,8 @@ public class FileData {
    * @return the keySet of the given layer or an empty set if the key does not exist.
    */
   public Set<String> singleLayerKeySet(final String key) {
-    return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet() : new HashSet<>();
+    return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet()
+        : new HashSet<>();
   }
 
   /**
@@ -197,32 +204,63 @@ public class FileData {
    * @return the keySet of all layers of localMap combined (Format: key.subkey).
    */
   public Set<String> keySet() {
-    return keySet(localMap);
+    return multiLayerKeySet(localMap);
+  }
+
+  public Set<Map.Entry<String, Object>> entrySet() {
+    return multiLayerEntrySet(localMap);
+  }
+
+  public Set<Map.Entry<String, Object>> singleLayerEntrySet() {
+    return localMap.entrySet();
   }
 
   /**
    * get the keySet of all sublayers of the given key combined.
    *
    * @param key the key of the layer
-   * @return the keySet of all sublayers of the given key or an empty set if the key does not exist
-   *     (Format: key.subkey).
+   * @return the keySet of all sublayers of the given key or an empty set if the key does
+   * not exist (Format: key.subkey).
    */
   public Set<String> keySet(final String key) {
-    return get(key) instanceof Map ? keySet((Map<String, Object>) get(key)) : new HashSet<>();
+    return get(key) instanceof Map
+        ? multiLayerKeySet((Map<String, Object>) get(key))
+        : new HashSet<>();
   }
 
-  private Set<String> keySet(final Map<String, Object> map) {
-    final Set<String> localSet = new HashSet<>();
+  /**
+   * Private helper method to get the key set of an map containing maps recursively
+   */
+  private Set<String> multiLayerKeySet(final Map<String, Object> map) {
+    final Set<String> out = new HashSet<>();
     for (final String key : map.keySet()) {
       if (map.get(key) instanceof Map) {
-        for (final String tempKey : keySet((Map<String, Object>) map.get(key))) {
-          localSet.add(key + "." + tempKey);
+        for (final String tempKey : multiLayerKeySet(
+            (Map<String, Object>) map.get(key))) {
+          out.add(key + "." + tempKey);
         }
       } else {
-        localSet.add(key);
+        out.add(key);
       }
     }
-    return localSet;
+    return out;
+  }
+
+
+  private Set<Map.Entry<String, Object>> multiLayerEntrySet(
+      final Map<String, Object> map) {
+    final Set<Map.Entry<String, Object>> out = new HashSet<>();
+    for (val entry : map.entrySet()) {
+      if (map.get(entry.getKey()) instanceof Map) {
+        for (final String tempKey :
+            multiLayerKeySet((Map<String, Object>) map.get(entry.getKey()))) {
+          out.add(new SimpleEntry<>(entry.getKey() + "." + tempKey, entry.getValue()));
+        }
+      } else {
+        out.add(entry);
+      }
+    }
+    return out;
   }
 
   /**

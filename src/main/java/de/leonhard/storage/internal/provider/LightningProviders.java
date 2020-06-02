@@ -6,16 +6,22 @@ import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 
 /**
- * Interface for registering more powerful Map/List implementation than the default JDK one's
- * examples for these implementations are FastUtils & Trove Used in {@link
+ * Interface for registering more powerful Map/List implementation than the default JDK
+ * one's examples for these implementations are FastUtils & Trove Used in {@link
  * de.leonhard.storage.internal.settings.DataType} Enum
  */
 @UtilityClass
 @Accessors(fluent = true, chain = true)
 public class LightningProviders {
-  @Setter private MapProvider mapProvider;
-  @Setter private YamlConfig yamlConfig;
-  @Setter private InputStreamProvider inputStreamProvider;
+
+  @Setter
+  private MapProvider mapProvider;
+  @Setter
+  private YamlConfig yamlConfig;
+  @Setter
+  private InputStreamProvider inputStreamProvider;
+  @Setter
+  private ExceptionHandler exceptionHandler;
 
   public MapProvider mapProvider() {
 
@@ -23,7 +29,8 @@ public class LightningProviders {
       return mapProvider;
     }
 
-    return mapProvider = new MapProvider() {};
+    return mapProvider = new MapProvider() {
+    };
   }
 
   public YamlConfig yamlConfig() {
@@ -45,6 +52,16 @@ public class LightningProviders {
       return inputStreamProvider;
     }
 
-    return inputStreamProvider = new InputStreamProvider() {};
+    return inputStreamProvider = new InputStreamProvider() {
+    };
+  }
+
+  public ExceptionHandler exceptionHandler() {
+    if (exceptionHandler != null) {
+      return exceptionHandler;
+    }
+
+    return exceptionHandler = new ExceptionHandler() {
+    };
   }
 }
