@@ -50,7 +50,8 @@ public class FileUtils {
    * @param folder    Folder to search in.
    * @param extension Extension to search for. Set to null to skip extension validation.
    */
-  public List<File> listFiles(@NonNull final File folder,
+  public List<File> listFiles(
+      @NonNull final File folder,
       @NonNull final String extension) {
     final List<File> result = new ArrayList<>();
 
