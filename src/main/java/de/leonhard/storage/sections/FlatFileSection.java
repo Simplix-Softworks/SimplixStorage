@@ -9,7 +9,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 public class FlatFileSection implements DataStorage {
-  private final FlatFile flatFile;
+  protected final FlatFile flatFile;
   @Getter private final String pathPrefix;
 
   @Override
