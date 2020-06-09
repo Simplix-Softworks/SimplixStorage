@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface DataStorage {
@@ -240,7 +241,7 @@ public interface DataStorage {
    * @param def Default value, if data-structure doesn't contain key.
    * @param <T> Type of default-value.
    */
-  default <T> T getOrDefault(final String key, final T def) {
+  default <T> T getOrDefault(final String key, @NonNull final T def) {
     final Object raw = get(key);
     return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }

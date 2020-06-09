@@ -5,12 +5,6 @@ import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
-import lombok.Cleanup;
-import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +13,11 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Cleanup;
+import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 @Getter
 public class Json extends FlatFile {
