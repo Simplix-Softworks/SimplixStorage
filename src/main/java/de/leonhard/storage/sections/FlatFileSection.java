@@ -52,6 +52,11 @@ public class FlatFileSection implements DataStorage {
     return flatFile.get(createFinalKey(key));
   }
 
+  @Override
+  public <E extends Enum<E>> E getEnum(String key, Class<E> enumType) {
+    return flatFile.getEnum(createFinalKey(key), enumType);
+  }
+
   private String createFinalKey(final String key) {
     return pathPrefix == null || pathPrefix.isEmpty() ? key : pathPrefix + "." + key;
   }

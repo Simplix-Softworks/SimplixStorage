@@ -3,12 +3,9 @@ package de.leonhard.storage.internal;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
+
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
