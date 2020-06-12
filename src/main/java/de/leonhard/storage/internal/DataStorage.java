@@ -75,8 +75,12 @@ public interface DataStorage {
    * @param key   The key your value should be associated with.
    * @param value The value you want to set in your data-structure.
    */
-  default void setSerializable(final String key, final Object value) {
-    final Object data = LightningSerializer.deserialize(value);
+  default <T> void setSerializable(final String key, final T value) {
+    setSerializable(key, value, (Class<T>) value.getClass());
+  }
+
+  default <T> void setSerializable(final String key, final T value, Class<T> clazz) {
+    final Object data = LightningSerializer.deserialize(value, clazz);
     set(key, data);
   }
 
@@ -207,7 +211,8 @@ public interface DataStorage {
    * @param <E>      EnumType
    * @return Serialized Enum
    */
-  default <E extends Enum<E>> E getEnum(final String key,
+  default <E extends Enum<E>> E getEnum(
+      final String key,
       final Class<E> enumType) {
     final Object object = get(key);
     Valid.checkBoolean(object instanceof String,
@@ -226,7 +231,7 @@ public interface DataStorage {
     if (!contains(key)) {
       return null;
     }
-    return LightningSerializer.serialize(get(key), clazz);
+    return LightningSerializer.deserialize(get(key), clazz);
   }
 
   // ----------------------------------------------------------------------------------------------------
