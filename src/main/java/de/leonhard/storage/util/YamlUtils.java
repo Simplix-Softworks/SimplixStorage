@@ -1,4 +1,4 @@
-package de.leonhard.storage.internal.editor.yaml;
+package de.leonhard.storage.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 
 /** Class to work with the parts of the lines of a YAML-file */
 @UtilityClass
-public class YamlStringEditor {
+public class YamlUtils {
   public List<String> getCommentsFromLines(final List<String> lines) {
     final List<String> result = new ArrayList<>();
 

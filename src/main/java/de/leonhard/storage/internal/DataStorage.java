@@ -3,12 +3,10 @@ package de.leonhard.storage.internal;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
+
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface DataStorage {
@@ -77,8 +75,12 @@ public interface DataStorage {
    * @param key   The key your value should be associated with.
    * @param value The value you want to set in your data-structure.
    */
-  default void setSerializable(final String key, final Object value) {
-    final Object data = LightningSerializer.deserialize(value);
+  default <T> void setSerializable(final String key, final T value) {
+    setSerializable(key, value, (Class<T>) value.getClass());
+  }
+
+  default <T> void setSerializable(final String key, final T value, Class<T> clazz) {
+    final Object data = LightningSerializer.deserialize(value, clazz);
     set(key, data);
   }
 
@@ -209,7 +211,8 @@ public interface DataStorage {
    * @param <E>      EnumType
    * @return Serialized Enum
    */
-  default <E extends Enum<E>> E getEnum(final String key,
+  default <E extends Enum<E>> E getEnum(
+      final String key,
       final Class<E> enumType) {
     final Object object = get(key);
     Valid.checkBoolean(object instanceof String,
@@ -228,7 +231,7 @@ public interface DataStorage {
     if (!contains(key)) {
       return null;
     }
-    return LightningSerializer.serialize(get(key), clazz);
+    return LightningSerializer.deserialize(get(key), clazz);
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -240,7 +243,7 @@ public interface DataStorage {
    * @param def Default value, if data-structure doesn't contain key.
    * @param <T> Type of default-value.
    */
-  default <T> T getOrDefault(final String key, final T def) {
+  default <T> T getOrDefault(final String key, @NonNull final T def) {
     final Object raw = get(key);
     return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }

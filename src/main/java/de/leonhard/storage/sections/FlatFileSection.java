@@ -9,7 +9,7 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 public class FlatFileSection implements DataStorage {
-  private final FlatFile flatFile;
+  protected final FlatFile flatFile;
   @Getter private final String pathPrefix;
 
   @Override
@@ -50,6 +50,11 @@ public class FlatFileSection implements DataStorage {
   @Override
   public Object get(final String key) {
     return flatFile.get(createFinalKey(key));
+  }
+
+  @Override
+  public <E extends Enum<E>> E getEnum(String key, Class<E> enumType) {
+    return flatFile.getEnum(createFinalKey(key), enumType);
   }
 
   private String createFinalKey(final String key) {

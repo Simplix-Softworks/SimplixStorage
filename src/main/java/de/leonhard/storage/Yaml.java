@@ -1,13 +1,12 @@
 package de.leonhard.storage;
 
-import com.esotericsoftware.yamlbeans.YamlException;
 import de.leonhard.storage.internal.FileData;
 import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.editor.yaml.SimpleYamlReader;
+import de.leonhard.storage.internal.editor.yaml.SimpleYamlWriter;
 import de.leonhard.storage.internal.editor.yaml.YamlEditor;
 import de.leonhard.storage.internal.editor.yaml.YamlParser;
-import de.leonhard.storage.internal.editor.yaml.YamlReader;
-import de.leonhard.storage.internal.editor.yaml.YamlWriter;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
@@ -21,12 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Synchronized;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
@@ -52,7 +49,8 @@ public class Yaml extends FlatFile {
   }
 
   public Yaml(
-      final String name, @Nullable final String path,
+      final String name,
+      @Nullable final String path,
       @Nullable final InputStream inputStream) {
     this(name, path, inputStream, null, null, null);
   }
@@ -109,56 +107,25 @@ public class Yaml extends FlatFile {
     if (inputStream == null) {
       return this;
     }
+
     try {
-      final Map<String, Object> data = new YamlReader(
+      final Map<String, Object> data = new SimpleYamlReader(
           new InputStreamReader(inputStream)).readToMap();
 
-      // Merging
-      for (final Entry<String, Object> entry : data.entrySet()) {
-        if (!fileData.containsKey(entry.getKey())) {
-          fileData.insert(entry.getKey(), entry.getValue());
+      final FileData newData = new FileData(data, DataType.UNSORTED);
+
+      for (final String key : newData.keySet()) {
+        if (!fileData.containsKey(key)) {
+          fileData.insert(key, newData.get(key));
         }
       }
-      writeWithComments();
-    } catch (final YamlException e) {
-      e.printStackTrace();
+
+      write();
+    } catch (final Exception ex) {
+      ex.printStackTrace();
     }
 
     return this;
-  }
-
-  @Override
-  @Synchronized
-  public void set(final String key, final Object value) {
-    reloadIfNeeded();
-
-    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-
-    fileData.insert(finalKey, value);
-    writeWithComments();
-  }
-
-
-  /**
-   * Method to write to file while preserving comments if set
-   */
-  protected void writeWithComments() {
-    // If Comments shouldn't be preserved
-    if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-      write();
-      return;
-    }
-
-    final List<String> unEdited = yamlEditor.read();
-    final List<String> header = yamlEditor.readHeader();
-    final List<String> footer = yamlEditor.readFooter();
-    write();
-    header.addAll(yamlEditor.read());
-    if (!header.containsAll(footer)) {
-      header.addAll(footer);
-    }
-    write();
-    yamlEditor.write(parser.parseLines(unEdited, header));
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -167,14 +134,28 @@ public class Yaml extends FlatFile {
 
   @Override
   protected Map<String, Object> readToMap() throws IOException {
-    @Cleanup final YamlReader reader = new YamlReader(new FileReader(getFile()));
+    @Cleanup final SimpleYamlReader reader = new SimpleYamlReader(
+        new FileReader(getFile()));
     return reader.readToMap();
   }
 
   @Override
   protected void write(final FileData data) throws IOException {
-    @Cleanup final YamlWriter writer = new YamlWriter(file);
-    writer.write(data.toMap());
+    // If Comments shouldn't be preserved
+    if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+      write0(fileData);
+      return;
+    }
+
+    final List<String> unEdited = yamlEditor.read();
+    write0(fileData);
+    yamlEditor.write(parser.parseLines(unEdited, yamlEditor.readKeys()));
+  }
+
+  // Writing without comments
+  private void write0(final FileData fileData) throws IOException {
+    @Cleanup final SimpleYamlWriter writer = new SimpleYamlWriter(file);
+    writer.write(fileData.toMap());
   }
 
   // ----------------------------------------------------------------------------------------------------

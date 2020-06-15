@@ -3,10 +3,10 @@ package de.leonhard.storage.internal.exception;
 import lombok.NonNull;
 
 /**
- * Every exception which is thrown in LightningStorage internally extends this
- * exception.
+ * Every exception which is thrown in LightningStorage internally extends this exception.
  * <p>
- * It describes the basic format
+ * It describes the basic format of exceptions we use. See implementations in {@link
+ * de.leonhard.storage.internal.exceptions}
  */
 public class LightningException extends RuntimeException {
 
@@ -27,7 +27,6 @@ public class LightningException extends RuntimeException {
       @NonNull final boolean enableSuppression,
       @NonNull final boolean writableStackTrace,
       @NonNull final String... messages) {
-    super(String.join("\n", messages), cause, enableSuppression,
-        writableStackTrace);
+    super(String.join("\n", messages), cause, enableSuppression, writableStackTrace);
   }
 }

@@ -1,6 +1,6 @@
 package de.leonhard.storage.util;
 
-import de.leonhard.storage.internal.exceptions.LightningValidationException;
+import de.leonhard.storage.internal.provider.LightningProviders;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,10 +48,10 @@ public class FileUtils {
    * empty list is returned instead of null.
    *
    * @param folder    Folder to search in.
-   * @param extension Extension to search for. Set to null to skip extension
-   *                  validation.
+   * @param extension Extension to search for. Set to null to skip extension validation.
    */
-  public List<File> listFiles(@NonNull final File folder,
+  public List<File> listFiles(
+      @NonNull final File folder,
       @NonNull final String extension) {
     final List<File> result = new ArrayList<>();
 
@@ -86,9 +86,11 @@ public class FileUtils {
       }
 
     } catch (final IOException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while creating file '" + file.getName() + "'.",
-          "In: '" + getParentDirPath(file) + "'");
+          "In: '" + getParentDirPath(file) + "'"
+      );
     }
     return file;
   }
@@ -98,7 +100,8 @@ public class FileUtils {
   // ----------------------------------------------------------------------------------------------------
 
   public String getExtension(@NonNull final String path) {
-    return path.lastIndexOf(".") > 0 ? path.substring(path.lastIndexOf(".") + 1)
+    return path.lastIndexOf(".") > 0
+        ? path.substring(path.lastIndexOf(".") + 1)
         : "";
   }
 
@@ -118,20 +121,18 @@ public class FileUtils {
   }
 
   /**
-   * Since file.getParentFile can be null we created an extension function to
-   * get the path of the parent file
+   * Since file.getParentFile can be null we created an extension function to get the path
+   * of the parent file
    *
    * @param fileOrDirPath Path to file
    * @return Path to file as String
    */
   public String getParentDirPath(@NonNull final String fileOrDirPath) {
     final boolean endsWithSlash = fileOrDirPath.endsWith(File.separator);
-    return fileOrDirPath.substring(
-        0,
-        fileOrDirPath.lastIndexOf(
-            File.separatorChar,
-            endsWithSlash ? fileOrDirPath.length() - 2
-                : fileOrDirPath.length() - 1));
+    return fileOrDirPath
+        .substring(0, fileOrDirPath.lastIndexOf(File.separatorChar, endsWithSlash
+            ? fileOrDirPath.length() - 2
+            : fileOrDirPath.length() - 1));
   }
 
   public boolean hasChanged(final File file, final long timeStamp) {
@@ -149,7 +150,8 @@ public class FileUtils {
     try {
       return Files.newInputStream(file.toPath());
     } catch (final IOException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while creating InputStream from '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
@@ -159,7 +161,8 @@ public class FileUtils {
     try {
       return new FileOutputStream(file);
     } catch (final FileNotFoundException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while creating OutputStream from '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
@@ -169,7 +172,8 @@ public class FileUtils {
     try {
       return new FileReader(file);
     } catch (final FileNotFoundException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while creating Reader for '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
@@ -179,7 +183,8 @@ public class FileUtils {
     try {
       return new FileWriter(file);
     } catch (final IOException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while creating Writer for '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
@@ -191,7 +196,8 @@ public class FileUtils {
     try {
       Files.write(file.toPath(), lines);
     } catch (final IOException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while writing to '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
@@ -211,7 +217,8 @@ public class FileUtils {
         }
       }
     } catch (final IOException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while writing InputStream to '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
@@ -221,7 +228,8 @@ public class FileUtils {
     try {
       return Files.readAllBytes(file.toPath());
     } catch (final IOException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while reading '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
@@ -294,7 +302,8 @@ public class FileUtils {
 
       return complete.digest();
     } catch (final IOException | NoSuchAlgorithmException ex) {
-      throw new LightningValidationException(ex,
+      throw LightningProviders.exceptionHandler().create(
+          ex,
           "Error while creating checksum of '" + file.getName() + "'.",
           "In: '" + getParentDirPath(file) + "'");
     }
