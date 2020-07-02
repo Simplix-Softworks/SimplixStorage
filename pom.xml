@@ -6,7 +6,7 @@
 
   <groupId>com.github.javafactorydev</groupId>
   <artifactId>lightningstorage</artifactId>
-  <version>3.1.4</version>
+  <version>3.1.5</version>
   <name>LightningStorage</name>
   <description>Store data in a better way</description>
   <url>https://github.com/JavaFactoryDev/LightningStorage</url>
@@ -52,13 +52,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <distributionManagement>
-    <repository>
-      <id>thewarking</id>
-      <url>http://thewarking.de:8081/repository/PluginUtils/</url>
-    </repository>
-  </distributionManagement>
 
   <build>
     <defaultGoal>clean verify -U</defaultGoal>

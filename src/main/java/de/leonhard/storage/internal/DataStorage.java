@@ -1,11 +1,10 @@
 package de.leonhard.storage.internal;
 
+import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
-
 import java.util.*;
-
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,9 +52,10 @@ public interface DataStorage {
   // ----------------------------------------------------------------------------------------------------
 
   /**
-   * Method to get a value of a predefined type from our data structure
-   * will return {@link Optional#empty()} if the value wasn't found.
-   * @param key Key to search the value for
+   * Method to get a value of a predefined type from our data structure will return {@link
+   * Optional#empty()} if the value wasn't found.
+   *
+   * @param key  Key to search the value for
    * @param type Type of the value
    */
   default <T> Optional<T> find(final String key, final Class<T> type) {
@@ -68,20 +68,23 @@ public interface DataStorage {
   }
 
   /**
-   * Method to deserialize a class using the {@link LightningSerializer}. You
-   * will need to register your serializable in the {@link LightningSerializer}
-   * before.
+   * Method to deserialize a class using the {@link LightningSerializer}. You will need to
+   * register your serializable in the {@link LightningSerializer} before.
    *
    * @param key   The key your value should be associated with.
    * @param value The value you want to set in your data-structure.
    */
-  default <T> void setSerializable(final String key, final T value) {
-    setSerializable(key, value, (Class<T>) value.getClass());
-  }
-
-  default <T> void setSerializable(final String key, final T value, Class<T> clazz) {
-    final Object data = LightningSerializer.deserialize(value, clazz);
-    set(key, data);
+  default <T> void setSerializable(@NonNull final String key, @NonNull final T value) {
+    try {
+      final Object data = LightningSerializer.serialize(value);
+      set(key, data);
+    } catch (final Throwable throwable) {
+      throw LightningProviders.exceptionHandler().create(
+          throwable,
+          "Can't deserialize: '" + key + "'",
+          "Class: '" + value.getClass().getName() + "'",
+          "Package: '" + value.getClass().getPackage() + "'");
+    }
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -221,9 +224,8 @@ public interface DataStorage {
   }
 
   /**
-   * Method to serialize a Class using the {@link LightningSerializer}. You will
-   * need to register your serializable in the {@link LightningSerializer}
-   * before.
+   * Method to serialize a Class using the {@link LightningSerializer}. You will need to
+   * register your serializable in the {@link LightningSerializer} before.
    *
    * @return Serialized instance of class.
    */
@@ -249,8 +251,8 @@ public interface DataStorage {
   }
 
   /**
-   * Sets a value to the data-structure if the data-structure doesn't already
-   * contain the value Has nothing to do with Bukkit't 'addDefault'
+   * Sets a value to the data-structure if the data-structure doesn't already contain the
+   * value Has nothing to do with Bukkit't 'addDefault'
    *
    * @param key   Key to set the value
    * @param value Value to set.
@@ -265,8 +267,8 @@ public interface DataStorage {
    * Mix of setDefault & getDefault.
    *
    * <p>Sets a value to the data-structure if the data-structure doesn't
-   * already contain the value Returns a default value if the data-structure
-   * doesn't already contain the key.
+   * already contain the value Returns a default value if the data-structure doesn't
+   * already contain the key.
    *
    * <p>If the key is already contained by the data-structure the value of
    * assigned to the key will be returned and casted to the type of your def.

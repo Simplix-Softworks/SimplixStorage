@@ -1,6 +1,7 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.DataStorage;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import lombok.experimental.UtilityClass;
@@ -234,7 +235,7 @@ public class ClassWrapper {
       if (obj instanceof Collection && ((Collection<?>) obj).size() == 1) {
         return ((List<?>) obj).get(0).toString();
       }
-      return obj.toString();
+      return new String(obj.toString().getBytes(), StandardCharsets.UTF_8);
     }
   }
 }
