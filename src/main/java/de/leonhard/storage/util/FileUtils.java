@@ -1,6 +1,12 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.provider.LightningProviders;
+import lombok.Cleanup;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,10 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import lombok.Cleanup;
-import lombok.NonNull;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 
 /**
  * Class for easier, more convenient & strait interaction with files
@@ -42,7 +44,7 @@ public class FileUtils {
    */
   public List<File> listFiles(
       @NonNull final File folder,
-      @NonNull final String extension) {
+      @Nullable final String extension) {
     final List<File> result = new ArrayList<>();
 
     final File[] files = folder.listFiles();

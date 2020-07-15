@@ -66,17 +66,18 @@ public final class YamlParser {
     String currentKey = FOOTER;
     for (int i = lines.size() - 1; i >= 0; i--) {
       final String line = lines.get(i);
-      if (line.trim().startsWith("#") || line.isEmpty()) {
+      if (!line.trim().startsWith("#") && !line.isEmpty()) {
+        currentKey = line;
+      } else {
         final List<String> storage = out.get(currentKey.split(":")[0]);
 
         if (storage == null) {
-          out.put(currentKey.split(":")[0],
+          out.put(
+              currentKey.split(":")[0],
               new ArrayList<>(Collections.singletonList(line)));
         } else {
           storage.add(line);
         }
-      } else {
-        currentKey = line;
       }
     }
     return out;
