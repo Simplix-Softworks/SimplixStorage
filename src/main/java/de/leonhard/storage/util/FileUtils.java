@@ -1,12 +1,6 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.provider.LightningProviders;
-import lombok.Cleanup;
-import lombok.NonNull;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +12,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import lombok.Cleanup;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Class for easier, more convenient & strait interaction with files
@@ -60,7 +59,8 @@ public class FileUtils {
     return result;
   }
 
-  public File getAndMake(@NonNull final String name,
+  public File getAndMake(
+      @NonNull final String name,
       @NonNull final String path) {
     return getAndMake(new File(path, name));
   }
@@ -107,8 +107,8 @@ public class FileUtils {
   }
 
   /**
-   * Since file.getParentFile can be null we created an extension function to get the path
-   * of the parent file
+   * Since file.getParentFile can be null we created an extension function to get the path of the
+   * parent file
    *
    * @param fileOrDirPath Path to file
    * @return Path to file as String
@@ -219,10 +219,10 @@ public class FileUtils {
     }
   }
 
-  public List<String> readAllLines(final File file) {
+  public List<String> readAllLines(@NonNull final File file) {
     final byte[] fileBytes = readAllBytes(file);
     final String asString = new String(fileBytes);
-    return new ArrayList<>(Arrays.asList(asString.split("\n")));
+    return new ArrayList<>(Arrays.asList(asString.split(System.lineSeparator())));
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -312,9 +312,10 @@ public class FileUtils {
     if (target.exists() && !replace)
       return;
 
-    try (final InputStream inputStream = LightningProviders
-        .inputStreamProvider()
-        .createInputStreamFromInnerResource(resourcePath)) {
+    try (
+        final InputStream inputStream = LightningProviders
+            .inputStreamProvider()
+            .createInputStreamFromInnerResource(resourcePath)) {
 
       Valid.notNull(
           inputStream,

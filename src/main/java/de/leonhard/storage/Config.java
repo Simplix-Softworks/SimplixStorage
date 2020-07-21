@@ -6,6 +6,7 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"unused"})
@@ -13,7 +14,7 @@ public class Config extends Yaml {
 
   private List<String> header;
 
-  public Config(final Config config) {
+  public Config(@NonNull final Config config) {
     super(config);
   }
 

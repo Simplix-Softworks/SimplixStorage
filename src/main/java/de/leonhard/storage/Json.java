@@ -42,15 +42,12 @@ public class Json extends FlatFile {
       @Nullable final ReloadSettings reloadSettings) {
     super(name, path, FileType.JSON);
 
-    if (create() || file.length() == 0) {
-      if (inputStream != null) {
+    if (create() || file.length() == 0)
+      if (inputStream != null)
         FileUtils.writeToFile(file, inputStream);
-      }
-    }
 
-    if (reloadSettings != null) {
+    if (reloadSettings != null)
       this.reloadSettings = reloadSettings;
-    }
     forceReload();
   }
 
@@ -73,15 +70,14 @@ public class Json extends FlatFile {
   @Override
   public Map getMap(final String key) {
     final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-    if (!contains(finalKey)) {
+    if (!contains(finalKey))
       return new HashMap<>();
-    } else {
+    else {
       final Object map = get(key);
-      if (map instanceof Map) {
+      if (map instanceof Map)
         return (Map<?, ?>) fileData.get(key);
-      } else if (map instanceof JSONObject) {
+      else if (map instanceof JSONObject)
         return ((JSONObject) map).toMap();
-      }
       // Exception in casting
       throw new IllegalArgumentException(
           "ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
@@ -94,9 +90,8 @@ public class Json extends FlatFile {
 
   @Override
   protected Map<String, Object> readToMap() throws IOException {
-    if (file.length() == 0) {
+    if (file.length() == 0)
       Files.write(file.toPath(), Collections.singletonList("{}"));
-    }
 
     final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
     return new JSONObject(jsonTokener).toMap();

@@ -6,15 +6,15 @@ import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.editor.toml.TomlManager;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import lombok.NonNull;
 
 public class Toml extends FlatFile {
 
-  public Toml(final Toml toml) {
+  public Toml(@NonNull final Toml toml) {
     super(toml.getFile());
     fileData = toml.getFileData();
   }
@@ -34,13 +34,11 @@ public class Toml extends FlatFile {
       final ReloadSettings reloadSettings) {
     super(name, path, FileType.TOML);
 
-    if (create() && inputStream != null) {
+    if (create() && inputStream != null)
       FileUtils.writeToFile(file, inputStream);
-    }
 
-    if (reloadSettings != null) {
+    if (reloadSettings != null)
       this.reloadSettings = reloadSettings;
-    }
 
     forceReload();
   }

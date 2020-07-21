@@ -11,17 +11,14 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +31,7 @@ public class Yaml extends FlatFile {
   @Setter
   private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-  public Yaml(final Yaml yaml) {
+  public Yaml(@NonNull final Yaml yaml) {
     super(yaml.getFile());
     fileData = yaml.getFileData();
     yamlEditor = yaml.getYamlEditor();
@@ -64,26 +61,22 @@ public class Yaml extends FlatFile {
     super(name, path, FileType.YAML);
     this.inputStream = inputStream;
 
-    if (create() && inputStream != null) {
+    if (create() && inputStream != null)
       FileUtils.writeToFile(file, inputStream);
-    }
 
     yamlEditor = new YamlEditor(file);
     parser = new YamlParser(yamlEditor);
 
-    if (reloadSettings != null) {
+    if (reloadSettings != null)
       this.reloadSettings = reloadSettings;
-    }
 
-    if (configSettings != null) {
+    if (configSettings != null)
       this.configSettings = configSettings;
-    }
 
-    if (dataType != null) {
+    if (dataType != null)
       this.dataType = dataType;
-    } else {
+    else
       this.dataType = DataType.fromConfigSettings(configSettings);
-    }
 
     forceReload();
   }
@@ -103,9 +96,8 @@ public class Yaml extends FlatFile {
   public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
     reloadIfNeeded();
     // Creating & setting defaults
-    if (inputStream == null) {
+    if (inputStream == null)
       return this;
-    }
 
     try {
       final Map<String, Object> data = new SimpleYamlReader(
@@ -113,11 +105,9 @@ public class Yaml extends FlatFile {
 
       final FileData newData = new FileData(data, DataType.UNSORTED);
 
-      for (final String key : newData.keySet()) {
-        if (!fileData.containsKey(key)) {
+      for (final String key : newData.keySet())
+        if (!fileData.containsKey(key))
           fileData.insert(key, newData.get(key));
-        }
-      }
 
       write();
     } catch (final Exception ex) {
