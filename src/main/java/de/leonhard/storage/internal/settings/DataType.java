@@ -2,11 +2,12 @@ package de.leonhard.storage.internal.settings;
 
 import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.provider.MapProvider;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Map;
-
-/** An Enum defining how the Data should be stored */
+/**
+ * An Enum defining how the Data should be stored
+ */
 @RequiredArgsConstructor
 public enum DataType {
   SORTED {
@@ -25,11 +26,10 @@ public enum DataType {
 
   private static final MapProvider mapProvider = LightningProviders.mapProvider();
 
-  public static DataType fromConfigSettings(final ConfigSettings configSettings) {
+  public static DataType forConfigSetting(final ConfigSettings configSettings) {
     // Only Configs needs the preservation of the order of the keys
-    if (ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
+    if (ConfigSettings.PRESERVE_COMMENTS.equals(configSettings))
       return SORTED;
-    }
     // In all other cases using the normal HashMap is better to save memory.
     return UNSORTED;
   }

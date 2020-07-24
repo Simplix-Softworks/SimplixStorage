@@ -76,7 +76,7 @@ public class Yaml extends FlatFile {
     if (dataType != null)
       this.dataType = dataType;
     else
-      this.dataType = DataType.fromConfigSettings(configSettings);
+      this.dataType = DataType.forConfigSetting(configSettings);
 
     forceReload();
   }
