@@ -25,6 +25,7 @@ public class Json extends FlatFile {
   public Json(final Json json) {
     super(json.getFile(), json.fileType);
     fileData = json.getFileData();
+    pathPrefix = json.getPathPrefix();
   }
 
   public Json(final String name, final String path) {

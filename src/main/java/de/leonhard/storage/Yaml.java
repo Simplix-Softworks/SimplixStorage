@@ -38,6 +38,7 @@ public class Yaml extends FlatFile {
     parser = yaml.getParser();
     configSettings = yaml.getConfigSettings();
     inputStream = yaml.getInputStream().orElse(null);
+    pathPrefix = yaml.getPathPrefix();
   }
 
   public Yaml(final String name, @Nullable final String path) {

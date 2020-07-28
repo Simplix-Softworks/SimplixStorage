@@ -17,6 +17,7 @@ public class Toml extends FlatFile {
   public Toml(@NonNull final Toml toml) {
     super(toml.getFile());
     fileData = toml.getFileData();
+    pathPrefix = toml.getPathPrefix();
   }
 
   public Toml(final String name, final String path) {
@@ -62,10 +63,10 @@ public class Toml extends FlatFile {
   protected final void write(final FileData data) {
     try {
       TomlManager.write(data.toMap(), getFile());
-    } catch (final IOException ex) {
+    } catch (final IOException ioException) {
       System.err.println("Exception while writing fileData to file '" + getName() + "'");
       System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
-      ex.printStackTrace();
+      ioException.printStackTrace();
     }
   }
 }
