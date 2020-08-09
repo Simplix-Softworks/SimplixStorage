@@ -1,10 +1,6 @@
 package de.leonhard.storage.internal.editor.yaml;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
@@ -22,7 +18,7 @@ public final class YamlParser {
     final Map<String, List<String>> parsed = assignCommentsToKey(comments);
 
     for (final String line : updated) {
-      final val rawList = getKeyAndRemove(line, parsed);
+      val rawList = getKeyAndRemove(line, parsed);
       if (rawList == null || rawList.isEmpty()) {
 
         out.add(line);
@@ -42,7 +38,10 @@ public final class YamlParser {
   private List<String> getKeyAndRemove(String key, final Map<String, List<String>> data) {
     key = key.split(":")[0];
     for (final val entry : data.entrySet()) {
-      if (key.equals(entry.getKey().split(":")[0])) {
+      final String entryKey = entry.getKey().split(":")[0];
+
+      // using substring since indentation might differ a bit
+      if (key.equals(entryKey) || key.substring(1).equals(entryKey)) {
         data.remove(entry.getKey());
         return entry.getValue();
       }
@@ -52,11 +51,12 @@ public final class YamlParser {
   }
 
   public Map<String, List<String>> assignCommentsToKey() {
-    return assignCommentsToKey(yamlEditor.read());
+    return assignCommentsToKey(this.yamlEditor.read());
   }
 
   /**
    * Method to map the #-comments in your YAML-File to the according key
+   *
    * @param lines Initial lines to read
    * @return Mapped comments (Key, comments)
    */
