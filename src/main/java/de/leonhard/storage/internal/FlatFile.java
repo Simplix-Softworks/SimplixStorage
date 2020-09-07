@@ -33,11 +33,11 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
       @NonNull final FileType fileType) {
     Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
     this.fileType = fileType;
-    if (path == null || path.isEmpty())
-      file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
-    else {
+    if (path == null || path.isEmpty()) {
+      this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
+    } else {
       final String fixedPath = path.replace("\\", "/");
-      file = new File(
+      this.file = new File(
           fixedPath
           + File.separator
           + FileUtils.replaceExtensions(name)
@@ -57,15 +57,14 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   /**
-   * This constructor should only be used to store for example YAML-LIKE data in a .db
-   * file
+   * This constructor should only be used to store for example YAML-LIKE data in a .db file
    *
    * <p>Therefor no validation is possible. Might be unsafe.
    */
   protected FlatFile(@NonNull final File file) {
     this.file = file;
     // Might be null
-    fileType = FileType.fromFile(file);
+    this.fileType = FileType.fromFile(file);
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -78,16 +77,16 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
    * @return true if file was created.
    */
   protected final boolean create() {
-    return createFile(file);
+    return createFile(this.file);
   }
 
   private synchronized boolean createFile(final File file) {
     if (file.exists()) {
-      lastLoaded = System.currentTimeMillis();
+      this.lastLoaded = System.currentTimeMillis();
       return false;
     } else {
       FileUtils.getAndMake(file);
-      lastLoaded = System.currentTimeMillis();
+      this.lastLoaded = System.currentTimeMillis();
       return true;
     }
   }
@@ -97,8 +96,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   // ----------------------------------------------------------------------------------------------------
 
   /**
-   * Forces Re-read/load the content of our flat file Should be used to put the data from
-   * the file to our FileData
+   * Forces Re-read/load the content of our flat file Should be used to put the data from the file
+   * to our FileData
    */
   protected abstract Map<String, Object> readToMap() throws IOException;
 
@@ -110,11 +109,11 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   protected abstract void write(final FileData data) throws IOException;
 
   protected void handleReloadException(final IOException ioException) {
-    final String fileName = fileType == null
+    final String fileName = this.fileType == null
         ? "File"
-        : fileType.name().toLowerCase(); // fileType might be null
+        : this.fileType.name().toLowerCase(); // fileType might be null
     System.err.println("Exception reloading " + fileName + " '" + getName() + "'");
-    System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+    System.err.println("In '" + FileUtils.getParentDirPath(this.file) + "'");
     ioException.printStackTrace();
   }
   // ----------------------------------------------------------------------------------------------------
@@ -124,16 +123,16 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   @Override
   public synchronized void set(final String key, final Object value) {
     reloadIfNeeded();
-    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-    fileData.insert(finalKey, value);
+    final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+    this.fileData.insert(finalKey, value);
     write();
-    lastLoaded = System.currentTimeMillis();
+    this.lastLoaded = System.currentTimeMillis();
   }
 
   @Override
   public final Object get(final String key) {
     reloadIfNeeded();
-    final String finalKey = pathPrefix == null ? key : pathPrefix + "." + key;
+    final String finalKey = this.pathPrefix == null ? key : this.pathPrefix + "." + key;
     return getFileData().get(finalKey);
   }
 
@@ -146,38 +145,38 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   @Override
   public final boolean contains(final String key) {
     reloadIfNeeded();
-    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-    return fileData.containsKey(finalKey);
+    final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+    return this.fileData.containsKey(finalKey);
   }
 
   @Override
   public final Set<String> singleLayerKeySet() {
     reloadIfNeeded();
-    return fileData.singleLayerKeySet();
+    return this.fileData.singleLayerKeySet();
   }
 
   @Override
   public final Set<String> singleLayerKeySet(final String key) {
     reloadIfNeeded();
-    return fileData.singleLayerKeySet(key);
+    return this.fileData.singleLayerKeySet(key);
   }
 
   @Override
   public final Set<String> keySet() {
     reloadIfNeeded();
-    return fileData.keySet();
+    return this.fileData.keySet();
   }
 
   @Override
   public final Set<String> keySet(final String key) {
     reloadIfNeeded();
-    return fileData.keySet(key);
+    return this.fileData.keySet(key);
   }
 
   @Override
   public synchronized final void remove(final String key) {
     reloadIfNeeded();
-    fileData.remove(key);
+    this.fileData.remove(key);
     write();
   }
 
@@ -191,7 +190,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
    * @param map Map to insert.
    */
   public final void putAll(final Map<String, Object> map) {
-    fileData.putAll(map);
+    this.fileData.putAll(map);
     write();
   }
 
@@ -207,15 +206,17 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     final List<Object> result = new ArrayList<>();
     reloadIfNeeded();
 
-    for (final String key : keys)
+    for (final String key : keys) {
       result.add(get(key));
+    }
 
     return result;
   }
 
   public void removeAll(final String... keys) {
-    for (final String key : keys)
-      fileData.remove(key);
+    for (final String key : keys) {
+      this.fileData.remove(key);
+    }
     write();
   }
 
@@ -223,13 +224,19 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   // Pretty nice utility methods for FlatFile's
   // ----------------------------------------------------------------------------------------------------
 
+  public final void addDefaultsFromMap(@NonNull final Map<String, Object> mapWithDefaults) {
+    addDefaultsFromFileData(new FileData(mapWithDefaults, this.dataType));
+  }
+
   public final void addDefaultsFromFileData(@NonNull final FileData newData) {
     reloadIfNeeded();
 
     // Creating & setting defaults
-    for (final String key : newData.keySet())
-      if (!fileData.containsKey(key))
-        fileData.insert(key, newData.get(key));
+    for (final String key : newData.keySet()) {
+      if (!this.fileData.containsKey(key)) {
+        this.fileData.insert(key, newData.get(key));
+      }
+    }
 
     write();
   }
@@ -239,36 +246,37 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   public final String getName() {
-    return file.getName();
+    return this.file.getName();
   }
 
   public final String getFilePath() {
-    return file.getAbsolutePath();
+    return this.file.getAbsolutePath();
   }
 
   public synchronized void replace(
       final CharSequence target,
       final CharSequence replacement) throws IOException {
-    final List<String> lines = Files.readAllLines(file.toPath());
+    final List<String> lines = Files.readAllLines(this.file.toPath());
     final List<String> result = new ArrayList<>();
-    for (final String line : lines)
+    for (final String line : lines) {
       result.add(line.replace(target, replacement));
-    Files.write(file.toPath(), result);
+    }
+    Files.write(this.file.toPath(), result);
   }
 
   public void write() {
     try {
-      write(fileData);
+      write(this.fileData);
     } catch (final IOException ex) {
       System.err.println("Exception writing to file '" + getName() + "'");
-      System.err.println("In '" + FileUtils.getParentDirPath(file) + "'");
+      System.err.println("In '" + FileUtils.getParentDirPath(this.file) + "'");
       ex.printStackTrace();
     }
-    lastLoaded = System.currentTimeMillis();
+    this.lastLoaded = System.currentTimeMillis();
   }
 
   public final boolean hasChanged() {
-    return FileUtils.hasChanged(file, lastLoaded);
+    return FileUtils.hasChanged(this.file, this.lastLoaded);
   }
 
   public final void forceReload() {
@@ -278,16 +286,17 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     } catch (final IOException ex) {
       handleReloadException(ex);
     } finally {
-      if (fileData == null)
-        fileData = new FileData(out, dataType);
-      else
-        fileData.loadData(out);
-      lastLoaded = System.currentTimeMillis();
+      if (this.fileData == null) {
+        this.fileData = new FileData(out, this.dataType);
+      } else {
+        this.fileData.loadData(out);
+      }
+      this.lastLoaded = System.currentTimeMillis();
     }
   }
 
   public final void clear() {
-    fileData.clear();
+    this.fileData.clear();
     write();
   }
 
@@ -296,19 +305,21 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   // ----------------------------------------------------------------------------------------------------
 
   protected final void reloadIfNeeded() {
-    if (shouldReload())
+    if (shouldReload()) {
       forceReload();
+    }
   }
 
   // Should the file be re-read before the next get() operation?
   // Can be used as utility method for implementations of FlatFile
   protected boolean shouldReload() {
-    if (ReloadSettings.AUTOMATICALLY.equals(reloadSettings))
+    if (ReloadSettings.AUTOMATICALLY.equals(this.reloadSettings)) {
       return true;
-    else if (ReloadSettings.INTELLIGENT.equals(reloadSettings))
-      return FileUtils.hasChanged(file, lastLoaded);
-    else
+    } else if (ReloadSettings.INTELLIGENT.equals(this.reloadSettings)) {
+      return FileUtils.hasChanged(this.file, this.lastLoaded);
+    } else {
       return false;
+    }
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -316,8 +327,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   // ----------------------------------------------------------------------------------------------------
 
   public final FileData getFileData() {
-    Valid.notNull(fileData, "FileData mustn't be null");
-    return fileData;
+    Valid.notNull(this.fileData, "FileData mustn't be null");
+    return this.fileData;
   }
 
   public final FlatFileSection getSection(final String pathPrefix) {
@@ -326,6 +337,6 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 
   @Override
   public final int compareTo(final FlatFile flatFile) {
-    return file.compareTo(flatFile.file);
+    return this.file.compareTo(flatFile.file);
   }
 }
