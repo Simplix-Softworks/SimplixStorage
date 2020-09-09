@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 /**
- * An extended HashMap, to easily process the nested HashMaps created by reading the
- * Configuration files.
+ * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration
+ * files.
  */
 @SuppressWarnings("unchecked")
 public class FileData {
@@ -21,22 +21,22 @@ public class FileData {
   private final Map<String, Object> localMap;
 
   public FileData(final Map<String, Object> map, final DataType dataType) {
-    localMap = dataType.getMapImplementation();
+    this.localMap = dataType.getMapImplementation();
 
-    localMap.putAll(map);
+    this.localMap.putAll(map);
   }
 
   public FileData(final JSONObject jsonObject) {
-    localMap = new HashMap<>(jsonObject.toMap());
+    this.localMap = new HashMap<>(jsonObject.toMap());
   }
 
   public FileData(final JSONObject jsonObject, final DataType dataType) {
-    localMap = dataType.getMapImplementation();
-    localMap.putAll(jsonObject.toMap());
+    this.localMap = dataType.getMapImplementation();
+    this.localMap.putAll(jsonObject.toMap());
   }
 
   public void clear() {
-    localMap.clear();
+    this.localMap.clear();
   }
 
   /**
@@ -48,7 +48,7 @@ public class FileData {
     clear();
 
     if (map != null) {
-      localMap.putAll(map);
+      this.localMap.putAll(map);
     }
   }
 
@@ -60,7 +60,7 @@ public class FileData {
    */
   public Object get(final String key) {
     final String[] parts = key.split("\\.");
-    return get(localMap, parts, 0);
+    return get(this.localMap, parts, 0);
   }
 
   private Object get(final Map<String, Object> map, final String[] key, final int id) {
@@ -84,10 +84,10 @@ public class FileData {
    */
   public synchronized void insert(final String key, final Object value) {
     final String[] parts = key.split("\\.");
-    localMap.put(
+    this.localMap.put(
         parts[0],
-        localMap.containsKey(parts[0]) && localMap.get(parts[0]) instanceof Map
-            ? insert((Map<String, Object>) localMap.get(parts[0]), parts, value, 1)
+        this.localMap.containsKey(parts[0]) && this.localMap.get(parts[0]) instanceof Map
+            ? insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
             : insert(new HashMap<>(), parts, value, 1));
   }
 
@@ -115,10 +115,11 @@ public class FileData {
    */
   public boolean containsKey(final String key) {
     final String[] parts = key.split("\\.");
-    return containsKey(localMap, parts, 0);
+    return containsKey(this.localMap, parts, 0);
   }
 
-  private boolean containsKey(final Map<String, Object> map, final String[] key,
+  private boolean containsKey(
+      final Map<String, Object> map, final String[] key,
       final int id) {
     if (id < key.length - 1) {
       if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
@@ -184,7 +185,7 @@ public class FileData {
    * @return the keySet of the top layer of localMap.
    */
   public Set<String> singleLayerKeySet() {
-    return localMap.keySet();
+    return this.localMap.keySet();
   }
 
   /**
@@ -204,23 +205,23 @@ public class FileData {
    * @return the keySet of all layers of localMap combined (Format: key.subkey).
    */
   public Set<String> keySet() {
-    return multiLayerKeySet(localMap);
+    return multiLayerKeySet(this.localMap);
   }
 
   public Set<Map.Entry<String, Object>> entrySet() {
-    return multiLayerEntrySet(localMap);
+    return multiLayerEntrySet(this.localMap);
   }
 
   public Set<Map.Entry<String, Object>> singleLayerEntrySet() {
-    return localMap.entrySet();
+    return this.localMap.entrySet();
   }
 
   /**
    * get the keySet of all sublayers of the given key combined.
    *
    * @param key the key of the layer
-   * @return the keySet of all sublayers of the given key or an empty set if the key does
-   * not exist (Format: key.subkey).
+   * @return the keySet of all sublayers of the given key or an empty set if the key does not exist
+   * (Format: key.subkey).
    */
   public Set<String> keySet(final String key) {
     return get(key) instanceof Map
@@ -246,7 +247,6 @@ public class FileData {
     return out;
   }
 
-
   private Set<Map.Entry<String, Object>> multiLayerEntrySet(
       final Map<String, Object> map) {
     final Set<Map.Entry<String, Object>> out = new HashSet<>();
@@ -269,7 +269,7 @@ public class FileData {
    * @return the size of the top layer of localMap.
    */
   public int singleLayerSize() {
-    return localMap.size();
+    return this.localMap.size();
   }
 
   /**
@@ -288,7 +288,7 @@ public class FileData {
    * @return the size of all layers of localMap combined.
    */
   public int size() {
-    return localMap.size();
+    return this.localMap.size();
   }
 
   /**
@@ -298,11 +298,11 @@ public class FileData {
    * @return the size of all sublayers of the given key or 0 if the key does not exist.
    */
   public int size(final String key) {
-    return localMap.size();
+    return this.localMap.size();
   }
 
   public void putAll(final Map<String, Object> map) {
-    localMap.putAll(map);
+    this.localMap.putAll(map);
   }
 
   private int size(final Map<String, Object> map) {
@@ -320,15 +320,15 @@ public class FileData {
   // ----------------------------------------------------------------------------------------------------
 
   public Map<String, Object> toMap() {
-    if (localMap != null) {
-      return localMap;
+    if (this.localMap != null) {
+      return this.localMap;
     } else {
       return new HashMap<>();
     }
   }
 
   public JSONObject toJsonObject() {
-    return JsonUtils.getJsonFromMap(localMap);
+    return JsonUtils.getJsonFromMap(this.localMap);
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -337,12 +337,12 @@ public class FileData {
 
   @Override
   public int hashCode() {
-    return localMap.hashCode();
+    return this.localMap.hashCode();
   }
 
   @Override
   public String toString() {
-    return localMap.toString();
+    return this.localMap.toString();
   }
 
   @Override
@@ -353,7 +353,7 @@ public class FileData {
       return false;
     } else {
       final FileData fileData = (FileData) obj;
-      return localMap.equals(fileData.localMap);
+      return this.localMap.equals(fileData.localMap);
     }
   }
 }

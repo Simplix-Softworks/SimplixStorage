@@ -68,8 +68,8 @@ public interface DataStorage {
   }
 
   /**
-   * Method to deserialize a class using the {@link LightningSerializer}. You will need to
-   * register your serializable in the {@link LightningSerializer} before.
+   * Method to deserialize a class using the {@link LightningSerializer}. You will need to register
+   * your serializable in the {@link LightningSerializer} before.
    *
    * @param key   The key your value should be associated with.
    * @param value The value you want to set in your data-structure.
@@ -218,14 +218,15 @@ public interface DataStorage {
       final String key,
       final Class<E> enumType) {
     final Object object = get(key);
-    Valid.checkBoolean(object instanceof String,
+    Valid.checkBoolean(
+        object instanceof String,
         "No usable Enum-Value found for '" + key + "'.");
     return Enum.valueOf(enumType, (String) object);
   }
 
   /**
-   * Method to serialize a Class using the {@link LightningSerializer}. You will need to
-   * register your serializable in the {@link LightningSerializer} before.
+   * Method to serialize a Class using the {@link LightningSerializer}. You will need to register
+   * your serializable in the {@link LightningSerializer} before.
    *
    * @return Serialized instance of class.
    */
@@ -251,8 +252,8 @@ public interface DataStorage {
   }
 
   /**
-   * Sets a value to the data-structure if the data-structure doesn't already contain the
-   * value Has nothing to do with Bukkit't 'addDefault'
+   * Sets a value to the data-structure if the data-structure doesn't already contain the value Has
+   * nothing to do with Bukkit't 'addDefault'
    *
    * @param key   Key to set the value
    * @param value Value to set.
@@ -267,8 +268,8 @@ public interface DataStorage {
    * Mix of setDefault & getDefault.
    *
    * <p>Sets a value to the data-structure if the data-structure doesn't
-   * already contain the value Returns a default value if the data-structure doesn't
-   * already contain the key.
+   * already contain the value Returns a default value if the data-structure doesn't already contain
+   * the key.
    *
    * <p>If the key is already contained by the data-structure the value of
    * assigned to the key will be returned and casted to the type of your def.

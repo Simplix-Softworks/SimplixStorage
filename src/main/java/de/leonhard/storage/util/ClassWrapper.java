@@ -11,8 +11,8 @@ import lombok.experimental.UtilityClass;
 public class ClassWrapper {
 
   /**
-   * Method to cast an object to a given datatype Used for example in {@link
-   * DataStorage} to cast the results of get() to for example a String
+   * Method to cast an object to a given datatype Used for example in {@link DataStorage} to cast
+   * the results of get() to for example a String
    *
    * @param obj Object to cast
    * @param def type of result
@@ -46,8 +46,8 @@ public class ClassWrapper {
   }
 
   /**
-   * Method to cast an object to a given datatype Used for example in {@link
-   * DataStorage} to cast the results of get() to for example a String
+   * Method to cast an object to a given datatype Used for example in {@link DataStorage} to cast
+   * the results of get() to for example a String
    *
    * @param obj   Object to cast
    * @param clazz class of result

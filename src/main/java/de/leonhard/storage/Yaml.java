@@ -33,12 +33,12 @@ public class Yaml extends FlatFile {
 
   public Yaml(@NonNull final Yaml yaml) {
     super(yaml.getFile());
-    fileData = yaml.getFileData();
-    yamlEditor = yaml.getYamlEditor();
-    parser = yaml.getParser();
-    configSettings = yaml.getConfigSettings();
-    inputStream = yaml.getInputStream().orElse(null);
-    pathPrefix = yaml.getPathPrefix();
+    this.fileData = yaml.getFileData();
+    this.yamlEditor = yaml.getYamlEditor();
+    this.parser = yaml.getParser();
+    this.configSettings = yaml.getConfigSettings();
+    this.inputStream = yaml.getInputStream().orElse(null);
+    this.pathPrefix = yaml.getPathPrefix();
   }
 
   public Yaml(final String name, @Nullable final String path) {
@@ -62,22 +62,26 @@ public class Yaml extends FlatFile {
     super(name, path, FileType.YAML);
     this.inputStream = inputStream;
 
-    if (create() && inputStream != null)
-      FileUtils.writeToFile(file, inputStream);
+    if (create() && inputStream != null) {
+      FileUtils.writeToFile(this.file, inputStream);
+    }
 
-    yamlEditor = new YamlEditor(file);
-    parser = new YamlParser(yamlEditor);
+    this.yamlEditor = new YamlEditor(this.file);
+    this.parser = new YamlParser(this.yamlEditor);
 
-    if (reloadSettings != null)
+    if (reloadSettings != null) {
       this.reloadSettings = reloadSettings;
+    }
 
-    if (configSettings != null)
+    if (configSettings != null) {
       this.configSettings = configSettings;
+    }
 
-    if (dataType != null)
+    if (dataType != null) {
       this.dataType = dataType;
-    else
+    } else {
       this.dataType = DataType.forConfigSetting(configSettings);
+    }
 
     forceReload();
   }
@@ -97,8 +101,9 @@ public class Yaml extends FlatFile {
   public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
     reloadIfNeeded();
     // Creating & setting defaults
-    if (inputStream == null)
+    if (inputStream == null) {
       return this;
+    }
 
     try {
       final Map<String, Object> data = new SimpleYamlReader(
@@ -106,9 +111,11 @@ public class Yaml extends FlatFile {
 
       final FileData newData = new FileData(data, DataType.UNSORTED);
 
-      for (final String key : newData.keySet())
-        if (!fileData.containsKey(key))
-          fileData.insert(key, newData.get(key));
+      for (final String key : newData.keySet()) {
+        if (!this.fileData.containsKey(key)) {
+          this.fileData.insert(key, newData.get(key));
+        }
+      }
 
       write();
     } catch (final Exception ex) {
@@ -132,19 +139,19 @@ public class Yaml extends FlatFile {
   @Override
   protected void write(final FileData data) throws IOException {
     // If Comments shouldn't be preserved
-    if (!ConfigSettings.PRESERVE_COMMENTS.equals(configSettings)) {
-      write0(fileData);
+    if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings)) {
+      write0(this.fileData);
       return;
     }
 
-    final List<String> unEdited = yamlEditor.read();
-    write0(fileData);
-    yamlEditor.write(parser.parseLines(unEdited, yamlEditor.readKeys()));
+    final List<String> unEdited = this.yamlEditor.read();
+    write0(this.fileData);
+    this.yamlEditor.write(this.parser.parseLines(unEdited, this.yamlEditor.readKeys()));
   }
 
   // Writing without comments
   private void write0(final FileData fileData) throws IOException {
-    @Cleanup final SimpleYamlWriter writer = new SimpleYamlWriter(file);
+    @Cleanup final SimpleYamlWriter writer = new SimpleYamlWriter(this.file);
     writer.write(fileData.toMap());
   }
 
@@ -153,11 +160,11 @@ public class Yaml extends FlatFile {
   // ----------------------------------------------------------------------------------------------------
 
   public final List<String> getHeader() {
-    return yamlEditor.readHeader();
+    return this.yamlEditor.readHeader();
   }
 
   public final void setHeader(final List<String> header) {
-    yamlEditor.setHeader(header);
+    this.yamlEditor.setHeader(header);
   }
 
   public final void setHeader(final String... header) {
@@ -165,7 +172,7 @@ public class Yaml extends FlatFile {
   }
 
   public final void addHeader(final List<String> toAdd) {
-    yamlEditor.addHeader(toAdd);
+    this.yamlEditor.addHeader(toAdd);
   }
 
   public final void addHeader(final String... header) {
@@ -173,6 +180,6 @@ public class Yaml extends FlatFile {
   }
 
   public final Optional<InputStream> getInputStream() {
-    return Optional.ofNullable(inputStream);
+    return Optional.ofNullable(this.inputStream);
   }
 }

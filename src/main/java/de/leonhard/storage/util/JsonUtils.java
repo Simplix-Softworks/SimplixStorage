@@ -1,11 +1,10 @@
 package de.leonhard.storage.util;
 
+import java.util.*;
 import lombok.experimental.UtilityClass;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.*;
 
 @SuppressWarnings({"unchecked", "WeakerAccess"})
 @UtilityClass

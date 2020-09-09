@@ -1,13 +1,15 @@
 package de.leonhard.storage.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import lombok.experimental.UtilityClass;
 
-/** Utility Class to take benchmarks */
+/**
+ * Utility Class to take benchmarks
+ */
 @UtilityClass
 public class LagCatcher {
+
   private final HashMap<String, Long> startTimes = new HashMap<>();
   private final HashMap<String, Long> stopTimes = new HashMap<>();
 
@@ -41,7 +43,8 @@ public class LagCatcher {
       final long took = end - start;
       System.out.println(
           (Object)
-              ("Test '"
+              (
+                  "Test '"
                   + name
                   + "' took "
                   + TimeUnit.NANOSECONDS.toMicros(took)
@@ -67,14 +70,16 @@ public class LagCatcher {
     }
     System.out.println(
         (Object)
-            ("Average time: "
+            (
+                "Average time: "
                 + TimeUnit.NANOSECONDS.toMicros(nanosTook / cycles)
                 + " micros - "
                 + TimeUnit.NANOSECONDS.toMillis(nanosTook / cycles)
                 + " ms."));
     System.out.println(
         (Object)
-            ("Test took: "
+            (
+                "Test took: "
                 + TimeUnit.NANOSECONDS.toMicros(nanosTook)
                 + " micros "
                 + "- "

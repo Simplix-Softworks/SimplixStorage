@@ -24,8 +24,8 @@ public class Json extends FlatFile {
 
   public Json(final Json json) {
     super(json.getFile(), json.fileType);
-    fileData = json.getFileData();
-    pathPrefix = json.getPathPrefix();
+    this.fileData = json.getFileData();
+    this.pathPrefix = json.getPathPrefix();
   }
 
   public Json(final String name, final String path) {
@@ -43,12 +43,15 @@ public class Json extends FlatFile {
       @Nullable final ReloadSettings reloadSettings) {
     super(name, path, FileType.JSON);
 
-    if (create() || file.length() == 0)
-      if (inputStream != null)
-        FileUtils.writeToFile(file, inputStream);
+    if (create() || this.file.length() == 0) {
+      if (inputStream != null) {
+        FileUtils.writeToFile(this.file, inputStream);
+      }
+    }
 
-    if (reloadSettings != null)
+    if (reloadSettings != null) {
       this.reloadSettings = reloadSettings;
+    }
     forceReload();
   }
 
@@ -70,15 +73,16 @@ public class Json extends FlatFile {
    */
   @Override
   public Map getMap(final String key) {
-    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
-    if (!contains(finalKey))
+    final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+    if (!contains(finalKey)) {
       return new HashMap<>();
-    else {
+    } else {
       final Object map = get(key);
-      if (map instanceof Map)
-        return (Map<?, ?>) fileData.get(key);
-      else if (map instanceof JSONObject)
+      if (map instanceof Map) {
+        return (Map<?, ?>) this.fileData.get(key);
+      } else if (map instanceof JSONObject) {
         return ((JSONObject) map).toMap();
+      }
       // Exception in casting
       throw new IllegalArgumentException(
           "ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
@@ -91,16 +95,17 @@ public class Json extends FlatFile {
 
   @Override
   protected Map<String, Object> readToMap() throws IOException {
-    if (file.length() == 0)
-      Files.write(file.toPath(), Collections.singletonList("{}"));
+    if (this.file.length() == 0) {
+      Files.write(this.file.toPath(), Collections.singletonList("{}"));
+    }
 
-    final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
+    final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(this.file));
     return new JSONObject(jsonTokener).toMap();
   }
 
   @Override
   protected void write(final FileData data) throws IOException {
-    @Cleanup final Writer writer = FileUtils.createWriter(file);
+    @Cleanup final Writer writer = FileUtils.createWriter(this.file);
     writer.write(data.toJsonObject().toString(3));
     writer.flush();
   }

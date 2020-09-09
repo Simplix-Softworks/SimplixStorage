@@ -48,13 +48,16 @@ public class FileUtils {
 
     final File[] files = folder.listFiles();
 
-    if (files == null)
+    if (files == null) {
       return result;
+    }
 
     // if the extension is null we always add the file.
-    for (final File file : files)
-      if (extension == null || file.getName().endsWith(extension))
+    for (final File file : files) {
+      if (extension == null || file.getName().endsWith(extension)) {
         result.add(file);
+      }
+    }
 
     return result;
   }
@@ -67,10 +70,12 @@ public class FileUtils {
 
   public File getAndMake(@NonNull final File file) {
     try {
-      if (file.getParentFile() != null && !file.getParentFile().exists())
+      if (file.getParentFile() != null && !file.getParentFile().exists()) {
         file.getParentFile().mkdirs();
-      if (!file.exists())
+      }
+      if (!file.exists()) {
         file.createNewFile();
+      }
 
     } catch (final IOException ex) {
       throw LightningProviders.exceptionHandler().create(
@@ -97,8 +102,9 @@ public class FileUtils {
   }
 
   public String replaceExtensions(@NonNull final String fileName) {
-    if (!fileName.contains("."))
+    if (!fileName.contains(".")) {
       return fileName;
+    }
     return fileName.replace("." + getExtension(fileName), "");
   }
 
@@ -122,8 +128,9 @@ public class FileUtils {
   }
 
   public boolean hasChanged(final File file, final long timeStamp) {
-    if (file == null)
+    if (file == null) {
       return false;
+    }
     return timeStamp < file.lastModified();
   }
 
@@ -192,13 +199,14 @@ public class FileUtils {
       @NonNull final File file,
       @NonNull final InputStream inputStream) {
     try (final FileOutputStream outputStream = new FileOutputStream(file)) {
-      if (!file.exists())
+      if (!file.exists()) {
         Files.copy(inputStream, file.toPath());
-      else {
+      } else {
         final byte[] data = new byte[8192];
         int count;
-        while ((count = inputStream.read(data, 0, 8192)) != -1)
+        while ((count = inputStream.read(data, 0, 8192)) != -1) {
           outputStream.write(data, 0, count);
+        }
       }
     } catch (final IOException ex) {
       throw LightningProviders.exceptionHandler().create(
@@ -263,8 +271,9 @@ public class FileUtils {
     final byte[] checkSum = md5Checksum(filename);
     final StringBuilder result = new StringBuilder();
 
-    for (final byte b : checkSum)
+    for (final byte b : checkSum) {
       result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+    }
 
     return result.toString();
   }
@@ -278,8 +287,9 @@ public class FileUtils {
       do {
         numRead = fileInputStream.read(buffer);
 
-        if (numRead > 0)
+        if (numRead > 0) {
           complete.update(buffer, 0, numRead);
+        }
       } while (numRead != -1);
 
       return complete.digest();
@@ -309,8 +319,9 @@ public class FileUtils {
 
     final File target = new File(targetDirectory, resourcePath);
 
-    if (target.exists() && !replace)
+    if (target.exists() && !replace) {
       return;
+    }
 
     try (
         final InputStream inputStream = LightningProviders
@@ -339,13 +350,15 @@ public class FileUtils {
       throws IOException {
 
     if (source.isDirectory()) {
-      if (!destination.exists())
+      if (!destination.exists()) {
         destination.mkdirs();
+      }
 
       final String[] files = source.list();
 
-      if (files == null)
+      if (files == null) {
         return;
+      }
 
       for (final String file : files) {
         final File srcFile = new File(source, file);
@@ -360,8 +373,9 @@ public class FileUtils {
       final byte[] buffer = new byte[1024];
 
       int length;
-      while ((length = in.read(buffer)) > 0)
+      while ((length = in.read(buffer)) > 0) {
         out.write(buffer, 0, length);
+      }
     }
   }
 }
