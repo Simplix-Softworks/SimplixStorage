@@ -365,7 +365,7 @@ public class FileUtils {
 
     Valid.checkBoolean(
         targetDirectory.isDirectory(),
-        "Source directory must be an directory");
+        "Target directory must be an directory");
 
     try (final JarFile jarFile = new JarFile(sourceJarFile)) {
       for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements(); ) {
