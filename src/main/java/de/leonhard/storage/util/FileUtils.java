@@ -5,11 +5,15 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import lombok.Cleanup;
@@ -323,6 +327,8 @@ public class FileUtils {
       return;
     }
 
+    getAndMake(target);
+
     try (
         final InputStream inputStream = LightningProviders
             .inputStreamProvider()
@@ -331,7 +337,7 @@ public class FileUtils {
       Valid.notNull(
           inputStream,
           "The embedded resource '" + resourcePath + "' cannot be found");
-      Files.copy(inputStream, target.toPath());
+      Files.copy(inputStream, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
     } catch (final IOException ioException) {
       throw LightningProviders
@@ -341,6 +347,46 @@ public class FileUtils {
               "Exception while extracting file",
               "Directory: '" + targetDirectory + "'",
               "ResourcePath: '" + resourcePath + "'");
+    }
+  }
+
+  public void extractResourceFolderContents(
+      @NonNull final File sourceJarFile,
+      @NonNull final File targetDirectory,
+      @NonNull final String sourceDirectory,
+      boolean replace) {
+
+    if (!targetDirectory.exists()) {
+      Valid.checkBoolean(
+          targetDirectory.mkdirs(),
+          "Can't create directory '" + targetDirectory.getName() + "'",
+          "Parent: '" + getParentDirPath(targetDirectory) + "'");
+    }
+
+    Valid.checkBoolean(
+        targetDirectory.isDirectory(),
+        "Source directory must be an directory");
+
+    try (final JarFile jarFile = new JarFile(sourceJarFile)) {
+      for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements(); ) {
+        final JarEntry jarEntry = entries.nextElement();
+        final String entryName = jarEntry.getName();
+
+        if (entryName.startsWith(sourceDirectory) && !jarEntry.isDirectory()) {
+          extractResource(targetDirectory.getAbsolutePath(), entryName, replace);
+        }
+      }
+
+    } catch (final Throwable throwable) {
+      throw LightningProviders
+          .exceptionHandler()
+          .create(
+              throwable,
+              "Failed to extract folder from '"
+              + targetDirectory
+              + "' to '"
+              + sourceDirectory
+              + "'");
     }
   }
 
