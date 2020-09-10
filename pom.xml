@@ -2,56 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <groupId>com.github.javafactorydev</groupId>
   <artifactId>lightningstorage</artifactId>
-  <version>3.1.9</version>
-  <name>LightningStorage</name>
-  <description>Store data in a better way</description>
-  <url>https://github.com/JavaFactoryDev/LightningStorage</url>
-
-  <licenses>
-    <license>
-      <name>Apache License 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <id>JavaFactoryDev</id>
-      <name>Leonhard Solbach</name>
-      <email>JavaFactoryDev@gmail.com</email>
-      <url>https://github.com/JavaFactoryDev</url>
-      <roles>
-        <role>Lead Developer</role>
-      </roles>
-      <timezone>Germany</timezone>
-    </developer>
-
-    <developer>
-      <id>Zeanon</id>
-      <name>Zeanon</name>
-      <email>thezeanon@gmail.com</email>
-      <url>https://github.com/Zeanon</url>
-      <roles>
-        <role>Refactoring</role>
-      </roles>
-      <timezone>Germany</timezone>
-    </developer>
-  </developers>
-
-  <scm>
-    <connection>scm:git:git://github.com/JavaFactoryDev/LightningStorage.git</connection>
-    <developerConnection>scm:git:ssh://github.com/JavaFactoryDev/LightningStorage.git
-    </developerConnection>
-    <url>//github.com/JavaFactoryDev/LightningStorage</url>
-  </scm>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
 
   <build>
     <defaultGoal>clean verify -U</defaultGoal>
@@ -75,18 +26,9 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
           <minimizeJar>true</minimizeJar>
           <relocations>
             <relocation>
@@ -102,14 +44,21 @@
               <shadedPattern>de.leonhard.storage.shaded.jetbrains</shadedPattern>
             </relocation>
           </relocations>
-          <createDependencyReducedPom>false</createDependencyReducedPom>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.2.1</version>
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.2</version>
         <configuration>
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
@@ -117,69 +66,142 @@
               <mainClass>de.leonhard.storage.Main</mainClass>
             </manifest>
             <manifestEntries>
-              <Manifest-Version>${project.version}</Manifest-Version>
               <Built-By>${project.name} Development Team</Built-By>
+              <Manifest-Version>${project.version}</Manifest-Version>
             </manifestEntries>
           </archive>
         </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.1.2</version>
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <executions>
-          <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>testCompile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <id>compile</id>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <id>testCompile</id>
+            <phase>test-compile</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.8.1</version>
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
-        <version>3.0.0-M1</version>
         <configuration>
           <skip>true</skip>
         </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>3.0.0-M1</version>
       </plugin>
 
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.8</version>
+        <configuration>
+          <nexusUrl>http://thewarking.de:8081/</nexusUrl>
+          <serverId>thewarking</serverId>
+          <skipStaging>true</skipStaging>
+        </configuration>
         <executions>
           <execution>
-            <id>default-deploy</id>
-            <phase>deploy</phase>
             <goals>
               <goal>deploy</goal>
             </goals>
+            <id>default-deploy</id>
+            <phase>deploy</phase>
           </execution>
         </executions>
-        <configuration>
-          <serverId>thewarking</serverId>
-          <nexusUrl>http://thewarking.de:8081/</nexusUrl>
-          <skipStaging>true</skipStaging>
-        </configuration>
+        <groupId>org.sonatype.plugins</groupId>
+        <version>1.6.8</version>
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <!-- YAML -->
+    <dependency>
+      <artifactId>yamlbeans</artifactId>
+      <groupId>com.esotericsoftware.yamlbeans</groupId>
+      <scope>compile</scope>
+      <version>1.13</version>
+    </dependency>
+
+    <!-- JSON -->
+    <dependency>
+      <artifactId>json</artifactId>
+      <groupId>org.json</groupId>
+      <scope>compile</scope>
+      <version>20190722</version>
+    </dependency>
+
+    <!-- Lombok -->
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <scope>provided</scope>
+      <version>1.18.10</version>
+    </dependency>
+
+    <!-- JetBrains Annotations -->
+    <dependency>
+      <artifactId>annotations</artifactId>
+      <groupId>org.jetbrains</groupId>
+      <version>18.0.0</version>
+    </dependency>
+  </dependencies>
+  <description>Store data in a better way</description>
+  <developers>
+    <developer>
+      <email>JavaFactoryDev@gmail.com</email>
+      <id>JavaFactoryDev</id>
+      <name>Leonhard Solbach</name>
+      <roles>
+        <role>Lead Developer</role>
+      </roles>
+      <timezone>Germany</timezone>
+      <url>https://github.com/JavaFactoryDev</url>
+    </developer>
+
+    <developer>
+      <email>thezeanon@gmail.com</email>
+      <id>Zeanon</id>
+      <name>Zeanon</name>
+      <roles>
+        <role>Refactoring</role>
+      </roles>
+      <timezone>Germany</timezone>
+      <url>https://github.com/Zeanon</url>
+    </developer>
+  </developers>
+  <groupId>com.github.javafactorydev</groupId>
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <name>LightningStorage</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <repositories>
     <repository>
@@ -193,36 +215,14 @@
     </repository>
   </repositories>
 
-  <dependencies>
-    <!-- YAML -->
-    <dependency>
-      <groupId>com.esotericsoftware.yamlbeans</groupId>
-      <artifactId>yamlbeans</artifactId>
-      <version>1.13</version>
-      <scope>compile</scope>
-    </dependency>
+  <scm>
+    <connection>scm:git:git://github.com/JavaFactoryDev/LightningStorage.git</connection>
+    <developerConnection>scm:git:ssh://github.com/JavaFactoryDev/LightningStorage.git
+    </developerConnection>
+    <url>//github.com/JavaFactoryDev/LightningStorage</url>
+  </scm>
 
-    <!-- JSON -->
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20190722</version>
-      <scope>compile</scope>
-    </dependency>
+  <url>https://github.com/JavaFactoryDev/LightningStorage</url>
 
-    <!-- Lombok -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.10</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- JetBrains Annotations -->
-    <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-      <version>18.0.0</version>
-    </dependency>
-  </dependencies>
+  <version>3.1.9</version>
 </project>

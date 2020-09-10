@@ -18,8 +18,7 @@ import java.util.Map;
  * <h1>DateTimes support</h1>
  *
  * <p>Any {@link TemporalAccessor} may be added in a Map passed to this writer, this writer can
- * only
- * write three kind of datetimes: {@link LocalDate}, {@link LocalDateTime} and {@link
+ * only write three kind of datetimes: {@link LocalDate}, {@link LocalDateTime} and {@link
  * ZonedDateTime}.
  *
  * <h1>Lenient bare keys</h1>
