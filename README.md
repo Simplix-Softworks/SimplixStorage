@@ -2,9 +2,9 @@
 # SimplixStorage
 SimplixStorage - A Library to store data in a better way.
 
-![](https://i.imgur.com/tDf7NVA.png)
+[](https://i.imgur.com/tDf7NVA.png)
 
-[![](https://jitpack.io/v/JavaFactoryDev/SimplixStorage.svg)](https://jitpack.io/#JavaFactoryDev/SimplixStorage)
+[![](https://jitpack.io/v/simplix-softworks/simplixstorage.svg)](https://jitpack.io/#simplix-softworks/simplixstorage)
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
 Want to do more than just use simple .yml files to store data?<br>
