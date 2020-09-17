@@ -1,8 +1,10 @@
 
-# LightningStorage
-LightningStorage - A Library to store data in a better way.
+# SimplixStorage
+SimplixStorage - A Library to store data in a better way.
 
-[![](https://jitpack.io/v/JavaFactoryDev/LightningStorage.svg)](https://jitpack.io/#JavaFactoryDev/LightningStorage)
+![](https://i.imgur.com/tDf7NVA.png)
+
+[![](https://jitpack.io/v/simplix-softworks/simplixstorage.svg)](https://jitpack.io/#simplix-softworks/simplixstorage)
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
 Want to do more than just use simple .yml files to store data?<br>
@@ -15,20 +17,20 @@ without being depended on Bukkit/BungeeCord. But there was nothing out there so 
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
 ThunderBolt-2 for example only supports Json files but does not support nested objects.
 Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
-Now it is here: **LightningStorage**!
+Now it is here: **SimplixStorage**!
 
-LightningStorage is extremely fast & good at **storing data reliably**! <br>
+SimplixStorage is extremely fast & good at **storing data reliably**! <br>
 It also supports **nested objects**!<br>
 Like bukkit it has a contains check.
-LightningStorage is licensed under the Apache2 license, which means that
+SimplixStorage is licensed under the Apache2 license, which means that
 you can also **use it in private projects** that are not open source.
 
 If you have any ideas to add or issues just open a issue page. I will do my best to help.
 <br>
-For more details, see the [wiki](https://github.com/JavaFactoryDev/LightningStorage/wiki) 
+For more details, see the [wiki](https://github.com/Simplix-Softworks/SimplixStorage/wiki) 
 
 <br>
-At the moment LightningStorage supports four file types:
+At the moment SimplixStorage supports four file types:
 
 <br>
 
@@ -77,14 +79,14 @@ repositories {
 2. Place this in your dependency-section: 
 
 Version:
-Find the latest version of LightningStorage [here](https://github.com/JavaFactoryDev/LightningStorage/releases)
+Find the latest version of SimplixStorage [here](https://github.com/Simplix-Softworks/SimplixStorage/releases/)
 
 Maven:
 
 ```xml
 <dependency>
-  <groupId>com.github.KotlinFactory</groupId>
-  <artifactId>LightningStorage</artifactId> 
+  <groupId>com.github.simplix-softworks</groupId>
+  <artifactId>SimplixStorage</artifactId> 
   <version>VERSION <!-- Replace me with the current version --></version> 
 </dependency>
 ```       
@@ -92,7 +94,8 @@ Maven:
 Gradle:
 ```groovy
 dependencies {
-    compile 'com.github.JavaFactoryDev:LightningStorage:VERSION /* Replace me with the current version */'
+    compile 'com.github.simplix-softworks:SimplixStorage:VERSION /* Replace me with the current
+    version */'
 }
 ```
     
@@ -133,7 +136,7 @@ plugins {
     id 'java'
     id 'application'
     
-    // This is the 'shadow' plugin to shadow 'LightningStorage' directly into your jar.
+    // This is the 'shadow' plugin to shadow 'SimplixStorage' directly into your jar.
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 ```
@@ -141,7 +144,7 @@ plugins {
 
 **Library's used:**
 
-LightningStorage uses a powerful combination of libraries to provide the best usability: 
+SimplixStorage uses a powerful combination of libraries to provide the best usability: 
 
 >MIT-org.json Copyright (c) 2002 JSON.org <br>
 >YAMLBEANS - Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini <br>
