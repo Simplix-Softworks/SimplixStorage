@@ -1,6 +1,6 @@
 
-# LightningStorage
-LightningStorage - A Library to store data in a better way.
+# SimplixStorage
+SimplixStorage - A Library to store data in a better way.
 
 [![](https://jitpack.io/v/JavaFactoryDev/LightningStorage.svg)](https://jitpack.io/#JavaFactoryDev/LightningStorage)
 
