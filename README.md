@@ -25,7 +25,7 @@ you can also **use it in private projects** that are not open source.
 
 If you have any ideas to add or issues just open a issue page. I will do my best to help.
 <br>
-For more details, see the [wiki](https://github.com/JavaFactoryDev/SimplixStorage/wiki) 
+For more details, see the [wiki](https://github.com/Simplix-Softworks/SimplixStorage/wiki) 
 
 <br>
 At the moment SimplixStorage supports four file types:
