@@ -1,4 +1,4 @@
-#LightningStorage
+#SimplixStorage
 Libraries used:
 
 > TOML-LIB: https://github.com/TheElectronWill/TOML-javalib/
