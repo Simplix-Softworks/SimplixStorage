@@ -2,7 +2,7 @@
 # SimplixStorage
 SimplixStorage - A Library to store data in a better way.
 
-[](https://i.imgur.com/tDf7NVA.png)
+![](https://i.imgur.com/tDf7NVA.png)
 
 [![](https://jitpack.io/v/simplix-softworks/simplixstorage.svg)](https://jitpack.io/#simplix-softworks/simplixstorage)
 
