@@ -30,8 +30,7 @@ If you have any ideas to add or issues just open a issue page. I will do my best
 For more details, see the [wiki](https://github.com/Simplix-Softworks/SimplixStorage/wiki) 
 
 <br>
-At the moment SimplixStorage supports four file types:
-
+At the moment SimplixStorage supports three file types:
 <br>
 
 #### Json:
@@ -40,7 +39,6 @@ It is much faster than yaml files and is therefore better suited for storing
  larger amounts of data, such as player data (rank, money, playtime, etc).
 >https://stackoverflow.com/questions/2451732/how-is-it-that-json-serialization-is-so-much-faster-than-yaml-serialization-in-p/2452043#2452043
 
-
 #### Yaml:
 Yaml files are not as fast as json files, but they are easier 
 to read and are therefore more suitable than configuration files, 
@@ -48,10 +46,6 @@ as you often find them in bukkit plugins in the form of "config.yml".
 
 #### Toml:
 Toml is a compromise between the readybility of Yaml and the performance of Json, thus being a quite good way to go.
-
-
-#### LightningFile
-LightningFile is our own implementation of a config file format. It has quite good performance (about as fast as Json) but is way more readable.
 
 #### How to setup
 
@@ -140,7 +134,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 ```
-
 
 **Library's used:**
 
