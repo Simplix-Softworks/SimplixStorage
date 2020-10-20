@@ -2,7 +2,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>lightningstorage</artifactId>
+  <artifactId>simplixstorage</artifactId>
+  <version>3.1.9</version>
 
   <build>
     <defaultGoal>clean verify -U</defaultGoal>
@@ -162,6 +163,12 @@
       <groupId>org.jetbrains</groupId>
       <version>18.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>RELEASE</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <description>Store data in a better way</description>
   <developers>
@@ -223,6 +230,4 @@
   </scm>
 
   <url>https://github.com/JavaFactoryDev/LightningStorage</url>
-
-  <version>3.1.9</version>
 </project>
