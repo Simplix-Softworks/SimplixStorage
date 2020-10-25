@@ -2,8 +2,6 @@
 # SimplixStorage
 SimplixStorage - A Library to store data in a better way.
 
-![](https://i.imgur.com/tDf7NVA.png)
-
 [![](https://jitpack.io/v/simplix-softworks/simplixstorage.svg)](https://jitpack.io/#simplix-softworks/simplixstorage) [![Discord](https://img.shields.io/discord/752533664696369204?label=Discord)](https://discord.simplixsoft.com/) ![GitHub](https://img.shields.io/github/license/Simplix-Softworks/SimplixStorage)
 
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
