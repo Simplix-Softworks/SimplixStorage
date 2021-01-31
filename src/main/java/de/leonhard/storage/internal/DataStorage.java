@@ -5,6 +5,7 @@ import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -230,11 +231,30 @@ public interface DataStorage {
    *
    * @return Serialized instance of class.
    */
+  @Nullable
   default <T> T getSerializable(final String key, final Class<T> clazz) {
     if (!contains(key)) {
       return null;
     }
-    return LightningSerializer.deserialize(get(key), clazz);
+    Object raw = get(key);
+    if (raw == null) {
+      return null;
+    }
+    return LightningSerializer.deserialize(raw, clazz);
+  }
+
+  @Nullable
+  default <T> List<T> getSerializableList(final String key, final Class<T> type) {
+    if (!contains(key)) {
+      return null;
+    }
+
+    final List<?> rawList = getList(key);
+
+    return rawList
+        .stream()
+        .map(input -> LightningSerializer.deserialize(input, type))
+        .collect(Collectors.toList());
   }
 
   // ----------------------------------------------------------------------------------------------------
