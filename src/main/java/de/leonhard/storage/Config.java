@@ -1,11 +1,13 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Consumer;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +39,18 @@ public class Config extends Yaml {
       @Nullable final ConfigSettings configSettings,
       @Nullable final DataType dataType) {
     super(name, path, inputStream, reloadSettings, configSettings, dataType);
+    setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
+  }
+
+  public Config(
+      final String name,
+      @Nullable final String path,
+      @Nullable final InputStream inputStream,
+      @Nullable final ReloadSettings reloadSettings,
+      @Nullable final ConfigSettings configSettings,
+      @Nullable final DataType dataType,
+      @Nullable final Consumer<FlatFile> reloadConsumer) {
+    super(name, path, inputStream, reloadSettings, configSettings, dataType, reloadConsumer);
     setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
   }
 

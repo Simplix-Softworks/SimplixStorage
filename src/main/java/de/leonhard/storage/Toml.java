@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.function.Consumer;
 import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Toml extends FlatFile {
 
@@ -25,15 +27,17 @@ public class Toml extends FlatFile {
   }
 
   public Toml(final String name, final String path, final InputStream inputStream) {
-    this(name, path, inputStream, null);
+    this(name, path, inputStream, null, null);
   }
 
   public Toml(
-      final String name,
-      final String path,
-      final InputStream inputStream,
-      final ReloadSettings reloadSettings) {
-    super(name, path, FileType.TOML);
+      @NonNull final String name,
+      @NonNull final String path,
+      @Nullable final InputStream inputStream,
+      @Nullable final ReloadSettings reloadSettings,
+      @Nullable final Consumer<FlatFile> reloadConsumer
+  ) {
+    super(name, path, FileType.TOML, reloadConsumer);
 
     if (create() && inputStream != null) {
       FileUtils.writeToFile(this.file, inputStream);

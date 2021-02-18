@@ -190,7 +190,7 @@ public interface DataStorage {
    * Attempts to get a List of the given type
    * @param key Path to List in data structure.
    */
-  default <T> List<T> getListRaw(final String key) {
+  default <T> List<T> getListParameterized(final String key) {
     return getOrSetDefault(key, new ArrayList<>());
   }
 
@@ -218,7 +218,7 @@ public interface DataStorage {
    * Attempts to get a map of the given type
    * @param key Path to the Map in the data-structure
    */
-  default <K, V> Map<K, V> getMapRaw(final String key) {
+  default <K, V> Map<K, V> getMapParameterized(final String key) {
     return getOrSetDefault(key, new HashMap<>());
   }
 

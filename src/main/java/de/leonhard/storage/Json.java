@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import lombok.Cleanup;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +42,16 @@ public class Json extends FlatFile {
       @Nullable final String path,
       @Nullable final InputStream inputStream,
       @Nullable final ReloadSettings reloadSettings) {
-    super(name, path, FileType.JSON);
+    this(name, path, inputStream, reloadSettings, null);
+  }
+
+  public Json(
+      final String name,
+      @Nullable final String path,
+      @Nullable final InputStream inputStream,
+      @Nullable final ReloadSettings reloadSettings,
+      @Nullable final Consumer<FlatFile> reloadConsumer) {
+    super(name, path, FileType.JSON, reloadConsumer);
 
     if (create() || this.file.length() == 0) {
       if (inputStream != null) {
@@ -72,7 +82,7 @@ public class Json extends FlatFile {
    * @return Map
    */
   @Override
-  public Map getMap(final String key) {
+  public final Map getMap(final String key) {
     final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
     if (!contains(finalKey)) {
       return new HashMap<>();
@@ -94,7 +104,7 @@ public class Json extends FlatFile {
   // ----------------------------------------------------------------------------------------------------
 
   @Override
-  protected Map<String, Object> readToMap() throws IOException {
+  protected final Map<String, Object> readToMap() throws IOException {
     if (this.file.length() == 0) {
       Files.write(this.file.toPath(), Collections.singletonList("{}"));
     }
@@ -104,7 +114,7 @@ public class Json extends FlatFile {
   }
 
   @Override
-  protected void write(final FileData data) throws IOException {
+  protected final void write(final FileData data) throws IOException {
     @Cleanup final Writer writer = FileUtils.createWriter(this.file);
     writer.write(data.toJsonObject().toString(3));
     writer.flush();

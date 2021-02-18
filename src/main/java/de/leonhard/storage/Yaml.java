@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NonNull;
@@ -40,6 +41,7 @@ public class Yaml extends FlatFile {
     this.configSettings = yaml.getConfigSettings();
     this.inputStream = yaml.getInputStream().orElse(null);
     this.pathPrefix = yaml.getPathPrefix();
+    this.reloadConsumer = yaml.getReloadConsumer();
   }
 
   public Yaml(final String name, @Nullable final String path) {
@@ -60,7 +62,18 @@ public class Yaml extends FlatFile {
       @Nullable final ReloadSettings reloadSettings,
       @Nullable final ConfigSettings configSettings,
       @Nullable final DataType dataType) {
-    super(name, path, FileType.YAML);
+    this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
+  }
+
+  public Yaml(
+      final String name,
+      @Nullable final String path,
+      @Nullable final InputStream inputStream,
+      @Nullable final ReloadSettings reloadSettings,
+      @Nullable final ConfigSettings configSettings,
+      @Nullable final DataType dataType,
+      @Nullable final Consumer<FlatFile> reloadConsumer) {
+    super(name, path, FileType.YAML, reloadConsumer);
     this.inputStream = inputStream;
 
     if (create() && inputStream != null) {

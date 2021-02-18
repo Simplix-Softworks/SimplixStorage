@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.function.Consumer;
 import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
   protected DataType dataType = DataType.UNSORTED;
   protected FileData fileData;
+  @Nullable
+  protected Consumer<FlatFile> reloadConsumer;
   @Setter
   protected String pathPrefix;
   private long lastLoaded;
@@ -30,9 +33,11 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   protected FlatFile(
       @NonNull final String name,
       @Nullable final String path,
-      @NonNull final FileType fileType) {
+      @NonNull final FileType fileType,
+      @Nullable final Consumer<FlatFile> reloadConsumer) {
     Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
     this.fileType = fileType;
+    this.reloadConsumer = reloadConsumer;
     if (path == null || path.isEmpty()) {
       this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
     } else {
@@ -49,7 +54,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   protected FlatFile(@NonNull final File file, @NonNull final FileType fileType) {
     this.file = file;
     this.fileType = fileType;
-
+    this.reloadConsumer = null;
     Valid.checkBoolean(
         fileType == FileType.fromExtension(file),
         "Invalid file-extension for file type: '" + fileType + "'",
@@ -63,6 +68,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
    */
   protected FlatFile(@NonNull final File file) {
     this.file = file;
+    this.reloadConsumer = null;
     // Might be null
     this.fileType = FileType.fromFile(file);
   }
@@ -280,6 +286,11 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   public final void forceReload() {
+
+    if (reloadConsumer != null) {
+      reloadConsumer.accept(this);
+    }
+
     Map<String, Object> out = new HashMap<>();
     try {
       out = readToMap();
@@ -336,7 +347,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   @Override
-  public final int compareTo(final FlatFile flatFile) {
+  public final int compareTo(@NonNull final FlatFile flatFile) {
     return this.file.compareTo(flatFile.file);
   }
 }
