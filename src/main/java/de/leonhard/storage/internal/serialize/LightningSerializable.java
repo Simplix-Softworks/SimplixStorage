@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.serialize;
 
 import lombok.NonNull;
+
 public interface LightningSerializable<T> {
 
   /**

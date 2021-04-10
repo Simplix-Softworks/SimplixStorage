@@ -60,7 +60,8 @@ public class LightningSerializer {
     final LightningSerializable<?> serializable = findSerializable(type);
     Valid.notNull(
         serializable,
-        "No serializable found for '" + type.getSimpleName() + "'");
+        "No serializable found for '" + type.getSimpleName() + "'",
+        "Raw: '" + raw.getClass().getSimpleName() + "'");
     return (T) serializable.deserialize(raw);
   }
 }

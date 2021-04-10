@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.provider.InputStreamProvider;
 import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.settings.ConfigSettings;
@@ -7,14 +8,15 @@ import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
-import lombok.NonNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.function.Consumer;
+import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class LightningBuilder {
+
   private final InputStreamProvider inputStreamProvider;
 
   private final String path;
@@ -23,6 +25,8 @@ public final class LightningBuilder {
   private ReloadSettings reloadSettings;
   private ConfigSettings configSettings;
   private DataType dataType;
+
+  private @Nullable Consumer<FlatFile> reloadConsumer = null;
 
   private LightningBuilder(
       final String name, final String path, final InputStreamProvider inputStreamProvider) {
@@ -73,16 +77,21 @@ public final class LightningBuilder {
   // Adding out settings
   // ----------------------------------------------------------------------------------------------------
 
+  public LightningBuilder reloadCallback(@Nullable final Consumer<FlatFile> reloadConsumer) {
+    this.reloadConsumer = reloadConsumer;
+    return this;
+  }
+
   public LightningBuilder addInputStreamFromFile(@NonNull final File file) {
-    inputStream = FileUtils.createInputStream(file);
+    this.inputStream = FileUtils.createInputStream(file);
     return this;
   }
 
   public LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
-    inputStream = inputStreamProvider.createInputStreamFromInnerResource(resource);
+    this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
 
     Valid.notNull(
-        inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
+        this.inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
     return this;
   }
 
@@ -116,18 +125,42 @@ public final class LightningBuilder {
   // ----------------------------------------------------------------------------------------------------
 
   public Config createConfig() {
-    return new Config(name, path, inputStream, reloadSettings, configSettings, dataType);
+    return new Config(
+        this.name,
+        this.path,
+        this.inputStream,
+        this.reloadSettings,
+        this.configSettings,
+        this.dataType,
+        reloadConsumer);
   }
 
   public Yaml createYaml() {
-    return new Yaml(name, path, inputStream, reloadSettings, configSettings, dataType);
+    return new Yaml(
+        this.name,
+        this.path,
+        this.inputStream,
+        this.reloadSettings,
+        this.configSettings,
+        this.dataType,
+        reloadConsumer);
   }
 
   public Toml createToml() {
-    return new Toml(name, path, inputStream, reloadSettings);
+    return new Toml(
+        this.name,
+        this.path,
+        this.inputStream,
+        this.reloadSettings,
+        reloadConsumer);
   }
 
   public Json createJson() {
-    return new Json(name, path, inputStream, reloadSettings);
+    return new Json(
+        this.name,
+        this.path,
+        this.inputStream,
+        this.reloadSettings,
+        reloadConsumer);
   }
 }

@@ -1,6 +1,7 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.DataStorage;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import lombok.experimental.UtilityClass;
@@ -10,8 +11,8 @@ import lombok.experimental.UtilityClass;
 public class ClassWrapper {
 
   /**
-   * Method to cast an object to a given datatype Used for example in {@link
-   * DataStorage} to cast the results of get() to for example a String
+   * Method to cast an object to a given datatype Used for example in {@link DataStorage} to cast
+   * the results of get() to for example a String
    *
    * @param obj Object to cast
    * @param def type of result
@@ -45,8 +46,8 @@ public class ClassWrapper {
   }
 
   /**
-   * Method to cast an object to a given datatype Used for example in {@link
-   * DataStorage} to cast the results of get() to for example a String
+   * Method to cast an object to a given datatype Used for example in {@link DataStorage} to cast
+   * the results of get() to for example a String
    *
    * @param obj   Object to cast
    * @param clazz class of result
@@ -234,7 +235,7 @@ public class ClassWrapper {
       if (obj instanceof Collection && ((Collection<?>) obj).size() == 1) {
         return ((List<?>) obj).get(0).toString();
       }
-      return obj.toString();
+      return new String(obj.toString().getBytes(), StandardCharsets.UTF_8);
     }
   }
 }

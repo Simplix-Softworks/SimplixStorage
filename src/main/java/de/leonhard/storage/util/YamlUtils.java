@@ -5,9 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import lombok.experimental.UtilityClass;
 
-/** Class to work with the parts of the lines of a YAML-file */
+/**
+ * Class to work with the parts of the lines of a YAML-file
+ */
 @UtilityClass
 public class YamlUtils {
+
   public List<String> getCommentsFromLines(final List<String> lines) {
     final List<String> result = new ArrayList<>();
 
@@ -45,7 +48,9 @@ public class YamlUtils {
     return result;
   }
 
-  /** @return List of comments that don't belong to header or footer */
+  /**
+   * @return List of comments that don't belong to header or footer
+   */
   public List<String> getPureCommentsFromLines(final List<String> lines) {
     final List<String> comments = getCommentsFromLines(lines);
     final List<String> header = getHeaderFromLines(lines);

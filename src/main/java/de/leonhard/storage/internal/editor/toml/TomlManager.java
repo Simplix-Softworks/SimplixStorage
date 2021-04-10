@@ -2,16 +2,7 @@ package de.leonhard.storage.internal.editor.toml;
 
 import de.leonhard.storage.internal.exceptions.TomlException;
 import de.leonhard.storage.util.FastStringWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -27,7 +18,9 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TomlManager {
 
-  /** A DateTimeFormatter that uses the TOML format. */
+  /**
+   * A DateTimeFormatter that uses the TOML format.
+   */
   public final DateTimeFormatter DATE_FORMATTER =
       new DateTimeFormatterBuilder()
           .append(DateTimeFormatter.ISO_LOCAL_DATE)
@@ -70,7 +63,7 @@ public class TomlManager {
    * indentation parameters are used, ie each indent is one tab character.
    *
    * @param data the data to write
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public void write(final Map<String, Object> data, final OutputStream out) throws IOException {
@@ -82,9 +75,9 @@ public class TomlManager {
    * Writes data to a Writer, in the TOML format and with the default parameters, ie each indent is
    * 1 tab character. This is the same as {@code write(data, writer, 1, false)}.
    *
-   * @param data the data to write
+   * @param data   the data to write
    * @param writer where to write the data
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public void write(final Map<String, Object> data, final Writer writer) throws IOException {
@@ -96,12 +89,12 @@ public class TomlManager {
   /**
    * Writes the specified data to a Writer, in the TOML format and with the specified parameters.
    *
-   * @param data the data to write
-   * @param writer where to write the data
-   * @param indentSize the indentation size, ie the number of times the indentation character is
-   *     repeated in one indent.
+   * @param data             the data to write
+   * @param writer           where to write the data
+   * @param indentSize       the indentation size, ie the number of times the indentation character
+   *                         is repeated in one indent.
    * @param indentWithSpaces true to indent with spaces, false to indent with tabs
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public void write(
@@ -130,9 +123,9 @@ public class TomlManager {
   /**
    * Reads a String that contains TOML data.
    *
-   * @param toml a String containing TOML data
+   * @param toml                a String containing TOML data
    * @param strictAsciiBareKeys <code>true</code> to enforce strict bare keys (see {@link
-   *     TomlManager}).
+   *                            TomlManager}).
    * @return a {@code Map<String, Object>} containing the parsed data
    * @throws TomlException if a parse error occurs
    */
@@ -147,7 +140,7 @@ public class TomlManager {
    *
    * @param file the File to read data from
    * @return a {@code Map<String, Object>} containing the parsed data
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public Map<String, Object> read(final File file) throws IOException, TomlException {
@@ -157,11 +150,11 @@ public class TomlManager {
   /**
    * Reads TOML data from an UTF-8 encoded File.
    *
-   * @param file the File to read data from
+   * @param file                the File to read data from
    * @param strictAsciiBareKeys <code>true</code> to enforce strict bare keys (see {@link
-   *     TomlManager}).
+   *                            TomlManager}).
    * @return a {@code Map<String, Object>} containing the parsed data
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public Map<String, Object> read(final File file, final boolean strictAsciiBareKeys)
@@ -175,7 +168,7 @@ public class TomlManager {
    *
    * @param in the InputStream to read data from
    * @return a {@code Map<String, Object>} containing the parsed data
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public Map<String, Object> read(final InputStream in) throws IOException, TomlException {
@@ -185,11 +178,11 @@ public class TomlManager {
   /**
    * Reads TOML data from an UTF-8 encoded InputStream.
    *
-   * @param in the InputStream to read data from
+   * @param in                  the InputStream to read data from
    * @param strictAsciiBareKeys <code>true</code> to enforce strict bare keys (see {@link
-   *     TomlManager}).
+   *                            TomlManager}).
    * @return a {@code Map<String, Object>} containing the parsed data
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public Map<String, Object> read(final InputStream in, final boolean strictAsciiBareKeys)
@@ -201,11 +194,12 @@ public class TomlManager {
   /**
    * Reads TOML data from a Reader. The data is read until the end of the stream is reached.
    *
-   * @param bufferSize the initial size of the internal buffer that will contain the entire data.
+   * @param bufferSize          the initial size of the internal buffer that will contain the entire
+   *                            data.
    * @param strictAsciiBareKeys <code>true</code> to enforce strict bare keys (see {@link
-   *     TomlManager}).
+   *                            TomlManager}).
    * @return a {@code Map<String, Object>} containing the parsed data
-   * @throws IOException if a read error occurs
+   * @throws IOException   if a read error occurs
    * @throws TomlException if a parse error occurs
    */
   public Map<String, Object> read(

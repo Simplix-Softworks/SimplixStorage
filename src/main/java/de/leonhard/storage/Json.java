@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import lombok.Cleanup;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +25,8 @@ public class Json extends FlatFile {
 
   public Json(final Json json) {
     super(json.getFile(), json.fileType);
-    fileData = json.getFileData();
+    this.fileData = json.getFileData();
+    this.pathPrefix = json.getPathPrefix();
   }
 
   public Json(final String name, final String path) {
@@ -40,11 +42,20 @@ public class Json extends FlatFile {
       @Nullable final String path,
       @Nullable final InputStream inputStream,
       @Nullable final ReloadSettings reloadSettings) {
-    super(name, path, FileType.JSON);
+    this(name, path, inputStream, reloadSettings, null);
+  }
 
-    if (create() || file.length() == 0) {
+  public Json(
+      final String name,
+      @Nullable final String path,
+      @Nullable final InputStream inputStream,
+      @Nullable final ReloadSettings reloadSettings,
+      @Nullable final Consumer<FlatFile> reloadConsumer) {
+    super(name, path, FileType.JSON, reloadConsumer);
+
+    if (create() || this.file.length() == 0) {
       if (inputStream != null) {
-        FileUtils.writeToFile(file, inputStream);
+        FileUtils.writeToFile(this.file, inputStream);
       }
     }
 
@@ -71,14 +82,14 @@ public class Json extends FlatFile {
    * @return Map
    */
   @Override
-  public Map getMap(final String key) {
-    final String finalKey = (pathPrefix == null) ? key : pathPrefix + "." + key;
+  public final Map getMap(final String key) {
+    final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
     if (!contains(finalKey)) {
       return new HashMap<>();
     } else {
       final Object map = get(key);
       if (map instanceof Map) {
-        return (Map<?, ?>) fileData.get(key);
+        return (Map<?, ?>) this.fileData.get(key);
       } else if (map instanceof JSONObject) {
         return ((JSONObject) map).toMap();
       }
@@ -93,18 +104,18 @@ public class Json extends FlatFile {
   // ----------------------------------------------------------------------------------------------------
 
   @Override
-  protected Map<String, Object> readToMap() throws IOException {
-    if (file.length() == 0) {
-      Files.write(file.toPath(), Collections.singletonList("{}"));
+  protected final Map<String, Object> readToMap() throws IOException {
+    if (this.file.length() == 0) {
+      Files.write(this.file.toPath(), Collections.singletonList("{}"));
     }
 
-    final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(file));
+    final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(this.file));
     return new JSONObject(jsonTokener).toMap();
   }
 
   @Override
-  protected void write(final FileData data) throws IOException {
-    @Cleanup final Writer writer = FileUtils.createWriter(file);
+  protected final void write(final FileData data) throws IOException {
+    @Cleanup final Writer writer = FileUtils.createWriter(this.file);
     writer.write(data.toJsonObject().toString(3));
     writer.flush();
   }

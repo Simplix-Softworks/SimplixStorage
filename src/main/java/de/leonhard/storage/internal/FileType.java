@@ -1,10 +1,9 @@
 package de.leonhard.storage.internal;
 
 import de.leonhard.storage.util.FileUtils;
+import java.io.File;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.io.File;
 
 @Getter
 @RequiredArgsConstructor

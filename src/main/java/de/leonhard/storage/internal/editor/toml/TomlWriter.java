@@ -17,8 +17,8 @@ import java.util.Map;
  *
  * <h1>DateTimes support</h1>
  *
- * <p>Any {@link TemporalAccessor} may be added in a Map passed to this writer, this writer can only
- * write three kind of datetimes: {@link LocalDate}, {@link LocalDateTime} and {@link
+ * <p>Any {@link TemporalAccessor} may be added in a Map passed to this writer, this writer can
+ * only write three kind of datetimes: {@link LocalDate}, {@link LocalDateTime} and {@link
  * ZonedDateTime}.
  *
  * <h1>Lenient bare keys</h1>
@@ -55,8 +55,8 @@ public final class TomlWriter {
    * '\n' on Linux and OSX, "\r\n" on Windows). This is exactly the same as {@code
    * TomlWriter(writer, indentSize, indentWithSpaces, System.lineSeparator())}.
    *
-   * @param writer where to write the data
-   * @param indentSize the size of each indent
+   * @param writer           where to write the data
+   * @param indentSize       the size of each indent
    * @param indentWithSpaces true to indent with spaces, false to indent with tabs
    */
   public TomlWriter(final Writer writer, final int indentSize, final boolean indentWithSpaces) {
@@ -66,10 +66,10 @@ public final class TomlWriter {
   /**
    * Creates a new TomlWriter with the specified parameters.
    *
-   * @param writer where to write the data
-   * @param indentSize the size of each indent
+   * @param writer           where to write the data
+   * @param indentSize       the size of each indent
    * @param indentWithSpaces true to indent with spaces, false to indent with tabs
-   * @param lineSeparator the String to write to break lines
+   * @param lineSeparator    the String to write to break lines
    */
   public TomlWriter(
       final Writer writer,
@@ -158,9 +158,9 @@ public final class TomlWriter {
   /**
    * Writes the content of a table.
    *
-   * @param table the table to write
+   * @param table        the table to write
    * @param simpleValues true to write only the simple values (and the normal arrays), false to
-   *     write only the tables (and the arrays of tables).
+   *                     write only the tables (and the arrays of tables).
    */
   private void writeTableContent(final Map<String, Object> table, final boolean simpleValues)
       throws IOException {
@@ -254,7 +254,8 @@ public final class TomlWriter {
   private void writeKey(final String key) throws IOException {
     for (int i = 0; i < key.length(); i++) {
       final char c = key.charAt(i);
-      if (!(c >= 'a' && c <= 'z'
+      if (!(
+          c >= 'a' && c <= 'z'
           || c >= 'A' && c <= 'Z'
           || c >= '0' && c <= '9'
           || c == '-'

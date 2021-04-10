@@ -1,31 +1,26 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.provider.LightningProviders;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import lombok.Cleanup;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Class for easier, more convenient & strait interaction with files
@@ -52,7 +47,7 @@ public class FileUtils {
    */
   public List<File> listFiles(
       @NonNull final File folder,
-      @NonNull final String extension) {
+      @Nullable final String extension) {
     final List<File> result = new ArrayList<>();
 
     final File[] files = folder.listFiles();
@@ -61,8 +56,8 @@ public class FileUtils {
       return result;
     }
 
+    // if the extension is null we always add the file.
     for (final File file : files) {
-      // if the extension is null we always add the file.
       if (extension == null || file.getName().endsWith(extension)) {
         result.add(file);
       }
@@ -71,7 +66,8 @@ public class FileUtils {
     return result;
   }
 
-  public File getAndMake(@NonNull final String name,
+  public File getAndMake(
+      @NonNull final String name,
       @NonNull final String path) {
     return getAndMake(new File(path, name));
   }
@@ -99,7 +95,7 @@ public class FileUtils {
   // Methods for handling the extension of files
   // ----------------------------------------------------------------------------------------------------
 
-  public String getExtension(@NonNull final String path) {
+  private String getExtension(@NonNull final String path) {
     return path.lastIndexOf(".") > 0
         ? path.substring(path.lastIndexOf(".") + 1)
         : "";
@@ -121,13 +117,13 @@ public class FileUtils {
   }
 
   /**
-   * Since file.getParentFile can be null we created an extension function to get the path
-   * of the parent file
+   * Since file.getParentFile can be null we created an extension function to get the path of the
+   * parent file
    *
    * @param fileOrDirPath Path to file
    * @return Path to file as String
    */
-  public String getParentDirPath(@NonNull final String fileOrDirPath) {
+  private String getParentDirPath(@NonNull final String fileOrDirPath) {
     final boolean endsWithSlash = fileOrDirPath.endsWith(File.separator);
     return fileOrDirPath
         .substring(0, fileOrDirPath.lastIndexOf(File.separatorChar, endsWithSlash
@@ -157,7 +153,7 @@ public class FileUtils {
     }
   }
 
-  public OutputStream createOutputStream(@NonNull final File file) {
+  private OutputStream createOutputStream(@NonNull final File file) {
     try {
       return new FileOutputStream(file);
     } catch (final FileNotFoundException ex) {
@@ -224,7 +220,7 @@ public class FileUtils {
     }
   }
 
-  public byte[] readAllBytes(@NonNull final File file) {
+  private byte[] readAllBytes(@NonNull final File file) {
     try {
       return Files.readAllBytes(file.toPath());
     } catch (final IOException ex) {
@@ -235,10 +231,10 @@ public class FileUtils {
     }
   }
 
-  public List<String> readAllLines(final File file) {
+  public List<String> readAllLines(@NonNull final File file) {
     final byte[] fileBytes = readAllBytes(file);
     final String asString = new String(fileBytes);
-    return new ArrayList<>(Arrays.asList(asString.split("\n")));
+    return new ArrayList<>(Arrays.asList(asString.split(System.lineSeparator())));
   }
 
   // ----------------------------------------------------------------------------------------------------
@@ -286,7 +282,7 @@ public class FileUtils {
     return result.toString();
   }
 
-  public byte[] md5Checksum(@NonNull final File file) {
+  private byte[] md5Checksum(@NonNull final File file) {
     try (final InputStream fileInputStream = new FileInputStream(file)) {
       final byte[] buffer = new byte[1024];
       final MessageDigest complete = MessageDigest.getInstance("MD5");
@@ -313,7 +309,89 @@ public class FileUtils {
   // Misc
   // ----------------------------------------------------------------------------------------------------
 
-  public void copyFolder(@NonNull final File source,
+  public void extractResource(
+      @NonNull final String targetDirectory,
+      @NonNull final String resourcePath,
+      final boolean replace) {
+    Valid.checkBoolean(
+        !resourcePath.isEmpty(),
+        "ResourcePath mustn't be empty");
+
+    Valid.checkBoolean(
+        !targetDirectory.isEmpty(),
+        "Target directory mustn't be empty");
+
+    final File target = new File(targetDirectory, resourcePath);
+
+    if (target.exists() && !replace) {
+      return;
+    }
+
+    getAndMake(target);
+
+    try (
+        final InputStream inputStream = LightningProviders
+            .inputStreamProvider()
+            .createInputStreamFromInnerResource(resourcePath)) {
+
+      Valid.notNull(
+          inputStream,
+          "The embedded resource '" + resourcePath + "' cannot be found");
+      Files.copy(inputStream, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+    } catch (final IOException ioException) {
+      throw LightningProviders
+          .exceptionHandler()
+          .create(
+              ioException,
+              "Exception while extracting file",
+              "Directory: '" + targetDirectory + "'",
+              "ResourcePath: '" + resourcePath + "'");
+    }
+  }
+
+  public void extractResourceFolderContents(
+      @NonNull final File sourceJarFile,
+      @NonNull final File targetDirectory,
+      @NonNull final String sourceDirectory,
+      boolean replace) {
+
+    if (!targetDirectory.exists()) {
+      Valid.checkBoolean(
+          targetDirectory.mkdirs(),
+          "Can't create directory '" + targetDirectory.getName() + "'",
+          "Parent: '" + getParentDirPath(targetDirectory) + "'");
+    }
+
+    Valid.checkBoolean(
+        targetDirectory.isDirectory(),
+        "Target directory must be an directory");
+
+    try (final JarFile jarFile = new JarFile(sourceJarFile)) {
+      for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements(); ) {
+        final JarEntry jarEntry = entries.nextElement();
+        final String entryName = jarEntry.getName();
+
+        if (entryName.startsWith(sourceDirectory) && !jarEntry.isDirectory()) {
+          extractResource(targetDirectory.getAbsolutePath(), entryName, replace);
+        }
+      }
+
+    } catch (final Throwable throwable) {
+      throw LightningProviders
+          .exceptionHandler()
+          .create(
+              throwable,
+              "Failed to extract folder from '"
+              + targetDirectory
+              + "' to '"
+              + sourceDirectory
+              + "'");
+    }
+  }
+
+  private void copyFolder(
+      @NonNull final File source,
       @NonNull final File destination)
       throws IOException {
 

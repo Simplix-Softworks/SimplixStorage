@@ -8,10 +8,13 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Enhanced Version of YamlReader of EsotericSoftware, which implements {@link AutoCloseable} */
+/**
+ * Enhanced Version of YamlReader of EsotericSoftware, which implements {@link AutoCloseable}
+ */
 public class SimpleYamlReader
     extends YamlReader
     implements AutoCloseable {
+
   public SimpleYamlReader(final Reader reader) {
     super(reader);
   }
