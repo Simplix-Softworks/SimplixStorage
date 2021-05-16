@@ -54,6 +54,7 @@ public class ClassWrapper {
    * @return Casted object
    */
   public <T> T getFromDef(final Object obj, final Class<T> clazz) {
+
     if (clazz == int.class || clazz == Integer.class) {
       return (T) INTEGER.getInt(obj);
     } else if (clazz == float.class || clazz == Float.class) {
