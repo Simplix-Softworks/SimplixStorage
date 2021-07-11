@@ -158,7 +158,9 @@ public final class TomlWriter {
         }
     }
 
-    private void writeTableContent(final Map<String, Object> table) throws IOException {
+    private void writeTableContent(final Map<String, Object> table)
+                                   throws IOException
+    {
         writeTableContent(table, true);
         writeTableContent(table, false);
     }
@@ -172,7 +174,7 @@ public final class TomlWriter {
      */
     private void writeTableContent(final Map<String, Object> table,
                                    final boolean simpleValues)
-                                    throws IOException
+                                   throws IOException
     {
         for (val entry : table.entrySet()) {
             val name = entry.getKey();
@@ -396,41 +398,29 @@ public final class TomlWriter {
 
         if (value instanceof String) {
             writeString((String) value);
-        }
-        else if (value instanceof Number || value instanceof Boolean) {
+        } else if (value instanceof Number || value instanceof Boolean) {
             write(value.toString());
-        }
-        else if (value instanceof TemporalAccessor)
-        {
+        } else if (value instanceof TemporalAccessor) {
             String formatted = TomlManager.DATE_FORMATTER.format((TemporalAccessor) value);
             if (formatted.endsWith("T")) formatted = formatted.substring(0, formatted.length() - 1); // removes it because it's invalid.
             write(formatted);
-        }
-        else if (value instanceof Collection) {
+        } else if (value instanceof Collection) {
             writeArray((Collection<?>) value);
-        }
-        else if (value instanceof int[]) {
+        } else if (value instanceof int[]) {
             writeArray((int[]) value);
-        }
-        else if (value instanceof byte[]) {
+        } else if (value instanceof byte[]) {
             writeArray((byte[]) value);
-        }
-        else if (value instanceof short[]) {
+        } else if (value instanceof short[]) {
             writeArray((short[]) value);
-        }
-        else if (value instanceof char[]) {
+        } else if (value instanceof char[]) {
             writeArray((char[]) value);
-        }
-        else if (value instanceof long[]) {
+        } else if (value instanceof long[]) {
             writeArray((long[]) value);
-        }
-        else if (value instanceof float[]) {
+        } else if (value instanceof float[]) {
             writeArray((float[]) value);
-        }
-        else if (value instanceof double[]) {
+        } else if (value instanceof double[]) {
             writeArray((double[]) value);
-        }
-        else if (value instanceof Map) {
+        } else if (value instanceof Map) {
             throw new IOException("Unexpected value " + value);
         } else {
             throw new TomlException("Unsupported value of type " + value.getClass().getCanonicalName());

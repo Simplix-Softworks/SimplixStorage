@@ -252,30 +252,27 @@ public class FileData {
     /**
      * Private helper method to get the key set of an map containing maps recursively
      */
-    private Set<String> multiLayerKeySet(final Map<String, Object> map)
-    {
+    private Set<String> multiLayerKeySet(final Map<String, Object> map) {
         final Set<String> out = new HashSet<>();
-        for (val key : map.keySet())
-        {
-            if (map.get(key) instanceof Map)
-            {
-                for (val tempKey : multiLayerKeySet((Map<String, Object>) map.get(key)))
-                {
+
+        for (val key : map.keySet()) {
+            if (map.get(key) instanceof Map) {
+                for (val tempKey : multiLayerKeySet((Map<String, Object>) map.get(key))) {
                     out.add(key + "." + tempKey);
                 }
             } else {
                 out.add(key);
             }
         }
+
         return out;
     }
 
     private Set<Map.Entry<String, Object>> multiLayerEntrySet(final Map<String, Object> map) {
         final Set<Map.Entry<String, Object>> out = new HashSet<>();
-        for (val entry : map.entrySet())
-        {
-            if (map.get(entry.getKey()) instanceof Map)
-            {
+
+        for (val entry : map.entrySet()) {
+            if (map.get(entry.getKey()) instanceof Map) {
                 for (val tempKey : multiLayerKeySet((Map<String, Object>) map.get(entry.getKey()))) {
                     out.add(new SimpleEntry<>(entry.getKey() + "." + tempKey, entry.getValue()));
                 }
@@ -283,6 +280,7 @@ public class FileData {
                 out.add(entry);
             }
         }
+
         return out;
     }
 

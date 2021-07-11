@@ -55,7 +55,9 @@ public final class TomlReader
      *                            <code>false</code> to allow lenient
      *                            ones.
      */
-    public TomlReader(final String data, final boolean strictAsciiBareKeys) {
+    public TomlReader(final String data,
+                      final boolean strictAsciiBareKeys)
+    {
         this.data = data;
         this.strictAsciiBareKeys = strictAsciiBareKeys;
     }
@@ -70,11 +72,10 @@ public final class TomlReader
 
     private char nextUseful(final boolean skipComments) {
         char c = ' ';
-        while (hasNext() && (c == ' ' || c == '\t' || c == '\r' || c == '\n' || (c == '#' && skipComments)))
-        {
+        while (hasNext() && (c == ' ' || c == '\t' || c == '\r' || c == '\n' || (c == '#' && skipComments))) {
             c = next();
-            if (skipComments && c == '#')
-            {
+
+            if (skipComments && c == '#') {
                 val nextLinebreak = data.indexOf('\n', pos);
                 if (nextLinebreak == -1) {
                     pos = data.length();
@@ -140,18 +141,21 @@ public final class TomlReader
             case '{':
                 return nextInlineTable();
             case 't': // Must be "true"
-                if (pos + 3 > data.length() || next() != 'r' || next() != 'u' || next() != 'e') throw new TomlException("Invalid value at line " + line);
+                if (pos + 3 > data.length() || next() != 'r' || next() != 'u' || next() != 'e') {
+                    throw new TomlException("Invalid value at line " + line);
+                }
                 return true;
             case 'f': // Must be "false"
-                if (pos + 4 > data.length() || next() != 'a' || next() != 'l' || next() != 's' || next() != 'e') throw new TomlException("Invalid value at line " + line);
+                if (pos + 4 > data.length() || next() != 'a' || next() != 'l' || next() != 's' || next() != 'e') {
+                    throw new TomlException("Invalid value at line " + line);
+                }
                 return false;
             default:
                 throw new TomlException("Invalid character '" + toString(firstChar) + "' at line " + line);
         }
     }
 
-    public Map<String, Object> read()
-    {
+    public Map<String, Object> read() {
         val map = nextTableContent();
 
         if (!hasNext() && pos > 0 && data.charAt(pos - 1) == '[') {
@@ -164,7 +168,7 @@ public final class TomlReader
 
             if (c == '[') {
                 twoBrackets = true;
-              nextUseful(false);
+                nextUseful(false);
             } else {
                 twoBrackets = false;
             }
@@ -195,10 +199,10 @@ public final class TomlReader
                         break;
                     }
                     case '\'': {
-                        if (pos + 1 < data.length())
-                        {
+                        if (pos + 1 < data.length()) {
                             val c2 = data.charAt(pos);
                             val c3 = data.charAt(pos + 1);
+
                             if (c2 == '\'' && c3 == '\'') {
                                 pos += 2;
                                 name = nextLiteralMultilineString();
@@ -211,7 +215,9 @@ public final class TomlReader
                         pos--; // to include the first (already read) non-space character
                         name = nextBareKey(']', '.').trim();
                         if (data.charAt(pos) == ']') {
-                            if (!name.isEmpty()) keyParts.add(name);
+                            if (!name.isEmpty()) {
+                                keyParts.add(name);
+                            }
                             insideSquareBrackets = false;
                         } else if (name.isEmpty()) {
                             throw new TomlException("Invalid empty key at line " + line);
@@ -226,9 +232,13 @@ public final class TomlReader
             }
 
             // -- Checks --
-            if (keyParts.isEmpty()) throw new TomlException("Invalid empty key at line " + line);
+            if (keyParts.isEmpty()) {
+                throw new TomlException("Invalid empty key at line " + line);
+            }
 
-            if (twoBrackets && next() != ']') throw new TomlException("Missing character ']' at line " + line);
+            if (twoBrackets && next() != ']') {
+                throw new TomlException("Missing character ']' at line " + line);
+            }
 
             // -- Reads the value (table content) --
             val value = nextTableContent();
@@ -341,13 +351,17 @@ public final class TomlReader
                 default:
                     pos--; // to include the first (already read) non-space character
                     name = nextBareKey(' ', '\t', '=');
-                    if (name.isEmpty()) throw new TomlException("Invalid empty key at line " + line);
+                    if (name.isEmpty()) {
+                        throw new TomlException("Invalid empty key at line " + line);
+                    }
                     break;
             }
 
             val separator = nextUsefulOrLinebreak(); // tries to find the '=' sign
 
-            if (separator != '=') throw new TomlException("Invalid character '" + toString(separator) + "' at line " + line + ": expected '='");
+            if (separator != '=') {
+                throw new TomlException("Invalid character '" + toString(separator) + "' at line " + line + ": expected '='");
+            }
 
             val valueFirstChar = nextUsefulOrLinebreak();
             val value = nextValue(valueFirstChar);
@@ -389,8 +403,7 @@ public final class TomlReader
 
                     break;
                 }
-                case '\'':
-                {
+                case '\'': {
                     if (pos + 1 < data.length())
                     {
                         val c2 = data.charAt(pos);
@@ -430,7 +443,9 @@ public final class TomlReader
 
             if (afterEntry == '#') {
                 pos--; // to make the next nextUseful() call read the # character
-            } else if (afterEntry != '\n') throw new TomlException("Invalid character '" + toString(afterEntry) + "' after the value at line " + line);
+            } else if (afterEntry != '\n') {
+                throw new TomlException("Invalid character '" + toString(afterEntry) + "' after the value at line " + line);
+            }
 
             if (map.containsKey(name)) {
                 throw new TomlException("Duplicate key \"" + name + "\"");
@@ -443,6 +458,7 @@ public final class TomlReader
     private Object nextNumberOrDate(final char first) {
         boolean maybeDouble = true, maybeInteger = true, maybeDate = true;
         val sb = new StringBuilder();
+
         sb.append(first);
         char c;
         whileLoop:
@@ -489,7 +505,6 @@ public final class TomlReader
                 if (valueStr.length() < 10) {
                     return Integer.parseInt(valueStr);
                 }
-
                 return Long.parseLong(valueStr);
             }
 
@@ -623,8 +638,7 @@ public final class TomlReader
             }
             if (escape) {
                 if (c == '\r' || c == '\n' || c == ' ' || c == '\t') {
-                    if (c == '\r' && hasNext() && data.charAt(pos) == '\n') // "\r\n"
-                    {
+                    if (c == '\r' && hasNext() && data.charAt(pos) == '\n') {
                         pos++;
                     } else if (c == '\n') {
                         line++;
@@ -656,8 +670,7 @@ public final class TomlReader
     }
 
     private char unescape(final char c) {
-        switch (c)
-        {
+        switch (c) {
             case 'b':
                 return '\b';
             case 't':
@@ -701,8 +714,7 @@ public final class TomlReader
                     val hexVal = Integer.parseInt(unicode, 16);
                     return (char) hexVal;
                 } catch (final NumberFormatException ex) {
-                    throw new TomlException(
-                            ex,
+                    throw new TomlException(ex,
                             "Invalid unicode code point at line " + line);
                 }
             }

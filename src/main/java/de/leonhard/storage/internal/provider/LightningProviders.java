@@ -21,9 +21,10 @@ public class LightningProviders {
     @Setter private ExceptionHandler exceptionHandler;
 
     public MapProvider mapProvider() {
-        if (mapProvider != null) return mapProvider;
-        return mapProvider = new MapProvider() {
-        };
+        if (mapProvider != null) {
+            return mapProvider;
+        }
+        return mapProvider = new MapProvider() {};
     }
 
     public YamlConfig yamlConfig() {

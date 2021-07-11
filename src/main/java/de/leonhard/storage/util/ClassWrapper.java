@@ -23,38 +23,27 @@ public class ClassWrapper {
     public <T> T getFromDef(final Object obj, final T def) {
         if (def instanceof Integer) {
             return (T) INTEGER.getInt(obj);
-        }
-        else if (def instanceof Float) {
+        } else if (def instanceof Float) {
             return (T) FLOAT.getFloat(obj);
-        }
-        else if (def instanceof Double) {
+        } else if (def instanceof Double) {
             return (T) DOUBLE.getDouble(obj);
-        }
-        else if (def instanceof Long) {
+        } else if (def instanceof Long) {
             return (T) LONG.getLong(obj);
-        }
-        else if (def instanceof Boolean) {
+        } else if (def instanceof Boolean) {
             return (T) (Boolean) obj.toString().equalsIgnoreCase("true");
-        }
-        else if (def instanceof String[]) {
+        } else if (def instanceof String[]) {
             return (T) STRING.getStringArray(obj);
-        }
-        else if (def instanceof Long[] || def instanceof long[]) {
+        } else if (def instanceof Long[] || def instanceof long[]) {
             return (T) LONG.getLongArray(obj);
-        }
-        else if (def instanceof Double[] || def instanceof double[]) {
+        } else if (def instanceof Double[] || def instanceof double[]) {
             return (T) DOUBLE.getDoubleArray(obj);
-        }
-        else if (def instanceof Float[] || def instanceof float[]) {
+        } else if (def instanceof Float[] || def instanceof float[]) {
             return (T) FLOAT.getFloatArray(obj);
-        }
-        else if (def instanceof Short[] || def instanceof short[]) {
+        } else if (def instanceof Short[] || def instanceof short[]) {
             return (T) SHORT.getShortArray(obj);
-        }
-        else if (def instanceof Byte[] || def instanceof byte[]) {
+        } else if (def instanceof Byte[] || def instanceof byte[]) {
             return (T) BYTE.getByteArray(obj);
         }
-
         return (T) obj;
     }
 
@@ -70,35 +59,25 @@ public class ClassWrapper {
 
         if (clazz == int.class || clazz == Integer.class) {
             return (T) INTEGER.getInt(obj);
-        }
-        else if (clazz == float.class || clazz == Float.class) {
+        } else if (clazz == float.class || clazz == Float.class) {
             return (T) FLOAT.getFloat(obj);
-        }
-        else if (clazz == double.class || clazz == Double.class) {
+        } else if (clazz == double.class || clazz == Double.class) {
             return (T) DOUBLE.getDouble(obj);
-        }
-        else if (clazz == long.class || clazz == Long.class) {
+        } else if (clazz == long.class || clazz == Long.class) {
             return (T) LONG.getLong(obj);
-        }
-        else if (clazz == boolean.class || clazz == Boolean.class) {
+        } else if (clazz == boolean.class || clazz == Boolean.class) {
             return (T) (Boolean) obj.toString().equalsIgnoreCase("true");
-        }
-        else if (clazz == String[].class) {
+        } else if (clazz == String[].class) {
             return (T) STRING.getStringArray(obj);
-        }
-        else if (clazz == Double[].class || clazz == double[].class) {
+        } else if (clazz == Double[].class || clazz == double[].class) {
             return (T) DOUBLE.getDoubleArray(obj);
-        }
-        else if (clazz == Float[].class || clazz == float[].class) {
+        } else if (clazz == Float[].class || clazz == float[].class) {
             return (T) FLOAT.getFloatArray(obj);
-        }
-        else if (clazz == Integer[].class || clazz == int[].class) {
+        } else if (clazz == Integer[].class || clazz == int[].class) {
             return (T) INTEGER.getIntArray(obj);
-        }
-        else if (clazz == Short[].class || clazz == short[].class) {
+        } else if (clazz == Short[].class || clazz == short[].class) {
             return (T) SHORT.getShortArray(obj);
-        }
-        else if (clazz == Byte[].class || clazz == byte[].class) {
+        } else if (clazz == Byte[].class || clazz == byte[].class) {
             return (T) BYTE.getByteArray(obj);
         }
 

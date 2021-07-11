@@ -216,8 +216,7 @@ public class FileUtils {
         }
     }
 
-    private byte[] readAllBytes(@NonNull final File file)
-    {
+    private byte[] readAllBytes(@NonNull final File file) {
         try {
             return Files.readAllBytes(file.toPath());
         } catch (final IOException ex) {

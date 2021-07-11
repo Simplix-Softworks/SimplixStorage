@@ -5,7 +5,9 @@ import lombok.NonNull;
 
 public abstract class ExceptionHandler {
 
-    public RuntimeException create(@NonNull final Throwable throwable, @NonNull final String... messages) {
+    public RuntimeException create(@NonNull final Throwable throwable,
+                                   @NonNull final String... messages)
+    {
         return new LightningValidationException(throwable, messages);
     }
 }

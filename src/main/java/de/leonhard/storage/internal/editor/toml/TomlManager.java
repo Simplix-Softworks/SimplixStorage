@@ -55,7 +55,10 @@ public class TomlManager {
      * @param file where to write the data
      * @throws IOException if an error occurs
      */
-    public void write(final Map<String, Object> data, final File file) throws IOException {
+    public void write(final Map<String, Object> data,
+                      final File file)
+                      throws IOException
+    {
         val out = new FileOutputStream(file);
         write(data, out);
     }
@@ -68,7 +71,10 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public void write(final Map<String, Object> data, final OutputStream out) throws IOException {
+    public void write(final Map<String, Object> data,
+                      final OutputStream out)
+                      throws IOException
+    {
         val writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         write(data, writer);
     }
@@ -82,7 +88,10 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public void write(final Map<String, Object> data, final Writer writer) throws IOException {
+    public void write(final Map<String, Object> data,
+                      final Writer writer)
+                      throws IOException
+    {
         val tw = new TomlWriter(writer);
         tw.write(data);
         tw.close();
@@ -132,7 +141,9 @@ public class TomlManager {
      * @return a {@code Map<String, Object>} containing the parsed data
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final String toml, final boolean strictAsciiBareKeys) {
+    public Map<String, Object> read(final String toml,
+                                    final boolean strictAsciiBareKeys)
+    {
         val tr = new TomlReader(toml, strictAsciiBareKeys);
         return tr.read();
     }
@@ -160,7 +171,10 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final File file, final boolean strictAsciiBareKeys) throws IOException, TomlException {
+    public Map<String, Object> read(final File file,
+                                    final boolean strictAsciiBareKeys)
+                                    throws IOException, TomlException
+    {
         return read(new FileInputStream(file), strictAsciiBareKeys);
     }
 
@@ -173,7 +187,9 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final InputStream in) throws IOException, TomlException {
+    public Map<String, Object> read(final InputStream in)
+                                    throws IOException, TomlException
+    {
         return read(in, false);
     }
 
