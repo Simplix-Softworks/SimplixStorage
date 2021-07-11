@@ -40,18 +40,25 @@ public class Yaml extends FlatFile {
         this.reloadConsumer = yaml.getReloadConsumer();
     }
 
-    public Yaml(final String name, @Nullable final String path)
+    public Yaml(final String name,
+                @Nullable final String path)
     {
         this(name, path, null, null, null, null);
     }
 
-    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream)
+    public Yaml(final String name,
+                @Nullable final String path,
+                @Nullable final InputStream inputStream)
     {
         this(name, path, inputStream, null, null, null);
     }
 
-    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream,
-                @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType)
+    public Yaml(final String name,
+                @Nullable final String path,
+                @Nullable final InputStream inputStream,
+                @Nullable final ReloadSettings reloadSettings,
+                @Nullable final ConfigSettings configSettings,
+                @Nullable final DataType dataType)
     {
         this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
     }
@@ -59,8 +66,10 @@ public class Yaml extends FlatFile {
     public Yaml(final String name,
                 @Nullable final String path,
                 @Nullable final InputStream inputStream,
-                @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings,
-                @Nullable final DataType dataType, @Nullable final Consumer<FlatFile> reloadConsumer)
+                @Nullable final ReloadSettings reloadSettings,
+                @Nullable final ConfigSettings configSettings,
+                @Nullable final DataType dataType,
+                @Nullable final Consumer<FlatFile> reloadConsumer)
     {
         super(name, path, FileType.YAML, reloadConsumer);
         this.inputStream = inputStream;
