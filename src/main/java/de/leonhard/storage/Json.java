@@ -24,100 +24,90 @@ import java.util.function.Consumer;
 @Getter
 public class Json extends FlatFile {
 
-  public Json(final Json json) {
-    super(json.getFile(), json.fileType);
-    this.fileData = json.getFileData();
-    this.pathPrefix = json.getPathPrefix();
-  }
-
-  public Json(final String name, final String path) {
-    this(name, path, null);
-  }
-
-  public Json(final String name, final String path, final InputStream inputStream) {
-    this(name, path, inputStream, null);
-  }
-
-  public Json(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings) {
-    this(name, path, inputStream, reloadSettings, null);
-  }
-
-  public Json(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings,
-      @Nullable final Consumer<FlatFile> reloadConsumer) {
-    super(name, path, FileType.JSON, reloadConsumer);
-
-    if (create() || this.file.length() == 0) {
-      if (inputStream != null) {
-        FileUtils.writeToFile(this.file, inputStream);
-      }
+    public Json(final Json json) {
+        super(json.getFile(), json.fileType);
+        this.fileData = json.getFileData();
+        this.pathPrefix = json.getPathPrefix();
     }
 
-    if (reloadSettings != null) {
-      this.reloadSettings = reloadSettings;
-    }
-    forceReload();
-  }
-
-  public Json(final File file) {
-    super(file, FileType.JSON);
-    create();
-    forceReload();
-  }
-
-  // ----------------------------------------------------------------------------------------------------
-  // Methods to override (Points where JSON is unspecific for typical FlatFiles)
-  // ----------------------------------------------------------------------------------------------------
-
-  /**
-   * Gets a Map by key Although used to get nested objects {@link Json}
-   *
-   * @param key Path to Map-List in JSON
-   * @return Map
-   */
-  @Override
-  public final Map<?, ?> getMap(final String key) {
-    val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
-    if (!contains(finalKey)) {
-      return new HashMap<>();
-    } else {
-      val map = get(key);
-      if (map instanceof Map) {
-        return (Map<?, ?>) this.fileData.get(key);
-      } else if (map instanceof JSONObject) {
-        return ((JSONObject) map).toMap();
-      }
-      // Exception in casting
-      throw new IllegalArgumentException(
-          "ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
-    }
-  }
-
-  // ----------------------------------------------------------------------------------------------------
-  // Abstract methods to implement
-  // ----------------------------------------------------------------------------------------------------
-
-  @Override
-  protected final Map<String, Object> readToMap() throws IOException {
-    if (this.file.length() == 0) {
-      Files.write(this.file.toPath(), Collections.singletonList("{}"));
+    public Json(final String name, final String path) {
+        this(name, path, null);
     }
 
-    val jsonTokener = new JSONTokener(FileUtils.createInputStream(this.file));
-    return new JSONObject(jsonTokener).toMap();
-  }
+    public Json(final String name, final String path, final InputStream inputStream) {
+        this(name, path, inputStream, null);
+    }
 
-  @Override
-  protected final void write(final FileData data) throws IOException {
-    @Cleanup val writer = FileUtils.createWriter(this.file);
-    writer.write(data.toJsonObject().toString(3));
-    writer.flush();
-  }
+    public Json(
+            final String name,
+            @Nullable final String path,
+            @Nullable final InputStream inputStream,
+            @Nullable final ReloadSettings reloadSettings)
+    {
+        this(name, path, inputStream, reloadSettings, null);
+    }
+
+    public Json(
+            final String name,
+            @Nullable final String path,
+            @Nullable final InputStream inputStream,
+            @Nullable final ReloadSettings reloadSettings,
+            @Nullable final Consumer<FlatFile> reloadConsumer)
+    {
+        super(name, path, FileType.JSON, reloadConsumer);
+        if (create() && inputStream != null || this.file.length() == 0 && inputStream != null) FileUtils.writeToFile(this.file, inputStream);
+        if (reloadSettings != null) this.reloadSettings = reloadSettings;
+        forceReload();
+    }
+
+    public Json(final File file) {
+        super(file, FileType.JSON);
+        create();
+        forceReload();
+    }
+
+    // ----------------------------------------------------------------------------------------------------
+    // Methods to override (Points where JSON is unspecific for typical FlatFiles)
+    // ----------------------------------------------------------------------------------------------------
+
+    /**
+     * Gets a Map by key Although used to get nested objects {@link Json}
+     *
+     * @param key Path to Map-List in JSON
+     * @return Map
+     */
+    @Override
+    public final Map<?, ?> getMap(final String key) {
+        val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+        if (!contains(finalKey)) {
+            return new HashMap<>();
+        } else {
+            val map = get(key);
+            if (map instanceof Map) {
+                return (Map<?, ?>) this.fileData.get(key);
+            } else if (map instanceof JSONObject) {
+                return ((JSONObject) map).toMap();
+            }
+            // Exception in casting
+            throw new IllegalArgumentException("ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
+        }
+    }
+
+    // ----------------------------------------------------------------------------------------------------
+    // Abstract methods to implement
+    // ----------------------------------------------------------------------------------------------------
+
+    @Override
+    protected final Map<String, Object> readToMap() throws IOException {
+        if (this.file.length() == 0) Files.write(this.file.toPath(), Collections.singletonList("{}"));
+        val jsonTokener = new JSONTokener(FileUtils.createInputStream(this.file));
+        return new JSONObject(jsonTokener).toMap();
+    }
+
+    @Override
+    protected final void write(final FileData data) throws IOException {
+        @Cleanup val writer = FileUtils.createWriter(this.file);
+        writer.write(data.toJsonObject().toString(3));
+        writer.flush();
+    }
 }

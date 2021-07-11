@@ -209,7 +209,7 @@ public class TomlManager {
             final Reader reader, final int bufferSize, final boolean strictAsciiBareKeys)
             throws IOException, TomlException {
         val sb = new StringBuilder(bufferSize);
-        final char[] buf = new char[8192];
+        val buf = new char[8192];
         int read;
         while ((read = reader.read(buf)) != -1) {
             sb.append(buf, 0, read);

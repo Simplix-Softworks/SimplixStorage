@@ -40,13 +40,9 @@ public class Toml extends FlatFile {
     ) {
         super(name, path, FileType.TOML, reloadConsumer);
 
-        if (create() && inputStream != null) {
-            FileUtils.writeToFile(this.file, inputStream);
-        }
+        if (create() && inputStream != null) FileUtils.writeToFile(this.file, inputStream);
 
-        if (reloadSettings != null) {
-            this.reloadSettings = reloadSettings;
-        }
+        if (reloadSettings != null) this.reloadSettings = reloadSettings;
 
         forceReload();
     }

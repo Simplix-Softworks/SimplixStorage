@@ -2,6 +2,7 @@ package de.leonhard.storage.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import lombok.var;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -17,24 +18,18 @@ public class LagCatcher {
     private final HashMap<String, Long> stopTimes = new HashMap<>();
 
     public void start(final String name) {
-        if (LagCatcher.startTimes.containsKey(name)) {
-            throw new IllegalStateException(("Test is already running for '" + name + "'"));
-        }
-        final long nanoTime = System.nanoTime();
+        if (LagCatcher.startTimes.containsKey(name)) throw new IllegalStateException(("Test is already running for '" + name + "'"));
+        val nanoTime = System.nanoTime();
         LagCatcher.startTimes.put(name, nanoTime);
     }
 
     public void stop(final String name) {
-        if (LagCatcher.stopTimes.containsKey(name)) {
-            throw new IllegalStateException(("No test running for '" + name + "'"));
-        }
+        if (LagCatcher.stopTimes.containsKey(name)) throw new IllegalStateException(("No test running for '" + name + "'"));
         LagCatcher.stopTimes.put(name, System.nanoTime());
     }
 
     private void show(final String name) {
-        if (!LagCatcher.startTimes.containsKey(name) || !LagCatcher.stopTimes.containsKey(name)) {
-            throw new IllegalStateException(("No results found for '" + name + "'"));
-        }
+        if (!LagCatcher.startTimes.containsKey(name) || !LagCatcher.stopTimes.containsKey(name)) throw new IllegalStateException(("No results found for '" + name + "'"));
         val value = LagCatcher.startTimes.get(name);
         if (value == null) {
             return;
@@ -65,7 +60,7 @@ public class LagCatcher {
     }
 
     public void runMultipleTimes(final int cycles, final Runnable runnable) {
-        long nanosTook = 0L;
+        var nanosTook = 0L;
         for (int i = 0; i < cycles; ++i) {
             val nanoTime = System.nanoTime();
             runnable.run();
@@ -73,20 +68,18 @@ public class LagCatcher {
         }
         System.out.println(
                 (Object)
-                        (
-                                "Average time: "
-                                        + TimeUnit.NANOSECONDS.toMicros(nanosTook / cycles)
-                                        + " micros - "
-                                        + TimeUnit.NANOSECONDS.toMillis(nanosTook / cycles)
-                                        + " ms."));
+                        ("Average time: "
+                                + TimeUnit.NANOSECONDS.toMicros(nanosTook / cycles)
+                                + " micros - "
+                                + TimeUnit.NANOSECONDS.toMillis(nanosTook / cycles)
+                                + " ms."));
         System.out.println(
                 (Object)
-                        (
-                                "Test took: "
-                                        + TimeUnit.NANOSECONDS.toMicros(nanosTook)
-                                        + " micros "
-                                        + "- "
-                                        + TimeUnit.NANOSECONDS.toMillis(nanosTook)
-                                        + " ms"));
+                        ("Test took: "
+                                + TimeUnit.NANOSECONDS.toMicros(nanosTook)
+                                + " micros "
+                                + "- "
+                                + TimeUnit.NANOSECONDS.toMillis(nanosTook)
+                                + " ms"));
     }
 }

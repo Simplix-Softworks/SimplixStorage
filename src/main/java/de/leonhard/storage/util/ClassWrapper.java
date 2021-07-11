@@ -91,7 +91,6 @@ public class ClassWrapper {
                 val list = (List<Long>) obj;
                 return list.toArray(new Long[0]);
             }
-
             return new Long[0];
         }
 
@@ -114,7 +113,6 @@ public class ClassWrapper {
                 val list = (List<Double>) obj;
                 return list.toArray(new Double[0]);
             }
-
             return new Double[0];
         }
 
@@ -137,7 +135,6 @@ public class ClassWrapper {
                 val list = (List<Float>) obj;
                 return list.toArray(new Float[0]);
             }
-
             return new Float[0];
         }
 
@@ -160,7 +157,6 @@ public class ClassWrapper {
                 val list = (List<Integer>) obj;
                 return list.toArray(new Integer[0]);
             }
-
             return new Integer[0];
         }
 
@@ -184,7 +180,6 @@ public class ClassWrapper {
                 val list = (List<Short>) obj;
                 return list.toArray(new Short[0]);
             }
-
             return new Short[0];
         }
 
@@ -230,7 +225,6 @@ public class ClassWrapper {
                 val list = (List<String>) obj;
                 return list.toArray(new String[0]);
             }
-
             return new String[0];
         }
 

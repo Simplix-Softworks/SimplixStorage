@@ -236,15 +236,11 @@ public interface DataStorage {
      * @param <E>      EnumType
      * @return Serialized Enum
      */
-    default <E extends Enum<E>> E getEnum(
-            final String key,
-            final Class<E> enumType) {
-        final Object object = get(key);
-        Valid.checkBoolean(
-                object instanceof String,
-                "No usable Enum-Value found for '" + key + "'.");
-      assert object instanceof String;
-      return Enum.valueOf(enumType, (String) object);
+    default <E extends Enum<E>> E getEnum(final String key, final Class<E> enumType) {
+        val object = get(key);
+        Valid.checkBoolean(object instanceof String, "No usable Enum-Value found for '" + key + "'.");
+        assert object instanceof String;
+        return Enum.valueOf(enumType, (String) object);
     }
 
     /**
@@ -255,23 +251,17 @@ public interface DataStorage {
      */
     @Nullable
     default <T> T getSerializable(final String key, final Class<T> clazz) {
-        if (!contains(key)) {
-            return null;
-        }
+        if (!contains(key)) return null;
         var raw = get(key);
-        if (raw == null) {
-            return null;
-        }
+        if (raw == null) return null;
         return LightningSerializer.deserialize(raw, clazz);
     }
 
     @Nullable
     default <T> List<T> getSerializableList(final String key, final Class<T> type) {
-        if (!contains(key)) {
-            return null;
-        }
+        if (!contains(key)) return null;
 
-        final List<?> rawList = getList(key);
+        val rawList = getList(key);
 
         return rawList
                 .stream()
@@ -301,9 +291,7 @@ public interface DataStorage {
      * @param value Value to set.
      */
     default void setDefault(final String key, final Object value) {
-        if (!contains(key)) {
-            set(key, value);
-        }
+        if (!contains(key)) set(key, value);
     }
 
     /**

@@ -97,10 +97,7 @@ public class FileData {
             final int id) {
         if (id < key.length) {
             final Map<String, Object> tempMap = new HashMap<>(map);
-            final Map<String, Object> childMap =
-                    map.containsKey(key[id]) && map.get(key[id]) instanceof Map
-                            ? (Map<String, Object>) map.get(key[id])
-                            : new HashMap<>();
+            final Map<String, Object> childMap = map.containsKey(key[id]) && map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>();
             tempMap.put(key[id], insert(childMap, key, value, id + 1));
             return tempMap;
         } else {
@@ -119,12 +116,10 @@ public class FileData {
         return containsKey(this.localMap, parts, 0);
     }
 
-    private boolean containsKey(
-            final Map<String, Object> map, final String[] key,
-            final int id) {
+    private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
         if (id < key.length - 1) {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
-                final Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
+                val tempMap = (Map<String, Object>) map.get(key[id]);
                 return containsKey(tempMap, key, id + 1);
             } else {
                 return false;
@@ -141,7 +136,7 @@ public class FileData {
      */
     public synchronized void remove(final String key) {
         if (containsKey(key)) {
-            final String[] parts = key.split("\\.");
+            val parts = key.split("\\.");
             remove(parts);
         }
     }
@@ -161,18 +156,13 @@ public class FileData {
         }
     }
 
-    private Map<String, Object> remove(
-            final Map<String, Object> map,
-            final String[] key,
-            final int keyIndex) {
+    private Map<String, Object> remove(final Map<String, Object> map, final String[] key, final int keyIndex) {
         if (keyIndex < key.length - 1) {
             val tempValue = map.get(key[keyIndex]);
             if (tempValue instanceof Map) {
                 //noinspection unchecked
                 map.put(key[keyIndex], this.remove((Map<String, Object>) tempValue, key, keyIndex + 1));
-                if (((Map<Object, Object>) map.get(key[keyIndex])).isEmpty()) {
-                    map.remove(key[keyIndex]);
-                }
+                if (((Map<Object, Object>) map.get(key[keyIndex])).isEmpty()) map.remove(key[keyIndex]);
             }
         } else {
             map.remove(key[keyIndex]);
@@ -280,7 +270,7 @@ public class FileData {
      * @return the size of the given layer or 0 if the key does not exist.
      */
     public int singleLayerSize(final String key) {
-        return get(key) instanceof Map ? ((Map) get(key)).size() : 0;
+        return get(key) instanceof Map ? ((Map<?, ?>) get(key)).size() : 0;
     }
 
     /**
@@ -309,9 +299,7 @@ public class FileData {
     private int size(final Map<String, Object> map) {
         int size = map.size();
         for (val key : map.keySet()) {
-            if (map.get(key) instanceof Map) {
-                size += size((Map<String, Object>) map.get(key));
-            }
+            if (map.get(key) instanceof Map) size += size((Map<String, Object>) map.get(key));
         }
         return size;
     }

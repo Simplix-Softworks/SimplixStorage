@@ -32,18 +32,14 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     protected String pathPrefix;
     private long lastLoaded;
 
-    protected FlatFile(
-            @NonNull final String name,
-            @Nullable final String path,
-            @NonNull final FileType fileType,
-            @Nullable final Consumer<FlatFile> reloadConsumer) {
+    protected FlatFile(@NonNull final String name, @Nullable final String path, @NonNull final FileType fileType, @Nullable final Consumer<FlatFile> reloadConsumer) {
         Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
         this.fileType = fileType;
         this.reloadConsumer = reloadConsumer;
         if (path == null || path.isEmpty()) {
             this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
         } else {
-            final String fixedPath = path.replace("\\", "/");
+            val fixedPath = path.replace("\\", "/");
             this.file = new File(
                     fixedPath
                             + File.separator
@@ -261,9 +257,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         return this.file.getAbsolutePath();
     }
 
-    public synchronized void replace(
-            final CharSequence target,
-            final CharSequence replacement) throws IOException {
+    @Synchronized
+    public void replace(final CharSequence target, final CharSequence replacement) throws IOException {
         val lines = Files.readAllLines(this.file.toPath());
         final List<String> result = new ArrayList<>();
         for (val line : lines) {

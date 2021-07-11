@@ -15,10 +15,7 @@ public class JsonUtils {
 
     public Map<String, Object> jsonToMap(final JSONObject jsonObject) throws JSONException {
         Map<String, Object> retMap = new HashMap<>();
-
-        if (jsonObject != JSONObject.NULL) {
-            retMap = toMap(jsonObject);
-        }
+        if (jsonObject != JSONObject.NULL) retMap = toMap(jsonObject);
         return retMap;
     }
 
@@ -28,9 +25,7 @@ public class JsonUtils {
         for (val entry : map.entrySet()) {
             var key = entry.getKey();
             var value = entry.getValue();
-            if (value instanceof Map) {
-                value = getJsonFromMap((Map<String, Object>) value); // Recursive call
-            }
+            if (value instanceof Map) value = getJsonFromMap((Map<String, Object>) value); // Recursive call
             jsonData.put(key, value);
         }
         return jsonData;
@@ -39,7 +34,7 @@ public class JsonUtils {
     public Map<String, Object> toMap(final JSONObject jsonObject) throws JSONException {
         final Map<String, Object> map = new HashMap<>();
 
-        final Iterator<String> keysItr = jsonObject.keys();
+        val keysItr = jsonObject.keys();
         keysItr.forEachRemaining(key -> map.put(key, getValue(jsonObject.get(key))));
         return map;
     }

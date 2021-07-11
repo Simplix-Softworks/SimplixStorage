@@ -110,20 +110,15 @@ public class Yaml extends FlatFile {
     public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
         reloadIfNeeded();
         // Creating & setting defaults
-        if (inputStream == null) {
-            return this;
-        }
+        if (inputStream == null) return this;
 
         try {
-            final Map<String, Object> data = new SimpleYamlReader(
-                    new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
+            val data = new SimpleYamlReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
 
             val newData = new FileData(data, DataType.UNSORTED);
 
             for (val key : newData.keySet()) {
-                if (!this.fileData.containsKey(key)) {
-                    this.fileData.insert(key, newData.get(key));
-                }
+                if (!this.fileData.containsKey(key)) this.fileData.insert(key, newData.get(key));
             }
 
             write();
@@ -140,8 +135,7 @@ public class Yaml extends FlatFile {
 
     @Override
     protected Map<String, Object> readToMap() throws IOException {
-        @Cleanup val reader = new SimpleYamlReader(
-                new FileReader(getFile()));
+        @Cleanup val reader = new SimpleYamlReader(new FileReader(getFile()));
         return reader.readToMap();
     }
 
@@ -153,7 +147,7 @@ public class Yaml extends FlatFile {
             return;
         }
 
-        final List<String> unEdited = this.yamlEditor.read();
+        val unEdited = this.yamlEditor.read();
         write0(this.fileData);
         this.yamlEditor.write(this.parser.parseLines(unEdited, this.yamlEditor.readKeys()));
     }
@@ -192,14 +186,12 @@ public class Yaml extends FlatFile {
     @SuppressWarnings("unused")
     public final void framedHeader(final String... header) {
         List<String> stringList = new ArrayList<>();
-        String border = "# +----------------------------------------------------+ #";
+        var border = "# +----------------------------------------------------+ #";
         stringList.add(border);
 
         for (String line : header) {
             var builder = new StringBuilder();
-            if (line.length() > 50) {
-                continue;
-            }
+            if (line.length() > 50) continue;
 
             int length = (50 - line.length()) / 2;
             var finalLine = new StringBuilder(line);
@@ -211,9 +203,7 @@ public class Yaml extends FlatFile {
                 finalLine.reverse();
             }
 
-            if (line.length() % 2 != 0) {
-                finalLine.append(" ");
-            }
+            if (line.length() % 2 != 0) finalLine.append(" ");
 
             builder.append("# < ").append(finalLine).append(" > #");
             stringList.add(builder.toString());

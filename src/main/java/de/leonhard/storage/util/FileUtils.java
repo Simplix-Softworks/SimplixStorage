@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
@@ -50,14 +49,13 @@ public class FileUtils {
      */
     public List<File> listFiles(
             @NonNull final File folder,
-            @Nullable final String extension) {
+            @Nullable final String extension)
+    {
         final List<File> result = new ArrayList<>();
 
         val files = folder.listFiles();
 
-        if (files == null) {
-            return result;
-        }
+        if (files == null) return result;
 
         // if the extension is null we always add the file.
         for (val file : files) {
@@ -65,7 +63,6 @@ public class FileUtils {
                 result.add(file);
             }
         }
-
         return result;
     }
 
@@ -77,16 +74,11 @@ public class FileUtils {
 
     public File getAndMake(@NonNull final File file) {
         try {
-            if (file.getParentFile() != null && !file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+            if (file.getParentFile() != null && !file.getParentFile().exists()) file.getParentFile().mkdirs();
+            if (!file.exists()) file.createNewFile();
 
         } catch (final IOException ex) {
-            throw LightningProviders.exceptionHandler().create(
-                    ex,
+            throw LightningProviders.exceptionHandler().create(ex,
                     "Error while creating file '" + file.getName() + "'.",
                     "In: '" + getParentDirPath(file) + "'"
             );
@@ -248,26 +240,22 @@ public class FileUtils {
     public void zipFile(final String sourceDirectory, final String to) {
         final File fileTo = getAndMake(new File(to + ".zip"));
 
-        @Cleanup final ZipOutputStream zipOutputStream = new ZipOutputStream(
-                createOutputStream(fileTo));
-        final Path pathFrom = Paths.get(new File(sourceDirectory).toURI());
+        @Cleanup val zipOutputStream = new ZipOutputStream(createOutputStream(fileTo));
+        val pathFrom = Paths.get(new File(sourceDirectory).toURI());
 
         Files.walk(pathFrom)
                 .filter(path -> !Files.isDirectory(path))
-                .forEach(
-                        path -> {
-                            final ZipEntry zipEntry = new ZipEntry(
-                                    pathFrom.relativize(path).toString());
-
-                            try {
-                                zipOutputStream.putNextEntry(zipEntry);
-
-                                Files.copy(path, zipOutputStream);
-                                zipOutputStream.closeEntry();
-                            } catch (final IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        });
+                .forEach(path ->
+                {
+                    final ZipEntry zipEntry = new ZipEntry(pathFrom.relativize(path).toString());
+                    try {
+                        zipOutputStream.putNextEntry(zipEntry);
+                        Files.copy(path, zipOutputStream);
+                        zipOutputStream.closeEntry();
+                    } catch (final IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -275,10 +263,10 @@ public class FileUtils {
     // ----------------------------------------------------------------------------------------------------
 
     public String md5ChecksumAsString(@NonNull final File filename) {
-        final byte[] checkSum = md5Checksum(filename);
-        final StringBuilder result = new StringBuilder();
+        val checkSum = md5Checksum(filename);
+        val result = new StringBuilder();
 
-        for (final byte b : checkSum) {
+        for (val b : checkSum) {
             result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
         }
 
@@ -287,24 +275,18 @@ public class FileUtils {
 
     private byte[] md5Checksum(@NonNull final File file) {
         try (val fileInputStream = new FileInputStream(file)) {
-            final byte[] buffer = new byte[1024];
+            val buffer = new byte[1024];
             val complete = MessageDigest.getInstance("MD5");
             int numRead;
 
             do {
                 numRead = fileInputStream.read(buffer);
-
-                if (numRead > 0) {
-                    complete.update(buffer, 0, numRead);
-                }
+                if (numRead > 0) complete.update(buffer, 0, numRead);
             } while (numRead != -1);
 
             return complete.digest();
         } catch (final IOException | NoSuchAlgorithmException ex) {
-            throw LightningProviders.exceptionHandler().create(
-                    ex,
-                    "Error while creating checksum of '" + file.getName() + "'.",
-                    "In: '" + getParentDirPath(file) + "'");
+            throw LightningProviders.exceptionHandler().create(ex, "Error while creating checksum of '" + file.getName() + "'.", "In: '" + getParentDirPath(file) + "'");
         }
     }
 
@@ -384,8 +366,7 @@ public class FileUtils {
         } catch (final Throwable throwable) {
             throw LightningProviders
                     .exceptionHandler()
-                    .create(
-                            throwable,
+                    .create(throwable,
                             "Failed to extract folder from '"
                                     + targetDirectory
                                     + "' to '"
@@ -406,14 +387,11 @@ public class FileUtils {
 
             val files = source.list();
 
-            if (files == null) {
-                return;
-            }
+            if (files == null) return;
 
-            for (final String file : files) {
-                final File srcFile = new File(source, file);
-                final File destFile = new File(destination, file);
-
+            for (val file : files) {
+                val srcFile = new File(source, file);
+                val destFile = new File(destination, file);
                 copyFolder(srcFile, destFile);
             }
         } else {

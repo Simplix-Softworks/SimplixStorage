@@ -59,6 +59,7 @@ public class LightningSerializer {
         return serializable.serialize(obj);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T deserialize(final Object raw, Class<T> type) {
         val serializable = findSerializable(type);
         Valid.notNull(

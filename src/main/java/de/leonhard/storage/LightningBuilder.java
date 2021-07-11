@@ -30,8 +30,7 @@ public final class LightningBuilder {
 
     private @Nullable Consumer<FlatFile> reloadConsumer = null;
 
-    private LightningBuilder(
-            final String name, final String path, final InputStreamProvider inputStreamProvider) {
+    private LightningBuilder(final String name, final String path, final InputStreamProvider inputStreamProvider) {
         this.name = name;
         this.path = path;
         this.inputStreamProvider = inputStreamProvider;
@@ -66,13 +65,10 @@ public final class LightningBuilder {
     public static LightningBuilder fromDirectory(@NonNull final File file) {
         Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
-        if (!file.exists()) {
-            file.mkdirs();
-        }
+        if (!file.exists()) file.mkdirs();
 
         // Will return the name of the folder as default name
-        return new LightningBuilder(
-                file.getName(), file.getAbsolutePath(), LightningProviders.inputStreamProvider());
+        return new LightningBuilder(file.getName(), file.getAbsolutePath(), LightningProviders.inputStreamProvider());
     }
 
     // ----------------------------------------------------------------------------------------------------
