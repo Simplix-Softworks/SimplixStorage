@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class LightningValidationException extends LightningException {
 
-    private final long serialVersionUID = -7961367314553460325L;
+    private static final long serialVersionUID = -7961367314553460325L;
 
     public LightningValidationException(final @NotNull Throwable throwable, final String... messages) {
         super(throwable, messages);

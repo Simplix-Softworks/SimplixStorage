@@ -253,9 +253,10 @@ public class FileData {
     private @NotNull Set<String> multiLayerKeySet(final @NotNull Map<String, Object> map) {
         final Set<String> out = new HashSet<>();
 
-        for (val key : map.keySet()) {
-            if (map.get(key) instanceof Map) {
-                for (val tempKey : multiLayerKeySet((Map<String, Object>) map.get(key))) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            val key = entry.getKey();
+            if (entry.getValue() instanceof Map) {
+                for (val tempKey : multiLayerKeySet((Map<String, Object>) entry.getValue())) {
                     out.add(key + "." + tempKey);
                 }
             } else {
@@ -326,9 +327,9 @@ public class FileData {
 
     private int size(final @NotNull Map<String, Object> map) {
         int size = map.size();
-        for (val key : map.keySet()) {
-            if (map.get(key) instanceof Map) {
-                size += size((Map<String, Object>) map.get(key));
+        for (Object o : map.values()) {
+            if (o instanceof Map) {
+                size += size((Map<String, Object>) o);
             }
         }
         return size;
