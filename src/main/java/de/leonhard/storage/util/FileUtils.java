@@ -59,12 +59,12 @@ public class FileUtils {
         }
 
         // if the extension is null we always add the file.
-        for (val file : files)
-        {
+        for (val file : files) {
             if (extension == null || file.getName().endsWith(extension)) {
                 result.add(file);
             }
         }
+
         return result;
     }
 
@@ -79,12 +79,16 @@ public class FileUtils {
             if (file.getParentFile() != null && !file.getParentFile().exists()){
                 file.getParentFile().mkdirs();
             }
+
             if (!file.exists()) {
                 file.createNewFile();
             }
+
         } catch (final IOException ex) {
             throw LightningProviders.exceptionHandler().create
-                    (ex, "Error while creating file '" + file.getName() + "'.", "In: '" + getParentDirPath(file) + "'");
+                    (ex,
+                            "Error while creating file '" + file.getName() + "'.",
+                            "In: '" + getParentDirPath(file) + "'");
         }
         return file;
     }
@@ -125,11 +129,13 @@ public class FileUtils {
                 fileOrDirPath.lastIndexOf(File.separatorChar, endsWithSlash ? fileOrDirPath.length() - 2 : fileOrDirPath.length() - 1));
     }
 
-    public boolean hasChanged(final File file, final long timeStamp)
+    public boolean hasChanged(final File file,
+                              final long timeStamp)
     {
         if (file == null) {
             return false;
         }
+
         return timeStamp < file.lastModified();
     }
 
@@ -137,8 +143,7 @@ public class FileUtils {
     // Methods for reading & writing a file
     // ----------------------------------------------------------------------------------------------------
 
-    public InputStream createInputStream(@NonNull final File file)
-    {
+    public InputStream createInputStream(@NonNull final File file) {
         try {
             return Files.newInputStream(file.toPath());
         } catch (final IOException ex) {
@@ -148,8 +153,7 @@ public class FileUtils {
         }
     }
 
-    private OutputStream createOutputStream(@NonNull final File file)
-    {
+    private OutputStream createOutputStream(@NonNull final File file) {
         try {
             return new FileOutputStream(file);
         } catch (final FileNotFoundException ex) {
@@ -159,8 +163,7 @@ public class FileUtils {
         }
     }
 
-    public Reader createReader(@NonNull final File file)
-    {
+    public Reader createReader(@NonNull final File file) {
         try {
             return new FileReader(file);
         } catch (final FileNotFoundException ex) {
@@ -170,8 +173,7 @@ public class FileUtils {
         }
     }
 
-    public Writer createWriter(@NonNull final File file)
-    {
+    public Writer createWriter(@NonNull final File file) {
         try {
             return new FileWriter(file);
         } catch (final IOException ex) {
@@ -181,7 +183,8 @@ public class FileUtils {
         }
     }
 
-    public void write(@NonNull final File file, @NonNull final List<String> lines)
+    public void write(@NonNull final File file,
+                      @NonNull final List<String> lines)
     {
         try {
             Files.write(file.toPath(), lines);
@@ -199,8 +202,9 @@ public class FileUtils {
             if (!file.exists()) {
                 Files.copy(inputStream, file.toPath());
             } else {
-                final byte[] data = new byte[8192];
+                val data = new byte[8192];
                 int count;
+
                 while ((count = inputStream.read(data, 0, 8192)) != -1) {
                     outputStream.write(data, 0, count);
                 }
@@ -226,6 +230,7 @@ public class FileUtils {
     public List<String> readAllLines(@NonNull final File file) {
         val fileBytes = readAllBytes(file);
         val asString = new String(fileBytes);
+
         return new ArrayList<>(Arrays.asList(asString.split(System.lineSeparator())));
     }
 
@@ -234,9 +239,10 @@ public class FileUtils {
     // ----------------------------------------------------------------------------------------------------
 
     @SneakyThrows
-    public void zipFile(final String sourceDirectory, final String to) {
-        final File fileTo = getAndMake(new File(to + ".zip"));
-
+    public void zipFile(final String sourceDirectory,
+                        final String to)
+    {
+        val fileTo = getAndMake(new File(to + ".zip"));
         @Cleanup val zipOutputStream = new ZipOutputStream(createOutputStream(fileTo));
         val pathFrom = Paths.get(new File(sourceDirectory).toURI());
 
@@ -258,8 +264,7 @@ public class FileUtils {
     // Checksums
     // ----------------------------------------------------------------------------------------------------
 
-    public String md5ChecksumAsString(@NonNull final File filename)
-    {
+    public String md5ChecksumAsString(@NonNull final File filename) {
         val checkSum = md5Checksum(filename);
         val result = new StringBuilder();
 
@@ -270,8 +275,7 @@ public class FileUtils {
         return result.toString();
     }
 
-    private byte[] md5Checksum(@NonNull final File file)
-    {
+    private byte[] md5Checksum(@NonNull final File file) {
         try (val fileInputStream = new FileInputStream(file)) {
             val buffer = new byte[1024];
             val complete = MessageDigest.getInstance("MD5");
@@ -311,8 +315,7 @@ public class FileUtils {
 
         getAndMake(target);
 
-        try (val inputStream = LightningProviders.inputStreamProvider().createInputStreamFromInnerResource(resourcePath))
-        {
+        try (val inputStream = LightningProviders.inputStreamProvider().createInputStreamFromInnerResource(resourcePath)) {
             Valid.notNull(inputStream, "The embedded resource '" + resourcePath + "' cannot be found");
 
             assert inputStream != null;
@@ -330,8 +333,7 @@ public class FileUtils {
                                               @NonNull final String sourceDirectory,
                                               boolean replace)
     {
-        if (!targetDirectory.exists())
-        {
+        if (!targetDirectory.exists()) {
             Valid.checkBoolean(targetDirectory.mkdirs(),
                     "Can't create directory '" + targetDirectory.getName() + "'",
                                 "Parent: '" + getParentDirPath(targetDirectory) + "'");
@@ -341,25 +343,24 @@ public class FileUtils {
                 targetDirectory.isDirectory(),
                 "Target directory must be an directory");
 
-        try (val jarFile = new JarFile(sourceJarFile))
-        {
-            for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();)
-            {
+        try (val jarFile = new JarFile(sourceJarFile)) {
+            for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
                 val jarEntry = entries.nextElement();
                 val entryName = jarEntry.getName();
 
-                if (entryName.startsWith(sourceDirectory) && !jarEntry.isDirectory()) extractResource(targetDirectory.getAbsolutePath(), entryName, replace);
+                if (entryName.startsWith(sourceDirectory) && !jarEntry.isDirectory()) {
+                    extractResource(targetDirectory.getAbsolutePath(), entryName, replace);
+                }
             }
 
         } catch (final Throwable throwable) {
-            throw LightningProviders.exceptionHandler().create(throwable, "Failed to extract folder from '" + targetDirectory + "' to '" + sourceDirectory + "'");
+            throw LightningProviders.exceptionHandler().create(throwable,
+                    "Failed to extract folder from '" + targetDirectory + "' to '" + sourceDirectory + "'");
         }
     }
 
-    private void copyFolder(@NonNull final File source, @NonNull final File destination) throws IOException
-    {
-        if (source.isDirectory())
-        {
+    private void copyFolder(@NonNull final File source, @NonNull final File destination) throws IOException {
+        if (source.isDirectory()) {
             if (!destination.exists()) {
                 destination.mkdirs();
             }
@@ -370,16 +371,17 @@ public class FileUtils {
                 return;
             }
 
-            for (val file : files)
-            {
+            for (val file : files) {
                 val srcFile = new File(source, file);
                 val destFile = new File(destination, file);
+
                 copyFolder(srcFile, destFile);
             }
-        } else {
 
+        } else {
             @Cleanup val in = createInputStream(source);
             @Cleanup val out = createOutputStream(destination);
+
             val buffer = new byte[1024];
 
             int length;

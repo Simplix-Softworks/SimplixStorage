@@ -22,17 +22,16 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 
     protected final File file;
     protected final FileType fileType;
-    @Setter
-    protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+    @Setter protected ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
     protected DataType dataType = DataType.UNSORTED;
     protected FileData fileData;
-    @Nullable
-    protected Consumer<FlatFile> reloadConsumer;
-    @Setter
-    protected String pathPrefix;
+    @Nullable protected Consumer<FlatFile> reloadConsumer;
+    @Setter protected String pathPrefix;
     private long lastLoaded;
 
-    protected FlatFile(@NonNull final String name, @Nullable final String path, @NonNull final FileType fileType,
+    protected FlatFile(@NonNull final String name,
+                       @Nullable final String path,
+                       @NonNull final FileType fileType,
                        @Nullable final Consumer<FlatFile> reloadConsumer)
     {
         Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
@@ -40,8 +39,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         this.fileType = fileType;
         this.reloadConsumer = reloadConsumer;
 
-        if (path == null || path.isEmpty())
-        {
+        if (path == null || path.isEmpty()) {
             this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
         } else {
             val fixedPath = path.replace("\\", "/");
@@ -49,7 +47,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         }
     }
 
-    protected FlatFile(@NonNull final File file, @NonNull final FileType fileType)
+    protected FlatFile(@NonNull final File file,
+                       @NonNull final FileType fileType)
     {
         this.file = file;
         this.fileType = fileType;
@@ -64,8 +63,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
      *
      * <p>Therefor no validation is possible. Might be unsafe.
      */
-    protected FlatFile(@NonNull final File file)
-    {
+    protected FlatFile(@NonNull final File file) {
         this.file = file;
         this.reloadConsumer = null;
         // Might be null
@@ -86,8 +84,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     }
 
     @Synchronized
-    private boolean createFile(final File file)
-    {
+    private boolean createFile(final File file) {
         if (file.exists()) {
             this.lastLoaded = System.currentTimeMillis();
             return false;
@@ -119,8 +116,10 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         val fileName = this.fileType == null
                 ? "File"
                 : this.fileType.name().toLowerCase(); // fileType might be null
+
         System.err.println("Exception reloading " + fileName + " '" + getName() + "'");
         System.err.println("In '" + FileUtils.getParentDirPath(this.file) + "'");
+
         ioException.printStackTrace();
     }
     // ----------------------------------------------------------------------------------------------------
@@ -211,6 +210,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     // For performance separated from get(String key)
     public final List<Object> getAll(final String... keys) {
         final List<Object> result = new ArrayList<>();
+
         reloadIfNeeded();
 
         for (val key : keys) {
@@ -224,6 +224,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         for (val key : keys){
             this.fileData.remove(key);
         }
+
         write();
     }
 
@@ -239,8 +240,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         reloadIfNeeded();
 
         // Creating & setting defaults
-        for (val key : newData.keySet())
-        {
+        for (val key : newData.keySet()) {
             if (!this.fileData.containsKey(key)) {
                 this.fileData.insert(key, newData.get(key));
             }
@@ -262,12 +262,17 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     }
 
     @Synchronized
-    public void replace(final CharSequence target, final CharSequence replacement) throws IOException {
+    public void replace(final CharSequence target,
+                        final CharSequence replacement)
+                        throws IOException
+    {
         val lines = Files.readAllLines(this.file.toPath());
         final List<String> result = new ArrayList<>();
+
         for (val line : lines) {
             result.add(line.replace(target, replacement));
         }
+
         Files.write(this.file.toPath(), result);
     }
 
@@ -287,10 +292,9 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     }
 
     public final void forceReload() {
-
         if (reloadConsumer != null) reloadConsumer.accept(this);
-
         Map<String, Object> out = new HashMap<>();
+
         try {
             out = readToMap();
         } catch (final IOException ex) {
@@ -320,8 +324,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 
     // Should the file be re-read before the next get() operation?
     // Can be used as utility method for implementations of FlatFile
-    protected boolean shouldReload()
-    {
+    protected boolean shouldReload() {
         if (ReloadSettings.AUTOMATICALLY.equals(this.reloadSettings)) {
             return true;
         } else if (ReloadSettings.INTELLIGENT.equals(this.reloadSettings)) {

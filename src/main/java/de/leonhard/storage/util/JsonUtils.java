@@ -13,8 +13,7 @@ import java.util.*;
 @UtilityClass
 public class JsonUtils {
 
-    public Map<String, Object> jsonToMap(final JSONObject jsonObject) throws JSONException
-    {
+    public Map<String, Object> jsonToMap(final JSONObject jsonObject) throws JSONException {
         Map<String, Object> retMap = new HashMap<>();
 
         if (jsonObject != JSONObject.NULL) {
@@ -24,8 +23,7 @@ public class JsonUtils {
         return retMap;
     }
 
-    public JSONObject getJsonFromMap(final Map<String, Object> map) throws JSONException
-    {
+    public JSONObject getJsonFromMap(final Map<String, Object> map) throws JSONException {
         val jsonData = new JSONObject();
 
         for (val entry : map.entrySet()) {
@@ -38,6 +36,7 @@ public class JsonUtils {
 
             jsonData.put(key, value);
         }
+
         return jsonData;
     }
 
@@ -49,8 +48,7 @@ public class JsonUtils {
         return map;
     }
 
-    public List<Object> toList(final JSONArray array) throws JSONException
-    {
+    public List<Object> toList(final JSONArray array) throws JSONException {
         final List<Object> list = new ArrayList<>();
 
         for (int i = 0; i < array.length(); i++) {
@@ -60,16 +58,12 @@ public class JsonUtils {
         return list;
     }
 
-    private Object getValue(final Object obj)
-    {
-        if (obj instanceof JSONArray)
-        {
+    private Object getValue(final Object obj) {
+        if (obj instanceof JSONArray) {
             return toList((JSONArray) obj);
-        } else if (obj instanceof JSONObject)
-        {
+        } else if (obj instanceof JSONObject) {
             return toMap((JSONObject) obj);
-        } else
-        {
+        } else {
             return obj;
         }
     }

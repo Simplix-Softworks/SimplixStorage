@@ -20,8 +20,7 @@ public class ClassWrapper {
      * @param def type of result
      * @return Casted object
      */
-    public <T> T getFromDef(final Object obj, final T def)
-    {
+    public <T> T getFromDef(final Object obj, final T def) {
         if (def instanceof Integer) {
             return (T) INTEGER.getInt(obj);
         }
@@ -55,6 +54,7 @@ public class ClassWrapper {
         else if (def instanceof Byte[] || def instanceof byte[]) {
             return (T) BYTE.getByteArray(obj);
         }
+
         return (T) obj;
     }
 
@@ -68,8 +68,7 @@ public class ClassWrapper {
      */
     public <T> T getFromDef(final Object obj, final Class<T> clazz) {
 
-        if (clazz == int.class || clazz == Integer.class)
-        {
+        if (clazz == int.class || clazz == Integer.class) {
             return (T) INTEGER.getInt(obj);
         }
         else if (clazz == float.class || clazz == Float.class) {
@@ -102,19 +101,19 @@ public class ClassWrapper {
         else if (clazz == Byte[].class || clazz == byte[].class) {
             return (T) BYTE.getByteArray(obj);
         }
+
         return (T) obj;
     }
 
     @UtilityClass
     public class LONG {
 
-        public Long[] getLongArray(final Object obj)
-        {
-            if (obj instanceof List)
-            {
+        public Long[] getLongArray(final Object obj) {
+            if (obj instanceof List) {
                 val list = (List<Long>) obj;
                 return list.toArray(new Long[0]);
             }
+
             return new Long[0];
         }
 
@@ -132,17 +131,16 @@ public class ClassWrapper {
     @UtilityClass
     public class DOUBLE {
 
-        public Double[] getDoubleArray(final Object obj)
-        {
+        public Double[] getDoubleArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Double>) obj;
                 return list.toArray(new Double[0]);
             }
+
             return new Double[0];
         }
 
-        public Double getDouble(final Object obj)
-        {
+        public Double getDouble(final Object obj) {
             if (obj instanceof Number) {
                 return ((Number) obj).doubleValue();
             } else if (obj instanceof String) {
@@ -156,20 +154,20 @@ public class ClassWrapper {
     @UtilityClass
     public class FLOAT {
 
-        public Float[] getFloatArray(final Object obj)
-        {
+        public Float[] getFloatArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Float>) obj;
                 return list.toArray(new Float[0]);
             }
+
             return new Float[0];
         }
 
-        public Float getFloat(final Object obj)
-        {
+        public Float getFloat(final Object obj) {
             if (obj instanceof Number) {
                 return ((Number) obj).floatValue();
-            } else if (obj instanceof String) {
+            }
+            else if (obj instanceof String) {
                 return Float.parseFloat((String) obj);
             } else {
                 return Float.parseFloat(obj.toString());
@@ -180,17 +178,16 @@ public class ClassWrapper {
     @UtilityClass
     public class INTEGER {
 
-        public Integer[] getIntArray(final Object obj)
-        {
+        public Integer[] getIntArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Integer>) obj;
                 return list.toArray(new Integer[0]);
             }
+
             return new Integer[0];
         }
 
-        public Integer getInt(final Object obj)
-        {
+        public Integer getInt(final Object obj) {
             if (obj instanceof Number) {
                 return ((Number) obj).intValue();
             } else if (obj instanceof String) {
@@ -205,20 +202,20 @@ public class ClassWrapper {
     @SuppressWarnings("unused")
     public class SHORT {
 
-        public Short[] getShortArray(final Object obj)
-        {
+        public Short[] getShortArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Short>) obj;
                 return list.toArray(new Short[0]);
             }
+
             return new Short[0];
         }
 
-        public Short getShort(final Object obj)
-        {
+        public Short getShort(final Object obj) {
             if (obj instanceof Number) {
                 return ((Number) obj).shortValue();
-            } else if (obj instanceof String) {
+            }
+            else if (obj instanceof String) {
                 return Short.parseShort((String) obj);
             } else {
                 return Short.parseShort(obj.toString());
@@ -229,8 +226,7 @@ public class ClassWrapper {
     @UtilityClass
     public class BYTE {
 
-        public Byte[] getByteArray(final Object obj)
-        {
+        public Byte[] getByteArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Byte>) obj;
                 return list.toArray(new Byte[0]);
@@ -239,8 +235,7 @@ public class ClassWrapper {
             return new Byte[0];
         }
 
-        public Byte getByte(final Object obj)
-        {
+        public Byte getByte(final Object obj) {
             if (obj instanceof Number) {
                 return ((Number) obj).byteValue();
             } else if (obj instanceof STRING) {
@@ -254,12 +249,12 @@ public class ClassWrapper {
     @UtilityClass
     public class STRING {
 
-        public String[] getStringArray(final Object obj)
-        {
+        public String[] getStringArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<String>) obj;
                 return list.toArray(new String[0]);
             }
+
             return new String[0];
         }
 
@@ -267,6 +262,7 @@ public class ClassWrapper {
             if (obj instanceof Collection && ((Collection<?>) obj).size() == 1) {
                 return ((List<?>) obj).get(0).toString();
             }
+
             return new String(obj.toString().getBytes(), StandardCharsets.UTF_8);
         }
     }

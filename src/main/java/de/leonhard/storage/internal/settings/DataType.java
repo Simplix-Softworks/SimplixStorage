@@ -10,8 +10,9 @@ import java.util.Map;
  * An Enum defining how the Data should be stored
  */
 @RequiredArgsConstructor
-public enum DataType
-{
+public enum DataType {
+
+    // Sorted data type
     SORTED {
         @Override
         public Map<String, Object> getMapImplementation() {
@@ -19,6 +20,7 @@ public enum DataType
         }
     },
 
+    // Unsorted data type
     UNSORTED {
         @Override
         public Map<String, Object> getMapImplementation() {

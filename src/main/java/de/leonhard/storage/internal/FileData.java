@@ -328,8 +328,7 @@ public class FileData {
         this.localMap.putAll(map);
     }
 
-    private int size(final Map<String, Object> map)
-    {
+    private int size(final Map<String, Object> map) {
         int size = map.size();
         for (val key : map.keySet()) {
             if (map.get(key) instanceof Map) {
@@ -370,8 +369,7 @@ public class FileData {
     }
 
     @Override
-    public boolean equals(final Object obj)
-    {
+    public boolean equals(final Object obj) {
         if (obj == this) {
             return true;
         } else if (obj == null || getClass() != obj.getClass()) {

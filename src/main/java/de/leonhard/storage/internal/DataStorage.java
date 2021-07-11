@@ -64,13 +64,16 @@ public interface DataStorage {
      * @param key  Key to search the value for
      * @param type Type of the value
      */
-    default <T> Optional<T> find(final String key, final Class<T> type)
+    default <T> Optional<T> find(final String key,
+                                 final Class<T> type)
     {
         val raw = get(key);
+
         //Key wasn't found
         if (raw == null)  {
             return Optional.empty();
         }
+
         return Optional.of(ClassWrapper.getFromDef(raw, type));
     }
 
@@ -81,7 +84,8 @@ public interface DataStorage {
      * @param key   The key your value should be associated with.
      * @param value The value you want to set in your data-structure.
      */
-    default <T> void setSerializable(@NonNull final String key, @NonNull final T value)
+    default <T> void setSerializable(@NonNull final String key,
+                                     @NonNull final T value)
     {
         try {
             val data = LightningSerializer.serialize(value);
@@ -239,7 +243,8 @@ public interface DataStorage {
      * @param <E>      EnumType
      * @return Serialized Enum
      */
-    default <E extends Enum<E>> E getEnum(final String key, final Class<E> enumType)
+    default <E extends Enum<E>> E getEnum(final String key,
+                                          final Class<E> enumType)
     {
         val object = get(key);
         Valid.checkBoolean(object instanceof String, "No usable Enum-Value found for '" + key + "'.");
@@ -254,23 +259,22 @@ public interface DataStorage {
      * @return Serialized instance of class.
      */
     @Nullable
-    default <T> T getSerializable(final String key, final Class<T> clazz)
+    default <T> T getSerializable(final String key,
+                                  final Class<T> clazz)
     {
         if (!contains(key)) {
             return null;
         }
-
         var raw = get(key);
-
         if (raw == null) {
             return null;
         }
-
         return LightningSerializer.deserialize(raw, clazz);
     }
 
     @Nullable
-    default <T> List<T> getSerializableList(final String key, final Class<T> type)
+    default <T> List<T> getSerializableList(final String key,
+                                            final Class<T> type)
     {
         if (!contains(key))  {
             return null;
@@ -293,7 +297,9 @@ public interface DataStorage {
      * @param def Default value, if data-structure doesn't contain key.
      * @param <T> Type of default-value.
      */
-    default <T> T getOrDefault(final String key, @NonNull final T def) {
+    default <T> T getOrDefault(final String key,
+                               @NonNull final T def)
+    {
         val raw = get(key);
         return raw == null ? def : ClassWrapper.getFromDef(raw, def);
     }
@@ -322,15 +328,14 @@ public interface DataStorage {
      * @param key Key to set the value
      * @param def Value to set or return.
      */
-    default <T> T getOrSetDefault(final String key, final T def)
+    default <T> T getOrSetDefault(final String key,
+                                  final T def)
     {
         val raw = get(key);
         //Key it not yet present in data-structure
-        if (raw == null)
-        {
+        if (raw == null) {
             set(key, def);
             return def;
-
         } else {
             return ClassWrapper.getFromDef(raw, def);
         }

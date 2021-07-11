@@ -70,8 +70,7 @@ public class Json extends FlatFile {
         forceReload();
     }
 
-    public Json(final File file)
-    {
+    public Json(final File file) {
         super(file, FileType.JSON);
         create();
         forceReload();
@@ -88,8 +87,7 @@ public class Json extends FlatFile {
      * @return Map
      */
     @Override
-    public final Map<?, ?> getMap(final String key)
-    {
+    public final Map<?, ?> getMap(final String key) {
         val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
 
         if (!contains(finalKey)) {
@@ -113,8 +111,7 @@ public class Json extends FlatFile {
     // ----------------------------------------------------------------------------------------------------
 
     @Override
-    protected final Map<String, Object> readToMap() throws IOException
-    {
+    protected final Map<String, Object> readToMap() throws IOException {
         if (this.file.length() == 0) {
             Files.write(this.file.toPath(), Collections.singletonList("{}"));
         }
@@ -125,8 +122,7 @@ public class Json extends FlatFile {
     }
 
     @Override
-    protected final void write(final FileData data) throws IOException
-    {
+    protected final void write(final FileData data) throws IOException {
         @Cleanup val writer = FileUtils.createWriter(this.file);
 
         writer.write(data.toJsonObject().toString(3));

@@ -44,7 +44,10 @@ public final class LightningBuilder
     // Creating our Builder
     // ----------------------------------------------------------------------------------------------------
 
-    public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path) {
+    public static LightningBuilder fromPath(
+            @NonNull final String name,
+            @NonNull final String path)
+    {
         return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
     }
 
@@ -53,8 +56,7 @@ public final class LightningBuilder
         return fromFile(path.toFile());
     }
 
-    public static LightningBuilder fromFile(@NonNull final File file)
-    {
+    public static LightningBuilder fromFile(@NonNull final File file) {
         // File shouldn't be a directory
         Valid.checkBoolean(!file.isDirectory(), "File mustn't be a directory.",
                                                             "Please use from Directory to use a directory",
@@ -63,8 +65,7 @@ public final class LightningBuilder
         return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file), LightningProviders.inputStreamProvider());
     }
 
-    public static LightningBuilder fromDirectory(@NonNull final File file)
-    {
+    public static LightningBuilder fromDirectory(@NonNull final File file) {
         Valid.checkBoolean(!file.getName().contains("."),
                 "File-Name mustn't contain '.'");
 
@@ -90,8 +91,7 @@ public final class LightningBuilder
         return this;
     }
 
-    public LightningBuilder addInputStreamFromResource(@NonNull final String resource)
-    {
+    public LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
         this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
         Valid.notNull(this.inputStream, "InputStream is null.",
                                                  "No inbuilt resource '" + resource + "' found: ");
@@ -99,32 +99,27 @@ public final class LightningBuilder
         return this;
     }
 
-    public LightningBuilder setName(@NonNull final String name)
-    {
+    public LightningBuilder setName(@NonNull final String name) {
         this.name = name;
         return this;
     }
 
-    public LightningBuilder addInputStream(@Nullable final InputStream inputStream)
-    {
+    public LightningBuilder addInputStream(@Nullable final InputStream inputStream) {
         this.inputStream = inputStream;
         return this;
     }
 
-    public LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings)
-    {
+    public LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings) {
         this.configSettings = configSettings;
         return this;
     }
 
-    public LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings)
-    {
+    public LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings) {
         this.reloadSettings = reloadSettings;
         return this;
     }
 
-    public LightningBuilder setDataType(@NonNull final DataType dataType)
-    {
+    public LightningBuilder setDataType(@NonNull final DataType dataType) {
         this.dataType = dataType;
         return this;
     }
@@ -133,8 +128,7 @@ public final class LightningBuilder
     // Create the objects of our FileTypes
     // ----------------------------------------------------------------------------------------------------
 
-    public Config createConfig()
-    {
+    public Config createConfig() {
         return new Config(
                 this.name,
                 this.path,
@@ -145,8 +139,7 @@ public final class LightningBuilder
                 reloadConsumer);
     }
 
-    public Yaml createYaml()
-    {
+    public Yaml createYaml() {
         return new Yaml(
                 this.name,
                 this.path,
@@ -157,8 +150,7 @@ public final class LightningBuilder
                 reloadConsumer);
     }
 
-    public Toml createToml()
-    {
+    public Toml createToml() {
         return new Toml(
                 this.name,
                 this.path,
@@ -167,8 +159,7 @@ public final class LightningBuilder
                 reloadConsumer);
     }
 
-    public Json createJson()
-    {
+    public Json createJson() {
         return new Json(
                 this.name,
                 this.path,

@@ -62,8 +62,7 @@ public class YamlEditor {
         lines.removeAll(readHeader());
 
         // Adding new header in front
-        for (int i = 0; i < header.size(); i++)
-        {
+        for (int i = 0; i < header.size(); i++) {
             val toAdd = header.get(i);
             lines.add(i, toAdd.startsWith("#") ? toAdd : "#" + toAdd);
         }
@@ -72,12 +71,10 @@ public class YamlEditor {
         write(lines);
     }
 
-    public void addHeader(final List<String> header)
-    {
+    public void addHeader(final List<String> header) {
         val lines = read();
 
-        for (int i = 0; i < header.size(); i++)
-        {
+        for (int i = 0; i < header.size(); i++) {
             val toAdd = header.get(i);
             lines.add(i, toAdd.startsWith("#") ? toAdd : "#" + toAdd);
         }

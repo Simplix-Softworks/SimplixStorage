@@ -20,8 +20,7 @@ public class Valid {
         checkBoolean(condition, "Valid.checkBoolean(): Condition is False.");
     }
 
-    public void checkBoolean(final boolean condition, final String... errorMessage)
-    {
+    public void checkBoolean(final boolean condition, final String... errorMessage) {
         if (!condition) {
             throw new LightningValidationException(errorMessage);
         }
@@ -31,11 +30,11 @@ public class Valid {
         notNull(object, "Valid.notNull(): Validated Object is null");
     }
 
-    public <T> void notNull(@Nullable final T object, @Nullable final String...message)
-    {
+    public <T> void notNull(@Nullable final T object, @Nullable final String...message) {
         if (object != null) {
             return;
         }
+
         throw new LightningValidationException(message);
     }
 }

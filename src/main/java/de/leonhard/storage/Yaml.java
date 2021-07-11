@@ -28,8 +28,7 @@ public class Yaml extends FlatFile {
 
     @Setter private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-    public Yaml(@NonNull final Yaml yaml)
-    {
+    public Yaml(@NonNull final Yaml yaml) {
         super(yaml.getFile());
         this.fileData = yaml.getFileData();
         this.yamlEditor = yaml.getYamlEditor();
@@ -122,8 +121,7 @@ public class Yaml extends FlatFile {
             val data = new SimpleYamlReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
             val newData = new FileData(data, DataType.UNSORTED);
 
-            for (val key : newData.keySet())
-            {
+            for (val key : newData.keySet()) {
                 if (!this.fileData.containsKey(key)) {
                     this.fileData.insert(key, newData.get(key));
                 }
@@ -142,15 +140,13 @@ public class Yaml extends FlatFile {
     // ----------------------------------------------------------------------------------------------------
 
     @Override
-    protected Map<String, Object> readToMap() throws IOException
-    {
+    protected Map<String, Object> readToMap() throws IOException {
         @Cleanup val reader = new SimpleYamlReader(new FileReader(getFile()));
         return reader.readToMap();
     }
 
     @Override
-    protected void write(final FileData data) throws IOException
-    {
+    protected void write(final FileData data) throws IOException {
         // If Comments shouldn't be preserved
         if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings)) {
             write0(this.fileData);
@@ -163,8 +159,7 @@ public class Yaml extends FlatFile {
     }
 
     // Writing without comments
-    private void write0(final FileData fileData) throws IOException
-    {
+    private void write0(final FileData fileData) throws IOException {
         @Cleanup val writer = new SimpleYamlWriter(this.file);
         writer.write(fileData.toMap());
     }
@@ -195,8 +190,7 @@ public class Yaml extends FlatFile {
     }
 
     @SuppressWarnings("unused")
-    public final void framedHeader(final String... header)
-    {
+    public final void framedHeader(final String... header) {
         List<String> stringList = new ArrayList<>();
         var border = "# +----------------------------------------------------+ #";
         stringList.add(border);

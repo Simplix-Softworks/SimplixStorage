@@ -20,13 +20,12 @@ public enum FileType {
         return fromExtension(FileUtils.getExtension(file));
     }
 
-    public static FileType fromExtension(final String type)
-    {
-        for (val value : values())
-        {
+    public static FileType fromExtension(final String type) {
+        for (val value : values()) {
             if (!value.extension.equalsIgnoreCase(type)) continue;
             return value;
         }
+
         return null;
     }
 

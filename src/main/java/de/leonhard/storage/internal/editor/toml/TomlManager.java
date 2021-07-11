@@ -99,8 +99,14 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public void write(final Map<String, Object> data, final Writer writer, final int indentSize, final boolean indentWithSpaces) throws IOException {
+    public void write(final Map<String, Object> data,
+                      final Writer writer,
+                      final int indentSize,
+                      final boolean indentWithSpaces)
+                      throws IOException
+    {
         val tw = new TomlWriter(writer, indentSize, indentWithSpaces);
+
         tw.write(data);
         tw.close();
     }
@@ -181,7 +187,10 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final InputStream in, final boolean strictAsciiBareKeys) throws IOException, TomlException {
+    public Map<String, Object> read(final InputStream in,
+                                    final boolean strictAsciiBareKeys)
+                                    throws IOException, TomlException
+    {
         return read(new InputStreamReader(in, StandardCharsets.UTF_8), in.available(), strictAsciiBareKeys);
     }
 
@@ -196,12 +205,19 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final Reader reader, final int bufferSize, final boolean strictAsciiBareKeys) throws IOException, TomlException
+    public Map<String, Object> read(final Reader reader,
+                                    final int bufferSize,
+                                    final boolean strictAsciiBareKeys)
+                                    throws IOException, TomlException
     {
         val sb = new StringBuilder(bufferSize);
         val buf = new char[8192];
         int read;
-        while ((read = reader.read(buf)) != -1) sb.append(buf, 0, read);
+
+        while ((read = reader.read(buf)) != -1) {
+            sb.append(buf, 0, read);
+        }
+
         val tr = new TomlReader(sb.toString(), strictAsciiBareKeys);
         return tr.read();
     }
