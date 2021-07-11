@@ -65,7 +65,8 @@ public final class LightningBuilder {
     public static LightningBuilder fromDirectory(@NonNull final File file) {
         Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
-        if (!file.exists()) file.mkdirs();
+        if (!file.exists()) //noinspection ResultOfMethodCallIgnored
+            file.mkdirs();
 
         // Will return the name of the folder as default name
         return new LightningBuilder(file.getName(), file.getAbsolutePath(), LightningProviders.inputStreamProvider());

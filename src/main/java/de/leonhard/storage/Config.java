@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Consumer;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "CopyConstructorMissesField"})
 public class Config extends Yaml {
 
     private List<String> header;

@@ -30,6 +30,7 @@ public interface DataStorage {
      * @param key Key to check
      * @return Returned value.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean contains(final String key);
 
     /**

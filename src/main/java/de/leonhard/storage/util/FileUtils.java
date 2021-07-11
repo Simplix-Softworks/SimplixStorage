@@ -27,7 +27,7 @@ import java.util.zip.ZipOutputStream;
  * Class for easier, more convenient & strait interaction with files
  */
 @UtilityClass
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class FileUtils {
 
     // ----------------------------------------------------------------------------------------------------
