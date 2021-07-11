@@ -2,6 +2,7 @@ package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.util.JsonUtils;
+import lombok.Synchronized;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -47,10 +48,7 @@ public class FileData {
      */
     public void loadData(final Map<String, Object> map) {
         clear();
-
-        if (map != null) {
-            this.localMap.putAll(map);
-        }
+        if (map != null) this.localMap.putAll(map);
     }
 
     /**
@@ -85,16 +83,12 @@ public class FileData {
      */
     public synchronized void insert(final String key, final Object value) {
         val parts = key.split("\\.");
-        this.localMap.put(
-                parts[0],
-                this.localMap.containsKey(parts[0]) && this.localMap.get(parts[0]) instanceof Map
+        this.localMap.put(parts[0], this.localMap.containsKey(parts[0]) && this.localMap.get(parts[0]) instanceof Map
                         ? insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
                         : insert(new HashMap<>(), parts, value, 1));
     }
 
-    private Object insert(
-            final Map<String, Object> map, final String[] key, final Object value,
-            final int id) {
+    private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
         if (id < key.length) {
             final Map<String, Object> tempMap = new HashMap<>(map);
             final Map<String, Object> childMap = map.containsKey(key[id]) && map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>();
@@ -134,7 +128,8 @@ public class FileData {
      *
      * @param key the key to be removed from the map.
      */
-    public synchronized void remove(final String key) {
+    @Synchronized
+    public void remove(final String key) {
         if (containsKey(key)) {
             val parts = key.split("\\.");
             remove(parts);
@@ -238,8 +233,7 @@ public class FileData {
         return out;
     }
 
-    private Set<Map.Entry<String, Object>> multiLayerEntrySet(
-            final Map<String, Object> map) {
+    private Set<Map.Entry<String, Object>> multiLayerEntrySet(final Map<String, Object> map) {
         final Set<Map.Entry<String, Object>> out = new HashSet<>();
         for (val entry : map.entrySet()) {
             if (map.get(entry.getKey()) instanceof Map) {

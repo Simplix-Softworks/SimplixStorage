@@ -43,48 +43,26 @@ public class Yaml extends FlatFile {
         this(name, path, null, null, null, null);
     }
 
-    public Yaml(
-            final String name,
-            @Nullable final String path,
-            @Nullable final InputStream inputStream) {
+    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream) {
         this(name, path, inputStream, null, null, null);
     }
 
-    public Yaml(
-            final String name,
-            @Nullable final String path,
-            @Nullable final InputStream inputStream,
-            @Nullable final ReloadSettings reloadSettings,
-            @Nullable final ConfigSettings configSettings,
-            @Nullable final DataType dataType) {
+    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType) {
         this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
     }
 
-    public Yaml(
-            final String name,
-            @Nullable final String path,
-            @Nullable final InputStream inputStream,
-            @Nullable final ReloadSettings reloadSettings,
-            @Nullable final ConfigSettings configSettings,
-            @Nullable final DataType dataType,
-            @Nullable final Consumer<FlatFile> reloadConsumer) {
+    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType, @Nullable final Consumer<FlatFile> reloadConsumer) {
         super(name, path, FileType.YAML, reloadConsumer);
         this.inputStream = inputStream;
 
-        if (create() && inputStream != null) {
-            FileUtils.writeToFile(this.file, inputStream);
-        }
+        if (create() && inputStream != null) FileUtils.writeToFile(this.file, inputStream);
 
         this.yamlEditor = new YamlEditor(this.file);
         this.parser = new YamlParser(this.yamlEditor);
 
-        if (reloadSettings != null) {
-            this.reloadSettings = reloadSettings;
-        }
+        if (reloadSettings != null) this.reloadSettings = reloadSettings;
 
-        if (configSettings != null) {
-            this.configSettings = configSettings;
-        }
+        if (configSettings != null) this.configSettings = configSettings;
 
         if (dataType != null) {
             this.dataType = dataType;
@@ -117,9 +95,7 @@ public class Yaml extends FlatFile {
 
             val newData = new FileData(data, DataType.UNSORTED);
 
-            for (val key : newData.keySet()) {
-                if (!this.fileData.containsKey(key)) this.fileData.insert(key, newData.get(key));
-            }
+            for (val key : newData.keySet()) if (!this.fileData.containsKey(key)) this.fileData.insert(key, newData.get(key));
 
             write();
         } catch (final Exception ex) {

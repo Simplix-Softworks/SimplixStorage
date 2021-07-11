@@ -67,9 +67,7 @@ public interface DataStorage {
     default <T> Optional<T> find(final String key, final Class<T> type) {
         val raw = get(key);
         //Key wasn't found
-        if (raw == null) {
-            return Optional.empty();
-        }
+        if (raw == null) return Optional.empty();
         return Optional.of(ClassWrapper.getFromDef(raw, type));
     }
 
@@ -84,12 +82,7 @@ public interface DataStorage {
         try {
             val data = LightningSerializer.serialize(value);
             set(key, data);
-        } catch (final Throwable throwable) {
-            throw LightningProviders.exceptionHandler().create(
-                    throwable,
-                    "Can't deserialize: '" + key + "'",
-                    "Class: '" + value.getClass().getName() + "'",
-                    "Package: '" + value.getClass().getPackage() + "'");
+        } catch (final Throwable throwable) { throw LightningProviders.exceptionHandler().create(throwable, "Can't deserialize: '" + key + "'", "Class: '" + value.getClass().getName() + "'", "Package: '" + value.getClass().getPackage() + "'");
         }
     }
 
@@ -104,7 +97,7 @@ public interface DataStorage {
      * @param def Default value & type of it
      */
     default <T> T get(final String key, final T def) {
-        final Object raw = get(key);
+        val raw = get(key);
         return raw == null ? def : ClassWrapper.getFromDef(raw, def);
     }
 
@@ -261,9 +254,7 @@ public interface DataStorage {
     @Nullable
     default <T> List<T> getSerializableList(final String key, final Class<T> type) {
         if (!contains(key)) return null;
-
         val rawList = getList(key);
-
         return rawList
                 .stream()
                 .map(input -> LightningSerializer.deserialize(input, type))

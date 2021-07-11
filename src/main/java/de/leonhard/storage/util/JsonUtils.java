@@ -41,9 +41,7 @@ public class JsonUtils {
 
     public List<Object> toList(final JSONArray array) throws JSONException {
         final List<Object> list = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            list.add(getValue(array.get(i)));
-        }
+        for (int i = 0; i < array.length(); i++) list.add(getValue(array.get(i)));
         return list;
     }
 

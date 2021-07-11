@@ -17,8 +17,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class LightningSerializer {
 
-    private final List<LightningSerializable<?>> serializables = Collections
-            .synchronizedList(new ArrayList<>());
+    private final List<LightningSerializable<?>> serializables = Collections.synchronizedList(new ArrayList<>());
 
     public boolean isSerializable(final Class<?> clazz) {
         return findSerializable(clazz) != null;
@@ -30,18 +29,14 @@ public class LightningSerializer {
      * @param serializable Serializable to register
      */
     public void registerSerializable(@NonNull final LightningSerializable<?> serializable) {
-        Valid.notNull(
-                serializable.getClazz(),
-                "Class of serializable mustn't be null");
+        Valid.notNull(serializable.getClazz(), "Class of serializable mustn't be null");
         serializables.add(serializable);
     }
 
     @Nullable
     public LightningSerializable<?> findSerializable(final Class<?> clazz) {
         for (val serializable : serializables) {
-            if (serializable.getClazz().equals(clazz)) {
-                return serializable;
-            }
+            if (serializable.getClazz().equals(clazz)) return serializable;
         }
         return null;
     }
@@ -52,20 +47,14 @@ public class LightningSerializer {
      */
     public Object serialize(final Object obj) {
         val serializable = (LightningSerializable<Object>) findSerializable(obj.getClass());
-
-        Valid.notNull(
-                serializable,
-                "No serializable found for '" + obj.getClass().getSimpleName() + "'");
+        Valid.notNull(serializable, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
         return serializable.serialize(obj);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T deserialize(final Object raw, Class<T> type) {
         val serializable = findSerializable(type);
-        Valid.notNull(
-                serializable,
-                "No serializable found for '" + type.getSimpleName() + "'",
-                "Raw: '" + raw.getClass().getSimpleName() + "'");
+        Valid.notNull(serializable, "No serializable found for '" + type.getSimpleName() + "'", "Raw: '" + raw.getClass().getSimpleName() + "'");
         assert serializable != null;
         return (T) serializable.deserialize(raw);
     }

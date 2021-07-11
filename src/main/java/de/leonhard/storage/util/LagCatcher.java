@@ -31,9 +31,7 @@ public class LagCatcher {
     private void show(final String name) {
         if (!LagCatcher.startTimes.containsKey(name) || !LagCatcher.stopTimes.containsKey(name)) throw new IllegalStateException(("No results found for '" + name + "'"));
         val value = LagCatcher.startTimes.get(name);
-        if (value == null) {
-            return;
-        }
+        if (value == null) return;
         final long start = value;
         val value2 = LagCatcher.stopTimes.get(name);
         if (value2 != null) {

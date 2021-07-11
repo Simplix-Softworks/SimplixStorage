@@ -12,25 +12,19 @@ public final class YamlParser {
 
     private final YamlEditor yamlEditor;
 
-    public List<String> parseLines(
-            final List<String> comments,
-            final List<String> updated) {
-        final List<String> out = new ArrayList<>();
+    public List<String> parseLines(final List<String> comments, final List<String> updated) { final List<String> out = new ArrayList<>();
         val parsed = assignCommentsToKey(comments);
 
         for (val line : updated) {
             val rawList = getKeyAndRemove(line, parsed);
             if (rawList == null || rawList.isEmpty()) {
-
                 out.add(line);
                 continue;
             }
 
             Collections.reverse(rawList);
             out.addAll(rawList);
-            if (!line.equals(FOOTER)) {
-                out.add(line);
-            }
+            if (!line.equals(FOOTER)) out.add(line);
         }
 
         return out;
@@ -72,11 +66,8 @@ public final class YamlParser {
                 currentKey = line;
             } else {
                 val storage = out.get(currentKey.split(":")[0]);
-
                 if (storage == null) {
-                    out.put(
-                            currentKey.split(":")[0],
-                            new ArrayList<>(Collections.singletonList(line)));
+                    out.put(currentKey.split(":")[0], new ArrayList<>(Collections.singletonList(line)));
                 } else if (!storage.contains(line)) {
                     storage.add(line);
                 }

@@ -10,9 +10,7 @@ public class LightningValidationException extends LightningException {
 
     private final long serialVersionUID = -7961367314553460325L;
 
-    public LightningValidationException(
-            final Throwable throwable,
-            final String... messages) {
+    public LightningValidationException(final Throwable throwable, final String... messages) {
         super(throwable, messages);
     }
 

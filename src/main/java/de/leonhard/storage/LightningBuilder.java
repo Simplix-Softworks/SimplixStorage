@@ -50,23 +50,14 @@ public final class LightningBuilder {
 
     public static LightningBuilder fromFile(@NonNull final File file) {
         // File shouldn't be a directory
-        Valid.checkBoolean(
-                !file.isDirectory(),
-                "File mustn't be a directory.",
-                "Please use from Directory to use a directory",
-                "This is due to Java-Internals");
-
-        return new LightningBuilder(
-                FileUtils.replaceExtensions(file.getName()),
-                FileUtils.getParentDirPath(file),
-                LightningProviders.inputStreamProvider());
+        Valid.checkBoolean(!file.isDirectory(), "File mustn't be a directory.", "Please use from Directory to use a directory", "This is due to Java-Internals");
+        return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file), LightningProviders.inputStreamProvider());
     }
 
     public static LightningBuilder fromDirectory(@NonNull final File file) {
         Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
-        if (!file.exists()) //noinspection ResultOfMethodCallIgnored
-            file.mkdirs();
+        if (!file.exists()) file.mkdirs();
 
         // Will return the name of the folder as default name
         return new LightningBuilder(file.getName(), file.getAbsolutePath(), LightningProviders.inputStreamProvider());
@@ -89,8 +80,7 @@ public final class LightningBuilder {
     public LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
         this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
 
-        Valid.notNull(
-                this.inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
+        Valid.notNull(this.inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
         return this;
     }
 

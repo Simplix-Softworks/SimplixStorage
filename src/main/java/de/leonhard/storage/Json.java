@@ -38,22 +38,11 @@ public class Json extends FlatFile {
         this(name, path, inputStream, null);
     }
 
-    public Json(
-            final String name,
-            @Nullable final String path,
-            @Nullable final InputStream inputStream,
-            @Nullable final ReloadSettings reloadSettings)
-    {
+    public Json(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings) {
         this(name, path, inputStream, reloadSettings, null);
     }
 
-    public Json(
-            final String name,
-            @Nullable final String path,
-            @Nullable final InputStream inputStream,
-            @Nullable final ReloadSettings reloadSettings,
-            @Nullable final Consumer<FlatFile> reloadConsumer)
-    {
+    public Json(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final Consumer<FlatFile> reloadConsumer) {
         super(name, path, FileType.JSON, reloadConsumer);
         if (create() && inputStream != null || this.file.length() == 0 && inputStream != null) FileUtils.writeToFile(this.file, inputStream);
         if (reloadSettings != null) this.reloadSettings = reloadSettings;

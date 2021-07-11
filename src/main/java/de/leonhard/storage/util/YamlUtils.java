@@ -15,12 +15,7 @@ public class YamlUtils {
 
     public List<String> getCommentsFromLines(final List<String> lines) {
         final List<String> result = new ArrayList<>();
-
-        for (val line : lines) {
-            if (line.startsWith("#")) {
-                result.add(line);
-            }
-        }
+        for (val line : lines) if (line.startsWith("#")) result.add(line);
         return result;
     }
 
@@ -42,9 +37,7 @@ public class YamlUtils {
         final List<String> result = new ArrayList<>();
 
         for (val line : lines) {
-            if (!line.startsWith("#")) {
-                return result;
-            }
+            if (!line.startsWith("#")) return result;
             result.add(line);
         }
         return result;
@@ -76,12 +69,7 @@ public class YamlUtils {
 
     public List<String> getKeys(final List<String> lines) {
         final List<String> result = new ArrayList<>();
-
-        for (val line : lines) {
-            if (!line.trim().startsWith("#")) {
-                result.add(line);
-            }
-        }
+        for (val line : lines) if (!line.trim().startsWith("#")) result.add(line);
         return result;
     }
 }

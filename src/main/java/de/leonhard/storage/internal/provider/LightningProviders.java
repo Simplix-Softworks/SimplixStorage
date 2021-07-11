@@ -25,19 +25,13 @@ public class LightningProviders {
     private ExceptionHandler exceptionHandler;
 
     public MapProvider mapProvider() {
-
-        if (mapProvider != null) {
-            return mapProvider;
-        }
-
+        if (mapProvider != null) return mapProvider;
         return mapProvider = new MapProvider() {
         };
     }
 
     public YamlConfig yamlConfig() {
-        if (yamlConfig != null) {
-            return yamlConfig;
-        }
+        if (yamlConfig != null) return yamlConfig;
         val config = new YamlConfig();
         // Use unicode
         config.writeConfig.setEscapeUnicode(false);
@@ -49,20 +43,12 @@ public class LightningProviders {
     }
 
     public InputStreamProvider inputStreamProvider() {
-        if (inputStreamProvider != null) {
-            return inputStreamProvider;
-        }
-
-        return inputStreamProvider = new InputStreamProvider() {
-        };
+        if (inputStreamProvider != null) return inputStreamProvider;
+        return inputStreamProvider = new InputStreamProvider() {};
     }
 
     public ExceptionHandler exceptionHandler() {
-        if (exceptionHandler != null) {
-            return exceptionHandler;
-        }
-
-        return exceptionHandler = new ExceptionHandler() {
-        };
+        if (exceptionHandler != null) return exceptionHandler;
+        return exceptionHandler = new ExceptionHandler() {};
     }
 }
