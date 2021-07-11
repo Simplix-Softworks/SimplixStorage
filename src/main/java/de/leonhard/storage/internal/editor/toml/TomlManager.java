@@ -196,7 +196,8 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final Reader reader, final int bufferSize, final boolean strictAsciiBareKeys) throws IOException, TomlException {
+    public Map<String, Object> read(final Reader reader, final int bufferSize, final boolean strictAsciiBareKeys) throws IOException, TomlException
+    {
         val sb = new StringBuilder(bufferSize);
         val buf = new char[8192];
         int read;

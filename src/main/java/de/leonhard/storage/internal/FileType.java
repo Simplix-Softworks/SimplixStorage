@@ -22,7 +22,8 @@ public enum FileType {
 
     public static FileType fromExtension(final String type)
     {
-        for (val value : values()) {
+        for (val value : values())
+        {
             if (!value.extension.equalsIgnoreCase(type)) continue;
             return value;
         }

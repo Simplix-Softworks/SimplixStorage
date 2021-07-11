@@ -81,13 +81,15 @@ public interface DataStorage {
      * @param key   The key your value should be associated with.
      * @param value The value you want to set in your data-structure.
      */
-    default <T> void setSerializable(@NonNull final String key, @NonNull final T value) {
+    default <T> void setSerializable(@NonNull final String key, @NonNull final T value)
+    {
         try {
             val data = LightningSerializer.serialize(value);
             set(key, data);
         } catch (final Throwable throwable) {
             throw LightningProviders.exceptionHandler().create
-                    (throwable, "Can't deserialize: '" + key + "'",
+                    (throwable,
+                            "Can't deserialize: '" + key + "'",
                             "Class: '" + value.getClass().getName() + "'",
                             "Package: '" + value.getClass().getPackage() + "'");
         }

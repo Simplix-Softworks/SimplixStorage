@@ -264,7 +264,9 @@ public class ClassWrapper {
         }
 
         public String getString(final Object obj) {
-            if (obj instanceof Collection && ((Collection<?>) obj).size() == 1) return ((List<?>) obj).get(0).toString();
+            if (obj instanceof Collection && ((Collection<?>) obj).size() == 1) {
+                return ((List<?>) obj).get(0).toString();
+            }
             return new String(obj.toString().getBytes(), StandardCharsets.UTF_8);
         }
     }

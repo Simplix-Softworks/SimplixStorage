@@ -59,7 +59,8 @@ public class YamlUtils {
     /**
      * @return List of comments that don't belong to header or footer
      */
-    public List<String> getPureCommentsFromLines(final List<String> lines) {
+    public List<String> getPureCommentsFromLines(final List<String> lines)
+    {
         val comments = getCommentsFromLines(lines);
         val header = getHeaderFromLines(lines);
         val footer = getFooterFromLines(lines);

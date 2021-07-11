@@ -57,7 +57,9 @@ public class LightningSerializer {
     public <T> T deserialize(final Object raw, Class<T> type)
     {
         val serializable = findSerializable(type);
-        Valid.notNull(serializable, "No serializable found for '" + type.getSimpleName() + "'", "Raw: '" + raw.getClass().getSimpleName() + "'");
+        Valid.notNull(serializable,
+                "No serializable found for '" + type.getSimpleName() + "'",
+                "Raw: '" + raw.getClass().getSimpleName() + "'");
         assert serializable != null;
         return (T) serializable.deserialize(raw);
     }

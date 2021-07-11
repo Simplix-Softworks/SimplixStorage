@@ -22,8 +22,7 @@ public class Valid {
 
     public void checkBoolean(final boolean condition, final String... errorMessage)
     {
-        if (!condition)
-        {
+        if (!condition) {
             throw new LightningValidationException(errorMessage);
         }
     }

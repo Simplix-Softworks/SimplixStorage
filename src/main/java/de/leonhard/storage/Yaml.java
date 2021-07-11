@@ -25,8 +25,8 @@ public class Yaml extends FlatFile {
     protected final InputStream inputStream;
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
-    @Setter
-    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+
+    @Setter private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
     public Yaml(@NonNull final Yaml yaml)
     {
@@ -56,7 +56,9 @@ public class Yaml extends FlatFile {
         this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
     }
 
-    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream,
+    public Yaml(final String name,
+                @Nullable final String path,
+                @Nullable final InputStream inputStream,
                 @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings,
                 @Nullable final DataType dataType, @Nullable final Consumer<FlatFile> reloadConsumer)
     {
@@ -99,21 +101,21 @@ public class Yaml extends FlatFile {
         return addDefaultsFromInputStream(getInputStream().orElse(null));
     }
 
-    public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream)
-    {
+    public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
         reloadIfNeeded();
+
         // Creating & setting defaults
-        if (inputStream == null) return this;
+        if (inputStream == null) {
+            return this;
+        }
 
         try {
             val data = new SimpleYamlReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
-
             val newData = new FileData(data, DataType.UNSORTED);
 
             for (val key : newData.keySet())
             {
-                if (!this.fileData.containsKey(key))
-                {
+                if (!this.fileData.containsKey(key)) {
                     this.fileData.insert(key, newData.get(key));
                 }
             }
@@ -131,7 +133,8 @@ public class Yaml extends FlatFile {
     // ----------------------------------------------------------------------------------------------------
 
     @Override
-    protected Map<String, Object> readToMap() throws IOException {
+    protected Map<String, Object> readToMap() throws IOException
+    {
         @Cleanup val reader = new SimpleYamlReader(new FileReader(getFile()));
         return reader.readToMap();
     }
@@ -140,8 +143,7 @@ public class Yaml extends FlatFile {
     protected void write(final FileData data) throws IOException
     {
         // If Comments shouldn't be preserved
-        if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings))
-        {
+        if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings)) {
             write0(this.fileData);
             return;
         }
@@ -152,7 +154,8 @@ public class Yaml extends FlatFile {
     }
 
     // Writing without comments
-    private void write0(final FileData fileData) throws IOException {
+    private void write0(final FileData fileData) throws IOException
+    {
         @Cleanup val writer = new SimpleYamlWriter(this.file);
         writer.write(fileData.toMap());
     }
@@ -189,16 +192,14 @@ public class Yaml extends FlatFile {
         var border = "# +----------------------------------------------------+ #";
         stringList.add(border);
 
-        for (String line : header)
-        {
+        for (String line : header) {
             var builder = new StringBuilder();
             if (line.length() > 50) continue;
 
             int length = (50 - line.length()) / 2;
             var finalLine = new StringBuilder(line);
 
-            for (int i = 0; i < length; i++)
-            {
+            for (int i = 0; i < length; i++) {
                 finalLine.append(" ");
                 finalLine.reverse();
                 finalLine.append(" ");

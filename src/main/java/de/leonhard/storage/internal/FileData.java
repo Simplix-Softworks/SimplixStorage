@@ -22,9 +22,10 @@ public class FileData {
 
     private final Map<String, Object> localMap;
 
-    public FileData(final Map<String, Object> map, final DataType dataType) {
+    public FileData(final Map<String, Object> map,
+                    final DataType dataType)
+    {
         this.localMap = dataType.getMapImplementation();
-
         this.localMap.putAll(map);
     }
 
@@ -32,7 +33,9 @@ public class FileData {
         this.localMap = new HashMap<>(jsonObject.toMap());
     }
 
-    public FileData(final JSONObject jsonObject, final DataType dataType) {
+    public FileData(final JSONObject jsonObject,
+                    final DataType dataType)
+    {
         this.localMap = dataType.getMapImplementation();
         this.localMap.putAll(jsonObject.toMap());
     }
@@ -46,8 +49,10 @@ public class FileData {
      *
      * @param map Map to load data from
      */
-    public void loadData(final Map<String, Object> map) {
+    public void loadData(final Map<String, Object> map)
+    {
         clear();
+
         if (map != null) {
             this.localMap.putAll(map);
         }
@@ -59,12 +64,16 @@ public class FileData {
      * @param key the key to look for.
      * @return the value assigned to the given key or null if the key does not exist.
      */
-    public Object get(final String key) {
+    public Object get(final String key)
+    {
         val parts = key.split("\\.");
         return get(this.localMap, parts, 0);
     }
 
-    private Object get(final Map<String, Object> map, final String[] key, final int id) {
+    private Object get(final Map<String, Object> map,
+                       final String[] key,
+                       final int id)
+    {
         if (id < key.length - 1)
         {
             if (map.get(key[id]) instanceof Map) {
@@ -84,14 +93,20 @@ public class FileData {
      * @param key   the key to be used.
      * @param value the value to be assigned to the key.
      */
-    public synchronized void insert(final String key, final Object value) {
+    public synchronized void insert(final String key,
+                                    final Object value)
+    {
         val parts = key.split("\\.");
         this.localMap.put(parts[0], this.localMap.containsKey(parts[0]) && this.localMap.get(parts[0]) instanceof Map
                         ? insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
                         : insert(new HashMap<>(), parts, value, 1));
     }
 
-    private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
+    private Object insert(final Map<String, Object> map,
+                          final String[] key,
+                          final Object value,
+                          final int id)
+    {
         if (id < key.length)
         {
             final Map<String, Object> tempMap = new HashMap<>(map);
@@ -116,7 +131,10 @@ public class FileData {
         return containsKey(this.localMap, parts, 0);
     }
 
-    private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
+    private boolean containsKey(final Map<String, Object> map,
+                                final String[] key,
+                                final int id)
+    {
         if (id < key.length - 1)
         {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
@@ -352,7 +370,8 @@ public class FileData {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(final Object obj)
+    {
         if (obj == this) {
             return true;
         } else if (obj == null || getClass() != obj.getClass()) {

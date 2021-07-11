@@ -17,11 +17,12 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public final class LightningBuilder {
+public final class LightningBuilder
+{
 
     private final InputStreamProvider inputStreamProvider;
-
     private final String path;
+
     private String name;
     private InputStream inputStream;
     private ReloadSettings reloadSettings;
@@ -30,7 +31,9 @@ public final class LightningBuilder {
 
     private @Nullable Consumer<FlatFile> reloadConsumer = null;
 
-    private LightningBuilder(final String name, final String path, final InputStreamProvider inputStreamProvider)
+    private LightningBuilder(final String name,
+                             final String path,
+                             final InputStreamProvider inputStreamProvider)
     {
         this.name = name;
         this.path = path;
@@ -41,8 +44,7 @@ public final class LightningBuilder {
     // Creating our Builder
     // ----------------------------------------------------------------------------------------------------
 
-    public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path)
-    {
+    public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path) {
         return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
     }
 
@@ -54,12 +56,17 @@ public final class LightningBuilder {
     public static LightningBuilder fromFile(@NonNull final File file)
     {
         // File shouldn't be a directory
-        Valid.checkBoolean(!file.isDirectory(), "File mustn't be a directory.", "Please use from Directory to use a directory", "This is due to Java-Internals");
+        Valid.checkBoolean(!file.isDirectory(), "File mustn't be a directory.",
+                                                            "Please use from Directory to use a directory",
+                                                            "This is due to Java-Internals");
+
         return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file), LightningProviders.inputStreamProvider());
     }
 
-    public static LightningBuilder fromDirectory(@NonNull final File file) {
-        Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
+    public static LightningBuilder fromDirectory(@NonNull final File file)
+    {
+        Valid.checkBoolean(!file.getName().contains("."),
+                "File-Name mustn't contain '.'");
 
         if (!file.exists()) {
             file.mkdirs();
@@ -86,7 +93,9 @@ public final class LightningBuilder {
     public LightningBuilder addInputStreamFromResource(@NonNull final String resource)
     {
         this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
-        Valid.notNull(this.inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
+        Valid.notNull(this.inputStream, "InputStream is null.",
+                                                 "No inbuilt resource '" + resource + "' found: ");
+
         return this;
     }
 

@@ -15,7 +15,8 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Toml extends FlatFile {
+public class Toml extends FlatFile
+{
 
     public Toml(@NonNull final Toml toml)
     {
@@ -32,13 +33,22 @@ public class Toml extends FlatFile {
         this(name, path, inputStream, null, null);
     }
 
-    public Toml(@NonNull final String name, @NonNull final String path,
-                @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings,
+    public Toml(@NonNull final String name,
+                @NonNull final String path,
+                @Nullable final InputStream inputStream,
+                @Nullable final ReloadSettings reloadSettings,
                 @Nullable final Consumer<FlatFile> reloadConsumer)
     {
         super(name, path, FileType.TOML, reloadConsumer);
-        if (create() && inputStream != null) FileUtils.writeToFile(this.file, inputStream);
-        if (reloadSettings != null) this.reloadSettings = reloadSettings;
+
+        if (create() && inputStream != null) {
+            FileUtils.writeToFile(this.file, inputStream);
+        }
+
+        if (reloadSettings != null) {
+            this.reloadSettings = reloadSettings;
+        }
+
         forceReload();
     }
 
@@ -59,7 +69,8 @@ public class Toml extends FlatFile {
     }
 
     @Override
-    protected final void write(final FileData data) {
+    protected final void write(final FileData data)
+    {
         try {
             TomlManager.write(data.toMap(), getFile());
         } catch (final IOException ioException) {
