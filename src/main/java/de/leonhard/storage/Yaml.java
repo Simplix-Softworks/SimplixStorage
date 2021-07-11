@@ -11,222 +11,218 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
+import lombok.*;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 public class Yaml extends FlatFile {
 
-  protected final InputStream inputStream;
-  protected final YamlEditor yamlEditor;
-  protected final YamlParser parser;
-  @Setter
-  private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+    protected final InputStream inputStream;
+    protected final YamlEditor yamlEditor;
+    protected final YamlParser parser;
+    @Setter
+    private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-  public Yaml(@NonNull final Yaml yaml) {
-    super(yaml.getFile());
-    this.fileData = yaml.getFileData();
-    this.yamlEditor = yaml.getYamlEditor();
-    this.parser = yaml.getParser();
-    this.configSettings = yaml.getConfigSettings();
-    this.inputStream = yaml.getInputStream().orElse(null);
-    this.pathPrefix = yaml.getPathPrefix();
-    this.reloadConsumer = yaml.getReloadConsumer();
-  }
-
-  public Yaml(final String name, @Nullable final String path) {
-    this(name, path, null, null, null, null);
-  }
-
-  public Yaml(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream) {
-    this(name, path, inputStream, null, null, null);
-  }
-
-  public Yaml(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings,
-      @Nullable final ConfigSettings configSettings,
-      @Nullable final DataType dataType) {
-    this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
-  }
-
-  public Yaml(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings,
-      @Nullable final ConfigSettings configSettings,
-      @Nullable final DataType dataType,
-      @Nullable final Consumer<FlatFile> reloadConsumer) {
-    super(name, path, FileType.YAML, reloadConsumer);
-    this.inputStream = inputStream;
-
-    if (create() && inputStream != null) {
-      FileUtils.writeToFile(this.file, inputStream);
+    public Yaml(@NonNull final Yaml yaml) {
+        super(yaml.getFile());
+        this.fileData = yaml.getFileData();
+        this.yamlEditor = yaml.getYamlEditor();
+        this.parser = yaml.getParser();
+        this.configSettings = yaml.getConfigSettings();
+        this.inputStream = yaml.getInputStream().orElse(null);
+        this.pathPrefix = yaml.getPathPrefix();
+        this.reloadConsumer = yaml.getReloadConsumer();
     }
 
-    this.yamlEditor = new YamlEditor(this.file);
-    this.parser = new YamlParser(this.yamlEditor);
-
-    if (reloadSettings != null) {
-      this.reloadSettings = reloadSettings;
+    public Yaml(final String name, @Nullable final String path) {
+        this(name, path, null, null, null, null);
     }
 
-    if (configSettings != null) {
-      this.configSettings = configSettings;
+    public Yaml(
+            final String name,
+            @Nullable final String path,
+            @Nullable final InputStream inputStream) {
+        this(name, path, inputStream, null, null, null);
     }
 
-    if (dataType != null) {
-      this.dataType = dataType;
-    } else {
-      this.dataType = DataType.forConfigSetting(configSettings);
+    public Yaml(
+            final String name,
+            @Nullable final String path,
+            @Nullable final InputStream inputStream,
+            @Nullable final ReloadSettings reloadSettings,
+            @Nullable final ConfigSettings configSettings,
+            @Nullable final DataType dataType) {
+        this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
     }
 
-    forceReload();
-  }
+    public Yaml(
+            final String name,
+            @Nullable final String path,
+            @Nullable final InputStream inputStream,
+            @Nullable final ReloadSettings reloadSettings,
+            @Nullable final ConfigSettings configSettings,
+            @Nullable final DataType dataType,
+            @Nullable final Consumer<FlatFile> reloadConsumer) {
+        super(name, path, FileType.YAML, reloadConsumer);
+        this.inputStream = inputStream;
 
-  public Yaml(final File file) {
-    this(file.getName(), FileUtils.getParentDirPath(file));
-  }
-
-  // ----------------------------------------------------------------------------------------------------
-  // Methods to override (Points where YAML is unspecific for typical FlatFiles)
-  // ----------------------------------------------------------------------------------------------------
-
-  public Yaml addDefaultsFromInputStream() {
-    return addDefaultsFromInputStream(getInputStream().orElse(null));
-  }
-
-  public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
-    reloadIfNeeded();
-    // Creating & setting defaults
-    if (inputStream == null) {
-      return this;
-    }
-
-    try {
-      final Map<String, Object> data = new SimpleYamlReader(
-          new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
-
-      final FileData newData = new FileData(data, DataType.UNSORTED);
-
-      for (final String key : newData.keySet()) {
-        if (!this.fileData.containsKey(key)) {
-          this.fileData.insert(key, newData.get(key));
+        if (create() && inputStream != null) {
+            FileUtils.writeToFile(this.file, inputStream);
         }
-      }
 
-      write();
-    } catch (final Exception ex) {
-      ex.printStackTrace();
+        this.yamlEditor = new YamlEditor(this.file);
+        this.parser = new YamlParser(this.yamlEditor);
+
+        if (reloadSettings != null) {
+            this.reloadSettings = reloadSettings;
+        }
+
+        if (configSettings != null) {
+            this.configSettings = configSettings;
+        }
+
+        if (dataType != null) {
+            this.dataType = dataType;
+        } else {
+            this.dataType = DataType.forConfigSetting(configSettings);
+        }
+
+        forceReload();
     }
 
-    return this;
-  }
-
-  // ----------------------------------------------------------------------------------------------------
-  // Abstract methods to implement
-  // ----------------------------------------------------------------------------------------------------
-
-  @Override
-  protected Map<String, Object> readToMap() throws IOException {
-    @Cleanup final SimpleYamlReader reader = new SimpleYamlReader(
-        new FileReader(getFile()));
-    return reader.readToMap();
-  }
-
-  @Override
-  protected void write(final FileData data) throws IOException {
-    // If Comments shouldn't be preserved
-    if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings)) {
-      write0(this.fileData);
-      return;
+    public Yaml(final File file) {
+        this(file.getName(), FileUtils.getParentDirPath(file));
     }
 
-    final List<String> unEdited = this.yamlEditor.read();
-    write0(this.fileData);
-    this.yamlEditor.write(this.parser.parseLines(unEdited, this.yamlEditor.readKeys()));
-  }
+    // ----------------------------------------------------------------------------------------------------
+    // Methods to override (Points where YAML is unspecific for typical FlatFiles)
+    // ----------------------------------------------------------------------------------------------------
 
-  // Writing without comments
-  private void write0(final FileData fileData) throws IOException {
-    @Cleanup final SimpleYamlWriter writer = new SimpleYamlWriter(this.file);
-    writer.write(fileData.toMap());
-  }
+    public Yaml addDefaultsFromInputStream() {
+        return addDefaultsFromInputStream(getInputStream().orElse(null));
+    }
 
-  // ----------------------------------------------------------------------------------------------------
-  // Specific utility methods for YAML
-  // ----------------------------------------------------------------------------------------------------
+    public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
+        reloadIfNeeded();
+        // Creating & setting defaults
+        if (inputStream == null) {
+            return this;
+        }
 
-  public final List<String> getHeader() {
-    return this.yamlEditor.readHeader();
-  }
+        try {
+            final Map<String, Object> data = new SimpleYamlReader(
+                    new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
 
-  public final void setHeader(final List<String> header) {
-    this.yamlEditor.setHeader(header);
-  }
+            val newData = new FileData(data, DataType.UNSORTED);
 
-  public final void setHeader(final String... header) {
-    setHeader(Arrays.asList(header));
-  }
+            for (val key : newData.keySet()) {
+                if (!this.fileData.containsKey(key)) {
+                    this.fileData.insert(key, newData.get(key));
+                }
+            }
 
-  public final void addHeader(final List<String> toAdd) {
-    this.yamlEditor.addHeader(toAdd);
-  }
+            write();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
 
-  public final void addHeader(final String... header) {
-    addHeader(Arrays.asList(header));
-  }
+        return this;
+    }
 
-	public final void framedHeader (final String... header) {
-		List <String> stringList = new ArrayList <>();
-		String border = "# +----------------------------------------------------+ #";
-		stringList.add(border);
+    // ----------------------------------------------------------------------------------------------------
+    // Abstract methods to implement
+    // ----------------------------------------------------------------------------------------------------
 
-		for (String line : header) {
-			StringBuilder builder = new StringBuilder();
-			if (line.length() > 50) {
-				continue;
-			}
+    @Override
+    protected Map<String, Object> readToMap() throws IOException {
+        @Cleanup val reader = new SimpleYamlReader(
+                new FileReader(getFile()));
+        return reader.readToMap();
+    }
 
-			int length = (50 - line.length()) / 2;
-			StringBuilder finalLine = new StringBuilder(line);
+    @Override
+    protected void write(final FileData data) throws IOException {
+        // If Comments shouldn't be preserved
+        if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings)) {
+            write0(this.fileData);
+            return;
+        }
 
-			for (int i = 0; i < length; i++) {
-				finalLine.append(" ");
-				finalLine.reverse();
-				finalLine.append(" ");
-				finalLine.reverse();
-			}
+        final List<String> unEdited = this.yamlEditor.read();
+        write0(this.fileData);
+        this.yamlEditor.write(this.parser.parseLines(unEdited, this.yamlEditor.readKeys()));
+    }
 
-			if (line.length() % 2 != 0) {
-				finalLine.append(" ");
-			}
+    // Writing without comments
+    private void write0(final FileData fileData) throws IOException {
+        @Cleanup val writer = new SimpleYamlWriter(this.file);
+        writer.write(fileData.toMap());
+    }
 
-			builder.append("# < ").append(finalLine.toString()).append(" > #");
-			stringList.add(builder.toString());
-		}
-		stringList.add(border);
-		setHeader(stringList);
-	}
+    // ----------------------------------------------------------------------------------------------------
+    // Specific utility methods for YAML
+    // ----------------------------------------------------------------------------------------------------
 
-  public final Optional<InputStream> getInputStream() {
-    return Optional.ofNullable(this.inputStream);
-  }
+    public final List<String> getHeader() {
+        return this.yamlEditor.readHeader();
+    }
+
+    public final void setHeader(final List<String> header) {
+        this.yamlEditor.setHeader(header);
+    }
+
+    public final void setHeader(final String... header) {
+        setHeader(Arrays.asList(header));
+    }
+
+    public final void addHeader(final List<String> toAdd) {
+        this.yamlEditor.addHeader(toAdd);
+    }
+
+  @SuppressWarnings("unused")
+    public final void addHeader(final String... header) {
+        addHeader(Arrays.asList(header));
+    }
+
+    @SuppressWarnings("unused")
+    public final void framedHeader(final String... header) {
+        List<String> stringList = new ArrayList<>();
+        String border = "# +----------------------------------------------------+ #";
+        stringList.add(border);
+
+        for (String line : header) {
+            var builder = new StringBuilder();
+            if (line.length() > 50) {
+                continue;
+            }
+
+            int length = (50 - line.length()) / 2;
+            var finalLine = new StringBuilder(line);
+
+            for (int i = 0; i < length; i++) {
+                finalLine.append(" ");
+                finalLine.reverse();
+                finalLine.append(" ");
+                finalLine.reverse();
+            }
+
+            if (line.length() % 2 != 0) {
+                finalLine.append(" ");
+            }
+
+            builder.append("# < ").append(finalLine).append(" > #");
+            stringList.add(builder.toString());
+        }
+        stringList.add(border);
+        setHeader(stringList);
+    }
+
+    public final Optional<InputStream> getInputStream() {
+        return Optional.ofNullable(this.inputStream);
+    }
 }

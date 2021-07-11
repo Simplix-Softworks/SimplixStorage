@@ -1,6 +1,15 @@
 package de.leonhard.storage.internal.settings;
 
+/**
+ * Config settings.
+ */
 public enum ConfigSettings {
-  PRESERVE_COMMENTS,
-  SKIP_COMMENTS
+    /**
+     * This will save/preserve comments.
+     */
+    PRESERVE_COMMENTS,
+    /**
+     * This will skip comments (not use them).
+     */
+    SKIP_COMMENTS
 }
