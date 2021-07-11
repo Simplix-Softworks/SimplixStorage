@@ -7,8 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ExceptionHandler {
 
     public @NotNull RuntimeException create(@NonNull final Throwable throwable,
-                                            @NonNull final String... messages)
-    {
+                                            @NonNull final String... messages) {
         return new LightningValidationException(throwable, messages);
     }
 }

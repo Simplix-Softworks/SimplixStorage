@@ -40,8 +40,7 @@ import java.util.*;
  * @author TheElectronWill Changed by JavaFactoryDev.
  */
 @SuppressWarnings("unchecked")
-public final class TomlReader
-{
+public final class TomlReader {
 
     private final String data;
     private final boolean strictAsciiBareKeys;
@@ -57,8 +56,7 @@ public final class TomlReader
      *                            ones.
      */
     public TomlReader(final String data,
-                      final boolean strictAsciiBareKeys)
-    {
+                      final boolean strictAsciiBareKeys) {
         this.data = data;
         this.strictAsciiBareKeys = strictAsciiBareKeys;
     }
@@ -227,7 +225,7 @@ public final class TomlReader
                         pos++; // to go after the character we stopped at in nextBareKey()
                         break;
                 }
-                if (insideSquareBrackets)  {
+                if (insideSquareBrackets) {
                     keyParts.add(name.trim());
                 }
             }
@@ -305,7 +303,7 @@ public final class TomlReader
                 break;
             }
 
-            if (afterEntry != ',')  {
+            if (afterEntry != ',') {
                 throw new TomlException("Invalid array at line " + line + ": expected a comma after each value");
             }
         }
@@ -387,8 +385,7 @@ public final class TomlReader
             String name = null;
             switch (nameFirstChar) {
                 case '"': {
-                    if (pos + 1 < data.length())
-                    {
+                    if (pos + 1 < data.length()) {
                         val c2 = data.charAt(pos);
                         val c3 = data.charAt(pos + 1);
 
@@ -405,8 +402,7 @@ public final class TomlReader
                     break;
                 }
                 case '\'': {
-                    if (pos + 1 < data.length())
-                    {
+                    if (pos + 1 < data.length()) {
                         val c2 = data.charAt(pos);
                         val c3 = data.charAt(pos + 1);
                         if (c2 == '\'' && c3 == '\'') {
@@ -435,7 +431,7 @@ public final class TomlReader
 
             val valueFirstChar = nextUsefulOrLinebreak();
 
-            if (valueFirstChar == '\n')  {
+            if (valueFirstChar == '\n') {
                 throw new TomlException("Invalid newline before the value at line " + line);
             }
 
@@ -480,7 +476,8 @@ public final class TomlReader
                     maybeInteger = false;
                     break;
                 case '-':
-                    if (pos != 0 && data.charAt(pos - 1) != 'e' && data.charAt(pos - 1) != 'E') maybeInteger = maybeDouble = false;
+                    if (pos != 0 && data.charAt(pos - 1) != 'e' && data.charAt(pos - 1) != 'E')
+                        maybeInteger = maybeDouble = false;
                     break;
                 case ',':
                 case ' ':
@@ -509,7 +506,7 @@ public final class TomlReader
                 return Long.parseLong(valueStr);
             }
 
-            if (maybeDouble)  {
+            if (maybeDouble) {
                 return Double.parseDouble(valueStr);
             }
 
@@ -569,7 +566,7 @@ public final class TomlReader
     private @NotNull String nextLiteralMultilineString() {
         val index = data.indexOf("'''", pos);
 
-        if (index == -1)  {
+        if (index == -1) {
             throw new TomlException("Invalid multiline literal String at line " + line + ": it never ends");
         }
 
@@ -578,8 +575,7 @@ public final class TomlReader
         if (data.charAt(pos) == '\r' && data.charAt(pos + 1) == '\n') { // "\r\n" at the beginning of the string
             str = data.substring(pos + 2, index);
             line++;
-        }
-        else if (data.charAt(pos) == '\n') { // '\n' at the beginning of the string
+        } else if (data.charAt(pos) == '\n') { // '\n' at the beginning of the string
             str = data.substring(pos + 1, index);
             line++;
         } else {
@@ -604,7 +600,7 @@ public final class TomlReader
 
         while (hasNext()) {
             val c = next();
-            if (c == '\n' || c == '\r')  {
+            if (c == '\n' || c == '\r') {
                 throw new TomlException("Invalid basic String at line " + line + ": newlines not allowed");
             }
             if (escape) {
@@ -704,8 +700,7 @@ public final class TomlReader
                             "Invalid unicode code point at line " + line);
                 }
             }
-            case 'U':
-            { // unicode UXXXXXXXX
+            case 'U': { // unicode UXXXXXXXX
                 if (data.length() - pos < 9) {
                     throw new TomlException("Invalid unicode code point at line " + line);
                 }

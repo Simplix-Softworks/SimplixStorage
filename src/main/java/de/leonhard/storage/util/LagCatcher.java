@@ -73,8 +73,7 @@ public class LagCatcher {
     }
 
     public void runMultipleTimes(final int cycles,
-                                 final @NotNull Runnable runnable)
-    {
+                                 final @NotNull Runnable runnable) {
         var nanosTook = 0L;
 
         for (int i = 0; i < cycles; ++i) {

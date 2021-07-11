@@ -146,8 +146,7 @@ public class ClassWrapper {
         public Float getFloat(final Object obj) {
             if (obj instanceof Number) {
                 return ((Number) obj).floatValue();
-            }
-            else if (obj instanceof String) {
+            } else if (obj instanceof String) {
                 return Float.parseFloat((String) obj);
             } else {
                 return Float.parseFloat(obj.toString());
@@ -194,8 +193,7 @@ public class ClassWrapper {
         public Short getShort(final Object obj) {
             if (obj instanceof Number) {
                 return ((Number) obj).shortValue();
-            }
-            else if (obj instanceof String) {
+            } else if (obj instanceof String) {
                 return Short.parseShort((String) obj);
             } else {
                 return Short.parseShort(obj.toString());

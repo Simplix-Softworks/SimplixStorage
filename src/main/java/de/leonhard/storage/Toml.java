@@ -36,8 +36,7 @@ public class Toml extends FlatFile {
                 @NonNull final String path,
                 @Nullable final InputStream inputStream,
                 @Nullable final ReloadSettings reloadSettings,
-                @Nullable final Consumer<FlatFile> reloadConsumer)
-    {
+                @Nullable final Consumer<FlatFile> reloadConsumer) {
         super(name, path, FileType.TOML, reloadConsumer);
 
         if (create() && inputStream != null) {

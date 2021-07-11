@@ -15,20 +15,25 @@ import lombok.val;
 @Accessors(fluent = true, chain = true)
 public class LightningProviders {
 
-    @Setter private MapProvider mapProvider;
-    @Setter private YamlConfig yamlConfig;
-    @Setter private InputStreamProvider inputStreamProvider;
-    @Setter private ExceptionHandler exceptionHandler;
+    @Setter
+    private MapProvider mapProvider;
+    @Setter
+    private YamlConfig yamlConfig;
+    @Setter
+    private InputStreamProvider inputStreamProvider;
+    @Setter
+    private ExceptionHandler exceptionHandler;
 
     public MapProvider mapProvider() {
         if (mapProvider != null) {
             return mapProvider;
         }
-        return mapProvider = new MapProvider() {};
+        return mapProvider = new MapProvider() {
+        };
     }
 
     public YamlConfig yamlConfig() {
-        if (yamlConfig != null)  {
+        if (yamlConfig != null) {
             return yamlConfig;
         }
 
@@ -48,7 +53,8 @@ public class LightningProviders {
             return inputStreamProvider;
         }
 
-        return inputStreamProvider = new InputStreamProvider() {};
+        return inputStreamProvider = new InputStreamProvider() {
+        };
     }
 
     public ExceptionHandler exceptionHandler() {
@@ -56,6 +62,7 @@ public class LightningProviders {
             return exceptionHandler;
         }
 
-        return exceptionHandler = new ExceptionHandler() {};
+        return exceptionHandler = new ExceptionHandler() {
+        };
     }
 }

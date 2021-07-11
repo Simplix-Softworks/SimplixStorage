@@ -63,8 +63,7 @@ public final class TomlWriter {
      */
     public TomlWriter(final Writer writer,
                       final int indentSize,
-                      final boolean indentWithSpaces)
-    {
+                      final boolean indentWithSpaces) {
         this(writer, indentSize, indentWithSpaces, System.lineSeparator());
     }
 
@@ -79,8 +78,7 @@ public final class TomlWriter {
     public TomlWriter(final Writer writer,
                       final int indentSize,
                       final boolean indentWithSpaces,
-                      final String lineSeparator)
-    {
+                      final String lineSeparator) {
         this.writer = writer;
         this.indentSize = indentSize;
         indentCharacter = indentWithSpaces ? ' ' : '\t';
@@ -88,8 +86,7 @@ public final class TomlWriter {
     }
 
     private static void addEscaped(final @NotNull StringBuilder stringBuilder,
-                                   final char c)
-    {
+                                   final char c) {
         switch (c) {
             case '\b':
                 stringBuilder.append("\\b");
@@ -143,16 +140,13 @@ public final class TomlWriter {
      * @throws IOException if an error occurs
      */
     public void write(final @NotNull Map<String, Object> data)
-            throws IOException
-    {
+            throws IOException {
         writeTableContent(data);
     }
 
-    private void writeTableName() throws IOException
-    {
+    private void writeTableName() throws IOException {
         val it = tablesNames.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             val namePart = it.next();
             writeKey(namePart);
             if (it.hasNext()) write('.');
@@ -160,8 +154,7 @@ public final class TomlWriter {
     }
 
     private void writeTableContent(final @NotNull Map<String, Object> table)
-                                   throws IOException
-    {
+            throws IOException {
         writeTableContent(table, true);
         writeTableContent(table, false);
     }
@@ -175,8 +168,7 @@ public final class TomlWriter {
      */
     private void writeTableContent(final @NotNull Map<String, Object> table,
                                    final boolean simpleValues)
-                                   throws IOException
-    {
+            throws IOException {
         for (val entry : table.entrySet()) {
             val name = entry.getKey();
             val value = entry.getValue();
@@ -212,7 +204,7 @@ public final class TomlWriter {
                 val array = (Object[]) value;
                 if (array.length > 0 && array[0] instanceof Map) { // array of tables
 
-                    if (simpleValues)  {
+                    if (simpleValues) {
                         continue;
                     }
 
@@ -403,7 +395,8 @@ public final class TomlWriter {
             write(value.toString());
         } else if (value instanceof TemporalAccessor) {
             String formatted = TomlManager.DATE_FORMATTER.format((TemporalAccessor) value);
-            if (formatted.endsWith("T")) formatted = formatted.substring(0, formatted.length() - 1); // removes it because it's invalid.
+            if (formatted.endsWith("T"))
+                formatted = formatted.substring(0, formatted.length() - 1); // removes it because it's invalid.
             write(formatted);
         } else if (value instanceof Collection) {
             writeArray((Collection<?>) value);

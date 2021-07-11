@@ -17,8 +17,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class SimpleYamlReader
         extends YamlReader
-        implements AutoCloseable
-{
+        implements AutoCloseable {
 
     public SimpleYamlReader(final @NotNull Reader reader) {
         super(reader);

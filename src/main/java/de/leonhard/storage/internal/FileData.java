@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
 
 /**
  * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration
@@ -21,8 +21,7 @@ public class FileData {
     private final @NotNull Map<String, Object> localMap;
 
     public FileData(final @NotNull Map<String, Object> map,
-                    final @NotNull DataType dataType)
-    {
+                    final @NotNull DataType dataType) {
         this.localMap = dataType.getMapImplementation();
         this.localMap.putAll(map);
     }
@@ -32,8 +31,7 @@ public class FileData {
     }
 
     public FileData(final @NotNull JSONObject jsonObject,
-                    final @NotNull DataType dataType)
-    {
+                    final @NotNull DataType dataType) {
         this.localMap = dataType.getMapImplementation();
         this.localMap.putAll(jsonObject.toMap());
     }
@@ -47,8 +45,7 @@ public class FileData {
      *
      * @param map Map to load data from
      */
-    public void loadData(final @Nullable Map<String, Object> map)
-    {
+    public void loadData(final @Nullable Map<String, Object> map) {
         clear();
 
         if (map != null) {
@@ -62,18 +59,15 @@ public class FileData {
      * @param key the key to look for.
      * @return the value assigned to the given key or null if the key does not exist.
      */
-    public @Nullable Object get(final @NotNull String key)
-    {
+    public @Nullable Object get(final @NotNull String key) {
         val parts = key.split("\\.");
         return get(this.localMap, parts, 0);
     }
 
     private @Nullable Object get(final @NotNull Map<String, Object> map,
                                  final String @NotNull [] key,
-                                 final int id)
-    {
-        if (id < key.length - 1)
-        {
+                                 final int id) {
+        if (id < key.length - 1) {
             if (map.get(key[id]) instanceof Map) {
                 val tempMap = (Map<String, Object>) map.get(key[id]);
                 return get(tempMap, key, id + 1);
@@ -92,21 +86,18 @@ public class FileData {
      * @param value the value to be assigned to the key.
      */
     public synchronized void insert(final @NotNull String key,
-                                    final Object value)
-    {
+                                    final Object value) {
         val parts = key.split("\\.");
         this.localMap.put(parts[0], this.localMap.containsKey(parts[0]) && this.localMap.get(parts[0]) instanceof Map
-                        ? insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
-                        : insert(new HashMap<>(), parts, value, 1));
+                ? insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
+                : insert(new HashMap<>(), parts, value, 1));
     }
 
     private Object insert(final @NotNull Map<String, Object> map,
                           final String @NotNull [] key,
                           final Object value,
-                          final int id)
-    {
-        if (id < key.length)
-        {
+                          final int id) {
+        if (id < key.length) {
             final Map<String, Object> tempMap = new HashMap<>(map);
             final Map<String, Object> childMap = map.containsKey(key[id]) && map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>();
 
@@ -131,10 +122,8 @@ public class FileData {
 
     private boolean containsKey(final @NotNull Map<String, Object> map,
                                 final String @NotNull [] key,
-                                final int id)
-    {
-        if (id < key.length - 1)
-        {
+                                final int id) {
+        if (id < key.length - 1) {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
                 val tempMap = (Map<String, Object>) map.get(key[id]);
                 return containsKey(tempMap, key, id + 1);
@@ -152,23 +141,20 @@ public class FileData {
      * @param key the key to be removed from the map.
      */
     @Synchronized
-    public void remove(final @NotNull String key)
-    {
+    public void remove(final @NotNull String key) {
         if (containsKey(key)) {
             val parts = key.split("\\.");
             remove(parts);
         }
     }
 
-    private void remove(final @NotNull String @NotNull [] key)
-    {
+    private void remove(final @NotNull String @NotNull [] key) {
         if (key.length == 1) {
             this.localMap.remove(key[0]);
         } else {
             val tempValue = this.localMap.get(key[0]);
 
-            if (tempValue instanceof Map)
-            {
+            if (tempValue instanceof Map) {
                 //noinspection unchecked
                 this.localMap.put(key[0], this.remove((Map<String, Object>) tempValue, key, 1));
 
@@ -179,10 +165,8 @@ public class FileData {
         }
     }
 
-    private @NotNull Map<String, Object> remove(final @NotNull Map<String, Object> map, final String @NotNull [] key, final int keyIndex)
-    {
-        if (keyIndex < key.length - 1)
-        {
+    private @NotNull Map<String, Object> remove(final @NotNull Map<String, Object> map, final String @NotNull [] key, final int keyIndex) {
+        if (keyIndex < key.length - 1) {
             val tempValue = map.get(key[keyIndex]);
             if (tempValue instanceof Map) {
                 //noinspection unchecked

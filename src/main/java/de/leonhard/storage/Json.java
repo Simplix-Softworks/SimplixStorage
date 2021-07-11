@@ -33,23 +33,20 @@ public class Json extends FlatFile {
     }
 
     public Json(final @NotNull String name,
-                final String path)
-    {
+                final String path) {
         this(name, path, null);
     }
 
     public Json(final @NotNull String name,
                 final String path,
-                final InputStream inputStream)
-    {
+                final InputStream inputStream) {
         this(name, path, inputStream, null);
     }
 
     public Json(final @NotNull String name,
                 @Nullable final String path,
                 @Nullable final InputStream inputStream,
-                @Nullable final ReloadSettings reloadSettings)
-    {
+                @Nullable final ReloadSettings reloadSettings) {
         this(name, path, inputStream, reloadSettings, null);
     }
 
@@ -57,8 +54,7 @@ public class Json extends FlatFile {
                 @Nullable final String path,
                 @Nullable final InputStream inputStream,
                 @Nullable final ReloadSettings reloadSettings,
-                @Nullable final Consumer<FlatFile> reloadConsumer)
-    {
+                @Nullable final Consumer<FlatFile> reloadConsumer) {
         super(name, path, FileType.JSON, reloadConsumer);
 
         if (create() && inputStream != null || this.file.length() == 0 && inputStream != null) {

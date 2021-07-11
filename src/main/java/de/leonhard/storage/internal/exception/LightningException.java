@@ -15,8 +15,7 @@ public class LightningException extends RuntimeException {
 
     protected LightningException(
             @NonNull final Throwable throwable,
-            @NonNull final String... messages)
-    {
+            @NonNull final String... messages) {
         super(String.join("\n", messages), throwable, false, true);
     }
 
@@ -27,8 +26,7 @@ public class LightningException extends RuntimeException {
     protected LightningException(@NonNull final Throwable cause,
                                  final boolean enableSuppression,
                                  final boolean writableStackTrace,
-                                 @NonNull final String... messages)
-    {
+                                 @NonNull final String... messages) {
         super(String.join("\n", messages), cause, enableSuppression, writableStackTrace);
     }
 }

@@ -66,12 +66,11 @@ public interface DataStorage {
      * @param type Type of the value
      */
     default <T> Optional<T> find(final String key,
-                                 final Class<T> type)
-    {
+                                 final Class<T> type) {
         val raw = get(key);
 
         //Key wasn't found
-        if (raw == null)  {
+        if (raw == null) {
             return Optional.empty();
         }
 
@@ -86,8 +85,7 @@ public interface DataStorage {
      * @param value The value you want to set in your data-structure.
      */
     default <T> void setSerializable(@NonNull final String key,
-                                     @NonNull final T value)
-    {
+                                     @NonNull final T value) {
         try {
             val data = LightningSerializer.serialize(value);
             set(key, data);
@@ -245,8 +243,7 @@ public interface DataStorage {
      * @return Serialized Enum
      */
     default <E extends Enum<E>> E getEnum(final String key,
-                                          final @NotNull Class<E> enumType)
-    {
+                                          final @NotNull Class<E> enumType) {
         val object = get(key);
         Valid.checkBoolean(object instanceof String, "No usable Enum-Value found for '" + key + "'.");
         assert object instanceof String;
@@ -261,8 +258,7 @@ public interface DataStorage {
      */
     @Nullable
     default <T> T getSerializable(final String key,
-                                  final @NotNull Class<T> clazz)
-    {
+                                  final @NotNull Class<T> clazz) {
         if (!contains(key)) {
             return null;
         }
@@ -275,9 +271,8 @@ public interface DataStorage {
 
     @Nullable
     default <T> List<T> getSerializableList(final String key,
-                                            final @NotNull Class<T> type)
-    {
-        if (!contains(key))  {
+                                            final @NotNull Class<T> type) {
+        if (!contains(key)) {
             return null;
         }
 
@@ -299,8 +294,7 @@ public interface DataStorage {
      * @param <T> Type of default-value.
      */
     default <T> @NotNull T getOrDefault(final String key,
-                                        @NonNull final T def)
-    {
+                                        @NonNull final T def) {
         val raw = get(key);
         return raw == null ? def : ClassWrapper.getFromDef(raw, def);
     }
@@ -330,8 +324,7 @@ public interface DataStorage {
      * @param def Value to set or return.
      */
     default <T> T getOrSetDefault(final String key,
-                                  final T def)
-    {
+                                  final T def) {
         val raw = get(key);
         //Key it not yet present in data-structure
         if (raw == null) {

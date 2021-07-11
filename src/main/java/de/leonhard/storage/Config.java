@@ -23,15 +23,13 @@ public class Config extends Yaml {
     }
 
     public Config(final @NotNull String name,
-                  final String path)
-    {
+                  final String path) {
         this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
     }
 
     public Config(final @NotNull String name,
                   @Nullable final String path,
-                  @Nullable final InputStream inputStream)
-    {
+                  @Nullable final InputStream inputStream) {
         this(name, path, inputStream, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
     }
 
@@ -40,8 +38,7 @@ public class Config extends Yaml {
                   @Nullable final InputStream inputStream,
                   @Nullable final ReloadSettings reloadSettings,
                   @Nullable final ConfigSettings configSettings,
-                  @Nullable final DataType dataType)
-    {
+                  @Nullable final DataType dataType) {
         super(name, path, inputStream, reloadSettings, configSettings, dataType);
         setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }
@@ -52,8 +49,7 @@ public class Config extends Yaml {
                   @Nullable final ReloadSettings reloadSettings,
                   @Nullable final ConfigSettings configSettings,
                   @Nullable final DataType dataType,
-                  @Nullable final Consumer<FlatFile> reloadConsumer)
-    {
+                  @Nullable final Consumer<FlatFile> reloadConsumer) {
         super(name, path, inputStream, reloadSettings, configSettings, dataType, reloadConsumer);
         setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }

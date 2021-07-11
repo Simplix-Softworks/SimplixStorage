@@ -26,14 +26,14 @@ public class TomlManager {
      * A DateTimeFormatter that uses the TOML format.
      */
     public final DateTimeFormatter DATE_FORMATTER = new DateTimeFormatterBuilder()
-                    .append(DateTimeFormatter.ISO_LOCAL_DATE)
-                    .optionalStart()
-                    .appendLiteral('T')
-                    .append(DateTimeFormatter.ISO_LOCAL_TIME)
-                    .optionalStart()
-                    .appendOffsetId()
-                    .optionalEnd()
-                    .toFormatter();
+            .append(DateTimeFormatter.ISO_LOCAL_DATE)
+            .optionalStart()
+            .appendLiteral('T')
+            .append(DateTimeFormatter.ISO_LOCAL_TIME)
+            .optionalStart()
+            .appendOffsetId()
+            .optionalEnd()
+            .toFormatter();
 
     /**
      * Writes the specified data to a String, in the TOML format.
@@ -58,8 +58,7 @@ public class TomlManager {
      */
     public void write(final @NotNull Map<String, Object> data,
                       final @NotNull File file)
-                      throws IOException
-    {
+            throws IOException {
         val out = new FileOutputStream(file);
         write(data, out);
     }
@@ -74,8 +73,7 @@ public class TomlManager {
      */
     public void write(final @NotNull Map<String, Object> data,
                       final @NotNull OutputStream out)
-                      throws IOException
-    {
+            throws IOException {
         val writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         write(data, writer);
     }
@@ -91,8 +89,7 @@ public class TomlManager {
      */
     public void write(final @NotNull Map<String, Object> data,
                       final Writer writer)
-                      throws IOException
-    {
+            throws IOException {
         val tw = new TomlWriter(writer);
         tw.write(data);
         tw.close();
@@ -113,8 +110,7 @@ public class TomlManager {
                       final Writer writer,
                       final int indentSize,
                       final boolean indentWithSpaces)
-                      throws IOException
-    {
+            throws IOException {
         val tw = new TomlWriter(writer, indentSize, indentWithSpaces);
 
         tw.write(data);
@@ -143,8 +139,7 @@ public class TomlManager {
      * @throws TomlException if a parse error occurs
      */
     public @NotNull Map<String, Object> read(final String toml,
-                                             final boolean strictAsciiBareKeys)
-    {
+                                             final boolean strictAsciiBareKeys) {
         val tr = new TomlReader(toml, strictAsciiBareKeys);
         return tr.read();
     }
@@ -174,8 +169,7 @@ public class TomlManager {
      */
     public @NotNull Map<String, Object> read(final @NotNull File file,
                                              final boolean strictAsciiBareKeys)
-                                    throws IOException, TomlException
-    {
+            throws IOException, TomlException {
         return read(new FileInputStream(file), strictAsciiBareKeys);
     }
 
@@ -189,8 +183,7 @@ public class TomlManager {
      * @throws TomlException if a parse error occurs
      */
     public @NotNull Map<String, Object> read(final @NotNull InputStream in)
-                                    throws IOException, TomlException
-    {
+            throws IOException, TomlException {
         return read(in, false);
     }
 
@@ -206,8 +199,7 @@ public class TomlManager {
      */
     public @NotNull Map<String, Object> read(final @NotNull InputStream in,
                                              final boolean strictAsciiBareKeys)
-                                    throws IOException, TomlException
-    {
+            throws IOException, TomlException {
         return read(new InputStreamReader(in, StandardCharsets.UTF_8), in.available(), strictAsciiBareKeys);
     }
 
@@ -225,8 +217,7 @@ public class TomlManager {
     public @NotNull Map<String, Object> read(final @NotNull Reader reader,
                                              final int bufferSize,
                                              final boolean strictAsciiBareKeys)
-                                    throws IOException, TomlException
-    {
+            throws IOException, TomlException {
         val sb = new StringBuilder(bufferSize);
         val buf = new char[8192];
         int read;

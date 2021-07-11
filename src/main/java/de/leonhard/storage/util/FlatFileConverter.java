@@ -6,12 +6,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-@UtilityClass @SuppressWarnings("unused")
+@UtilityClass
+@SuppressWarnings("unused")
 public class FlatFileConverter {
 
     public void addAllData(final @NotNull FlatFile source,
-                           final @NotNull FlatFile destination)
-    {
+                           final @NotNull FlatFile destination) {
         Objects.requireNonNull(destination.getFileData()).clear();
         destination.getFileData().loadData(Objects.requireNonNull(source.getFileData()).toMap());
         destination.write();

@@ -23,18 +23,20 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 
     protected final @NotNull File file;
     protected final @Nullable FileType fileType;
-    @Setter protected @Nullable ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
+    @Setter
+    protected @Nullable ReloadSettings reloadSettings = ReloadSettings.INTELLIGENT;
     protected @Nullable DataType dataType = DataType.UNSORTED;
     protected @Nullable FileData fileData;
-    @Nullable protected Consumer<FlatFile> reloadConsumer;
-    @Setter protected String pathPrefix;
+    @Nullable
+    protected Consumer<FlatFile> reloadConsumer;
+    @Setter
+    protected String pathPrefix;
     private long lastLoaded;
 
     protected FlatFile(@NonNull final String name,
                        @Nullable final String path,
                        @NonNull final FileType fileType,
-                       @Nullable final Consumer<FlatFile> reloadConsumer)
-    {
+                       @Nullable final Consumer<FlatFile> reloadConsumer) {
         Valid.checkBoolean(!name.isEmpty(), "Name mustn't be empty");
 
         this.fileType = fileType;
@@ -49,8 +51,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     }
 
     protected FlatFile(@NonNull final File file,
-                       @NonNull final FileType fileType)
-    {
+                       @NonNull final FileType fileType) {
         this.file = file;
         this.fileType = fileType;
         this.reloadConsumer = null;
@@ -127,7 +128,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     // Overridden methods from DataStorage
     // ---------------------------------------------------------------------------------------------------->
 
-    @Override @Synchronized
+    @Override
+    @Synchronized
     public void set(final String key, final Object value) {
         reloadIfNeeded();
         val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
@@ -180,7 +182,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         return Objects.requireNonNull(this.fileData).keySet(key);
     }
 
-    @Override @Synchronized
+    @Override
+    @Synchronized
     public final void remove(final @NotNull String key) {
         reloadIfNeeded();
         Objects.requireNonNull(this.fileData).remove(key);
@@ -222,7 +225,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     }
 
     public void removeAll(final String @NotNull ... keys) {
-        for (val key : keys){
+        for (val key : keys) {
             Objects.requireNonNull(this.fileData).remove(key);
         }
 
@@ -265,8 +268,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     @Synchronized
     public void replace(final @NotNull CharSequence target,
                         final @NotNull CharSequence replacement)
-                        throws IOException
-    {
+            throws IOException {
         val lines = Files.readAllLines(this.file.toPath());
         final List<String> result = new ArrayList<>();
 

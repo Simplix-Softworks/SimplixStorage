@@ -18,8 +18,7 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public final class LightningBuilder
-{
+public final class LightningBuilder {
 
     private final InputStreamProvider inputStreamProvider;
     private final String path;
@@ -34,8 +33,7 @@ public final class LightningBuilder
 
     private LightningBuilder(final String name,
                              final String path,
-                             final InputStreamProvider inputStreamProvider)
-    {
+                             final InputStreamProvider inputStreamProvider) {
         this.name = name;
         this.path = path;
         this.inputStreamProvider = inputStreamProvider;
@@ -47,21 +45,19 @@ public final class LightningBuilder
 
     public static @NotNull LightningBuilder fromPath(
             @NonNull final String name,
-            @NonNull final String path)
-    {
+            @NonNull final String path) {
         return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
     }
 
-    public static @NotNull LightningBuilder fromPath(@NonNull final Path path)
-    {
+    public static @NotNull LightningBuilder fromPath(@NonNull final Path path) {
         return fromFile(path.toFile());
     }
 
     public static @NotNull LightningBuilder fromFile(@NonNull final File file) {
         // File shouldn't be a directory
         Valid.checkBoolean(!file.isDirectory(), "File mustn't be a directory.",
-                                                            "Please use from Directory to use a directory",
-                                                            "This is due to Java-Internals");
+                "Please use from Directory to use a directory",
+                "This is due to Java-Internals");
 
         return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file), LightningProviders.inputStreamProvider());
     }
@@ -96,7 +92,7 @@ public final class LightningBuilder
     public @NotNull LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
         this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
         Valid.notNull(this.inputStream, "InputStream is null.",
-                                                 "No inbuilt resource '" + resource + "' found: ");
+                "No inbuilt resource '" + resource + "' found: ");
 
         return this;
     }

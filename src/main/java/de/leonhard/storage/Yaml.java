@@ -27,7 +27,8 @@ public class Yaml extends FlatFile {
     protected final YamlEditor yamlEditor;
     protected final YamlParser parser;
 
-    @Setter private @Nullable ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
+    @Setter
+    private @Nullable ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
     public Yaml(@NonNull final Yaml yaml) {
         super(yaml.getFile());
@@ -41,15 +42,13 @@ public class Yaml extends FlatFile {
     }
 
     public Yaml(final @NotNull String name,
-                @Nullable final String path)
-    {
+                @Nullable final String path) {
         this(name, path, null, null, null, null);
     }
 
     public Yaml(final @NotNull String name,
                 @Nullable final String path,
-                @Nullable final InputStream inputStream)
-    {
+                @Nullable final InputStream inputStream) {
         this(name, path, inputStream, null, null, null);
     }
 
@@ -58,8 +57,7 @@ public class Yaml extends FlatFile {
                 @Nullable final InputStream inputStream,
                 @Nullable final ReloadSettings reloadSettings,
                 @Nullable final ConfigSettings configSettings,
-                @Nullable final DataType dataType)
-    {
+                @Nullable final DataType dataType) {
         this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
     }
 
@@ -69,8 +67,7 @@ public class Yaml extends FlatFile {
                 @Nullable final ReloadSettings reloadSettings,
                 @Nullable final ConfigSettings configSettings,
                 @Nullable final DataType dataType,
-                @Nullable final Consumer<FlatFile> reloadConsumer)
-    {
+                @Nullable final Consumer<FlatFile> reloadConsumer) {
         super(name, path, FileType.YAML, reloadConsumer);
         this.inputStream = inputStream;
 
@@ -185,7 +182,7 @@ public class Yaml extends FlatFile {
         this.yamlEditor.addHeader(toAdd);
     }
 
-  @SuppressWarnings("unused")
+    @SuppressWarnings("unused")
     public final void addHeader(final String... header) {
         addHeader(Arrays.asList(header));
     }

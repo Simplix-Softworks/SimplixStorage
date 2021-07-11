@@ -49,8 +49,7 @@ public class FileUtils {
      * @param extension Extension to search for. Set to null to skip extension validation.
      */
     public @NotNull List<File> listFiles(@NonNull final File folder,
-                                         @Nullable final String extension)
-    {
+                                         @Nullable final String extension) {
         final List<File> result = new ArrayList<>();
 
         val files = folder.listFiles();
@@ -70,14 +69,13 @@ public class FileUtils {
     }
 
     public @NotNull File getAndMake(@NonNull final String name,
-                                    @NonNull final String path)
-    {
+                                    @NonNull final String path) {
         return getAndMake(new File(path, name));
     }
 
     public @NotNull File getAndMake(@NonNull final File file) {
         try {
-            if (file.getParentFile() != null && !file.getParentFile().exists()){
+            if (file.getParentFile() != null && !file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
 
@@ -131,8 +129,7 @@ public class FileUtils {
     }
 
     public boolean hasChanged(final @Nullable File file,
-                              final long timeStamp)
-    {
+                              final long timeStamp) {
         if (file == null) {
             return false;
         }
@@ -160,7 +157,7 @@ public class FileUtils {
         } catch (final @NotNull FileNotFoundException ex) {
             throw LightningProviders.exceptionHandler().create
                     (ex, "Error while creating OutputStream from '" + file.getName() + "'.",
-                                   "In: '" + getParentDirPath(file) + "'");
+                            "In: '" + getParentDirPath(file) + "'");
         }
     }
 
@@ -170,7 +167,7 @@ public class FileUtils {
         } catch (final @NotNull FileNotFoundException ex) {
             throw LightningProviders.exceptionHandler().create
                     (ex, "Error while creating Reader for '" + file.getName() + "'.",
-                                   "In: '" + getParentDirPath(file) + "'");
+                            "In: '" + getParentDirPath(file) + "'");
         }
     }
 
@@ -180,25 +177,23 @@ public class FileUtils {
         } catch (final @NotNull IOException ex) {
             throw LightningProviders.exceptionHandler().create
                     (ex, "Error while creating Writer for '" + file.getName() + "'.",
-                                   "In: '" + getParentDirPath(file) + "'");
+                            "In: '" + getParentDirPath(file) + "'");
         }
     }
 
     public void write(@NonNull final File file,
-                      @NonNull final List<String> lines)
-    {
+                      @NonNull final List<String> lines) {
         try {
             Files.write(file.toPath(), lines);
         } catch (final @NotNull IOException ex) {
             throw LightningProviders.exceptionHandler().create
                     (ex, "Error while writing to '" + file.getName() + "'.",
-                                   "In: '" + getParentDirPath(file) + "'");
+                            "In: '" + getParentDirPath(file) + "'");
         }
     }
 
     public void writeToFile(@NonNull final File file,
-                            @NonNull final InputStream inputStream)
-    {
+                            @NonNull final InputStream inputStream) {
         try (val outputStream = new FileOutputStream(file)) {
             if (!file.exists()) {
                 Files.copy(inputStream, file.toPath());
@@ -240,8 +235,7 @@ public class FileUtils {
 
     @SneakyThrows
     public void zipFile(final @NotNull String sourceDirectory,
-                        final String to)
-    {
+                        final String to) {
         val fileTo = getAndMake(new File(to + ".zip"));
         @Cleanup val zipOutputStream = new ZipOutputStream(createOutputStream(fileTo));
         val pathFrom = Paths.get(new File(sourceDirectory).toURI());
@@ -292,7 +286,7 @@ public class FileUtils {
         } catch (final @NotNull IOException | NoSuchAlgorithmException ex) {
             throw LightningProviders.exceptionHandler().create
                     (ex, "Error while creating checksum of '" + file.getName() + "'.",
-                                   "In: '" + getParentDirPath(file) + "'");
+                            "In: '" + getParentDirPath(file) + "'");
         }
     }
 
@@ -302,8 +296,7 @@ public class FileUtils {
 
     public void extractResource(@NonNull final String targetDirectory,
                                 @NonNull final String resourcePath,
-                                final boolean replace)
-    {
+                                final boolean replace) {
         Valid.checkBoolean(!resourcePath.isEmpty(), "ResourcePath mustn't be empty");
         Valid.checkBoolean(!targetDirectory.isEmpty(), "Target directory mustn't be empty");
 
@@ -323,20 +316,19 @@ public class FileUtils {
         } catch (final @NotNull IOException ioException) {
             throw LightningProviders.exceptionHandler().create(ioException,
                     "Exception while extracting file",
-                              "Directory: '" + targetDirectory + "'",
-                              "ResourcePath: '" + resourcePath + "'");
+                    "Directory: '" + targetDirectory + "'",
+                    "ResourcePath: '" + resourcePath + "'");
         }
     }
 
     public void extractResourceFolderContents(@NonNull final File sourceJarFile,
                                               @NonNull final File targetDirectory,
                                               @NonNull final String sourceDirectory,
-                                              boolean replace)
-    {
+                                              boolean replace) {
         if (!targetDirectory.exists()) {
             Valid.checkBoolean(targetDirectory.mkdirs(),
                     "Can't create directory '" + targetDirectory.getName() + "'",
-                                "Parent: '" + getParentDirPath(targetDirectory) + "'");
+                    "Parent: '" + getParentDirPath(targetDirectory) + "'");
         }
 
         Valid.checkBoolean(
@@ -344,7 +336,7 @@ public class FileUtils {
                 "Target directory must be an directory");
 
         try (val jarFile = new JarFile(sourceJarFile)) {
-            for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements();) {
+            for (final Enumeration<JarEntry> entries = jarFile.entries(); entries.hasMoreElements(); ) {
                 val jarEntry = entries.nextElement();
                 val entryName = jarEntry.getName();
 
