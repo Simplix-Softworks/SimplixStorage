@@ -29,12 +29,17 @@ public class Config extends Yaml {
         this(name, path, inputStream, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
     }
 
-    public Config(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType) {
+    public Config(final String name, @Nullable final String path, @Nullable final InputStream inputStream,
+                  @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType)
+    {
         super(name, path, inputStream, reloadSettings, configSettings, dataType);
         setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }
 
-    public Config(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType, @Nullable final Consumer<FlatFile> reloadConsumer) {
+    public Config(final String name, @Nullable final String path, @Nullable final InputStream inputStream,
+                  @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType,
+                  @Nullable final Consumer<FlatFile> reloadConsumer)
+    {
         super(name, path, inputStream, reloadSettings, configSettings, dataType, reloadConsumer);
         setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }

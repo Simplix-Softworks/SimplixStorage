@@ -13,19 +13,25 @@ import java.util.*;
 @UtilityClass
 public class JsonUtils {
 
-    public Map<String, Object> jsonToMap(final JSONObject jsonObject) throws JSONException {
+    public Map<String, Object> jsonToMap(final JSONObject jsonObject) throws JSONException
+    {
         Map<String, Object> retMap = new HashMap<>();
-        if (jsonObject != JSONObject.NULL) retMap = toMap(jsonObject);
+        if (jsonObject != JSONObject.NULL) {
+            retMap = toMap(jsonObject);
+        }
         return retMap;
     }
 
     public JSONObject getJsonFromMap(final Map<String, Object> map) throws JSONException {
         val jsonData = new JSONObject();
 
-        for (val entry : map.entrySet()) {
+        for (val entry : map.entrySet())
+        {
             var key = entry.getKey();
             var value = entry.getValue();
-            if (value instanceof Map) value = getJsonFromMap((Map<String, Object>) value); // Recursive call
+            if (value instanceof Map) {
+                value = getJsonFromMap((Map<String, Object>) value);
+            }
             jsonData.put(key, value);
         }
         return jsonData;
@@ -41,7 +47,9 @@ public class JsonUtils {
 
     public List<Object> toList(final JSONArray array) throws JSONException {
         final List<Object> list = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) list.add(getValue(array.get(i)));
+        for (int i = 0; i < array.length(); i++) {
+            list.add(getValue(array.get(i)));
+        }
         return list;
     }
 

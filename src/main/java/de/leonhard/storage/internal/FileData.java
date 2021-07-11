@@ -48,7 +48,9 @@ public class FileData {
      */
     public void loadData(final Map<String, Object> map) {
         clear();
-        if (map != null) this.localMap.putAll(map);
+        if (map != null) {
+            this.localMap.putAll(map);
+        }
     }
 
     /**
@@ -63,7 +65,8 @@ public class FileData {
     }
 
     private Object get(final Map<String, Object> map, final String[] key, final int id) {
-        if (id < key.length - 1) {
+        if (id < key.length - 1)
+        {
             if (map.get(key[id]) instanceof Map) {
                 val tempMap = (Map<String, Object>) map.get(key[id]);
                 return get(tempMap, key, id + 1);
@@ -89,10 +92,13 @@ public class FileData {
     }
 
     private Object insert(final Map<String, Object> map, final String[] key, final Object value, final int id) {
-        if (id < key.length) {
+        if (id < key.length)
+        {
             final Map<String, Object> tempMap = new HashMap<>(map);
             final Map<String, Object> childMap = map.containsKey(key[id]) && map.get(key[id]) instanceof Map ? (Map<String, Object>) map.get(key[id]) : new HashMap<>();
+
             tempMap.put(key[id], insert(childMap, key, value, id + 1));
+
             return tempMap;
         } else {
             return value;
@@ -111,7 +117,8 @@ public class FileData {
     }
 
     private boolean containsKey(final Map<String, Object> map, final String[] key, final int id) {
-        if (id < key.length - 1) {
+        if (id < key.length - 1)
+        {
             if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
                 val tempMap = (Map<String, Object>) map.get(key[id]);
                 return containsKey(tempMap, key, id + 1);
@@ -129,21 +136,26 @@ public class FileData {
      * @param key the key to be removed from the map.
      */
     @Synchronized
-    public void remove(final String key) {
+    public void remove(final String key)
+    {
         if (containsKey(key)) {
             val parts = key.split("\\.");
             remove(parts);
         }
     }
 
-    private void remove(final @NotNull String[] key) {
+    private void remove(final @NotNull String[] key)
+    {
         if (key.length == 1) {
             this.localMap.remove(key[0]);
         } else {
             val tempValue = this.localMap.get(key[0]);
-            if (tempValue instanceof Map) {
+
+            if (tempValue instanceof Map)
+            {
                 //noinspection unchecked
                 this.localMap.put(key[0], this.remove((Map<String, Object>) tempValue, key, 1));
+
                 if (((Map<Object, Object>) this.localMap.get(key[0])).isEmpty()) {
                     this.localMap.remove(key[0]);
                 }
@@ -151,13 +163,17 @@ public class FileData {
         }
     }
 
-    private Map<String, Object> remove(final Map<String, Object> map, final String[] key, final int keyIndex) {
-        if (keyIndex < key.length - 1) {
+    private Map<String, Object> remove(final Map<String, Object> map, final String[] key, final int keyIndex)
+    {
+        if (keyIndex < key.length - 1)
+        {
             val tempValue = map.get(key[keyIndex]);
             if (tempValue instanceof Map) {
                 //noinspection unchecked
                 map.put(key[keyIndex], this.remove((Map<String, Object>) tempValue, key, keyIndex + 1));
-                if (((Map<Object, Object>) map.get(key[keyIndex])).isEmpty()) map.remove(key[keyIndex]);
+                if (((Map<Object, Object>) map.get(key[keyIndex])).isEmpty()) {
+                    map.remove(key[keyIndex]);
+                }
             }
         } else {
             map.remove(key[keyIndex]);
@@ -218,12 +234,15 @@ public class FileData {
     /**
      * Private helper method to get the key set of an map containing maps recursively
      */
-    private Set<String> multiLayerKeySet(final Map<String, Object> map) {
+    private Set<String> multiLayerKeySet(final Map<String, Object> map)
+    {
         final Set<String> out = new HashSet<>();
-        for (val key : map.keySet()) {
-            if (map.get(key) instanceof Map) {
-                for (val tempKey : multiLayerKeySet(
-                        (Map<String, Object>) map.get(key))) {
+        for (val key : map.keySet())
+        {
+            if (map.get(key) instanceof Map)
+            {
+                for (val tempKey : multiLayerKeySet((Map<String, Object>) map.get(key)))
+                {
                     out.add(key + "." + tempKey);
                 }
             } else {
@@ -235,10 +254,11 @@ public class FileData {
 
     private Set<Map.Entry<String, Object>> multiLayerEntrySet(final Map<String, Object> map) {
         final Set<Map.Entry<String, Object>> out = new HashSet<>();
-        for (val entry : map.entrySet()) {
-            if (map.get(entry.getKey()) instanceof Map) {
-                for (val tempKey :
-                        multiLayerKeySet((Map<String, Object>) map.get(entry.getKey()))) {
+        for (val entry : map.entrySet())
+        {
+            if (map.get(entry.getKey()) instanceof Map)
+            {
+                for (val tempKey : multiLayerKeySet((Map<String, Object>) map.get(entry.getKey()))) {
                     out.add(new SimpleEntry<>(entry.getKey() + "." + tempKey, entry.getValue()));
                 }
             } else {
@@ -290,10 +310,13 @@ public class FileData {
         this.localMap.putAll(map);
     }
 
-    private int size(final Map<String, Object> map) {
+    private int size(final Map<String, Object> map)
+    {
         int size = map.size();
         for (val key : map.keySet()) {
-            if (map.get(key) instanceof Map) size += size((Map<String, Object>) map.get(key));
+            if (map.get(key) instanceof Map) {
+                size += size((Map<String, Object>) map.get(key));
+            }
         }
         return size;
     }

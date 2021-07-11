@@ -39,7 +39,8 @@ import java.util.*;
  * @author TheElectronWill Changed by JavaFactoryDev.
  */
 @SuppressWarnings("unchecked")
-public final class TomlReader {
+public final class TomlReader
+{
 
     private final String data;
     private final boolean strictAsciiBareKeys;
@@ -67,11 +68,14 @@ public final class TomlReader {
         return data.charAt(pos++);
     }
 
-    private char nextUseful(final boolean skipComments) {
+    private char nextUseful(final boolean skipComments)
+    {
         char c = ' ';
-        while (hasNext() && (c == ' ' || c == '\t' || c == '\r' || c == '\n' || (c == '#' && skipComments))) {
+        while (hasNext() && (c == ' ' || c == '\t' || c == '\r' || c == '\n' || (c == '#' && skipComments)))
+        {
             c = next();
-            if (skipComments && c == '#') {
+            if (skipComments && c == '#')
+            {
                 val nextLinebreak = data.indexOf('\n', pos);
                 if (nextLinebreak == -1) {
                     pos = data.length();
@@ -84,9 +88,11 @@ public final class TomlReader {
         return c;
     }
 
-    private char nextUsefulOrLinebreak() {
+    private char nextUsefulOrLinebreak()
+    {
         char c = ' ';
-        while (c == ' ' || c == '\t' || c == '\r') {
+        while (c == ' ' || c == '\t' || c == '\r')
+        {
             if (!hasNext()) return '\n';
             c = next();
         }
@@ -94,8 +100,10 @@ public final class TomlReader {
         return c;
     }
 
-    private Object nextValue(final char firstChar) {
-        switch (firstChar) {
+    private Object nextValue(final char firstChar)
+    {
+        switch (firstChar)
+        {
             case '+':
             case '-':
             case '0':
@@ -110,7 +118,8 @@ public final class TomlReader {
             case '9':
                 return nextNumberOrDate(firstChar);
             case '"':
-                if (pos + 1 < data.length()) {
+                if (pos + 1 < data.length())
+                {
                     val c2 = data.charAt(pos);
                     val c3 = data.charAt(pos + 1);
                     if (c2 == '"' && c3 == '"') {
@@ -120,7 +129,8 @@ public final class TomlReader {
                 }
                 return nextBasicString();
             case '\'':
-                if (pos + 1 < data.length()) {
+                if (pos + 1 < data.length())
+                {
                     val c2 = data.charAt(pos);
                     val c3 = data.charAt(pos + 1);
                     if (c2 == '\'' && c3 == '\'') {
@@ -144,12 +154,16 @@ public final class TomlReader {
         }
     }
 
-    public Map<String, Object> read() {
+    public Map<String, Object> read()
+    {
         val map = nextTableContent();
 
-        if (!hasNext() && pos > 0 && data.charAt(pos - 1) == '[') throw new TomlException("Invalid table declaration at line " + line + ": it never ends");
+        if (!hasNext() && pos > 0 && data.charAt(pos - 1) == '[') {
+            throw new TomlException("Invalid table declaration at line " + line + ": it never ends");
+        }
 
-        while (hasNext()) {
+        while (hasNext())
+        {
             char c = nextUseful(true);
             final boolean twoBrackets;
             if (c == '[') {
@@ -163,14 +177,20 @@ public final class TomlReader {
             // --- Reads the key --
             final List<String> keyParts = new ArrayList<>(4);
             var insideSquareBrackets = true;
-            while (insideSquareBrackets) {
-                if (!hasNext()) throw new TomlException("Invalid table declaration at line " + line + ": it never ends");
+
+            while (insideSquareBrackets)
+            {
+                if (!hasNext()) {
+                    throw new TomlException("Invalid table declaration at line " + line + ": it never ends");
+                }
 
                 String name = null;
                 val nameFirstChar = nextUseful(false);
-                switch (nameFirstChar) {
+                switch (nameFirstChar)
+                {
                     case '"': {
-                        if (pos + 1 < data.length()) {
+                        if (pos + 1 < data.length())
+                        {
                             val c2 = data.charAt(pos);
                             val c3 = data.charAt(pos + 1);
                             if (c2 == '"' && c3 == '"') {
@@ -182,7 +202,8 @@ public final class TomlReader {
                         break;
                     }
                     case '\'': {
-                        if (pos + 1 < data.length()) {
+                        if (pos + 1 < data.length())
+                        {
                             val c2 = data.charAt(pos);
                             val c3 = data.charAt(pos + 1);
                             if (c2 == '\'' && c3 == '\'') {
@@ -206,7 +227,9 @@ public final class TomlReader {
                         pos++; // to go after the character we stopped at in nextBareKey()
                         break;
                 }
-                if (insideSquareBrackets) keyParts.add(name.trim());
+                if (insideSquareBrackets)  {
+                    keyParts.add(name.trim());
+                }
             }
 
             // -- Checks --
@@ -219,11 +242,13 @@ public final class TomlReader {
 
             // -- Saves the value --
             Map<String, Object> valueMap = map; // the map that contains the value
-            for (int i = 0; i < keyParts.size() - 1; i++) {
+            for (int i = 0; i < keyParts.size() - 1; i++)
+            {
                 val part = keyParts.get(i);
                 val child = valueMap.get(part);
                 final Map<String, Object> childMap;
-                if (child == null) { // implicit table
+                if (child == null)
+                { // implicit table
                     childMap = new HashMap<>(4);
                     valueMap.put(part, childMap);
                 } else if (child instanceof Map) { // table
@@ -234,7 +259,8 @@ public final class TomlReader {
                 }
                 valueMap = childMap;
             }
-            if (twoBrackets) { // element of a table array
+            if (twoBrackets)
+            { // element of a table array
                 val name = keyParts.get(keyParts.size() - 1);
                 var tableArray = (Collection<Map<String, Object>>) valueMap.get(name);
                 if (tableArray == null) {
@@ -249,16 +275,22 @@ public final class TomlReader {
         return map;
     }
 
-    private List<Object> nextArray() {
+    private List<Object> nextArray()
+    {
         val list = new ArrayList<>();
-        while (true) {
+        while (true)
+        {
             val c = nextUseful(true);
             if (c == ']') {
                 pos++;
                 break;
             }
             val value = nextValue(c);
-            if (!list.isEmpty() && !(list.get(0).getClass().isAssignableFrom(value.getClass()))) throw new TomlException("Invalid array at line " + line + ": all the values must have the same type");
+
+            if (!list.isEmpty() && !(list.get(0).getClass().isAssignableFrom(value.getClass()))) {
+                throw new TomlException("Invalid array at line " + line + ": all the values must have the same type");
+            }
+
             list.add(value);
 
             val afterEntry = nextUseful(true);
@@ -266,16 +298,21 @@ public final class TomlReader {
                 pos++;
                 break;
             }
-            if (afterEntry != ',') throw new TomlException("Invalid array at line " + line + ": expected a comma after each value");
+
+            if (afterEntry != ',')  {
+                throw new TomlException("Invalid array at line " + line + ": expected a comma after each value");
+            }
         }
         pos--;
         list.trimToSize();
         return list;
     }
 
-    private Map<String, Object> nextInlineTable() {
+    private Map<String, Object> nextInlineTable()
+    {
         final Map<String, Object> map = new HashMap<>();
-        while (true) {
+        while (true)
+        {
             val nameFirstChar = nextUsefulOrLinebreak();
             String name = null;
             switch (nameFirstChar) {
@@ -330,27 +367,38 @@ public final class TomlReader {
         }
     }
 
-    private Map<String, Object> nextTableContent() {
+    private Map<String, Object> nextTableContent()
+    {
         final Map<String, Object> map = new HashMap<>();
-        while (true) {
+        while (true)
+        {
             val nameFirstChar = nextUseful(true);
             if (!hasNext() || nameFirstChar == '[') return map;
             String name = null;
-            switch (nameFirstChar) {
+            switch (nameFirstChar)
+            {
                 case '"': {
-                    if (pos + 1 < data.length()) {
+                    if (pos + 1 < data.length())
+                    {
                         val c2 = data.charAt(pos);
                         val c3 = data.charAt(pos + 1);
+
                         if (c2 == '"' && c3 == '"') {
                             pos += 2;
                             name = nextBasicMultilineString();
                         }
                     }
-                    if (name == null) name = nextBasicString();
+
+                    if (name == null) {
+                        name = nextBasicString();
+                    }
+
                     break;
                 }
-                case '\'': {
-                    if (pos + 1 < data.length()) {
+                case '\'':
+                {
+                    if (pos + 1 < data.length())
+                    {
                         val c2 = data.charAt(pos);
                         val c3 = data.charAt(pos + 1);
                         if (c2 == '\'' && c3 == '\'') {
@@ -358,7 +406,10 @@ public final class TomlReader {
                             name = nextLiteralMultilineString();
                         }
                     }
-                    if (name == null) name = nextLiteralString();
+
+                    if (name == null) {
+                        name = nextLiteralString();
+                    }
                     break;
                 }
                 default:
@@ -368,28 +419,41 @@ public final class TomlReader {
                     break;
             }
             val separator = nextUsefulOrLinebreak(); // tries to find the '=' sign
-            if (separator != '=') throw new TomlException("Invalid character '" + toString(separator) + "' at line " + line + ": expected '='");
+
+            if (separator != '=') {
+                throw new TomlException("Invalid character '" + toString(separator) + "' at line " + line + ": expected '='");
+            }
 
             val valueFirstChar = nextUsefulOrLinebreak();
-            if (valueFirstChar == '\n') throw new TomlException("Invalid newline before the value at line " + line);
-            val value = nextValue(valueFirstChar);
 
+            if (valueFirstChar == '\n')  {
+                throw new TomlException("Invalid newline before the value at line " + line);
+            }
+
+            val value = nextValue(valueFirstChar);
             val afterEntry = nextUsefulOrLinebreak();
+
             if (afterEntry == '#') {
                 pos--; // to make the next nextUseful() call read the # character
             } else if (afterEntry != '\n') throw new TomlException("Invalid character '" + toString(afterEntry) + "' after the value at line " + line);
-            if (map.containsKey(name)) throw new TomlException("Duplicate key \"" + name + "\"");
+
+            if (map.containsKey(name)) {
+                throw new TomlException("Duplicate key \"" + name + "\"");
+            }
+
             map.put(name, value);
         }
     }
 
-    private Object nextNumberOrDate(final char first) {
+    private Object nextNumberOrDate(final char first)
+    {
         boolean maybeDouble = true, maybeInteger = true, maybeDate = true;
         val sb = new StringBuilder();
         sb.append(first);
         char c;
         whileLoop:
-        while (hasNext()) {
+        while (hasNext())
+        {
             c = next();
             switch (c) {
                 case ':':
@@ -426,11 +490,17 @@ public final class TomlReader {
         val valueStr = sb.toString();
         try {
             if (maybeInteger) {
-                if (valueStr.length() < 10) return Integer.parseInt(valueStr);
+                if (valueStr.length() < 10) {
+                    return Integer.parseInt(valueStr);
+                }
                 return Long.parseLong(valueStr);
             }
-            if (maybeDouble) return Double.parseDouble(valueStr);
-            if (maybeDate) return TomlManager.DATE_FORMATTER.parseBest(valueStr, ZonedDateTime::from, LocalDateTime::from, LocalDate::from);
+            if (maybeDouble)  {
+                return Double.parseDouble(valueStr);
+            }
+            if (maybeDate) {
+                return TomlManager.DATE_FORMATTER.parseBest(valueStr, ZonedDateTime::from, LocalDateTime::from, LocalDate::from);
+            }
         } catch (final Exception ex) {
             throw new TomlException(ex, "Invalid value: \"" + valueStr + "\" at line " + line);
         }
@@ -438,11 +508,14 @@ public final class TomlReader {
         throw new TomlException("Invalid value: \"" + valueStr + "\" at line " + line);
     }
 
-    private String nextBareKey(final char... allowedEnds) {
+    private String nextBareKey(final char... allowedEnds)
+    {
         final String keyName;
-        for (int i = pos; i < data.length(); i++) {
+        for (int i = pos; i < data.length(); i++)
+        {
             val c = data.charAt(i);
-            for (val allowedEnd : allowedEnds) {
+            for (val allowedEnd : allowedEnds)
+            {
                 if (c == allowedEnd) { // checks if this character allowed to end this bare key
                     keyName = data.substring(pos, i);
                     pos = i;
@@ -456,12 +529,17 @@ public final class TomlReader {
         throw new TomlException("Invalid key/value pair at line " + line + " end of data reached before the value attached to the key was found");
     }
 
-    private String nextLiteralString() {
+    private String nextLiteralString()
+    {
         val index = data.indexOf('\'', pos);
-        if (index == -1) throw new TomlException("Invalid literal String at line " + line + ": it never ends");
+        if (index == -1) {
+            throw new TomlException("Invalid literal String at line " + line + ": it never ends");
+        }
 
         final String str = data.substring(pos, index);
-        if (str.indexOf('\n') != -1) throw new TomlException("Invalid literal String at line " + line + ": newlines are not allowed here");
+        if (str.indexOf('\n') != -1) {
+            throw new TomlException("Invalid literal String at line " + line + ": newlines are not allowed here");
+        }
 
         pos = index + 1;
         return str;
@@ -469,31 +547,46 @@ public final class TomlReader {
 
     private String nextLiteralMultilineString() {
         val index = data.indexOf("'''", pos);
-        if (index == -1) throw new TomlException("Invalid multiline literal String at line " + line + ": it never ends");
+
+        if (index == -1)  {
+            throw new TomlException("Invalid multiline literal String at line " + line + ": it never ends");
+        }
+
         final String str;
-        if (data.charAt(pos) == '\r' && data.charAt(pos + 1) == '\n') { // "\r\n" at the beginning of the string
+
+        if (data.charAt(pos) == '\r' && data.charAt(pos + 1) == '\n')
+        { // "\r\n" at the beginning of the string
             str = data.substring(pos + 2, index);
             line++;
-        } else if (data.charAt(pos) == '\n') { // '\n' at the beginning of the string
+        }
+        else if (data.charAt(pos) == '\n') { // '\n' at the beginning of the string
             str = data.substring(pos + 1, index);
             line++;
         } else {
             str = data.substring(pos, index);
         }
-        for (int i = 0; i < str.length(); i++) { // count lines
+
+        for (int i = 0; i < str.length(); i++)
+        { // count lines
             val c = str.charAt(i);
             if (c == '\n') line++;
         }
+
         pos = index + 3; // goes after the 3 quotes
         return str;
     }
 
-    private String nextBasicString() {
+    private String nextBasicString()
+    {
         val sb = new StringBuilder();
         boolean escape = false;
-        while (hasNext()) {
+
+        while (hasNext())
+        {
             val c = next();
-            if (c == '\n' || c == '\r') throw new TomlException("Invalid basic String at line " + line + ": newlines not allowed");
+            if (c == '\n' || c == '\r')  {
+                throw new TomlException("Invalid basic String at line " + line + ": newlines not allowed");
+            }
             if (escape) {
                 sb.append(unescape(c));
                 escape = false;
@@ -508,7 +601,8 @@ public final class TomlReader {
         throw new TomlException("Invalid basic String at line " + line + ": it nerver ends");
     }
 
-    private String nextBasicMultilineString() {
+    private String nextBasicMultilineString()
+    {
         val sb = new StringBuilder();
         boolean first = true, escape = false;
         while (hasNext()) {
@@ -558,7 +652,8 @@ public final class TomlReader {
     }
 
     private char unescape(final char c) {
-        switch (c) {
+        switch (c)
+        {
             case 'b':
                 return '\b';
             case 't':
@@ -574,11 +669,14 @@ public final class TomlReader {
             case '\\':
                 return '\\';
             case 'u': { // unicode uXXXX
+
                 if (data.length() - pos < 5) {
                     throw new TomlException("Invalid unicode code point at line " + line);
                 }
+
                 val unicode = data.substring(pos, pos + 4);
                 pos += 4;
+
                 try {
                     val hexVal = Integer.parseInt(unicode, 16);
                     return (char) hexVal;
@@ -588,7 +686,8 @@ public final class TomlReader {
                             "Invalid unicode code point at line " + line);
                 }
             }
-            case 'U': { // unicode UXXXXXXXX
+            case 'U':
+            { // unicode UXXXXXXXX
                 if (data.length() - pos < 9) {
                     throw new TomlException("Invalid unicode code point at line " + line);
                 }
@@ -611,7 +710,8 @@ public final class TomlReader {
     /**
      * Converts a char to a String. The char is escaped if needed.
      */
-    private String toString(final char c) {
+    private String toString(final char c)
+    {
         switch (c) {
             case '\b':
                 return "\\b";

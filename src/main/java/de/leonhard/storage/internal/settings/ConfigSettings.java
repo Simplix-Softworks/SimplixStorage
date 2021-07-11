@@ -3,7 +3,8 @@ package de.leonhard.storage.internal.settings;
 /**
  * Config settings.
  */
-public enum ConfigSettings {
+public enum ConfigSettings
+{
     /**
      * This will save/preserve comments.
      */

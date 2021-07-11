@@ -79,7 +79,8 @@ public final class TomlWriter {
         this.lineSeparator = lineSeparator;
     }
 
-    private static void addEscaped(final StringBuilder stringBuilder, final char c) {
+    private static void addEscaped(final StringBuilder stringBuilder, final char c)
+    {
         switch (c) {
             case '\b':
                 stringBuilder.append("\\b");
@@ -136,9 +137,11 @@ public final class TomlWriter {
         writeTableContent(data);
     }
 
-    private void writeTableName() throws IOException {
+    private void writeTableName() throws IOException
+    {
         val it = tablesNames.iterator();
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             val namePart = it.next();
             writeKey(namePart);
             if (it.hasNext()) write('.');
@@ -157,17 +160,22 @@ public final class TomlWriter {
      * @param simpleValues true to write only the simple values (and the normal arrays), false to
      *                     write only the tables (and the arrays of tables).
      */
-    private void writeTableContent(final Map<String, Object> table, final boolean simpleValues) throws IOException {
-        for (val entry : table.entrySet()) {
+    private void writeTableContent(final Map<String, Object> table, final boolean simpleValues) throws IOException
+    {
+        for (val entry : table.entrySet())
+        {
             val name = entry.getKey();
             val value = entry.getValue();
-            if (value instanceof Collection) { // array
+            if (value instanceof Collection)
+            { // array
                 val c = (Collection<Object>) value;
-                if (!c.isEmpty() && c.iterator().next() instanceof Map) { // array of tables
+                if (!c.isEmpty() && c.iterator().next() instanceof Map)
+                { // array of tables
                     if (simpleValues) continue;
                     tablesNames.addLast(name);
                     indentationLevel++;
-                    for (val element : c) {
+                    for (val element : c)
+                    {
                         indent();
                         write("[[");
                         writeTableName();
@@ -186,8 +194,11 @@ public final class TomlWriter {
                 }
             } else if (value instanceof Object[]) { // array
                 val array = (Object[]) value;
-                if (array.length > 0 && array[0] instanceof Map) { // array of tables
-                    if (simpleValues) continue;
+                if (array.length > 0 && array[0] instanceof Map)
+                { // array of tables
+                    if (simpleValues)  {
+                        continue;
+                    }
                     tablesNames.addLast(name);
                     indentationLevel++;
                     for (val element : array) {
@@ -201,14 +212,19 @@ public final class TomlWriter {
                     indentationLevel--;
                     tablesNames.removeLast();
                 } else { // normal array
-                    if (!simpleValues) continue;
+                    if (!simpleValues) {
+                        continue;
+                    }
                     indent();
                     writeKey(name);
                     write(" = ");
                     writeArray(array);
                 }
-            } else if (value instanceof Map) { // table
-                if (simpleValues) continue;
+            } else if (value instanceof Map)
+            { // table
+                if (simpleValues) {
+                    continue;
+                }
                 tablesNames.addLast(name);
                 indentationLevel++;
 
@@ -222,7 +238,9 @@ public final class TomlWriter {
                 indentationLevel--;
                 tablesNames.removeLast();
             } else { // simple value
-                if (!simpleValues) continue;
+                if (!simpleValues) {
+                    continue;
+                }
                 indent();
                 writeKey(name);
                 write(" = ");
@@ -233,8 +251,10 @@ public final class TomlWriter {
         newLine();
     }
 
-    private void writeKey(final String key) throws IOException {
-        for (int i = 0; i < key.length(); i++) {
+    private void writeKey(final String key) throws IOException
+    {
+        for (int i = 0; i < key.length(); i++)
+        {
             val c = key.charAt(i);
             if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '-' || c == '_')) {
                 writeString(key);
@@ -244,10 +264,12 @@ public final class TomlWriter {
         write(key);
     }
 
-    private void writeString(final String str) throws IOException {
+    private void writeString(final String str) throws IOException
+    {
         val stringBuilder = new StringBuilder();
         stringBuilder.append('"');
-        for (int i = 0; i < str.length(); i++) {
+        for (int i = 0; i < str.length(); i++)
+        {
             val c = str.charAt(i);
             addEscaped(stringBuilder, c);
         }
@@ -255,7 +277,8 @@ public final class TomlWriter {
         write(stringBuilder.toString());
     }
 
-    private void writeArray(final Collection<?> c) throws IOException {
+    private void writeArray(final Collection<?> c) throws IOException
+    {
         write('[');
         for (final Object element : c) {
             writeValue(element);
@@ -264,7 +287,8 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final Object[] array) throws IOException {
+    private void writeArray(final Object[] array) throws IOException
+    {
         write('[');
         for (final Object element : array) {
             writeValue(element);
@@ -273,18 +297,22 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final byte[] array) throws IOException {
+    private void writeArray(final byte[] array) throws IOException
+    {
         write('[');
-        for (final byte element : array) {
+        for (final byte element : array)
+        {
             write(String.valueOf(element));
             write(", ");
         }
         write(']');
     }
 
-    private void writeArray(final short[] array) throws IOException {
+    private void writeArray(final short[] array) throws IOException
+    {
         write('[');
-        for (val element : array) {
+        for (val element : array)
+        {
             write(String.valueOf(element));
             write(", ");
         }
@@ -300,75 +328,98 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final int[] array) throws IOException {
+    private void writeArray(final int[] array) throws IOException
+    {
         write('[');
-        for (val element : array) {
+        for (val element : array)
+        {
             write(String.valueOf(element));
             write(", ");
         }
         write(']');
     }
 
-    private void writeArray(final long[] array) throws IOException {
+    private void writeArray(final long[] array) throws IOException
+    {
         write('[');
-        for (val element : array) {
+        for (val element : array)
+        {
             write(String.valueOf(element));
             write(", ");
         }
         write(']');
     }
 
-    private void writeArray(final float[] array) throws IOException {
+    private void writeArray(final float[] array) throws IOException
+    {
         write('[');
-        for (val element : array) {
+        for (val element : array)
+        {
             write(String.valueOf(element));
             write(", ");
         }
         write(']');
     }
 
-    private void writeArray(final double[] array) throws IOException {
+    private void writeArray(final double[] array) throws IOException
+    {
         write('[');
-        for (val element : array) {
+        for (val element : array)
+        {
             write(String.valueOf(element));
             write(", ");
         }
         write(']');
     }
 
-    private void writeValue(final Object value) throws IOException {
-        if (value instanceof String) {
+    private void writeValue(final Object value) throws IOException
+    {
+        if (value instanceof String)
+        {
             writeString((String) value);
-        } else if (value instanceof Number || value instanceof Boolean) {
+        }
+        else if (value instanceof Number || value instanceof Boolean) {
             write(value.toString());
-        } else if (value instanceof TemporalAccessor) {
+        }
+        else if (value instanceof TemporalAccessor)
+        {
             String formatted = TomlManager.DATE_FORMATTER.format((TemporalAccessor) value);
             if (formatted.endsWith("T")) formatted = formatted.substring(0, formatted.length() - 1); // removes it because it's invalid.
             write(formatted);
-        } else if (value instanceof Collection) {
+        }
+        else if (value instanceof Collection) {
             writeArray((Collection<?>) value);
-        } else if (value instanceof int[]) {
+        }
+        else if (value instanceof int[]) {
             writeArray((int[]) value);
-        } else if (value instanceof byte[]) {
+        }
+        else if (value instanceof byte[]) {
             writeArray((byte[]) value);
-        } else if (value instanceof short[]) {
+        }
+        else if (value instanceof short[]) {
             writeArray((short[]) value);
-        } else if (value instanceof char[]) {
+        }
+        else if (value instanceof char[]) {
             writeArray((char[]) value);
-        } else if (value instanceof long[]) {
+        }
+        else if (value instanceof long[]) {
             writeArray((long[]) value);
-        } else if (value instanceof float[]) {
+        }
+        else if (value instanceof float[]) {
             writeArray((float[]) value);
-        } else if (value instanceof double[]) {
+        }
+        else if (value instanceof double[]) {
             writeArray((double[]) value);
-        } else if (value instanceof Map) {
+        }
+        else if (value instanceof Map) {
             throw new IOException("Unexpected value " + value);
         } else {
             throw new TomlException("Unsupported value of type " + value.getClass().getCanonicalName());
         }
     }
 
-    private void newLine() throws IOException {
+    private void newLine() throws IOException
+    {
         if (lineBreaks <= 1) {
             writer.write(lineSeparator);
             lineBreaks++;
@@ -385,9 +436,12 @@ public final class TomlWriter {
         lineBreaks = 0;
     }
 
-    private void indent() throws IOException {
-        for (int i = 0; i < indentationLevel; i++) {
-            for (int j = 0; j < indentSize; j++) {
+    private void indent() throws IOException
+    {
+        for (int i = 0; i < indentationLevel; i++)
+        {
+            for (int j = 0; j < indentSize; j++)
+            {
                 write(indentCharacter);
             }
         }

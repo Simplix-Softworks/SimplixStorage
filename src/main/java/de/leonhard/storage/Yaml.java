@@ -28,7 +28,8 @@ public class Yaml extends FlatFile {
     @Setter
     private ConfigSettings configSettings = ConfigSettings.SKIP_COMMENTS;
 
-    public Yaml(@NonNull final Yaml yaml) {
+    public Yaml(@NonNull final Yaml yaml)
+    {
         super(yaml.getFile());
         this.fileData = yaml.getFileData();
         this.yamlEditor = yaml.getYamlEditor();
@@ -39,30 +40,43 @@ public class Yaml extends FlatFile {
         this.reloadConsumer = yaml.getReloadConsumer();
     }
 
-    public Yaml(final String name, @Nullable final String path) {
+    public Yaml(final String name, @Nullable final String path)
+    {
         this(name, path, null, null, null, null);
     }
 
-    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream) {
+    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream)
+    {
         this(name, path, inputStream, null, null, null);
     }
 
-    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType) {
+    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream,
+                @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType)
+    {
         this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
     }
 
-    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings, @Nullable final DataType dataType, @Nullable final Consumer<FlatFile> reloadConsumer) {
+    public Yaml(final String name, @Nullable final String path, @Nullable final InputStream inputStream,
+                @Nullable final ReloadSettings reloadSettings, @Nullable final ConfigSettings configSettings,
+                @Nullable final DataType dataType, @Nullable final Consumer<FlatFile> reloadConsumer)
+    {
         super(name, path, FileType.YAML, reloadConsumer);
         this.inputStream = inputStream;
 
-        if (create() && inputStream != null) FileUtils.writeToFile(this.file, inputStream);
+        if (create() && inputStream != null) {
+            FileUtils.writeToFile(this.file, inputStream);
+        }
 
         this.yamlEditor = new YamlEditor(this.file);
         this.parser = new YamlParser(this.yamlEditor);
 
-        if (reloadSettings != null) this.reloadSettings = reloadSettings;
+        if (reloadSettings != null) {
+            this.reloadSettings = reloadSettings;
+        }
 
-        if (configSettings != null) this.configSettings = configSettings;
+        if (configSettings != null) {
+            this.configSettings = configSettings;
+        }
 
         if (dataType != null) {
             this.dataType = dataType;
@@ -85,7 +99,8 @@ public class Yaml extends FlatFile {
         return addDefaultsFromInputStream(getInputStream().orElse(null));
     }
 
-    public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
+    public Yaml addDefaultsFromInputStream(@Nullable final InputStream inputStream)
+    {
         reloadIfNeeded();
         // Creating & setting defaults
         if (inputStream == null) return this;
@@ -95,7 +110,13 @@ public class Yaml extends FlatFile {
 
             val newData = new FileData(data, DataType.UNSORTED);
 
-            for (val key : newData.keySet()) if (!this.fileData.containsKey(key)) this.fileData.insert(key, newData.get(key));
+            for (val key : newData.keySet())
+            {
+                if (!this.fileData.containsKey(key))
+                {
+                    this.fileData.insert(key, newData.get(key));
+                }
+            }
 
             write();
         } catch (final Exception ex) {
@@ -116,9 +137,11 @@ public class Yaml extends FlatFile {
     }
 
     @Override
-    protected void write(final FileData data) throws IOException {
+    protected void write(final FileData data) throws IOException
+    {
         // If Comments shouldn't be preserved
-        if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings)) {
+        if (!ConfigSettings.PRESERVE_COMMENTS.equals(this.configSettings))
+        {
             write0(this.fileData);
             return;
         }
@@ -160,26 +183,31 @@ public class Yaml extends FlatFile {
     }
 
     @SuppressWarnings("unused")
-    public final void framedHeader(final String... header) {
+    public final void framedHeader(final String... header)
+    {
         List<String> stringList = new ArrayList<>();
         var border = "# +----------------------------------------------------+ #";
         stringList.add(border);
 
-        for (String line : header) {
+        for (String line : header)
+        {
             var builder = new StringBuilder();
             if (line.length() > 50) continue;
 
             int length = (50 - line.length()) / 2;
             var finalLine = new StringBuilder(line);
 
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++)
+            {
                 finalLine.append(" ");
                 finalLine.reverse();
                 finalLine.append(" ");
                 finalLine.reverse();
             }
 
-            if (line.length() % 2 != 0) finalLine.append(" ");
+            if (line.length() % 2 != 0) {
+                finalLine.append(" ");
+            }
 
             builder.append("# < ").append(finalLine).append(" > #");
             stringList.add(builder.toString());

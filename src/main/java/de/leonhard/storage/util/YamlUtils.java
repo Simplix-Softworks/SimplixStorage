@@ -13,17 +13,27 @@ import java.util.List;
 @UtilityClass
 public class YamlUtils {
 
-    public List<String> getCommentsFromLines(final List<String> lines) {
+    public List<String> getCommentsFromLines(final List<String> lines)
+    {
         final List<String> result = new ArrayList<>();
-        for (val line : lines) if (line.startsWith("#")) result.add(line);
+        for (val line : lines)
+        {
+            if (line.startsWith("#"))
+            {
+                result.add(line);
+            }
+        }
         return result;
     }
 
-    public List<String> getFooterFromLines(final List<String> lines) {
+    public List<String> getFooterFromLines(final List<String> lines)
+    {
         final List<String> result = new ArrayList<>();
         Collections.reverse(lines);
-        for (val line : lines) {
-            if (!line.startsWith("#")) {
+        for (val line : lines)
+        {
+            if (!line.startsWith("#"))
+            {
                 Collections.reverse(result);
                 return result;
             }
@@ -36,8 +46,11 @@ public class YamlUtils {
     public List<String> getHeaderFromLines(final List<String> lines) {
         final List<String> result = new ArrayList<>();
 
-        for (val line : lines) {
-            if (!line.startsWith("#")) return result;
+        for (val line : lines)
+        {
+            if (!line.startsWith("#")) {
+                return result;
+            }
             result.add(line);
         }
         return result;
@@ -57,7 +70,8 @@ public class YamlUtils {
         return comments;
     }
 
-    public List<String> getLinesWithoutFooterAndHeaderFromLines(final List<String> lines) {
+    public List<String> getLinesWithoutFooterAndHeaderFromLines(final List<String> lines)
+    {
         val header = getHeaderFromLines(lines);
         val footer = getFooterFromLines(lines);
 
@@ -67,9 +81,16 @@ public class YamlUtils {
         return lines;
     }
 
-    public List<String> getKeys(final List<String> lines) {
+    public List<String> getKeys(final List<String> lines)
+    {
         final List<String> result = new ArrayList<>();
-        for (val line : lines) if (!line.trim().startsWith("#")) result.add(line);
+        for (val line : lines)
+        {
+            if (!line.trim().startsWith("#"))
+            {
+                result.add(line);
+            }
+        }
         return result;
     }
 }

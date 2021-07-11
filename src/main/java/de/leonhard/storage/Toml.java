@@ -17,7 +17,8 @@ import java.util.function.Consumer;
 
 public class Toml extends FlatFile {
 
-    public Toml(@NonNull final Toml toml) {
+    public Toml(@NonNull final Toml toml)
+    {
         super(toml.getFile());
         this.fileData = toml.getFileData();
         this.pathPrefix = toml.getPathPrefix();
@@ -31,14 +32,18 @@ public class Toml extends FlatFile {
         this(name, path, inputStream, null, null);
     }
 
-    public Toml(@NonNull final String name, @NonNull final String path, @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings, @Nullable final Consumer<FlatFile> reloadConsumer) {
+    public Toml(@NonNull final String name, @NonNull final String path,
+                @Nullable final InputStream inputStream, @Nullable final ReloadSettings reloadSettings,
+                @Nullable final Consumer<FlatFile> reloadConsumer)
+    {
         super(name, path, FileType.TOML, reloadConsumer);
         if (create() && inputStream != null) FileUtils.writeToFile(this.file, inputStream);
         if (reloadSettings != null) this.reloadSettings = reloadSettings;
         forceReload();
     }
 
-    public Toml(final File file) {
+    public Toml(final File file)
+    {
         super(file, FileType.TOML);
         create();
         forceReload();

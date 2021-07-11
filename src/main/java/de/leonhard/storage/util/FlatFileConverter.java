@@ -6,7 +6,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass @SuppressWarnings("unused")
 public class FlatFileConverter {
 
-    public void addAllData(final FlatFile source, final FlatFile destination) {
+    public void addAllData(final FlatFile source, final FlatFile destination)
+    {
         destination.getFileData().clear();
         destination.getFileData().loadData(source.getFileData().toMap());
         destination.write();

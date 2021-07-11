@@ -4,7 +4,8 @@ package de.leonhard.storage.internal.settings;
  * Reload settings.
  */
 @SuppressWarnings("unused")
-public enum ReloadSettings {
+public enum ReloadSettings
+{
     /**
      * This will reload the File everytime you access it.
      */

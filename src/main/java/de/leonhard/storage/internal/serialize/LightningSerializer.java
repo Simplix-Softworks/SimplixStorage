@@ -34,7 +34,8 @@ public class LightningSerializer {
     }
 
     @Nullable
-    public LightningSerializable<?> findSerializable(final Class<?> clazz) {
+    public LightningSerializable<?> findSerializable(final Class<?> clazz)
+    {
         for (val serializable : serializables) {
             if (serializable.getClazz().equals(clazz)) return serializable;
         }
@@ -45,14 +46,16 @@ public class LightningSerializer {
     /**e
      * Method to save an object
      */
-    public Object serialize(final Object obj) {
+    public Object serialize(final Object obj)
+    {
         val serializable = (LightningSerializable<Object>) findSerializable(obj.getClass());
         Valid.notNull(serializable, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
         return serializable.serialize(obj);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T deserialize(final Object raw, Class<T> type) {
+    public <T> T deserialize(final Object raw, Class<T> type)
+    {
         val serializable = findSerializable(type);
         Valid.notNull(serializable, "No serializable found for '" + type.getSimpleName() + "'", "Raw: '" + raw.getClass().getSimpleName() + "'");
         assert serializable != null;

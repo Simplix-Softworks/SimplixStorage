@@ -30,7 +30,8 @@ public final class LightningBuilder {
 
     private @Nullable Consumer<FlatFile> reloadConsumer = null;
 
-    private LightningBuilder(final String name, final String path, final InputStreamProvider inputStreamProvider) {
+    private LightningBuilder(final String name, final String path, final InputStreamProvider inputStreamProvider)
+    {
         this.name = name;
         this.path = path;
         this.inputStreamProvider = inputStreamProvider;
@@ -40,15 +41,18 @@ public final class LightningBuilder {
     // Creating our Builder
     // ----------------------------------------------------------------------------------------------------
 
-    public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path) {
+    public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path)
+    {
         return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
     }
 
-    public static LightningBuilder fromPath(@NonNull final Path path) {
+    public static LightningBuilder fromPath(@NonNull final Path path)
+    {
         return fromFile(path.toFile());
     }
 
-    public static LightningBuilder fromFile(@NonNull final File file) {
+    public static LightningBuilder fromFile(@NonNull final File file)
+    {
         // File shouldn't be a directory
         Valid.checkBoolean(!file.isDirectory(), "File mustn't be a directory.", "Please use from Directory to use a directory", "This is due to Java-Internals");
         return new LightningBuilder(FileUtils.replaceExtensions(file.getName()), FileUtils.getParentDirPath(file), LightningProviders.inputStreamProvider());
@@ -57,7 +61,9 @@ public final class LightningBuilder {
     public static LightningBuilder fromDirectory(@NonNull final File file) {
         Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
-        if (!file.exists()) file.mkdirs();
+        if (!file.exists()) {
+            file.mkdirs();
+        }
 
         // Will return the name of the folder as default name
         return new LightningBuilder(file.getName(), file.getAbsolutePath(), LightningProviders.inputStreamProvider());
@@ -77,34 +83,39 @@ public final class LightningBuilder {
         return this;
     }
 
-    public LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
+    public LightningBuilder addInputStreamFromResource(@NonNull final String resource)
+    {
         this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
-
         Valid.notNull(this.inputStream, "InputStream is null.", "No inbuilt resource '" + resource + "' found: ");
         return this;
     }
 
-    public LightningBuilder setName(@NonNull final String name) {
+    public LightningBuilder setName(@NonNull final String name)
+    {
         this.name = name;
         return this;
     }
 
-    public LightningBuilder addInputStream(@Nullable final InputStream inputStream) {
+    public LightningBuilder addInputStream(@Nullable final InputStream inputStream)
+    {
         this.inputStream = inputStream;
         return this;
     }
 
-    public LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings) {
+    public LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings)
+    {
         this.configSettings = configSettings;
         return this;
     }
 
-    public LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings) {
+    public LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings)
+    {
         this.reloadSettings = reloadSettings;
         return this;
     }
 
-    public LightningBuilder setDataType(@NonNull final DataType dataType) {
+    public LightningBuilder setDataType(@NonNull final DataType dataType)
+    {
         this.dataType = dataType;
         return this;
     }
@@ -113,7 +124,8 @@ public final class LightningBuilder {
     // Create the objects of our FileTypes
     // ----------------------------------------------------------------------------------------------------
 
-    public Config createConfig() {
+    public Config createConfig()
+    {
         return new Config(
                 this.name,
                 this.path,
@@ -124,7 +136,8 @@ public final class LightningBuilder {
                 reloadConsumer);
     }
 
-    public Yaml createYaml() {
+    public Yaml createYaml()
+    {
         return new Yaml(
                 this.name,
                 this.path,
@@ -135,7 +148,8 @@ public final class LightningBuilder {
                 reloadConsumer);
     }
 
-    public Toml createToml() {
+    public Toml createToml()
+    {
         return new Toml(
                 this.name,
                 this.path,
@@ -144,7 +158,8 @@ public final class LightningBuilder {
                 reloadConsumer);
     }
 
-    public Json createJson() {
+    public Json createJson()
+    {
         return new Json(
                 this.name,
                 this.path,

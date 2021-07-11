@@ -30,9 +30,14 @@ public class LightningProviders {
         };
     }
 
-    public YamlConfig yamlConfig() {
-        if (yamlConfig != null) return yamlConfig;
+    public YamlConfig yamlConfig()
+    {
+        if (yamlConfig != null)  {
+            return yamlConfig;
+        }
+
         val config = new YamlConfig();
+
         // Use unicode
         config.writeConfig.setEscapeUnicode(false);
         // Don't use anchors
@@ -42,13 +47,19 @@ public class LightningProviders {
         return yamlConfig = config;
     }
 
-    public InputStreamProvider inputStreamProvider() {
-        if (inputStreamProvider != null) return inputStreamProvider;
+    public InputStreamProvider inputStreamProvider()
+    {
+        if (inputStreamProvider != null) {
+            return inputStreamProvider;
+        }
         return inputStreamProvider = new InputStreamProvider() {};
     }
 
-    public ExceptionHandler exceptionHandler() {
-        if (exceptionHandler != null) return exceptionHandler;
+    public ExceptionHandler exceptionHandler()
+    {
+        if (exceptionHandler != null) {
+            return exceptionHandler;
+        }
         return exceptionHandler = new ExceptionHandler() {};
     }
 }

@@ -12,11 +12,15 @@ public final class YamlParser {
 
     private final YamlEditor yamlEditor;
 
-    public List<String> parseLines(final List<String> comments, final List<String> updated) { final List<String> out = new ArrayList<>();
+    public List<String> parseLines(final List<String> comments, final List<String> updated)
+    {
+        final List<String> out = new ArrayList<>();
         val parsed = assignCommentsToKey(comments);
 
-        for (val line : updated) {
+        for (val line : updated)
+        {
             val rawList = getKeyAndRemove(line, parsed);
+
             if (rawList == null || rawList.isEmpty()) {
                 out.add(line);
                 continue;
@@ -24,7 +28,10 @@ public final class YamlParser {
 
             Collections.reverse(rawList);
             out.addAll(rawList);
-            if (!line.equals(FOOTER)) out.add(line);
+
+            if (!line.equals(FOOTER)) {
+                out.add(line);
+            }
         }
 
         return out;
@@ -32,7 +39,8 @@ public final class YamlParser {
 
     private List<String> getKeyAndRemove(String key, final Map<String, List<String>> data) {
         key = key.split(":")[0];
-        for (val entry : data.entrySet()) {
+        for (val entry : data.entrySet())
+        {
             val entryKey = entry.getKey().split(":")[0];
 
             // using substring since indentation might differ a bit
@@ -56,11 +64,13 @@ public final class YamlParser {
      * @param lines Initial lines to read
      * @return Mapped comments (Key, comments)
      */
-    public Map<String, List<String>> assignCommentsToKey(final List<String> lines) {
+    public Map<String, List<String>> assignCommentsToKey(final List<String> lines)
+    {
         final Map<String, List<String>> out = new HashMap<>();
 
         String currentKey = FOOTER;
-        for (int i = lines.size() - 1; i >= 0; i--) {
+        for (int i = lines.size() - 1; i >= 0; i--)
+        {
             val line = lines.get(i);
             if (!line.trim().startsWith("#") && !line.isEmpty()) {
                 currentKey = line;
