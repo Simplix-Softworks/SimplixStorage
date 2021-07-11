@@ -5,6 +5,7 @@ import de.leonhard.storage.util.YamlUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -14,9 +15,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class YamlEditor {
 
-    private final File file;
+    private final @NotNull File file;
 
-    public List<String> read() {
+    public @NotNull List<String> read() {
         return FileUtils.readAllLines(file);
     }
 
@@ -24,38 +25,38 @@ public class YamlEditor {
     // Reading specific things from File
     // ----------------------------------------------------------------------------------------------------
 
-    public List<String> readKeys() {
+    public @NotNull List<String> readKeys() {
         return YamlUtils.getKeys(read());
     }
 
-    public List<String> readComments() {
+    public @NotNull List<String> readComments() {
         return YamlUtils.getKeys(read());
     }
 
-    public List<String> readHeader() {
+    public @NotNull List<String> readHeader() {
         return YamlUtils.getHeaderFromLines(read());
     }
 
-    public List<String> readFooter() {
+    public @NotNull List<String> readFooter() {
         return YamlUtils.getFooterFromLines(read());
     }
 
-    public List<String> readPureComments() {
+    public @NotNull List<String> readPureComments() {
         return YamlUtils.getPureCommentsFromLines(read());
     }
 
-    public List<String> readWithoutHeaderAndFooter() {
+    public @NotNull List<String> readWithoutHeaderAndFooter() {
         return YamlUtils.getLinesWithoutFooterAndHeaderFromLines(read());
     }
 
     // ----------------------------------------------------------------------------------------------------
     // Writing specific things from File
     // ----------------------------------------------------------------------------------------------------
-    public void write(final List<String> lines) {
+    public void write(final @NotNull List<String> lines) {
         FileUtils.write(file, lines);
     }
 
-    public void setHeader(final List<String> header) {
+    public void setHeader(final @NotNull List<String> header) {
         val lines = read();
 
         // Remove old header
@@ -71,7 +72,7 @@ public class YamlEditor {
         write(lines);
     }
 
-    public void addHeader(final List<String> header) {
+    public void addHeader(final @NotNull List<String> header) {
         val lines = read();
 
         for (int i = 0; i < header.size(); i++) {

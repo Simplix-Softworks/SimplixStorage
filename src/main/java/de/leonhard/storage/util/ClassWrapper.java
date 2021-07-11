@@ -3,6 +3,7 @@ package de.leonhard.storage.util;
 import de.leonhard.storage.internal.DataStorage;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -20,7 +21,7 @@ public class ClassWrapper {
      * @param def type of result
      * @return Casted object
      */
-    public <T> T getFromDef(final Object obj, final T def) {
+    public <T> @NotNull T getFromDef(final @NotNull Object obj, final T def) {
         if (def instanceof Integer) {
             return (T) INTEGER.getInt(obj);
         } else if (def instanceof Float) {
@@ -55,7 +56,7 @@ public class ClassWrapper {
      * @param clazz class of result
      * @return Casted object
      */
-    public <T> T getFromDef(final Object obj, final Class<T> clazz) {
+    public <T> @NotNull T getFromDef(final @NotNull Object obj, final Class<T> clazz) {
 
         if (clazz == int.class || clazz == Integer.class) {
             return (T) INTEGER.getInt(obj);
@@ -87,7 +88,7 @@ public class ClassWrapper {
     @UtilityClass
     public class LONG {
 
-        public Long[] getLongArray(final Object obj) {
+        public Long @NotNull [] getLongArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Long>) obj;
                 return list.toArray(new Long[0]);
@@ -110,7 +111,7 @@ public class ClassWrapper {
     @UtilityClass
     public class DOUBLE {
 
-        public Double[] getDoubleArray(final Object obj) {
+        public Double @NotNull [] getDoubleArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Double>) obj;
                 return list.toArray(new Double[0]);
@@ -133,7 +134,7 @@ public class ClassWrapper {
     @UtilityClass
     public class FLOAT {
 
-        public Float[] getFloatArray(final Object obj) {
+        public Float @NotNull [] getFloatArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Float>) obj;
                 return list.toArray(new Float[0]);
@@ -157,7 +158,7 @@ public class ClassWrapper {
     @UtilityClass
     public class INTEGER {
 
-        public Integer[] getIntArray(final Object obj) {
+        public Integer @NotNull [] getIntArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Integer>) obj;
                 return list.toArray(new Integer[0]);
@@ -181,7 +182,7 @@ public class ClassWrapper {
     @SuppressWarnings("unused")
     public class SHORT {
 
-        public Short[] getShortArray(final Object obj) {
+        public Short @NotNull [] getShortArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Short>) obj;
                 return list.toArray(new Short[0]);
@@ -205,7 +206,7 @@ public class ClassWrapper {
     @UtilityClass
     public class BYTE {
 
-        public Byte[] getByteArray(final Object obj) {
+        public Byte @NotNull [] getByteArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<Byte>) obj;
                 return list.toArray(new Byte[0]);
@@ -228,7 +229,7 @@ public class ClassWrapper {
     @UtilityClass
     public class STRING {
 
-        public String[] getStringArray(final Object obj) {
+        public String @NotNull [] getStringArray(final Object obj) {
             if (obj instanceof List) {
                 val list = (List<String>) obj;
                 return list.toArray(new String[0]);

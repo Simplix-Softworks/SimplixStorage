@@ -4,6 +4,7 @@ import de.leonhard.storage.util.Valid;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -47,14 +48,14 @@ public class LightningSerializer {
     /**e
      * Method to save an object
      */
-    public Object serialize(final Object obj) {
+    public Object serialize(final @NotNull Object obj) {
         val serializable = (LightningSerializable<Object>) findSerializable(obj.getClass());
         Valid.notNull(serializable, "No serializable found for '" + obj.getClass().getSimpleName() + "'");
         return serializable.serialize(obj);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T deserialize(final Object raw, final Class<T> type) {
+    public <T> @NotNull T deserialize(final @NotNull Object raw, final @NotNull Class<T> type) {
         val serializable = findSerializable(type);
         Valid.notNull(serializable,
                 "No serializable found for '" + type.getSimpleName() + "'",

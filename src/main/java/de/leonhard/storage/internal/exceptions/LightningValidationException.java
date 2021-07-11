@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.exceptions;
 
 import de.leonhard.storage.internal.exception.LightningException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Thrown to indicate that something went wrong, or just to end our code
@@ -10,7 +11,7 @@ public class LightningValidationException extends LightningException {
 
     private final long serialVersionUID = -7961367314553460325L;
 
-    public LightningValidationException(final Throwable throwable, final String... messages) {
+    public LightningValidationException(final @NotNull Throwable throwable, final String... messages) {
         super(throwable, messages);
     }
 

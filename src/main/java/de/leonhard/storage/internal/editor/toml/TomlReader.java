@@ -3,6 +3,7 @@ package de.leonhard.storage.internal.editor.toml;
 import de.leonhard.storage.internal.exceptions.TomlException;
 import lombok.val;
 import lombok.var;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -155,7 +156,7 @@ public final class TomlReader
         }
     }
 
-    public Map<String, Object> read() {
+    public @NotNull Map<String, Object> read() {
         val map = nextTableContent();
 
         if (!hasNext() && pos > 0 && data.charAt(pos - 1) == '[') {
@@ -281,7 +282,7 @@ public final class TomlReader
         return map;
     }
 
-    private List<Object> nextArray() {
+    private @NotNull List<Object> nextArray() {
         val list = new ArrayList<>();
 
         while (true) {
@@ -313,7 +314,7 @@ public final class TomlReader
         return list;
     }
 
-    private Map<String, Object> nextInlineTable() {
+    private @NotNull Map<String, Object> nextInlineTable() {
         final Map<String, Object> map = new HashMap<>();
 
         while (true) {
@@ -377,7 +378,7 @@ public final class TomlReader
         }
     }
 
-    private Map<String, Object> nextTableContent() {
+    private @NotNull Map<String, Object> nextTableContent() {
         final Map<String, Object> map = new HashMap<>();
 
         while (true) {
@@ -516,14 +517,14 @@ public final class TomlReader
                 return TomlManager.DATE_FORMATTER.parseBest(valueStr, ZonedDateTime::from, LocalDateTime::from, LocalDate::from);
             }
 
-        } catch (final Exception ex) {
+        } catch (final @NotNull Exception ex) {
             throw new TomlException(ex, "Invalid value: \"" + valueStr + "\" at line " + line);
         }
 
         throw new TomlException("Invalid value: \"" + valueStr + "\" at line " + line);
     }
 
-    private String nextBareKey(final char... allowedEnds) {
+    private @NotNull String nextBareKey(final char @NotNull ... allowedEnds) {
         final String keyName;
 
         for (int i = pos; i < data.length(); i++) {
@@ -549,7 +550,7 @@ public final class TomlReader
         throw new TomlException("Invalid key/value pair at line " + line + " end of data reached before the value attached to the key was found");
     }
 
-    private String nextLiteralString() {
+    private @NotNull String nextLiteralString() {
         val index = data.indexOf('\'', pos);
 
         if (index == -1) {
@@ -565,7 +566,7 @@ public final class TomlReader
         return str;
     }
 
-    private String nextLiteralMultilineString() {
+    private @NotNull String nextLiteralMultilineString() {
         val index = data.indexOf("'''", pos);
 
         if (index == -1)  {
@@ -597,7 +598,7 @@ public final class TomlReader
         return str;
     }
 
-    private String nextBasicString() {
+    private @NotNull String nextBasicString() {
         val sb = new StringBuilder();
         boolean escape = false;
 
@@ -620,7 +621,7 @@ public final class TomlReader
         throw new TomlException("Invalid basic String at line " + line + ": it nerver ends");
     }
 
-    private String nextBasicMultilineString() {
+    private @NotNull String nextBasicMultilineString() {
         val sb = new StringBuilder();
         boolean first = true, escape = false;
 
@@ -697,7 +698,7 @@ public final class TomlReader
                 try {
                     val hexVal = Integer.parseInt(unicode, 16);
                     return (char) hexVal;
-                } catch (final NumberFormatException ex) {
+                } catch (final @NotNull NumberFormatException ex) {
                     throw new TomlException(
                             ex,
                             "Invalid unicode code point at line " + line);
@@ -713,7 +714,7 @@ public final class TomlReader
                 try {
                     val hexVal = Integer.parseInt(unicode, 16);
                     return (char) hexVal;
-                } catch (final NumberFormatException ex) {
+                } catch (final @NotNull NumberFormatException ex) {
                     throw new TomlException(ex,
                             "Invalid unicode code point at line " + line);
                 }
@@ -726,7 +727,7 @@ public final class TomlReader
     /**
      * Converts a char to a String. The char is escaped if needed.
      */
-    private String toString(final char c) {
+    private @NotNull String toString(final char c) {
         switch (c) {
             case '\b':
                 return "\\b";

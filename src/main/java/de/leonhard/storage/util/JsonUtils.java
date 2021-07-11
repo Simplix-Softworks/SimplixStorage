@@ -3,6 +3,7 @@ package de.leonhard.storage.util;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import lombok.var;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +14,7 @@ import java.util.*;
 @UtilityClass
 public class JsonUtils {
 
-    public Map<String, Object> jsonToMap(final JSONObject jsonObject) throws JSONException {
+    public @NotNull Map<String, Object> jsonToMap(final @NotNull JSONObject jsonObject) throws JSONException {
         Map<String, Object> retMap = new HashMap<>();
 
         if (jsonObject != JSONObject.NULL) {
@@ -23,7 +24,7 @@ public class JsonUtils {
         return retMap;
     }
 
-    public JSONObject getJsonFromMap(final Map<String, Object> map) throws JSONException {
+    public @NotNull JSONObject getJsonFromMap(final @NotNull Map<String, Object> map) throws JSONException {
         val jsonData = new JSONObject();
 
         for (val entry : map.entrySet()) {
@@ -40,7 +41,7 @@ public class JsonUtils {
         return jsonData;
     }
 
-    public Map<String, Object> toMap(final JSONObject jsonObject) throws JSONException {
+    public @NotNull Map<String, Object> toMap(final @NotNull JSONObject jsonObject) throws JSONException {
         final Map<String, Object> map = new HashMap<>();
 
         val keysItr = jsonObject.keys();
@@ -48,7 +49,7 @@ public class JsonUtils {
         return map;
     }
 
-    public List<Object> toList(final JSONArray array) throws JSONException {
+    public @NotNull List<Object> toList(final @NotNull JSONArray array) throws JSONException {
         final List<Object> list = new ArrayList<>();
 
         for (int i = 0; i < array.length(); i++) {

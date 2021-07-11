@@ -1,6 +1,7 @@
 package de.leonhard.storage.internal.serialize;
 
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public interface LightningSerializable<T> {
 
@@ -10,14 +11,14 @@ public interface LightningSerializable<T> {
      * @param obj Data to deserialize our class from.
      * @throws ClassCastException Exception thrown when deserialization failed.
      */
-    T deserialize(@NonNull Object obj) throws ClassCastException;
+    @NotNull T deserialize(@NonNull Object obj) throws ClassCastException;
 
     /**
      * Save our serializable to data-structure.
      *
      * @throws ClassCastException Exception thrown when serialization failed.
      */
-    Object serialize(@NonNull T t) throws ClassCastException;
+    @NotNull Object serialize(@NonNull T t) throws ClassCastException;
 
-    Class<T> getClazz();
+    @NotNull Class<T> getClazz();
 }

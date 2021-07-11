@@ -5,6 +5,7 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -21,20 +22,20 @@ public class Config extends Yaml {
         super(config);
     }
 
-    public Config(final String name,
+    public Config(final @NotNull String name,
                   final String path)
     {
         this(name, path, null, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
     }
 
-    public Config(final String name,
+    public Config(final @NotNull String name,
                   @Nullable final String path,
                   @Nullable final InputStream inputStream)
     {
         this(name, path, inputStream, null, ConfigSettings.PRESERVE_COMMENTS, DataType.SORTED);
     }
 
-    public Config(final String name,
+    public Config(final @NotNull String name,
                   @Nullable final String path,
                   @Nullable final InputStream inputStream,
                   @Nullable final ReloadSettings reloadSettings,
@@ -45,7 +46,7 @@ public class Config extends Yaml {
         setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }
 
-    public Config(final String name,
+    public Config(final @NotNull String name,
                   @Nullable final String path,
                   @Nullable final InputStream inputStream,
                   @Nullable final ReloadSettings reloadSettings,
@@ -57,7 +58,7 @@ public class Config extends Yaml {
         setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
     }
 
-    public Config(final File file) {
+    public Config(final @NotNull File file) {
         super(file);
     }
 
@@ -66,12 +67,12 @@ public class Config extends Yaml {
     // ----------------------------------------------------------------------------------------------------
 
     @Override
-    public Config addDefaultsFromInputStream() {
+    public @NotNull Config addDefaultsFromInputStream() {
         return (Config) super.addDefaultsFromInputStream();
     }
 
     @Override
-    public Config addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
+    public @NotNull Config addDefaultsFromInputStream(@Nullable final InputStream inputStream) {
         return (Config) super.addDefaultsFromInputStream(inputStream);
     }
 }

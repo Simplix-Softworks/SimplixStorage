@@ -4,6 +4,7 @@ import de.leonhard.storage.internal.exceptions.TomlException;
 import de.leonhard.storage.util.FastStringWriter;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +42,7 @@ public class TomlManager {
      * @return a String that contains the data in the TOML format.
      * @throws IOException if an error occurs
      */
-    public String writeToString(final Map<String, Object> data) throws IOException {
+    public @NotNull String writeToString(final @NotNull Map<String, Object> data) throws IOException {
         val writer = new FastStringWriter();
         write(data, writer);
         return writer.toString();
@@ -55,8 +56,8 @@ public class TomlManager {
      * @param file where to write the data
      * @throws IOException if an error occurs
      */
-    public void write(final Map<String, Object> data,
-                      final File file)
+    public void write(final @NotNull Map<String, Object> data,
+                      final @NotNull File file)
                       throws IOException
     {
         val out = new FileOutputStream(file);
@@ -71,8 +72,8 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public void write(final Map<String, Object> data,
-                      final OutputStream out)
+    public void write(final @NotNull Map<String, Object> data,
+                      final @NotNull OutputStream out)
                       throws IOException
     {
         val writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
@@ -88,7 +89,7 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public void write(final Map<String, Object> data,
+    public void write(final @NotNull Map<String, Object> data,
                       final Writer writer)
                       throws IOException
     {
@@ -108,7 +109,7 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public void write(final Map<String, Object> data,
+    public void write(final @NotNull Map<String, Object> data,
                       final Writer writer,
                       final int indentSize,
                       final boolean indentWithSpaces)
@@ -128,7 +129,7 @@ public class TomlManager {
      * @return a {@code Map<String, Object>} containing the parsed data
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final String toml) throws TomlException {
+    public @NotNull Map<String, Object> read(final String toml) throws TomlException {
         return read(toml, false);
     }
 
@@ -141,8 +142,8 @@ public class TomlManager {
      * @return a {@code Map<String, Object>} containing the parsed data
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final String toml,
-                                    final boolean strictAsciiBareKeys)
+    public @NotNull Map<String, Object> read(final String toml,
+                                             final boolean strictAsciiBareKeys)
     {
         val tr = new TomlReader(toml, strictAsciiBareKeys);
         return tr.read();
@@ -157,7 +158,7 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final File file) throws IOException, TomlException {
+    public @NotNull Map<String, Object> read(final @NotNull File file) throws IOException, TomlException {
         return read(file, false);
     }
 
@@ -171,8 +172,8 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final File file,
-                                    final boolean strictAsciiBareKeys)
+    public @NotNull Map<String, Object> read(final @NotNull File file,
+                                             final boolean strictAsciiBareKeys)
                                     throws IOException, TomlException
     {
         return read(new FileInputStream(file), strictAsciiBareKeys);
@@ -187,7 +188,7 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final InputStream in)
+    public @NotNull Map<String, Object> read(final @NotNull InputStream in)
                                     throws IOException, TomlException
     {
         return read(in, false);
@@ -203,8 +204,8 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final InputStream in,
-                                    final boolean strictAsciiBareKeys)
+    public @NotNull Map<String, Object> read(final @NotNull InputStream in,
+                                             final boolean strictAsciiBareKeys)
                                     throws IOException, TomlException
     {
         return read(new InputStreamReader(in, StandardCharsets.UTF_8), in.available(), strictAsciiBareKeys);
@@ -221,9 +222,9 @@ public class TomlManager {
      * @throws IOException   if a read error occurs
      * @throws TomlException if a parse error occurs
      */
-    public Map<String, Object> read(final Reader reader,
-                                    final int bufferSize,
-                                    final boolean strictAsciiBareKeys)
+    public @NotNull Map<String, Object> read(final @NotNull Reader reader,
+                                             final int bufferSize,
+                                             final boolean strictAsciiBareKeys)
                                     throws IOException, TomlException
     {
         val sb = new StringBuilder(bufferSize);

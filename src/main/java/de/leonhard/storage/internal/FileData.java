@@ -5,13 +5,11 @@ import de.leonhard.storage.util.JsonUtils;
 import lombok.Synchronized;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration
@@ -20,21 +18,21 @@ import java.util.Set;
 @SuppressWarnings({"unchecked", "unused"})
 public class FileData {
 
-    private final Map<String, Object> localMap;
+    private final @NotNull Map<String, Object> localMap;
 
-    public FileData(final Map<String, Object> map,
-                    final DataType dataType)
+    public FileData(final @NotNull Map<String, Object> map,
+                    final @NotNull DataType dataType)
     {
         this.localMap = dataType.getMapImplementation();
         this.localMap.putAll(map);
     }
 
-    public FileData(final JSONObject jsonObject) {
+    public FileData(final @NotNull JSONObject jsonObject) {
         this.localMap = new HashMap<>(jsonObject.toMap());
     }
 
-    public FileData(final JSONObject jsonObject,
-                    final DataType dataType)
+    public FileData(final @NotNull JSONObject jsonObject,
+                    final @NotNull DataType dataType)
     {
         this.localMap = dataType.getMapImplementation();
         this.localMap.putAll(jsonObject.toMap());
@@ -49,7 +47,7 @@ public class FileData {
      *
      * @param map Map to load data from
      */
-    public void loadData(final Map<String, Object> map)
+    public void loadData(final @Nullable Map<String, Object> map)
     {
         clear();
 
@@ -64,15 +62,15 @@ public class FileData {
      * @param key the key to look for.
      * @return the value assigned to the given key or null if the key does not exist.
      */
-    public Object get(final String key)
+    public @Nullable Object get(final @NotNull String key)
     {
         val parts = key.split("\\.");
         return get(this.localMap, parts, 0);
     }
 
-    private Object get(final Map<String, Object> map,
-                       final String[] key,
-                       final int id)
+    private @Nullable Object get(final @NotNull Map<String, Object> map,
+                                 final String @NotNull [] key,
+                                 final int id)
     {
         if (id < key.length - 1)
         {
@@ -93,7 +91,7 @@ public class FileData {
      * @param key   the key to be used.
      * @param value the value to be assigned to the key.
      */
-    public synchronized void insert(final String key,
+    public synchronized void insert(final @NotNull String key,
                                     final Object value)
     {
         val parts = key.split("\\.");
@@ -102,8 +100,8 @@ public class FileData {
                         : insert(new HashMap<>(), parts, value, 1));
     }
 
-    private Object insert(final Map<String, Object> map,
-                          final String[] key,
+    private Object insert(final @NotNull Map<String, Object> map,
+                          final String @NotNull [] key,
                           final Object value,
                           final int id)
     {
@@ -126,13 +124,13 @@ public class FileData {
      * @param key the key to be looked for.
      * @return true if the key exists, otherwise false.
      */
-    public boolean containsKey(final String key) {
+    public boolean containsKey(final @NotNull String key) {
         val parts = key.split("\\.");
         return containsKey(this.localMap, parts, 0);
     }
 
-    private boolean containsKey(final Map<String, Object> map,
-                                final String[] key,
+    private boolean containsKey(final @NotNull Map<String, Object> map,
+                                final String @NotNull [] key,
                                 final int id)
     {
         if (id < key.length - 1)
@@ -154,7 +152,7 @@ public class FileData {
      * @param key the key to be removed from the map.
      */
     @Synchronized
-    public void remove(final String key)
+    public void remove(final @NotNull String key)
     {
         if (containsKey(key)) {
             val parts = key.split("\\.");
@@ -162,7 +160,7 @@ public class FileData {
         }
     }
 
-    private void remove(final @NotNull String[] key)
+    private void remove(final @NotNull String @NotNull [] key)
     {
         if (key.length == 1) {
             this.localMap.remove(key[0]);
@@ -181,7 +179,7 @@ public class FileData {
         }
     }
 
-    private Map<String, Object> remove(final Map<String, Object> map, final String[] key, final int keyIndex)
+    private @NotNull Map<String, Object> remove(final @NotNull Map<String, Object> map, final String @NotNull [] key, final int keyIndex)
     {
         if (keyIndex < key.length - 1)
         {
@@ -204,7 +202,7 @@ public class FileData {
      *
      * @return the keySet of the top layer of localMap.
      */
-    public Set<String> singleLayerKeySet() {
+    public @NotNull Set<String> singleLayerKeySet() {
         return this.localMap.keySet();
     }
 
@@ -214,8 +212,8 @@ public class FileData {
      * @param key the key of the layer.
      * @return the keySet of the given layer or an empty set if the key does not exist.
      */
-    public Set<String> singleLayerKeySet(final String key) {
-        return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet()
+    public @NotNull Set<String> singleLayerKeySet(final @NotNull String key) {
+        return get(key) instanceof Map ? ((Map<String, Object>) Objects.requireNonNull(get(key))).keySet()
                 : new HashSet<>();
     }
 
@@ -224,15 +222,15 @@ public class FileData {
      *
      * @return the keySet of all layers of localMap combined (Format: key.subkey).
      */
-    public Set<String> keySet() {
+    public @NotNull Set<String> keySet() {
         return multiLayerKeySet(this.localMap);
     }
 
-    public Set<Map.Entry<String, Object>> entrySet() {
+    public @NotNull Set<Map.Entry<String, Object>> entrySet() {
         return multiLayerEntrySet(this.localMap);
     }
 
-    public Set<Map.Entry<String, Object>> singleLayerEntrySet() {
+    public @NotNull Set<Map.Entry<String, Object>> singleLayerEntrySet() {
         return this.localMap.entrySet();
     }
 
@@ -243,16 +241,16 @@ public class FileData {
      * @return the keySet of all sublayers of the given key or an empty set if the key does not exist
      * (Format: key.subkey).
      */
-    public Set<String> keySet(final String key) {
+    public @NotNull Set<String> keySet(final @NotNull String key) {
         return get(key) instanceof Map
-                ? multiLayerKeySet((Map<String, Object>) get(key))
+                ? multiLayerKeySet((Map<String, Object>) Objects.requireNonNull(get(key)))
                 : new HashSet<>();
     }
 
     /**
      * Private helper method to get the key set of an map containing maps recursively
      */
-    private Set<String> multiLayerKeySet(final Map<String, Object> map) {
+    private @NotNull Set<String> multiLayerKeySet(final @NotNull Map<String, Object> map) {
         final Set<String> out = new HashSet<>();
 
         for (val key : map.keySet()) {
@@ -268,7 +266,7 @@ public class FileData {
         return out;
     }
 
-    private Set<Map.Entry<String, Object>> multiLayerEntrySet(final Map<String, Object> map) {
+    private @NotNull Set<Map.Entry<String, Object>> multiLayerEntrySet(final @NotNull Map<String, Object> map) {
         final Set<Map.Entry<String, Object>> out = new HashSet<>();
 
         for (val entry : map.entrySet()) {
@@ -299,8 +297,8 @@ public class FileData {
      * @param key the key of the layer.
      * @return the size of the given layer or 0 if the key does not exist.
      */
-    public int singleLayerSize(final String key) {
-        return get(key) instanceof Map ? ((Map<?, ?>) get(key)).size() : 0;
+    public int singleLayerSize(final @NotNull String key) {
+        return get(key) instanceof Map ? ((Map<?, ?>) Objects.requireNonNull(get(key))).size() : 0;
     }
 
     /**
@@ -322,11 +320,11 @@ public class FileData {
         return this.localMap.size();
     }
 
-    public void putAll(final Map<String, Object> map) {
+    public void putAll(final @NotNull Map<String, Object> map) {
         this.localMap.putAll(map);
     }
 
-    private int size(final Map<String, Object> map) {
+    private int size(final @NotNull Map<String, Object> map) {
         int size = map.size();
         for (val key : map.keySet()) {
             if (map.get(key) instanceof Map) {
@@ -340,15 +338,11 @@ public class FileData {
     // Utility functions
     // ----------------------------------------------------------------------------------------------------
 
-    public Map<String, Object> toMap() {
-        if (this.localMap != null) {
-            return this.localMap;
-        } else {
-            return new HashMap<>();
-        }
+    public @NotNull Map<String, Object> toMap() {
+        return this.localMap;
     }
 
-    public JSONObject toJsonObject() {
+    public @NotNull JSONObject toJsonObject() {
         return JsonUtils.getJsonFromMap(this.localMap);
     }
 
@@ -367,7 +361,7 @@ public class FileData {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(final @Nullable Object obj) {
         if (obj == this) {
             return true;
         } else if (obj == null || getClass() != obj.getClass()) {

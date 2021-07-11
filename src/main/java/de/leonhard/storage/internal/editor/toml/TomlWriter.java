@@ -2,6 +2,7 @@ package de.leonhard.storage.internal.editor.toml;
 
 import de.leonhard.storage.internal.exceptions.TomlException;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -86,7 +87,7 @@ public final class TomlWriter {
         this.lineSeparator = lineSeparator;
     }
 
-    private static void addEscaped(final StringBuilder stringBuilder,
+    private static void addEscaped(final @NotNull StringBuilder stringBuilder,
                                    final char c)
     {
         switch (c) {
@@ -141,7 +142,7 @@ public final class TomlWriter {
      * @param data the data to write
      * @throws IOException if an error occurs
      */
-    public void write(final Map<String, Object> data)
+    public void write(final @NotNull Map<String, Object> data)
             throws IOException
     {
         writeTableContent(data);
@@ -158,7 +159,7 @@ public final class TomlWriter {
         }
     }
 
-    private void writeTableContent(final Map<String, Object> table)
+    private void writeTableContent(final @NotNull Map<String, Object> table)
                                    throws IOException
     {
         writeTableContent(table, true);
@@ -172,7 +173,7 @@ public final class TomlWriter {
      * @param simpleValues true to write only the simple values (and the normal arrays), false to
      *                     write only the tables (and the arrays of tables).
      */
-    private void writeTableContent(final Map<String, Object> table,
+    private void writeTableContent(final @NotNull Map<String, Object> table,
                                    final boolean simpleValues)
                                    throws IOException
     {
@@ -270,7 +271,7 @@ public final class TomlWriter {
         newLine();
     }
 
-    private void writeKey(final String key) throws IOException {
+    private void writeKey(final @NotNull String key) throws IOException {
 
         for (int i = 0; i < key.length(); i++) {
             val c = key.charAt(i);
@@ -282,7 +283,7 @@ public final class TomlWriter {
         write(key);
     }
 
-    private void writeString(final String str) throws IOException {
+    private void writeString(final @NotNull String str) throws IOException {
         val stringBuilder = new StringBuilder();
         stringBuilder.append('"');
 
@@ -295,7 +296,7 @@ public final class TomlWriter {
         write(stringBuilder.toString());
     }
 
-    private void writeArray(final Collection<?> c) throws IOException {
+    private void writeArray(final @NotNull Collection<?> c) throws IOException {
         write('[');
 
         for (final Object element : c) {
@@ -306,7 +307,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final Object[] array) throws IOException {
+    private void writeArray(final Object @NotNull [] array) throws IOException {
         write('[');
 
         for (final Object element : array) {
@@ -317,7 +318,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final byte[] array) throws IOException {
+    private void writeArray(final byte @NotNull [] array) throws IOException {
         write('[');
 
         for (final byte element : array) {
@@ -328,7 +329,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final short[] array) throws IOException {
+    private void writeArray(final short @NotNull [] array) throws IOException {
         write('[');
 
         for (val element : array) {
@@ -339,7 +340,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final char[] array) throws IOException {
+    private void writeArray(final char @NotNull [] array) throws IOException {
         write('[');
 
         for (val element : array) {
@@ -350,7 +351,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final int[] array) throws IOException {
+    private void writeArray(final int @NotNull [] array) throws IOException {
         write('[');
 
         for (val element : array) {
@@ -361,7 +362,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final long[] array) throws IOException {
+    private void writeArray(final long @NotNull [] array) throws IOException {
         write('[');
 
         for (val element : array) {
@@ -372,7 +373,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final float[] array) throws IOException {
+    private void writeArray(final float @NotNull [] array) throws IOException {
         write('[');
 
         for (val element : array) {
@@ -383,7 +384,7 @@ public final class TomlWriter {
         write(']');
     }
 
-    private void writeArray(final double[] array) throws IOException {
+    private void writeArray(final double @NotNull [] array) throws IOException {
         write('[');
 
         for (val element : array) {
@@ -439,7 +440,7 @@ public final class TomlWriter {
         lineBreaks = 0;
     }
 
-    private void write(final String str) throws IOException {
+    private void write(final @NotNull String str) throws IOException {
         writer.write(str);
         lineBreaks = 0;
     }

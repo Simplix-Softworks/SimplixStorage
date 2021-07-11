@@ -3,6 +3,7 @@ package de.leonhard.storage.util;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import lombok.var;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -72,7 +73,7 @@ public class LagCatcher {
     }
 
     public void runMultipleTimes(final int cycles,
-                                 final Runnable runnable)
+                                 final @NotNull Runnable runnable)
     {
         var nanosTook = 0L;
 
