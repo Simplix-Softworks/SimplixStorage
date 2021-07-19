@@ -4,6 +4,7 @@ import de.leonhard.storage.internal.FlatFile;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
+@SuppressWarnings("unused")
 public class FlatFileConverter {
 
   public void addAllData(final FlatFile source, final FlatFile destination) {

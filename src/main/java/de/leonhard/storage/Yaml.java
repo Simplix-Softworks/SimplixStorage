@@ -11,19 +11,13 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
+import lombok.*;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 public class Yaml extends FlatFile {
@@ -124,7 +118,7 @@ public class Yaml extends FlatFile {
       final Map<String, Object> data = new SimpleYamlReader(
           new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
 
-      final FileData newData = new FileData(data, DataType.UNSORTED);
+      val newData = new FileData(data, DataType.UNSORTED);
 
       for (final String key : newData.keySet()) {
         if (!this.fileData.containsKey(key)) {
@@ -146,8 +140,7 @@ public class Yaml extends FlatFile {
 
   @Override
   protected Map<String, Object> readToMap() throws IOException {
-    @Cleanup final SimpleYamlReader reader = new SimpleYamlReader(
-        new FileReader(getFile()));
+    @Cleanup val reader = new SimpleYamlReader(new FileReader(getFile()));
     return reader.readToMap();
   }
 
@@ -166,7 +159,7 @@ public class Yaml extends FlatFile {
 
   // Writing without comments
   private void write0(final FileData fileData) throws IOException {
-    @Cleanup final SimpleYamlWriter writer = new SimpleYamlWriter(this.file);
+    @Cleanup val writer = new SimpleYamlWriter(this.file);
     writer.write(fileData.toMap());
   }
 
@@ -190,23 +183,25 @@ public class Yaml extends FlatFile {
     this.yamlEditor.addHeader(toAdd);
   }
 
+  @SuppressWarnings("unused")
   public final void addHeader(final String... header) {
     addHeader(Arrays.asList(header));
   }
 
+    @SuppressWarnings("unused")
 	public final void framedHeader (final String... header) {
-		List <String> stringList = new ArrayList <>();
-		String border = "# +----------------------------------------------------+ #";
+		List<String> stringList = new ArrayList <>();
+		var border = "# +----------------------------------------------------+ #";
 		stringList.add(border);
 
-		for (String line : header) {
-			StringBuilder builder = new StringBuilder();
+		for (var line : header) {
+			var builder = new StringBuilder();
 			if (line.length() > 50) {
 				continue;
 			}
 
 			int length = (50 - line.length()) / 2;
-			StringBuilder finalLine = new StringBuilder(line);
+			var finalLine = new StringBuilder(line);
 
 			for (int i = 0; i < length; i++) {
 				finalLine.append(" ");
@@ -219,7 +214,7 @@ public class Yaml extends FlatFile {
 				finalLine.append(" ");
 			}
 
-			builder.append("# < ").append(finalLine.toString()).append(" > #");
+			builder.append("# < ").append(finalLine).append(" > #");
 			stringList.add(builder.toString());
 		}
 		stringList.add(border);

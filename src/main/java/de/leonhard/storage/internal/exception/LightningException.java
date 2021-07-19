@@ -22,10 +22,11 @@ public class LightningException extends RuntimeException {
     super(String.join("\n", messages), null, false, true);
   }
 
+  @SuppressWarnings("unused")
   protected LightningException(
       @NonNull final Throwable cause,
-      @NonNull final boolean enableSuppression,
-      @NonNull final boolean writableStackTrace,
+      final boolean enableSuppression,
+      final boolean writableStackTrace,
       @NonNull final String... messages) {
     super(String.join("\n", messages), cause, enableSuppression, writableStackTrace);
   }

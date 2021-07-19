@@ -16,8 +16,9 @@ public interface LightningSerializable<T> {
    * Save our serializable to data-structure.
    *
    * @throws ClassCastException Exception thrown when serialization failed.
+   * @param t
    */
-  Object serialize(@NonNull final T t) throws ClassCastException;
+  Object serialize(final Object t) throws ClassCastException;
 
   Class<T> getClazz();
 }

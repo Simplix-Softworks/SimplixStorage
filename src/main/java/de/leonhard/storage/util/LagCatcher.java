@@ -1,13 +1,17 @@
 package de.leonhard.storage.util;
 
+import lombok.experimental.UtilityClass;
+import lombok.val;
+import lombok.var;
+
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import lombok.experimental.UtilityClass;
 
 /**
  * Utility Class to take benchmarks
  */
 @UtilityClass
+@SuppressWarnings("unused")
 public class LagCatcher {
 
   private final HashMap<String, Long> startTimes = new HashMap<>();
@@ -17,7 +21,7 @@ public class LagCatcher {
     if (LagCatcher.startTimes.containsKey(name)) {
       throw new IllegalStateException(("Test is already running for '" + name + "'"));
     }
-    final long nanoTime = System.nanoTime();
+    val nanoTime = System.nanoTime();
     LagCatcher.startTimes.put(name, nanoTime);
   }
 
@@ -32,15 +36,15 @@ public class LagCatcher {
     if (!LagCatcher.startTimes.containsKey(name) || !LagCatcher.stopTimes.containsKey(name)) {
       throw new IllegalStateException(("No results found for '" + name + "'"));
     }
-    final Long value = LagCatcher.startTimes.get(name);
+    val value = LagCatcher.startTimes.get(name);
     if (value == null) {
       return;
     }
-    final long start = value;
-    final Long value2 = LagCatcher.stopTimes.get(name);
+    val start = (long) value;
+    val value2 = LagCatcher.stopTimes.get(name);
     if (value2 != null) {
-      final long end = value2;
-      final long took = end - start;
+      val end = (long) value2;
+      val took = end - start;
       System.out.println(
           (Object)
               (
@@ -62,9 +66,9 @@ public class LagCatcher {
   }
 
   public void runMultipleTimes(final int cycles, final Runnable runnable) {
-    long nanosTook = 0L;
+    var nanosTook = 0L;
     for (int i = 0; i < cycles; ++i) {
-      final long nanoTime = System.nanoTime();
+      val nanoTime = System.nanoTime();
       runnable.run();
       nanosTook += System.nanoTime() - nanoTime;
     }

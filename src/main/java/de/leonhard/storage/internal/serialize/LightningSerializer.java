@@ -1,12 +1,14 @@
 package de.leonhard.storage.internal.serialize;
 
 import de.leonhard.storage.util.Valid;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+import lombok.val;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Class to register serializable's
@@ -35,7 +37,7 @@ public class LightningSerializer {
 
   @Nullable
   public LightningSerializable<?> findSerializable(final Class<?> clazz) {
-    for (final LightningSerializable<?> serializable : serializables) {
+    for (val serializable : serializables) {
       if (serializable.getClazz().equals(clazz)) {
         return serializable;
       }
@@ -48,7 +50,7 @@ public class LightningSerializer {
    * Method to save an object
    */
   public Object serialize(final Object obj) {
-    final LightningSerializable serializable = findSerializable(obj.getClass());
+    val serializable = findSerializable(obj.getClass());
 
     Valid.notNull(
         serializable,
@@ -56,12 +58,14 @@ public class LightningSerializer {
     return serializable.serialize(obj);
   }
 
+  @SuppressWarnings("unchecked")
   public <T> T deserialize(final Object raw, Class<T> type) {
-    final LightningSerializable<?> serializable = findSerializable(type);
+    val serializable = findSerializable(type);
     Valid.notNull(
         serializable,
         "No serializable found for '" + type.getSimpleName() + "'",
         "Raw: '" + raw.getClass().getSimpleName() + "'");
+    assert serializable != null;
     return (T) serializable.deserialize(raw);
   }
 }

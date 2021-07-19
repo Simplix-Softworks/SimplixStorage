@@ -1,8 +1,10 @@
 package de.leonhard.storage.util;
 
-import java.io.Writer;
 import lombok.Getter;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Writer;
 
 /**
  * A Writer writing in a StringBuilder. This is NOT Thread safe.
@@ -10,6 +12,7 @@ import lombok.NonNull;
  * @author TheElectronWill Edited by JavaFactoryDev.
  */
 @Getter
+@SuppressWarnings("unused")
 public class FastStringWriter extends Writer {
 
   /**
@@ -55,17 +58,17 @@ public class FastStringWriter extends Writer {
   }
 
   @Override
-  public void write(final String str, final int off, final int len) {
+  public void write(final @NotNull String str, final int off, final int len) {
     this.stringBuilder.append(str, off, off + len);
   }
 
   @Override
-  public void write(final String str) {
+  public void write(final @NotNull String str) {
     this.stringBuilder.append(str);
   }
 
   @Override
-  public void write(final char[] cbuf, final int off, final int len) {
+  public void write(final char @NotNull [] cbuf, final int off, final int len) {
     this.stringBuilder.append(cbuf, off, len);
   }
 

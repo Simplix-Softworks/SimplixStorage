@@ -1,9 +1,11 @@
 package de.leonhard.storage.internal;
 
 import de.leonhard.storage.util.FileUtils;
-import java.io.File;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+
+import java.io.File;
 
 @Getter
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public enum FileType {
   }
 
   public static FileType fromExtension(final String type) {
-    for (final FileType value : values()) {
+    for (val value : values()) {
       if (!value.extension.equalsIgnoreCase(type)) {
         continue;
       }

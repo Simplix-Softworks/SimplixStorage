@@ -1,8 +1,9 @@
 package de.leonhard.storage.internal.editor.yaml;
 
-import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+
+import java.util.*;
 
 @RequiredArgsConstructor
 public final class YamlParser {
@@ -37,8 +38,8 @@ public final class YamlParser {
 
   private List<String> getKeyAndRemove(String key, final Map<String, List<String>> data) {
     key = key.split(":")[0];
-    for (final val entry : data.entrySet()) {
-      final String entryKey = entry.getKey().split(":")[0];
+    for (val entry : data.entrySet()) {
+      val entryKey = entry.getKey().split(":")[0];
 
       // using substring since indentation might differ a bit
       if (key.equals(entryKey) || key.substring(1).equals(entryKey)) {
@@ -50,6 +51,7 @@ public final class YamlParser {
     return new ArrayList<>();
   }
 
+  @SuppressWarnings("unused")
   public Map<String, List<String>> assignCommentsToKey() {
     return assignCommentsToKey(this.yamlEditor.read());
   }
@@ -65,11 +67,11 @@ public final class YamlParser {
 
     String currentKey = FOOTER;
     for (int i = lines.size() - 1; i >= 0; i--) {
-      final String line = lines.get(i);
+      val line = lines.get(i);
       if (!line.trim().startsWith("#") && !line.isEmpty()) {
         currentKey = line;
       } else {
-        final List<String> storage = out.get(currentKey.split(":")[0]);
+        val storage = out.get(currentKey.split(":")[0]);
 
         if (storage == null) {
           out.put(

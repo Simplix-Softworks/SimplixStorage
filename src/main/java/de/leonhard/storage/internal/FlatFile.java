@@ -5,17 +5,19 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.sections.FlatFileSection;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
+import lombok.*;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Consumer;
-import lombok.*;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @ToString
 @EqualsAndHashCode
+@SuppressWarnings("unused")
 public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
 
   protected final File file;
@@ -41,7 +43,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     if (path == null || path.isEmpty()) {
       this.file = new File(FileUtils.replaceExtensions(name) + "." + fileType.getExtension());
     } else {
-      final String fixedPath = path.replace("\\", "/");
+      val fixedPath = path.replace("\\", "/");
       this.file = new File(
           fixedPath
           + File.separator
@@ -86,7 +88,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     return createFile(this.file);
   }
 
-  private synchronized boolean createFile(final File file) {
+  @Synchronized
+  private boolean createFile(final File file) {
     if (file.exists()) {
       this.lastLoaded = System.currentTimeMillis();
       return false;
@@ -115,7 +118,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   protected abstract void write(final FileData data) throws IOException;
 
   protected void handleReloadException(final IOException ioException) {
-    final String fileName = this.fileType == null
+    val fileName = this.fileType == null
         ? "File"
         : this.fileType.name().toLowerCase(); // fileType might be null
     System.err.println("Exception reloading " + fileName + " '" + getName() + "'");
@@ -126,10 +129,10 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   // Overridden methods from DataStorage
   // ---------------------------------------------------------------------------------------------------->
 
-  @Override
-  public synchronized void set(final String key, final Object value) {
+  @Override @Synchronized
+  public void set(final String key, final Object value) {
     reloadIfNeeded();
-    final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+    val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
     this.fileData.insert(finalKey, value);
     write();
     this.lastLoaded = System.currentTimeMillis();
@@ -138,7 +141,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   @Override
   public final Object get(final String key) {
     reloadIfNeeded();
-    final String finalKey = this.pathPrefix == null ? key : this.pathPrefix + "." + key;
+    val finalKey = this.pathPrefix == null ? key : this.pathPrefix + "." + key;
     return getFileData().get(finalKey);
   }
 
@@ -151,7 +154,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   @Override
   public final boolean contains(final String key) {
     reloadIfNeeded();
-    final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+    val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
     return this.fileData.containsKey(finalKey);
   }
 
@@ -179,8 +182,8 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     return this.fileData.keySet(key);
   }
 
-  @Override
-  public synchronized final void remove(final String key) {
+  @Override @Synchronized
+  public final void remove(final String key) {
     reloadIfNeeded();
     this.fileData.remove(key);
     write();
@@ -259,12 +262,13 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     return this.file.getAbsolutePath();
   }
 
-  public synchronized void replace(
+  @Synchronized
+  public void replace(
       final CharSequence target,
       final CharSequence replacement) throws IOException {
-    final List<String> lines = Files.readAllLines(this.file.toPath());
-    final List<String> result = new ArrayList<>();
-    for (final String line : lines) {
+    val lines = Files.readAllLines(this.file.toPath());
+    val result = new ArrayList<String>();
+    for (val line : lines) {
       result.add(line.replace(target, replacement));
     }
     Files.write(this.file.toPath(), result);

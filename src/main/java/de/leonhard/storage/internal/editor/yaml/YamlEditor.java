@@ -2,13 +2,16 @@ package de.leonhard.storage.internal.editor.yaml;
 
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.YamlUtils;
-import java.io.File;
-import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+
+import java.io.File;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class YamlEditor {
 
   private final File file;
@@ -53,14 +56,14 @@ public class YamlEditor {
   }
 
   public void setHeader(final List<String> header) {
-    final List<String> lines = read();
+    val lines = read();
 
     // Remove old header
     lines.removeAll(readHeader());
 
     // Adding new header in front
     for (int i = 0; i < header.size(); i++) {
-      final String toAdd = header.get(i);
+      val toAdd = header.get(i);
       lines.add(i, toAdd.startsWith("#") ? toAdd : "#" + toAdd);
     }
 
@@ -69,9 +72,9 @@ public class YamlEditor {
   }
 
   public void addHeader(final List<String> header) {
-    final List<String> lines = read();
+    val lines = read();
     for (int i = 0; i < header.size(); i++) {
-      final String toAdd = header.get(i);
+      val toAdd = header.get(i);
       lines.add(i, toAdd.startsWith("#") ? toAdd : "#" + toAdd);
     }
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 public abstract class MapProvider {
 
+  @SuppressWarnings("unused")
   public Map<String, Object> getMapImplementation() {
     return new HashMap<>();
   }

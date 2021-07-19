@@ -1,10 +1,12 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.DataStorage;
+import lombok.experimental.UtilityClass;
+import lombok.val;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
-import lombok.experimental.UtilityClass;
 
 @SuppressWarnings("unchecked")
 @UtilityClass
@@ -86,7 +88,7 @@ public class ClassWrapper {
 
     public Long[] getLongArray(final Object obj) {
       if (obj instanceof List) {
-        final List<Long> list = (List<Long>) obj;
+        val list = (List<Long>) obj;
         return list.toArray(new Long[0]);
       }
 
@@ -109,7 +111,7 @@ public class ClassWrapper {
 
     public Double[] getDoubleArray(final Object obj) {
       if (obj instanceof List) {
-        final List<Double> list = (List<Double>) obj;
+        val list = (List<Double>) obj;
         return list.toArray(new Double[0]);
       }
 
@@ -132,7 +134,7 @@ public class ClassWrapper {
 
     public Float[] getFloatArray(final Object obj) {
       if (obj instanceof List) {
-        final List<Float> list = (List<Float>) obj;
+        val list = (List<Float>) obj;
         return list.toArray(new Float[0]);
       }
 
@@ -155,7 +157,7 @@ public class ClassWrapper {
 
     public Integer[] getIntArray(final Object obj) {
       if (obj instanceof List) {
-        final List<Integer> list = (List<Integer>) obj;
+        val list = (List<Integer>) obj;
         return list.toArray(new Integer[0]);
       }
 
@@ -179,7 +181,7 @@ public class ClassWrapper {
 
     public Short[] getShortArray(final Object obj) {
       if (obj instanceof List) {
-        final List<Short> list = (List<Short>) obj;
+        val list = (List<Short>) obj;
         return list.toArray(new Short[0]);
       }
 
@@ -202,13 +204,14 @@ public class ClassWrapper {
 
     public Byte[] getByteArray(final Object obj) {
       if (obj instanceof List) {
-        final List<Byte> list = (List<Byte>) obj;
+        val list = (List<Byte>) obj;
         return list.toArray(new Byte[0]);
       }
 
       return new Byte[0];
     }
 
+    @SuppressWarnings("unused")
     public Byte getByte(final Object obj) {
       if (obj instanceof Number) {
         return ((Number) obj).byteValue();
@@ -225,13 +228,14 @@ public class ClassWrapper {
 
     public String[] getStringArray(final Object obj) {
       if (obj instanceof List) {
-        final List<String> list = (List<String>) obj;
+        val list = (List<String>) obj;
         return list.toArray(new String[0]);
       }
 
       return new String[0];
     }
 
+    @SuppressWarnings("unused")
     public String getString(final Object obj) {
       if (obj instanceof Collection && ((Collection<?>) obj).size() == 1) {
         return ((List<?>) obj).get(0).toString();

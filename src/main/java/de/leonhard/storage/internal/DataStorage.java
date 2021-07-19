@@ -4,11 +4,15 @@ import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.NonNull;
+import lombok.val;
+import lombok.var;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+@SuppressWarnings("unused")
 public interface DataStorage {
 
   /**
@@ -26,6 +30,7 @@ public interface DataStorage {
    * @param key Key to check
    * @return Returned value.
    */
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   boolean contains(final String key);
 
   /**
@@ -77,7 +82,7 @@ public interface DataStorage {
    */
   default <T> void setSerializable(@NonNull final String key, @NonNull final T value) {
     try {
-      final Object data = LightningSerializer.serialize(value);
+      val data = LightningSerializer.serialize(value);
       set(key, data);
     } catch (final Throwable throwable) {
       throw LightningProviders.exceptionHandler().create(
@@ -99,7 +104,7 @@ public interface DataStorage {
    * @param def Default value & type of it
    */
   default <T> T get(final String key, final T def) {
-    final Object raw = get(key);
+    val raw = get(key);
     return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }
 
@@ -233,10 +238,11 @@ public interface DataStorage {
   default <E extends Enum<E>> E getEnum(
       final String key,
       final Class<E> enumType) {
-    final Object object = get(key);
+    val object = get(key);
     Valid.checkBoolean(
         object instanceof String,
         "No usable Enum-Value found for '" + key + "'.");
+    assert object instanceof String;
     return Enum.valueOf(enumType, (String) object);
   }
 
@@ -251,7 +257,7 @@ public interface DataStorage {
     if (!contains(key)) {
       return null;
     }
-    Object raw = get(key);
+    var raw = get(key);
     if (raw == null) {
       return null;
     }
@@ -264,7 +270,7 @@ public interface DataStorage {
       return null;
     }
 
-    final List<?> rawList = getList(key);
+    val rawList = getList(key);
 
     return rawList
         .stream()
@@ -282,7 +288,7 @@ public interface DataStorage {
    * @param <T> Type of default-value.
    */
   default <T> T getOrDefault(final String key, @NonNull final T def) {
-    final Object raw = get(key);
+    val raw = get(key);
     return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }
 
@@ -313,13 +319,13 @@ public interface DataStorage {
    * @param def Value to set or return.
    */
   default <T> T getOrSetDefault(final String key, final T def) {
-    final Object raw = get(key);
+    val raw = get(key);
     //Key it not yet present in data-structure
     if (raw == null) {
       set(key, def);
       return def;
     } else {
-      return (T) ClassWrapper.getFromDef(raw, def);
+      return ClassWrapper.getFromDef(raw, def);
     }
   }
 }

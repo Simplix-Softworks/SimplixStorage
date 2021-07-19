@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
+@SuppressWarnings("unused")
 public class Valid {
 
   public void error(final Throwable cause, final String... messages) {

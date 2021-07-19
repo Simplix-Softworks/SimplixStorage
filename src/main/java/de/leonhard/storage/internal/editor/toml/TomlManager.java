@@ -2,12 +2,14 @@ package de.leonhard.storage.internal.editor.toml;
 
 import de.leonhard.storage.internal.exceptions.TomlException;
 import de.leonhard.storage.util.FastStringWriter;
+import lombok.experimental.UtilityClass;
+import lombok.val;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Map;
-import lombok.experimental.UtilityClass;
 
 /**
  * Utility class for reading and writing TOML v0.4.0. This class internally uses {@link TomlReader}
@@ -39,6 +41,7 @@ public class TomlManager {
    * @return a String that contains the data in the TOML format.
    * @throws IOException if an error occurs
    */
+  @SuppressWarnings("unused")
   public String writeToString(final Map<String, Object> data) throws IOException {
     final FastStringWriter writer = new FastStringWriter();
     write(data, writer);
@@ -54,7 +57,7 @@ public class TomlManager {
    * @throws IOException if an error occurs
    */
   public void write(final Map<String, Object> data, final File file) throws IOException {
-    final FileOutputStream out = new FileOutputStream(file);
+    val out = new FileOutputStream(file);
     write(data, out);
   }
 
@@ -67,7 +70,7 @@ public class TomlManager {
    * @throws TomlException if a parse error occurs
    */
   public void write(final Map<String, Object> data, final OutputStream out) throws IOException {
-    final OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+    val writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
     write(data, writer);
   }
 
@@ -81,7 +84,7 @@ public class TomlManager {
    * @throws TomlException if a parse error occurs
    */
   public void write(final Map<String, Object> data, final Writer writer) throws IOException {
-    final TomlWriter tw = new TomlWriter(writer);
+    val tw = new TomlWriter(writer);
     tw.write(data);
     tw.close();
   }
@@ -103,7 +106,7 @@ public class TomlManager {
       final int indentSize,
       final boolean indentWithSpaces)
       throws IOException {
-    final TomlWriter tw = new TomlWriter(writer, indentSize, indentWithSpaces);
+    val tw = new TomlWriter(writer, indentSize, indentWithSpaces);
     tw.write(data);
     tw.close();
   }
@@ -130,7 +133,7 @@ public class TomlManager {
    * @throws TomlException if a parse error occurs
    */
   public Map<String, Object> read(final String toml, final boolean strictAsciiBareKeys) {
-    final TomlReader tr = new TomlReader(toml, strictAsciiBareKeys);
+    val tr = new TomlReader(toml, strictAsciiBareKeys);
     return tr.read();
   }
 
@@ -205,13 +208,13 @@ public class TomlManager {
   public Map<String, Object> read(
       final Reader reader, final int bufferSize, final boolean strictAsciiBareKeys)
       throws IOException, TomlException {
-    final StringBuilder sb = new StringBuilder(bufferSize);
-    final char[] buf = new char[8192];
+    val sb = new StringBuilder(bufferSize);
+    val buf = new char[8192];
     int read;
     while ((read = reader.read(buf)) != -1) {
       sb.append(buf, 0, read);
     }
-    final TomlReader tr = new TomlReader(sb.toString(), strictAsciiBareKeys);
+    val tr = new TomlReader(sb.toString(), strictAsciiBareKeys);
     return tr.read();
   }
 }
