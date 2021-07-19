@@ -20,7 +20,7 @@ public enum DataType {
   UNSORTED {
     @Override
     public Map<String, Object> getMapImplementation() {
-      return mapProvider.getSortedMapImplementation();
+      return mapProvider.getMapImplementation();
     }
   };
 
