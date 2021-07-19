@@ -2,13 +2,14 @@ package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 @SuppressWarnings("unused")
 public class Valid {
 
-  public void error(final Throwable cause, final String... messages) {
+  public void error(final @NotNull Throwable cause, final String... messages) {
     throw new LightningValidationException(cause, messages);
   }
 

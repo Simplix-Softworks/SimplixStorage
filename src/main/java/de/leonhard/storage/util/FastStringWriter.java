@@ -18,7 +18,7 @@ public class FastStringWriter extends Writer {
   /**
    * The underlying StringBuilder. Everything is appended to it.
    */
-  private final StringBuilder stringBuilder;
+  private final @NotNull StringBuilder stringBuilder;
 
   public FastStringWriter() {
     this.stringBuilder = new StringBuilder();
@@ -35,24 +35,24 @@ public class FastStringWriter extends Writer {
    * @return the content of the underlying StringBuilder.
    */
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return this.stringBuilder.toString();
   }
 
   @Override
-  public FastStringWriter append(final char c) {
+  public @NotNull FastStringWriter append(final char c) {
     this.stringBuilder.append(c);
     return this;
   }
 
   @Override
-  public FastStringWriter append(final CharSequence csq, final int start, final int end) {
+  public @NotNull FastStringWriter append(final CharSequence csq, final int start, final int end) {
     this.stringBuilder.append(csq, start, end);
     return this;
   }
 
   @Override
-  public FastStringWriter append(final CharSequence csq) {
+  public @NotNull FastStringWriter append(final CharSequence csq) {
     this.stringBuilder.append(csq);
     return this;
   }

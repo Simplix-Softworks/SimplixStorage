@@ -2,6 +2,7 @@ package de.leonhard.storage.internal.editor.yaml;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -10,11 +11,11 @@ public final class YamlParser {
 
   private static final String FOOTER = "FOOTER";
 
-  private final YamlEditor yamlEditor;
+  private final @NotNull YamlEditor yamlEditor;
 
-  public List<String> parseLines(
-      final List<String> comments,
-      final List<String> updated) {
+  public @NotNull List<String> parseLines(
+      final @NotNull List<String> comments,
+      final @NotNull List<String> updated) {
     final List<String> out = new ArrayList<>();
     final Map<String, List<String>> parsed = assignCommentsToKey(comments);
 
@@ -36,7 +37,7 @@ public final class YamlParser {
     return out;
   }
 
-  private List<String> getKeyAndRemove(String key, final Map<String, List<String>> data) {
+  private List<String> getKeyAndRemove(String key, final @NotNull Map<String, List<String>> data) {
     key = key.split(":")[0];
     for (val entry : data.entrySet()) {
       val entryKey = entry.getKey().split(":")[0];
@@ -52,7 +53,7 @@ public final class YamlParser {
   }
 
   @SuppressWarnings("unused")
-  public Map<String, List<String>> assignCommentsToKey() {
+  public @NotNull Map<String, List<String>> assignCommentsToKey() {
     return assignCommentsToKey(this.yamlEditor.read());
   }
 
@@ -62,7 +63,7 @@ public final class YamlParser {
    * @param lines Initial lines to read
    * @return Mapped comments (Key, comments)
    */
-  public Map<String, List<String>> assignCommentsToKey(final List<String> lines) {
+  public @NotNull Map<String, List<String>> assignCommentsToKey(final @NotNull List<String> lines) {
     final Map<String, List<String>> out = new HashMap<>();
 
     String currentKey = FOOTER;

@@ -8,6 +8,7 @@ import de.leonhard.storage.util.FileUtils;
 import lombok.Cleanup;
 import lombok.Getter;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -19,27 +20,28 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 @Getter
 public class Json extends FlatFile {
 
-  public Json(final Json json) {
-    super(json.getFile(), json.fileType);
+  public Json(final @NotNull Json json) {
+    super(json.getFile(), Objects.requireNonNull(json.fileType));
     this.fileData = json.getFileData();
     this.pathPrefix = json.getPathPrefix();
   }
 
-  public Json(final String name, final String path) {
+  public Json(final @NotNull String name, final String path) {
     this(name, path, null);
   }
 
-  public Json(final String name, final String path, final InputStream inputStream) {
+  public Json(final @NotNull String name, final String path, final InputStream inputStream) {
     this(name, path, inputStream, null);
   }
 
   public Json(
-      final String name,
+      final @NotNull String name,
       @Nullable final String path,
       @Nullable final InputStream inputStream,
       @Nullable final ReloadSettings reloadSettings) {
@@ -47,7 +49,7 @@ public class Json extends FlatFile {
   }
 
   public Json(
-      final String name,
+      final @NotNull String name,
       @Nullable final String path,
       @Nullable final InputStream inputStream,
       @Nullable final ReloadSettings reloadSettings,
@@ -66,7 +68,7 @@ public class Json extends FlatFile {
     forceReload();
   }
 
-  public Json(final File file) {
+  public Json(final @NotNull File file) {
     super(file, FileType.JSON);
     create();
     forceReload();
@@ -83,14 +85,14 @@ public class Json extends FlatFile {
    * @return Map
    */
   @Override
-  public final Map<?, ?> getMap(final String key) {
+  public final @Nullable Map<?, ?> getMap(final @NotNull String key) {
     val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
     if (!contains(finalKey)) {
       return new HashMap<>();
     } else {
       val map = get(key);
       if (map instanceof Map) {
-        return (Map<?, ?>) this.fileData.get(key);
+        return (Map<?, ?>) Objects.requireNonNull(this.fileData).get(key);
       } else if (map instanceof JSONObject) {
         return ((JSONObject) map).toMap();
       }
@@ -115,7 +117,7 @@ public class Json extends FlatFile {
   }
 
   @Override
-  protected final void write(final FileData data) throws IOException {
+  protected final void write(final @NotNull FileData data) throws IOException {
     @Cleanup val writer = FileUtils.createWriter(this.file);
     writer.write(data.toJsonObject().toString(3));
     writer.flush();

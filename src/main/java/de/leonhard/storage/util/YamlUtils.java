@@ -2,6 +2,7 @@ package de.leonhard.storage.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +14,7 @@ import java.util.List;
 @UtilityClass
 public class YamlUtils {
 
-  public List<String> getCommentsFromLines(final List<String> lines) {
+  public @NotNull List<String> getCommentsFromLines(final @NotNull List<String> lines) {
     final List<String> result = new ArrayList<>();
 
     for (val line : lines) {
@@ -24,7 +25,7 @@ public class YamlUtils {
     return result;
   }
 
-  public List<String> getFooterFromLines(final List<String> lines) {
+  public @NotNull List<String> getFooterFromLines(final @NotNull List<String> lines) {
     final List<String> result = new ArrayList<>();
     Collections.reverse(lines);
     for (val line : lines) {
@@ -38,7 +39,7 @@ public class YamlUtils {
     return result;
   }
 
-  public List<String> getHeaderFromLines(final List<String> lines) {
+  public @NotNull List<String> getHeaderFromLines(final @NotNull List<String> lines) {
     final List<String> result = new ArrayList<>();
 
     for (val line : lines) {
@@ -53,7 +54,7 @@ public class YamlUtils {
   /**
    * @return List of comments that don't belong to header or footer
    */
-  public List<String> getPureCommentsFromLines(final List<String> lines) {
+  public @NotNull List<String> getPureCommentsFromLines(final @NotNull List<String> lines) {
     val comments = getCommentsFromLines(lines);
     val header = getHeaderFromLines(lines);
     val footer = getFooterFromLines(lines);
@@ -64,7 +65,7 @@ public class YamlUtils {
     return comments;
   }
 
-  public List<String> getLinesWithoutFooterAndHeaderFromLines(final List<String> lines) {
+  public @NotNull List<String> getLinesWithoutFooterAndHeaderFromLines(final @NotNull List<String> lines) {
     val header = getHeaderFromLines(lines);
     val footer = getFooterFromLines(lines);
 
@@ -74,7 +75,7 @@ public class YamlUtils {
     return lines;
   }
 
-  public List<String> getKeys(final List<String> lines) {
+  public @NotNull List<String> getKeys(final @NotNull List<String> lines) {
     final List<String> result = new ArrayList<>();
 
     for (val line : lines) {

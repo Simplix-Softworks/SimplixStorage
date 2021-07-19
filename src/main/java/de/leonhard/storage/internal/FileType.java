@@ -4,6 +4,8 @@ import de.leonhard.storage.util.FileUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -14,13 +16,13 @@ public enum FileType {
   YAML("yml"),
   TOML("toml");
 
-  private final String extension;
+  private final @NotNull String extension;
 
-  public static FileType fromFile(final File file) {
+  public static @Nullable FileType fromFile(final @NotNull File file) {
     return fromExtension(FileUtils.getExtension(file));
   }
 
-  public static FileType fromExtension(final String type) {
+  public static @Nullable FileType fromExtension(final String type) {
     for (val value : values()) {
       if (!value.extension.equalsIgnoreCase(type)) {
         continue;
@@ -30,7 +32,7 @@ public enum FileType {
     return null;
   }
 
-  public static FileType fromExtension(final File file) {
+  public static @Nullable FileType fromExtension(final @NotNull File file) {
     return fromExtension(FileUtils.getExtension(file));
   }
 }

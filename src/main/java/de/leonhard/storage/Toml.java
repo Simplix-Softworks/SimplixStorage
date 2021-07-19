@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.function.Consumer;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Toml extends FlatFile {
@@ -22,11 +23,11 @@ public class Toml extends FlatFile {
     this.pathPrefix = toml.getPathPrefix();
   }
 
-  public Toml(final String name, final String path) {
+  public Toml(final @NotNull String name, final @NotNull String path) {
     this(name, path, null);
   }
 
-  public Toml(final String name, final String path, final InputStream inputStream) {
+  public Toml(final @NotNull String name, final @NotNull String path, final InputStream inputStream) {
     this(name, path, inputStream, null, null);
   }
 
@@ -50,7 +51,7 @@ public class Toml extends FlatFile {
     forceReload();
   }
 
-  public Toml(final File file) {
+  public Toml(final @NotNull File file) {
     super(file, FileType.TOML);
     create();
     forceReload();
@@ -61,15 +62,15 @@ public class Toml extends FlatFile {
   // ----------------------------------------------------------------------------------------------------
 
   @Override
-  protected final Map<String, Object> readToMap() throws IOException {
+  protected final @NotNull Map<String, Object> readToMap() throws IOException {
     return TomlManager.read(getFile());
   }
 
   @Override
-  protected final void write(final FileData data) {
+  protected final void write(final @NotNull FileData data) {
     try {
       TomlManager.write(data.toMap(), getFile());
-    } catch (final IOException ioException) {
+    } catch (final @NotNull IOException ioException) {
       System.err.println("Exception while writing fileData to file '" + getName() + "'");
       System.err.println("In '" + FileUtils.getParentDirPath(this.file) + "'");
       ioException.printStackTrace();

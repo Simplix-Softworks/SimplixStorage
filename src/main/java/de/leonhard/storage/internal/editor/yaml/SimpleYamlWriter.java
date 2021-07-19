@@ -3,6 +3,8 @@ package de.leonhard.storage.internal.editor.yaml;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.util.FileUtils;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.Writer;
 
@@ -11,11 +13,11 @@ import java.io.Writer;
  */
 public class SimpleYamlWriter extends YamlWriter implements AutoCloseable {
 
-  public SimpleYamlWriter(final Writer writer) {
+  public SimpleYamlWriter(final @NotNull Writer writer) {
     super(writer, LightningProviders.yamlConfig());
   }
 
-  public SimpleYamlWriter(final File file) {
+  public SimpleYamlWriter(final @NotNull File file) {
     this(FileUtils.createWriter(file));
   }
 }

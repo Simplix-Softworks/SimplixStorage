@@ -4,6 +4,7 @@ import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import de.leonhard.storage.util.FileUtils;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.Reader;
@@ -18,20 +19,20 @@ public class SimpleYamlReader
     extends YamlReader
     implements AutoCloseable {
 
-  public SimpleYamlReader(final Reader reader) {
+  public SimpleYamlReader(final @NotNull Reader reader) {
     super(reader);
   }
 
-  public SimpleYamlReader(final File file) {
+  public SimpleYamlReader(final @NotNull File file) {
     super(FileUtils.createReader(file));
   }
 
-  public SimpleYamlReader(final String yaml) {
+  public SimpleYamlReader(final @NotNull String yaml) {
     super(yaml);
   }
 
   @SuppressWarnings("unchecked")
-  public Map<String, Object> readToMap() throws YamlException {
+  public @NotNull Map<String, Object> readToMap() throws YamlException {
     val obj = read();
     return obj == null ? new HashMap<>() : (Map<String, Object>) obj;
   }

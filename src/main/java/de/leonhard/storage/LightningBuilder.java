@@ -9,6 +9,7 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public final class LightningBuilder {
 
   private final String path;
   private String name;
-  private InputStream inputStream;
+  private @Nullable InputStream inputStream;
   private ReloadSettings reloadSettings;
   private ConfigSettings configSettings;
   private DataType dataType;
@@ -41,15 +42,15 @@ public final class LightningBuilder {
   // Creating our Builder
   // ----------------------------------------------------------------------------------------------------
 
-  public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path) {
+  public static @NotNull LightningBuilder fromPath(@NonNull final String name, @NonNull final String path) {
     return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
   }
 
-  public static LightningBuilder fromPath(@NonNull final Path path) {
+  public static @NotNull LightningBuilder fromPath(@NonNull final Path path) {
     return fromFile(path.toFile());
   }
 
-  public static LightningBuilder fromFile(@NonNull final File file) {
+  public static @NotNull LightningBuilder fromFile(@NonNull final File file) {
     // File shouldn't be a directory
     Valid.checkBoolean(
         !file.isDirectory(),
@@ -64,7 +65,7 @@ public final class LightningBuilder {
   }
 
   @SuppressWarnings("ResultOfMethodCallIgnored")
-  public static LightningBuilder fromDirectory(@NonNull final File file) {
+  public static @NotNull LightningBuilder fromDirectory(@NonNull final File file) {
     Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
     if (!file.exists()) {
@@ -80,17 +81,17 @@ public final class LightningBuilder {
   // Adding out settings
   // ----------------------------------------------------------------------------------------------------
 
-  public LightningBuilder reloadCallback(@Nullable final Consumer<FlatFile> reloadConsumer) {
+  public @NotNull LightningBuilder reloadCallback(@Nullable final Consumer<FlatFile> reloadConsumer) {
     this.reloadConsumer = reloadConsumer;
     return this;
   }
 
-  public LightningBuilder addInputStreamFromFile(@NonNull final File file) {
+  public @NotNull LightningBuilder addInputStreamFromFile(@NonNull final File file) {
     this.inputStream = FileUtils.createInputStream(file);
     return this;
   }
 
-  public LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
+  public @NotNull LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
     this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
 
     Valid.notNull(
@@ -98,27 +99,27 @@ public final class LightningBuilder {
     return this;
   }
 
-  public LightningBuilder setName(@NonNull final String name) {
+  public @NotNull LightningBuilder setName(@NonNull final String name) {
     this.name = name;
     return this;
   }
 
-  public LightningBuilder addInputStream(@Nullable final InputStream inputStream) {
+  public @NotNull LightningBuilder addInputStream(@Nullable final InputStream inputStream) {
     this.inputStream = inputStream;
     return this;
   }
 
-  public LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings) {
+  public @NotNull LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings) {
     this.configSettings = configSettings;
     return this;
   }
 
-  public LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings) {
+  public @NotNull LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings) {
     this.reloadSettings = reloadSettings;
     return this;
   }
 
-  public LightningBuilder setDataType(@NonNull final DataType dataType) {
+  public @NotNull LightningBuilder setDataType(@NonNull final DataType dataType) {
     this.dataType = dataType;
     return this;
   }
@@ -127,7 +128,7 @@ public final class LightningBuilder {
   // Create the objects of our FileTypes
   // ----------------------------------------------------------------------------------------------------
 
-  public Config createConfig() {
+  public @NotNull Config createConfig() {
     return new Config(
         this.name,
         this.path,
@@ -138,7 +139,7 @@ public final class LightningBuilder {
         reloadConsumer);
   }
 
-  public Yaml createYaml() {
+  public @NotNull Yaml createYaml() {
     return new Yaml(
         this.name,
         this.path,
@@ -149,7 +150,7 @@ public final class LightningBuilder {
         reloadConsumer);
   }
 
-  public Toml createToml() {
+  public @NotNull Toml createToml() {
     return new Toml(
         this.name,
         this.path,
@@ -158,7 +159,7 @@ public final class LightningBuilder {
         reloadConsumer);
   }
 
-  public Json createJson() {
+  public @NotNull Json createJson() {
     return new Json(
         this.name,
         this.path,

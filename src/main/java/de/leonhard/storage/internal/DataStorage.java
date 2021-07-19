@@ -7,6 +7,7 @@ import de.leonhard.storage.util.Valid;
 import lombok.NonNull;
 import lombok.val;
 import lombok.var;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -41,13 +42,13 @@ public interface DataStorage {
    */
   void set(final String key, final Object value);
 
-  Set<String> singleLayerKeySet();
+  @NotNull Set<String> singleLayerKeySet();
 
-  Set<String> singleLayerKeySet(final String key);
+  @NotNull Set<String> singleLayerKeySet(final String key);
 
-  Set<String> keySet();
+  @NotNull Set<String> keySet();
 
-  Set<String> keySet(final String key);
+  @NotNull Set<String> keySet(final String key);
 
   void remove(final String key);
 
@@ -65,7 +66,7 @@ public interface DataStorage {
    * @param type Type of the value
    */
   default <T> Optional<T> find(final String key, final Class<T> type) {
-    final Object raw = get(key);
+    val raw = get(key);
     //Key wasn't found
     if (raw == null) {
       return Optional.empty();
@@ -84,7 +85,7 @@ public interface DataStorage {
     try {
       val data = LightningSerializer.serialize(value);
       set(key, data);
-    } catch (final Throwable throwable) {
+    } catch (final @NotNull Throwable throwable) {
       throw LightningProviders.exceptionHandler().create(
           throwable,
           "Can't deserialize: '" + key + "'",
@@ -103,7 +104,7 @@ public interface DataStorage {
    * @param key Path to value in data-structure
    * @param def Default value & type of it
    */
-  default <T> T get(final String key, final T def) {
+  default <T> @NotNull T get(final String key, final @NotNull T def) {
     val raw = get(key);
     return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }
@@ -114,7 +115,7 @@ public interface DataStorage {
    * @param key Path to String in data-structure
    * @return Returns the value
    */
-  default String getString(final String key) {
+  default @NotNull String getString(final String key) {
     return getOrDefault(key, "");
   }
 
@@ -187,7 +188,7 @@ public interface DataStorage {
    *
    * @param key Path to List in data structure.
    */
-  default List<?> getList(final String key) {
+  default @NotNull List<?> getList(final String key) {
     return getOrDefault(key, new ArrayList<>());
   }
 
@@ -199,23 +200,23 @@ public interface DataStorage {
     return getOrSetDefault(key, new ArrayList<>());
   }
 
-  default List<String> getStringList(final String key) {
+  default @NotNull List<String> getStringList(final String key) {
     return getOrDefault(key, new ArrayList<>());
   }
 
-  default List<Integer> getIntegerList(final String key) {
+  default @NotNull List<Integer> getIntegerList(final String key) {
     return getOrDefault(key, new ArrayList<>());
   }
 
-  default List<Byte> getByteList(final String key) {
+  default @NotNull List<Byte> getByteList(final String key) {
     return getOrDefault(key, new ArrayList<>());
   }
 
-  default List<Long> getLongList(final String key) {
+  default @NotNull List<Long> getLongList(final String key) {
     return getOrDefault(key, new ArrayList<>());
   }
 
-  default Map<?, ?> getMap(final String key) {
+  default @Nullable Map<?, ?> getMap(final String key) {
     return getOrDefault(key, new HashMap<>());
   }
 
@@ -237,7 +238,7 @@ public interface DataStorage {
    */
   default <E extends Enum<E>> E getEnum(
       final String key,
-      final Class<E> enumType) {
+      final @NotNull Class<E> enumType) {
     val object = get(key);
     Valid.checkBoolean(
         object instanceof String,
@@ -253,7 +254,7 @@ public interface DataStorage {
    * @return Serialized instance of class.
    */
   @Nullable
-  default <T> T getSerializable(final String key, final Class<T> clazz) {
+  default <T> T getSerializable(final String key, final @NotNull Class<T> clazz) {
     if (!contains(key)) {
       return null;
     }
@@ -265,7 +266,7 @@ public interface DataStorage {
   }
 
   @Nullable
-  default <T> List<T> getSerializableList(final String key, final Class<T> type) {
+  default <T> List<T> getSerializableList(final String key, final @NotNull Class<T> type) {
     if (!contains(key)) {
       return null;
     }
@@ -287,7 +288,7 @@ public interface DataStorage {
    * @param def Default value, if data-structure doesn't contain key.
    * @param <T> Type of default-value.
    */
-  default <T> T getOrDefault(final String key, @NonNull final T def) {
+  default <T> @NotNull T getOrDefault(final String key, @NonNull final T def) {
     val raw = get(key);
     return raw == null ? def : ClassWrapper.getFromDef(raw, def);
   }

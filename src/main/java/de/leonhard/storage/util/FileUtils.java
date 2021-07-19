@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -31,7 +32,7 @@ public class FileUtils {
   // Getting Files
   // ----------------------------------------------------------------------------------------------------
 
-  public List<File> listFiles(@NonNull final File folder) {
+  public @NotNull List<File> listFiles(@NonNull final File folder) {
     return listFiles(folder, null);
   }
 
@@ -44,7 +45,7 @@ public class FileUtils {
    * @param folder    Folder to search in.
    * @param extension Extension to search for. Set to null to skip extension validation.
    */
-  public List<File> listFiles(
+  public @NotNull List<File> listFiles(
       @NonNull final File folder,
       @Nullable final String extension) {
     final List<File> result = new ArrayList<>();
@@ -65,13 +66,13 @@ public class FileUtils {
     return result;
   }
 
-  public File getAndMake(
+  public @NotNull File getAndMake(
       @NonNull final String name,
       @NonNull final String path) {
     return getAndMake(new File(path, name));
   }
 
-  public File getAndMake(@NonNull final File file) {
+  public @NotNull File getAndMake(@NonNull final File file) {
     try {
       if (file.getParentFile() != null && !file.getParentFile().exists()) {
         file.getParentFile().mkdirs();
@@ -80,7 +81,7 @@ public class FileUtils {
         file.createNewFile();
       }
 
-    } catch (final IOException ex) {
+    } catch (final @NotNull IOException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while creating file '" + file.getName() + "'.",
@@ -94,24 +95,24 @@ public class FileUtils {
   // Methods for handling the extension of files
   // ----------------------------------------------------------------------------------------------------
 
-  private String getExtension(@NonNull final String path) {
+  private @NotNull String getExtension(@NonNull final String path) {
     return path.lastIndexOf(".") > 0
         ? path.substring(path.lastIndexOf(".") + 1)
         : "";
   }
 
-  public String getExtension(@NonNull final File file) {
+  public @NotNull String getExtension(@NonNull final File file) {
     return getExtension(file.getName());
   }
 
-  public String replaceExtensions(@NonNull final String fileName) {
+  public @NotNull String replaceExtensions(@NonNull final String fileName) {
     if (!fileName.contains(".")) {
       return fileName;
     }
     return fileName.replace("." + getExtension(fileName), "");
   }
 
-  public String getParentDirPath(@NonNull final File file) {
+  public @NotNull String getParentDirPath(@NonNull final File file) {
     return getParentDirPath(file.getAbsolutePath());
   }
 
@@ -122,7 +123,7 @@ public class FileUtils {
    * @param fileOrDirPath Path to file
    * @return Path to file as String
    */
-  private String getParentDirPath(@NonNull final String fileOrDirPath) {
+  private @NotNull String getParentDirPath(@NonNull final String fileOrDirPath) {
     final boolean endsWithSlash = fileOrDirPath.endsWith(File.separator);
     return fileOrDirPath
         .substring(0, fileOrDirPath.lastIndexOf(File.separatorChar, endsWithSlash
@@ -130,7 +131,7 @@ public class FileUtils {
             : fileOrDirPath.length() - 1));
   }
 
-  public boolean hasChanged(final File file, final long timeStamp) {
+  public boolean hasChanged(final @Nullable File file, final long timeStamp) {
     if (file == null) {
       return false;
     }
@@ -141,10 +142,10 @@ public class FileUtils {
   // Methods for reading & writing a file
   // ----------------------------------------------------------------------------------------------------
 
-  public InputStream createInputStream(@NonNull final File file) {
+  public @NotNull InputStream createInputStream(@NonNull final File file) {
     try {
       return Files.newInputStream(file.toPath());
-    } catch (final IOException ex) {
+    } catch (final @NotNull IOException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while creating InputStream from '" + file.getName() + "'.",
@@ -152,10 +153,10 @@ public class FileUtils {
     }
   }
 
-  private OutputStream createOutputStream(@NonNull final File file) {
+  private @NotNull OutputStream createOutputStream(@NonNull final File file) {
     try {
       return new FileOutputStream(file);
-    } catch (final FileNotFoundException ex) {
+    } catch (final @NotNull FileNotFoundException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while creating OutputStream from '" + file.getName() + "'.",
@@ -163,10 +164,10 @@ public class FileUtils {
     }
   }
 
-  public Reader createReader(@NonNull final File file) {
+  public @NotNull Reader createReader(@NonNull final File file) {
     try {
       return new FileReader(file);
-    } catch (final FileNotFoundException ex) {
+    } catch (final @NotNull FileNotFoundException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while creating Reader for '" + file.getName() + "'.",
@@ -174,10 +175,10 @@ public class FileUtils {
     }
   }
 
-  public Writer createWriter(@NonNull final File file) {
+  public @NotNull Writer createWriter(@NonNull final File file) {
     try {
       return new FileWriter(file);
-    } catch (final IOException ex) {
+    } catch (final @NotNull IOException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while creating Writer for '" + file.getName() + "'.",
@@ -190,7 +191,7 @@ public class FileUtils {
       @NonNull final List<String> lines) {
     try {
       Files.write(file.toPath(), lines);
-    } catch (final IOException ex) {
+    } catch (final @NotNull IOException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while writing to '" + file.getName() + "'.",
@@ -211,7 +212,7 @@ public class FileUtils {
           outputStream.write(data, 0, count);
         }
       }
-    } catch (final IOException ex) {
+    } catch (final @NotNull IOException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while writing InputStream to '" + file.getName() + "'.",
@@ -219,10 +220,10 @@ public class FileUtils {
     }
   }
 
-  private byte[] readAllBytes(@NonNull final File file) {
+  private byte @NotNull [] readAllBytes(@NonNull final File file) {
     try {
       return Files.readAllBytes(file.toPath());
-    } catch (final IOException ex) {
+    } catch (final @NotNull IOException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while reading '" + file.getName() + "'.",
@@ -230,7 +231,7 @@ public class FileUtils {
     }
   }
 
-  public List<String> readAllLines(@NonNull final File file) {
+  public @NotNull List<String> readAllLines(@NonNull final File file) {
     val fileBytes = readAllBytes(file);
     val asString = new String(fileBytes);
     return new ArrayList<>(Arrays.asList(asString.split(System.lineSeparator())));
@@ -241,7 +242,7 @@ public class FileUtils {
   // ----------------------------------------------------------------------------------------------------
 
   @SneakyThrows
-  public void zipFile(final String sourceDirectory, final String to) {
+  public void zipFile(final @NotNull String sourceDirectory, final String to) {
     val fileTo = getAndMake(new File(to + ".zip"));
 
     @Cleanup val zipOutputStream = new ZipOutputStream(createOutputStream(fileTo));
@@ -259,7 +260,7 @@ public class FileUtils {
 
                 Files.copy(path, zipOutputStream);
                 zipOutputStream.closeEntry();
-              } catch (final IOException ex) {
+              } catch (final @NotNull IOException ex) {
                 ex.printStackTrace();
               }
             });
@@ -269,7 +270,7 @@ public class FileUtils {
   // Checksums
   // ----------------------------------------------------------------------------------------------------
 
-  public String md5ChecksumAsString(@NonNull final File filename) {
+  public @NotNull String md5ChecksumAsString(@NonNull final File filename) {
     val checkSum = md5Checksum(filename);
     val result = new StringBuilder();
 
@@ -295,7 +296,7 @@ public class FileUtils {
       } while (numRead != -1);
 
       return complete.digest();
-    } catch (final IOException | NoSuchAlgorithmException ex) {
+    } catch (final @NotNull IOException | NoSuchAlgorithmException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
           "Error while creating checksum of '" + file.getName() + "'.",
@@ -337,7 +338,7 @@ public class FileUtils {
           "The embedded resource '" + resourcePath + "' cannot be found");
       Files.copy(Objects.requireNonNull(inputStream), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-    } catch (final IOException ioException) {
+    } catch (final @NotNull IOException ioException) {
       throw LightningProviders
           .exceptionHandler()
           .create(
@@ -375,7 +376,7 @@ public class FileUtils {
         }
       }
 
-    } catch (final Throwable throwable) {
+    } catch (final @NotNull Throwable throwable) {
       throw LightningProviders
           .exceptionHandler()
           .create(
