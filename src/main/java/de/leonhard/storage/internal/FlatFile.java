@@ -311,6 +311,10 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
     write();
   }
 
+  public final void clearPathPrefix() {
+    this.pathPrefix = null;
+  }
+
   // ----------------------------------------------------------------------------------------------------
   // Internal stuff
   // ----------------------------------------------------------------------------------------------------
