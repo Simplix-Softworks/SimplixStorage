@@ -11,10 +11,10 @@ Are you looking for a powerful "bukkitlike" (Very similar to Bukkit config) libr
 **Then this library is just right for you.**
 
 I was looking for a library that I could use to store data with Bukkit like methods 
-without being depended on Bukkit/BungeeCord. But there was nothing out there so I decided to write my own library.
+without being depended on Bukkit/BungeeCord. But there was nothing out there, so I decided to write my own library.
 Of course there are a few libraries with bukkitlike methods but no one has the features that I need.
 ThunderBolt-2 for example only supports Json files but does not support nested objects.
-Now I'am publishing this library because I think libraries of high quality should be publicly available for everyone
+Now I'm publishing this library because I think libraries of high quality should be publicly available for everyone.
 Now it is here: **SimplixStorage**!
 
 SimplixStorage is extremely fast & good at **storing data reliably**! <br>

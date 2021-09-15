@@ -55,7 +55,7 @@ class ConfigTest {
     Assertions.assertEquals(0, anInt);
     Assertions.assertEquals(0.0, aDouble);
     Assertions.assertEquals(0.0f, aFloat);
-    Assertions.assertEquals(aLong, 0.0);
+    Assertions.assertEquals(0.0, aLong);
     Assertions.assertEquals(Optional.empty(), optionalString);
     Assertions.assertEquals("Default-Value", getOrDefault);
     Assertions.assertEquals("Default-Value-To-Be-Set-If-Not-Yet-Present", getOrSetDefault);

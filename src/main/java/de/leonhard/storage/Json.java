@@ -37,26 +37,22 @@ public class Json extends FlatFile {
     this(name, path, inputStream, null);
   }
 
-  public Json(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings) {
+  public Json(final String name,
+              @Nullable final String path,
+              @Nullable final InputStream inputStream,
+              @Nullable final ReloadSettings reloadSettings) {
     this(name, path, inputStream, reloadSettings, null);
   }
 
-  public Json(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings,
-      @Nullable final Consumer<FlatFile> reloadConsumer) {
+  public Json(final String name,
+              @Nullable final String path,
+              @Nullable final InputStream inputStream,
+              @Nullable final ReloadSettings reloadSettings,
+              @Nullable final Consumer<FlatFile> reloadConsumer) {
     super(name, path, FileType.JSON, reloadConsumer);
 
-    if (create() || this.file.length() == 0) {
-      if (inputStream != null) {
-        FileUtils.writeToFile(this.file, inputStream);
-      }
+    if ((create() || this.file.length() == 0) && inputStream != null) {
+      FileUtils.writeToFile(this.file, inputStream);
     }
 
     if (reloadSettings != null) {
@@ -95,7 +91,7 @@ public class Json extends FlatFile {
       }
       // Exception in casting
       throw new IllegalArgumentException(
-          "ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
+              "ClassCastEx: Json contains key: '" + key + "' but it is not a Map");
     }
   }
 
