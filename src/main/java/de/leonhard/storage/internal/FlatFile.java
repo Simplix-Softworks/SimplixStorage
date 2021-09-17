@@ -180,7 +180,7 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   @Override
-  public synchronized final void remove(final String key) {
+  public final synchronized void remove(final String key) {
     reloadIfNeeded();
     this.fileData.remove(key);
     write();

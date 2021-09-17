@@ -1,6 +1,7 @@
 package de.leonhard.storage.util;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.experimental.UtilityClass;
 
@@ -10,8 +11,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class LagCatcher {
 
-  private final HashMap<String, Long> startTimes = new HashMap<>();
-  private final HashMap<String, Long> stopTimes = new HashMap<>();
+  private final Map<String, Long> startTimes = new HashMap<>();
+  private final Map<String, Long> stopTimes = new HashMap<>();
 
   public void start(final String name) {
     if (LagCatcher.startTimes.containsKey(name)) {

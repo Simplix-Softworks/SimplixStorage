@@ -21,7 +21,7 @@ public class TomlManager {
   /**
    * A DateTimeFormatter that uses the TOML format.
    */
-  public final DateTimeFormatter DATE_FORMATTER =
+  public static final DateTimeFormatter DATE_FORMATTER =
       new DateTimeFormatterBuilder()
           .append(DateTimeFormatter.ISO_LOCAL_DATE)
           .optionalStart()

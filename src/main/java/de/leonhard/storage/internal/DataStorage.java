@@ -82,7 +82,7 @@ public interface DataStorage {
     } catch (final Throwable throwable) {
       throw LightningProviders.exceptionHandler().create(
           throwable,
-          "Can't deserialize: '" + key + "'",
+          "Can't serialize: '" + key + "'",
           "Class: '" + value.getClass().getName() + "'",
           "Package: '" + value.getClass().getPackage() + "'");
     }

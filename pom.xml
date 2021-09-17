@@ -146,7 +146,7 @@
       <artifactId>json</artifactId>
       <groupId>org.json</groupId>
       <scope>compile</scope>
-      <version>20200518</version>
+      <version>20210307</version>
     </dependency>
 
     <!-- Lombok -->
@@ -154,19 +154,19 @@
       <artifactId>lombok</artifactId>
       <groupId>org.projectlombok</groupId>
       <scope>provided</scope>
-      <version>1.18.10</version>
+      <version>1.18.20</version>
     </dependency>
 
     <!-- JetBrains Annotations -->
     <dependency>
       <artifactId>annotations</artifactId>
       <groupId>org.jetbrains</groupId>
-      <version>18.0.0</version>
+      <version>22.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>RELEASE</version>
+      <version>5.8.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -49,31 +49,28 @@ public class Yaml extends FlatFile {
     this(name, path, null, null, null, null);
   }
 
-  public Yaml(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream) {
+  public Yaml(final String name,
+              @Nullable final String path,
+              @Nullable final InputStream inputStream) {
     this(name, path, inputStream, null, null, null);
   }
 
-  public Yaml(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings,
-      @Nullable final ConfigSettings configSettings,
-      @Nullable final DataType dataType) {
+  public Yaml(final String name,
+              @Nullable final String path,
+              @Nullable final InputStream inputStream,
+              @Nullable final ReloadSettings reloadSettings,
+              @Nullable final ConfigSettings configSettings,
+              @Nullable final DataType dataType) {
     this(name, path, inputStream, reloadSettings, configSettings, dataType, null);
   }
 
-  public Yaml(
-      final String name,
-      @Nullable final String path,
-      @Nullable final InputStream inputStream,
-      @Nullable final ReloadSettings reloadSettings,
-      @Nullable final ConfigSettings configSettings,
-      @Nullable final DataType dataType,
-      @Nullable final Consumer<FlatFile> reloadConsumer) {
+  public Yaml(final String name,
+              @Nullable final String path,
+              @Nullable final InputStream inputStream,
+              @Nullable final ReloadSettings reloadSettings,
+              @Nullable final ConfigSettings configSettings,
+              @Nullable final DataType dataType,
+              @Nullable final Consumer<FlatFile> reloadConsumer) {
     super(name, path, FileType.YAML, reloadConsumer);
     this.inputStream = inputStream;
 
@@ -122,7 +119,7 @@ public class Yaml extends FlatFile {
 
     try {
       final Map<String, Object> data = new SimpleYamlReader(
-          new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
+              new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
 
       final FileData newData = new FileData(data, DataType.UNSORTED);
 
@@ -147,7 +144,7 @@ public class Yaml extends FlatFile {
   @Override
   protected Map<String, Object> readToMap() throws IOException {
     @Cleanup final SimpleYamlReader reader = new SimpleYamlReader(
-        new FileReader(getFile()));
+            new FileReader(getFile()));
     return reader.readToMap();
   }
 
@@ -194,37 +191,37 @@ public class Yaml extends FlatFile {
     addHeader(Arrays.asList(header));
   }
 
-	public final void framedHeader (final String... header) {
-		List <String> stringList = new ArrayList <>();
-		String border = "# +----------------------------------------------------+ #";
-		stringList.add(border);
+  public final void framedHeader(final String... header) {
+    List<String> stringList = new ArrayList<>();
+    String border = "# +----------------------------------------------------+ #";
+    stringList.add(border);
 
-		for (String line : header) {
-			StringBuilder builder = new StringBuilder();
-			if (line.length() > 50) {
-				continue;
-			}
+    for (String line : header) {
+      StringBuilder builder = new StringBuilder();
+      if (line.length() > 50) {
+        continue;
+      }
 
-			int length = (50 - line.length()) / 2;
-			StringBuilder finalLine = new StringBuilder(line);
+      int length = (50 - line.length()) / 2;
+      StringBuilder finalLine = new StringBuilder(line);
 
-			for (int i = 0; i < length; i++) {
-				finalLine.append(" ");
-				finalLine.reverse();
-				finalLine.append(" ");
-				finalLine.reverse();
-			}
+      for (int i = 0; i < length; i++) {
+        finalLine.append(" ");
+        finalLine.reverse();
+        finalLine.append(" ");
+        finalLine.reverse();
+      }
 
-			if (line.length() % 2 != 0) {
-				finalLine.append(" ");
-			}
+      if (line.length() % 2 != 0) {
+        finalLine.append(" ");
+      }
 
-			builder.append("# < ").append(finalLine.toString()).append(" > #");
-			stringList.add(builder.toString());
-		}
-		stringList.add(border);
-		setHeader(stringList);
-	}
+      builder.append("# < ").append(finalLine.toString()).append(" > #");
+      stringList.add(builder.toString());
+    }
+    stringList.add(border);
+    setHeader(stringList);
+  }
 
   public final Optional<InputStream> getInputStream() {
     return Optional.ofNullable(this.inputStream);
