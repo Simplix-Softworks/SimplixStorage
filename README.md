@@ -4,6 +4,10 @@ SimplixStorage - A Library to store data in a better way.
 
 [![](https://jitpack.io/v/simplix-softworks/simplixstorage.svg)](https://jitpack.io/#simplix-softworks/simplixstorage) [![Discord](https://img.shields.io/discord/752533664696369204?label=Discord)](https://discord.simplixsoft.com/) ![GitHub](https://img.shields.io/github/license/Simplix-Softworks/SimplixStorage)
 
+## Hacktoberfest 2021
+Our repository also participates in this year's [Hacktoberfest](https://hacktoberfest.digitalocean.com/). Sign up and submit at least **four pull requests**. If they are merged or the "hacktoberfest-accepted" label is assigned, they'll be counted towards your participation. The first **50,000** participants can earn a **T-shirt** or **plant a free**.
+
+## Overview
 Do you want to save your config files easily and **independently** from Bukkit or BungeeCord?<br>
 Want to do more than just use simple .yml files to store data?<br>
 Are you looking for a powerful "bukkitlike" (Very similar to Bukkit config) library to store data in files?<br>
@@ -27,9 +31,8 @@ If you have any ideas to add or issues just open a issue page. I will do my best
 <br>
 For more details, see the [wiki](https://github.com/Simplix-Softworks/SimplixStorage/wiki) 
 
-<br>
+## Supported data types
 At the moment SimplixStorage supports three file types:
-<br>
 
 #### Json:
 A very fast and slim file format.
