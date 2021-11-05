@@ -167,7 +167,7 @@ public class FileUtils {
 
   public Reader createReader(@NonNull final File file) {
     try {
-      return new InputStreamReader(new FileInputStream(file),StandardCharsets.UTF_8)
+      return new InputStreamReader(new FileInputStream(file),StandardCharsets.UTF_8);
     } catch (final FileNotFoundException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
