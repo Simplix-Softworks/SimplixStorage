@@ -14,6 +14,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import lombok.Cleanup;
@@ -166,7 +167,7 @@ public class FileUtils {
 
   public Reader createReader(@NonNull final File file) {
     try {
-      return new FileReader(file);
+      return new InputStreamReader(new FileInputStream(file),StandardCharsets.UTF_8)
     } catch (final FileNotFoundException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
@@ -177,7 +178,7 @@ public class FileUtils {
 
   public Writer createWriter(@NonNull final File file) {
     try {
-      return new FileWriter(file);
+       return new OutputStreamWriter(new FileOutputStream(file, false),StandardCharsets.UTF_8);
     } catch (final IOException ex) {
       throw LightningProviders.exceptionHandler().create(
           ex,
@@ -234,7 +235,14 @@ public class FileUtils {
   public List<String> readAllLines(@NonNull final File file) {
     final byte[] fileBytes = readAllBytes(file);
     final String asString = new String(fileBytes);
-    return new ArrayList<>(Arrays.asList(asString.split(System.lineSeparator())));
+    try(BufferedReader reader=new BufferedReader(new StringReader(asString))) {
+      return reader.lines().collect(Collectors.toList());
+    } catch (IOException ex) {
+      throw LightningProviders.exceptionHandler().create(
+              ex,
+              "Error while reading '" + file.getName() + "'.",
+              "In: '" + getParentDirPath(file) + "'");
+    }
   }
 
   // ----------------------------------------------------------------------------------------------------

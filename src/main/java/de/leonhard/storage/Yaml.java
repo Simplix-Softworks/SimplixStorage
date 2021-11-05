@@ -143,8 +143,7 @@ public class Yaml extends FlatFile {
 
   @Override
   protected Map<String, Object> readToMap() throws IOException {
-    @Cleanup final SimpleYamlReader reader = new SimpleYamlReader(
-            new FileReader(getFile()));
+    @Cleanup final SimpleYamlReader reader = new SimpleYamlReader(getFile());
     return reader.readToMap();
   }
 
