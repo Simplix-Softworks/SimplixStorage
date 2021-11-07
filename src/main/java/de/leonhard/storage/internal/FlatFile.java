@@ -328,12 +328,13 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   // Should the file be re-read before the next get() operation?
   // Can be used as utility method for implementations of FlatFile
   protected boolean shouldReload() {
-    if (ReloadSettings.AUTOMATICALLY.equals(this.reloadSettings)) {
-      return true;
-    } else if (ReloadSettings.INTELLIGENT.equals(this.reloadSettings)) {
-      return FileUtils.hasChanged(this.file, this.lastLoaded);
-    } else {
-      return false;
+    switch (this.reloadSettings) {
+      case AUTOMATICALLY:
+        return true;
+      case INTELLIGENT:
+        return FileUtils.hasChanged(this.file, this.lastLoaded);
+      default:
+        return false;
     }
   }
 
