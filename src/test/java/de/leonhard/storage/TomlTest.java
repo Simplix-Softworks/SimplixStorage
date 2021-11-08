@@ -22,7 +22,7 @@ public class TomlTest {
 
   @Test
   void testGetDataType() {
-    Assertions.assertEquals(toml.getDataType(), DataType.SORTED);
+    Assertions.assertEquals(DataType.SORTED, toml.getDataType());
   }
 
   @Test
@@ -69,7 +69,7 @@ public class TomlTest {
 
   @AfterAll
   @Test
-  static void tearDown() {
+  void tearDown() {
     toml.clear();
     Assertions.assertTrue(toml.getFile().delete());
   }

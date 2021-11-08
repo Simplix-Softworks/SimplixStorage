@@ -446,7 +446,9 @@ public final class TomlReader {
   }
 
   private Object nextNumberOrDate(final char first) {
-    boolean maybeDouble = true, maybeInteger = true, maybeDate = true;
+    boolean maybeDouble = true;
+    boolean maybeInteger = true;
+    boolean maybeDate = true;
     final StringBuilder sb = new StringBuilder();
     sb.append(first);
     char c;
@@ -614,7 +616,8 @@ public final class TomlReader {
 
   private String nextBasicMultilineString() {
     final StringBuilder sb = new StringBuilder();
-    boolean first = true, escape = false;
+    boolean first = true;
+    boolean escape = false;
     while (hasNext()) {
       final char c = next();
       if (first && (c == '\r' || c == '\n')) {

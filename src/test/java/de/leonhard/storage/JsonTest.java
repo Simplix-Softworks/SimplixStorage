@@ -69,7 +69,7 @@ public class JsonTest {
 
   @AfterAll
   @Test
-  static void tearDown() {
+  void tearDown() {
     json.clear();
     Assertions.assertTrue(json.getFile().delete());
   }

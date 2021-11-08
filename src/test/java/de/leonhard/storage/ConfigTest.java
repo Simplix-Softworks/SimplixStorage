@@ -77,7 +77,7 @@ class ConfigTest {
 
   @AfterAll
   @Test
-  static void tearDown() {
+  void tearDown() {
     config.clear();
     Assertions.assertTrue(config.getFile().delete());
   }

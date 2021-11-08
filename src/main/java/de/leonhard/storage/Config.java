@@ -14,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings({"unused"})
 public class Config extends Yaml {
 
-  private List<String> header;
-
   public Config(@NonNull final Config config) {
     super(config);
   }

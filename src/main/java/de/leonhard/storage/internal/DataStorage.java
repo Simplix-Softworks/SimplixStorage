@@ -319,7 +319,7 @@ public interface DataStorage {
       set(key, def);
       return def;
     } else {
-      return (T) ClassWrapper.getFromDef(raw, def);
+      return ClassWrapper.getFromDef(raw, def);
     }
   }
 }
