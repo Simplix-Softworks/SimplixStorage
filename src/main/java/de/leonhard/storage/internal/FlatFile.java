@@ -286,11 +286,6 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   public final void forceReload() {
-
-    if (reloadConsumer != null) {
-      reloadConsumer.accept(this);
-    }
-
     Map<String, Object> out = new HashMap<>();
     try {
       out = readToMap();
@@ -303,6 +298,9 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
         this.fileData.loadData(out);
       }
       this.lastLoaded = System.currentTimeMillis();
+      if (this.reloadConsumer != null) {
+        this.reloadConsumer.accept(this);
+      }
     }
   }
 
