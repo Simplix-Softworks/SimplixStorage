@@ -25,7 +25,7 @@ public class LightningProviders {
 
   public MapProvider mapProvider() {
     if (mapProvider == null) {
-     mapProvider = new MapProvider() {};
+      mapProvider = new MapProvider() {};
     }
     return mapProvider;
   }

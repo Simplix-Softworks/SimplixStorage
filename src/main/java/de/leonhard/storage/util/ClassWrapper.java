@@ -82,7 +82,7 @@ public class ClassWrapper {
   }
 
   @UtilityClass
-  public static class LONG {
+  public class LONG {
 
     public Long[] getLongArray(final Object obj) {
       if (obj instanceof List) {
@@ -105,7 +105,7 @@ public class ClassWrapper {
   }
 
   @UtilityClass
-  public static class DOUBLE {
+  public class DOUBLE {
 
     public Double[] getDoubleArray(final Object obj) {
       if (obj instanceof List) {
@@ -128,7 +128,7 @@ public class ClassWrapper {
   }
 
   @UtilityClass
-  public static class FLOAT {
+  public class FLOAT {
 
     public Float[] getFloatArray(final Object obj) {
       if (obj instanceof List) {
@@ -151,7 +151,7 @@ public class ClassWrapper {
   }
 
   @UtilityClass
-  public static class INTEGER {
+  public class INTEGER {
 
     public Integer[] getIntArray(final Object obj) {
       if (obj instanceof List) {
@@ -175,7 +175,7 @@ public class ClassWrapper {
 
   @UtilityClass
   @SuppressWarnings("unused")
-  public static class SHORT {
+  public class SHORT {
 
     public Short[] getShortArray(final Object obj) {
       if (obj instanceof List) {
@@ -198,7 +198,7 @@ public class ClassWrapper {
   }
 
   @UtilityClass
-  public static class BYTE {
+  public class BYTE {
 
     public Byte[] getByteArray(final Object obj) {
       if (obj instanceof List) {
@@ -221,7 +221,7 @@ public class ClassWrapper {
   }
 
   @UtilityClass
-  public static class STRING {
+  public class STRING {
 
     public String[] getStringArray(final Object obj) {
       if (obj instanceof List) {
