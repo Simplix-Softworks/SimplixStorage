@@ -234,14 +234,13 @@ public class FileData {
    */
   private Set<String> multiLayerKeySet(final Map<String, Object> map) {
     final Set<String> out = new HashSet<>();
-    for (final String key : map.keySet()) {
-      if (map.get(key) instanceof Map) {
-        for (final String tempKey : multiLayerKeySet(
-            (Map<String, Object>) map.get(key))) {
-          out.add(key + "." + tempKey);
+    for (final Map.Entry<String, Object> entry : map.entrySet()) {
+      if (entry.getValue() instanceof Map) {
+        for (final String tempKey : multiLayerKeySet((Map<String, Object>) entry.getValue())) {
+          out.add(entry.getKey() + "." + tempKey);
         }
       } else {
-        out.add(key);
+        out.add(entry.getKey());
       }
     }
     return out;
@@ -307,9 +306,9 @@ public class FileData {
 
   private int size(final Map<String, Object> map) {
     int size = map.size();
-    for (final String key : map.keySet()) {
-      if (map.get(key) instanceof Map) {
-        size += size((Map<String, Object>) map.get(key));
+    for (final Map.Entry<String, Object> entry : map.entrySet()) {
+      if (entry.getValue() instanceof Map) {
+        size += size((Map<String, Object>) entry.getValue());
       }
     }
     return size;
