@@ -1,27 +1,26 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.provider.LightningProviders;
+import lombok.*;
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import lombok.Cleanup;
-import lombok.NonNull;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Class for easier, more convenient & strait interaction with files
@@ -51,14 +50,14 @@ public class FileUtils {
       @Nullable final String extension) {
     final List<File> result = new ArrayList<>();
 
-    final File[] files = folder.listFiles();
+    val files = folder.listFiles();
 
     if (files == null) {
       return result;
     }
 
     // if the extension is null we always add the file.
-    for (final File file : files) {
+    for (val file : files) {
       if (extension == null || file.getName().endsWith(extension)) {
         result.add(file);
       }
@@ -203,11 +202,11 @@ public class FileUtils {
   public void writeToFile(
       @NonNull final File file,
       @NonNull final InputStream inputStream) {
-    try (final FileOutputStream outputStream = new FileOutputStream(file)) {
+    try (val outputStream = new FileOutputStream(file)) {
       if (!file.exists()) {
         Files.copy(inputStream, file.toPath());
       } else {
-        final byte[] data = new byte[8192];
+        val data = new byte[8192];
         int count;
         while ((count = inputStream.read(data, 0, 8192)) != -1) {
           outputStream.write(data, 0, count);
@@ -233,9 +232,9 @@ public class FileUtils {
   }
 
   public List<String> readAllLines(@NonNull final File file) {
-    final byte[] fileBytes = readAllBytes(file);
-    final String asString = new String(fileBytes);
-    try(BufferedReader reader=new BufferedReader(new StringReader(asString))) {
+    val fileBytes = readAllBytes(file);
+    val asString = new String(fileBytes);
+    try (var reader = new BufferedReader(new StringReader(asString))) {
       return reader.lines().collect(Collectors.toList());
     } catch (IOException ex) {
       throw LightningProviders.exceptionHandler().create(
@@ -251,18 +250,16 @@ public class FileUtils {
 
   @SneakyThrows
   public void zipFile(final String sourceDirectory, final String to) {
-    final File fileTo = getAndMake(new File(to + ".zip"));
+    val fileTo = getAndMake(new File(to + ".zip"));
 
-    @Cleanup final ZipOutputStream zipOutputStream = new ZipOutputStream(
-        createOutputStream(fileTo));
-    final Path pathFrom = Paths.get(new File(sourceDirectory).toURI());
+    @Cleanup val zipOutputStream = new ZipOutputStream(createOutputStream(fileTo));
+    val pathFrom = Paths.get(new File(sourceDirectory).toURI());
 
     Files.walk(pathFrom)
         .filter(path -> !Files.isDirectory(path))
         .forEach(
             path -> {
-              final ZipEntry zipEntry = new ZipEntry(
-                  pathFrom.relativize(path).toString());
+               val zipEntry = new ZipEntry(pathFrom.relativize(path).toString());
 
               try {
                 zipOutputStream.putNextEntry(zipEntry);
@@ -280,10 +277,10 @@ public class FileUtils {
   // ----------------------------------------------------------------------------------------------------
 
   public String md5ChecksumAsString(@NonNull final File filename) {
-    final byte[] checkSum = md5Checksum(filename);
-    final StringBuilder result = new StringBuilder();
+    val checkSum = md5Checksum(filename);
+    val result = new StringBuilder();
 
-    for (final byte b : checkSum) {
+    for (val b : checkSum) {
       result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
     }
 
@@ -291,9 +288,9 @@ public class FileUtils {
   }
 
   private byte[] md5Checksum(@NonNull final File file) {
-    try (final InputStream fileInputStream = new FileInputStream(file)) {
-      final byte[] buffer = new byte[1024];
-      final MessageDigest complete = MessageDigest.getInstance("MD5");
+    try (val fileInputStream = new FileInputStream(file)) {
+      val buffer = new byte[1024];
+      val complete = MessageDigest.getInstance("MD5");
       int numRead;
 
       do {
@@ -329,7 +326,7 @@ public class FileUtils {
         !targetDirectory.isEmpty(),
         "Target directory mustn't be empty");
 
-    final File target = new File(targetDirectory, resourcePath);
+    val target = new File(targetDirectory, resourcePath);
 
     if (target.exists() && !replace) {
       return;
@@ -338,14 +335,14 @@ public class FileUtils {
     getAndMake(target);
 
     try (
-        final InputStream inputStream = LightningProviders
+        val inputStream = LightningProviders
             .inputStreamProvider()
             .createInputStreamFromInnerResource(resourcePath)) {
 
       Valid.notNull(
           inputStream,
           "The embedded resource '" + resourcePath + "' cannot be found");
-      Files.copy(inputStream, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(Objects.requireNonNull(inputStream), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
     } catch (final IOException ioException) {
       throw LightningProviders
@@ -408,23 +405,23 @@ public class FileUtils {
         destination.mkdirs();
       }
 
-      final String[] files = source.list();
+      val files = source.list();
 
       if (files == null) {
         return;
       }
 
-      for (final String file : files) {
-        final File srcFile = new File(source, file);
-        final File destFile = new File(destination, file);
+      for (val file : files) {
+        val srcFile = new File(source, file);
+        val destFile = new File(destination, file);
 
         copyFolder(srcFile, destFile);
       }
     } else {
 
-      @Cleanup final InputStream in = createInputStream(source);
-      @Cleanup final OutputStream out = createOutputStream(destination);
-      final byte[] buffer = new byte[1024];
+      @Cleanup val in = createInputStream(source);
+      @Cleanup val out = createOutputStream(destination);
+      val buffer = new byte[1024];
 
       int length;
       while ((length = in.read(buffer)) > 0) {

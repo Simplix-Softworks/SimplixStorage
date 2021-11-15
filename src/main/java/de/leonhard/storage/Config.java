@@ -4,12 +4,12 @@ import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.function.Consumer;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.function.Consumer;
 
 @SuppressWarnings({"unused"})
 public class Config extends Yaml {

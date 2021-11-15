@@ -5,20 +5,21 @@ import de.leonhard.storage.internal.FileType;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
+import lombok.Cleanup;
+import lombok.Getter;
+import lombok.val;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import lombok.Cleanup;
-import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 @Getter
 public class Json extends FlatFile {
@@ -78,12 +79,12 @@ public class Json extends FlatFile {
    * @return Map
    */
   @Override
-  public final Map getMap(final String key) {
-    final String finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
+  public final Map<?,?> getMap(final String key) {
+    val finalKey = (this.pathPrefix == null) ? key : this.pathPrefix + "." + key;
     if (!contains(finalKey)) {
       return new HashMap<>();
     } else {
-      final Object map = get(key);
+      val map = get(key);
       if (map instanceof Map) {
         return (Map<?, ?>) this.fileData.get(key);
       } else if (map instanceof JSONObject) {
@@ -105,13 +106,13 @@ public class Json extends FlatFile {
       Files.write(this.file.toPath(), Collections.singletonList("{}"));
     }
 
-    final JSONTokener jsonTokener = new JSONTokener(FileUtils.createInputStream(this.file));
+    val jsonTokener = new JSONTokener(FileUtils.createInputStream(this.file));
     return new JSONObject(jsonTokener).toMap();
   }
 
   @Override
   protected final void write(final FileData data) throws IOException {
-    @Cleanup final Writer writer = FileUtils.createWriter(this.file);
+    @Cleanup val writer = FileUtils.createWriter(this.file);
     writer.write(data.toJsonObject().toString(3));
     writer.flush();
   }

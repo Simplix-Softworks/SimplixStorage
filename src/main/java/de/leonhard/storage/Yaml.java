@@ -11,7 +11,11 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
-import java.io.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,10 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+
+import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
 @Getter
@@ -118,12 +120,12 @@ public class Yaml extends FlatFile {
     }
 
     try {
-      final Map<String, Object> data = new SimpleYamlReader(
+      val data = new SimpleYamlReader(
               new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readToMap();
 
-      final FileData newData = new FileData(data, DataType.UNSORTED);
+      val newData = new FileData(data, DataType.UNSORTED);
 
-      for (final String key : newData.keySet()) {
+      for (val key : newData.keySet()) {
         if (!this.fileData.containsKey(key)) {
           this.fileData.insert(key, newData.get(key));
         }
@@ -143,7 +145,7 @@ public class Yaml extends FlatFile {
 
   @Override
   protected Map<String, Object> readToMap() throws IOException {
-    @Cleanup final SimpleYamlReader reader = new SimpleYamlReader(getFile());
+    @Cleanup val reader = new SimpleYamlReader(getFile());
     return reader.readToMap();
   }
 
@@ -155,14 +157,14 @@ public class Yaml extends FlatFile {
       return;
     }
 
-    final List<String> unEdited = this.yamlEditor.read();
+    val unEdited = this.yamlEditor.read();
     write0(this.fileData);
     this.yamlEditor.write(this.parser.parseLines(unEdited, this.yamlEditor.readKeys()));
   }
 
   // Writing without comments
   private void write0(final FileData fileData) throws IOException {
-    @Cleanup final SimpleYamlWriter writer = new SimpleYamlWriter(this.file);
+    @Cleanup val writer = new SimpleYamlWriter(this.file);
     writer.write(fileData.toMap());
   }
 
@@ -192,17 +194,17 @@ public class Yaml extends FlatFile {
 
   public final void framedHeader(final String... header) {
     List<String> stringList = new ArrayList<>();
-    String border = "# +----------------------------------------------------+ #";
+    var border = "# +----------------------------------------------------+ #";
     stringList.add(border);
 
-    for (String line : header) {
-      StringBuilder builder = new StringBuilder();
+    for (var line : header) {
+      var builder = new StringBuilder();
       if (line.length() > 50) {
         continue;
       }
 
       int length = (50 - line.length()) / 2;
-      StringBuilder finalLine = new StringBuilder(line);
+      var finalLine = new StringBuilder(line);
 
       for (int i = 0; i < length; i++) {
         finalLine.append(" ");
@@ -215,7 +217,7 @@ public class Yaml extends FlatFile {
         finalLine.append(" ");
       }
 
-      builder.append("# < ").append(finalLine.toString()).append(" > #");
+      builder.append("# < ").append(finalLine).append(" > #");
       stringList.add(builder.toString());
     }
     stringList.add(border);

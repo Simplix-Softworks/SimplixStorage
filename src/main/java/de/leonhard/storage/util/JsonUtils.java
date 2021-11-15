@@ -3,6 +3,7 @@ package de.leonhard.storage.util;
 import java.util.*;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import lombok.var;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ public class JsonUtils {
   }
 
   public JSONObject getJsonFromMap(final Map<String, Object> map) throws JSONException {
-    final JSONObject jsonData = new JSONObject();
+    var jsonData = new JSONObject();
 
     for (val entry : map.entrySet()) {
       String key = entry.getKey();
@@ -37,7 +38,7 @@ public class JsonUtils {
   public Map<String, Object> toMap(final JSONObject jsonObject) throws JSONException {
     final Map<String, Object> map = new HashMap<>();
 
-    final Iterator<String> keysItr = jsonObject.keys();
+    val keysItr = jsonObject.keys();
     keysItr.forEachRemaining(key -> map.put(key, getValue(jsonObject.get(key))));
     return map;
   }
