@@ -1,7 +1,6 @@
 package de.leonhard.storage.internal.editor.toml;
 
 import de.leonhard.storage.internal.exceptions.TomlException;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDate;

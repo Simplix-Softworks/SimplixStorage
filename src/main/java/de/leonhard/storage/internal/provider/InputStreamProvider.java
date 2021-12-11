@@ -1,8 +1,7 @@
 package de.leonhard.storage.internal.provider;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.io.InputStream;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class InputStreamProvider {
 

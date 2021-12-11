@@ -4,11 +4,10 @@ import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.serialize.LightningSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
-import lombok.NonNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface DataStorage {
 

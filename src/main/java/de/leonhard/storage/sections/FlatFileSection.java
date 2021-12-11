@@ -2,10 +2,9 @@ package de.leonhard.storage.sections;
 
 import de.leonhard.storage.internal.DataStorage;
 import de.leonhard.storage.internal.FlatFile;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Set;
 
 @RequiredArgsConstructor
 public class FlatFileSection implements DataStorage {

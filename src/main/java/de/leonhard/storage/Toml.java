@@ -6,14 +6,13 @@ import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.editor.toml.TomlManager;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
-import lombok.NonNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.function.Consumer;
+import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Toml extends FlatFile {
 

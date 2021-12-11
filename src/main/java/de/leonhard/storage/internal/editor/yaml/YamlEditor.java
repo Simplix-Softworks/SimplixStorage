@@ -2,11 +2,10 @@ package de.leonhard.storage.internal.editor.yaml;
 
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.YamlUtils;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.io.File;
 import java.util.List;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
