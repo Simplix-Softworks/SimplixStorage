@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"unused"})
@@ -54,6 +55,34 @@ public class Config extends Yaml {
 
   public Config(final File file) {
     super(file);
+  }
+
+  public void annotateClass(Object classInstance) {
+    Class<?> clazz = classInstance.getClass();
+    try {
+      for (Field field : clazz.getFields()) {
+        if(field.isAnnotationPresent(de.leonhard.storage.annotation.Config.class)) {
+          field.setAccessible(true);
+          field.set(classInstance, this.get(field.getAnnotation(de.leonhard.storage.annotation.Config.class).value(), field.getType()));
+        }
+      }
+    }catch (IllegalAccessException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void annotateClass(Object classInstance, String section) {
+    Class<?> clazz = classInstance.getClass();
+    try {
+      for (Field field : clazz.getFields()) {
+        if(field.isAnnotationPresent(de.leonhard.storage.annotation.Config.class)) {
+          field.setAccessible(true);
+          field.set(classInstance, this.get(section + "." + field.getAnnotation(de.leonhard.storage.annotation.Config.class).value(), field.getType()));
+        }
+      }
+    }catch (IllegalAccessException e) {
+      e.printStackTrace();
+    }
   }
 
   // ----------------------------------------------------------------------------------------------------

@@ -2,14 +2,15 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import de.leonhard.storage.internal.settings.DataType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 class ConfigTest {
 
@@ -75,10 +76,37 @@ class ConfigTest {
     Assertions.assertTrue(config.getBoolean("Test-Key-1"));
   }
 
+  @Test
+  void testAnnotations() {
+    config.set("annotation-test", "Annotation Test");
+    config.set("section.annotations", 2);
+
+    AnnotationTests test = new AnnotationTests();
+    config.annotateClass(test);
+    Assertions.assertEquals("Annotation Test", test.getAnnotationTest());
+    Assertions.assertEquals(2, test.getAnnotationTest2());
+  }
+
   @AfterAll
   @Test
-  void tearDown() {
+  static void tearDown() {
     config.clear();
     Assertions.assertTrue(config.getFile().delete());
+  }
+
+  static class AnnotationTests {
+
+    @de.leonhard.storage.annotation.Config("annotation-test")
+    public String annotationTest;
+    @de.leonhard.storage.annotation.Config("section.annotations")
+    public Integer annotationTest2;
+
+    public String getAnnotationTest() {
+      return annotationTest;
+    }
+
+    public int getAnnotationTest2() {
+      return annotationTest2;
+    }
   }
 }
