@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.annotation.ConfigPath;
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
@@ -61,9 +62,9 @@ public class Config extends Yaml {
     Class<?> clazz = classInstance.getClass();
     try {
       for (Field field : clazz.getFields()) {
-        if(field.isAnnotationPresent(de.leonhard.storage.annotation.Config.class)) {
+        if(field.isAnnotationPresent(ConfigPath.class)) {
           field.setAccessible(true);
-          field.set(classInstance, this.get(field.getAnnotation(de.leonhard.storage.annotation.Config.class).value(), field.getType()));
+          field.set(classInstance, this.get(field.getAnnotation(ConfigPath.class).value(), field.getType()));
         }
       }
     }catch (IllegalAccessException e) {
@@ -75,9 +76,9 @@ public class Config extends Yaml {
     Class<?> clazz = classInstance.getClass();
     try {
       for (Field field : clazz.getFields()) {
-        if(field.isAnnotationPresent(de.leonhard.storage.annotation.Config.class)) {
+        if(field.isAnnotationPresent(ConfigPath.class)) {
           field.setAccessible(true);
-          field.set(classInstance, this.get(section + "." + field.getAnnotation(de.leonhard.storage.annotation.Config.class).value(), field.getType()));
+          field.set(classInstance, this.get(section + "." + field.getAnnotation(ConfigPath.class).value(), field.getType()));
         }
       }
     }catch (IllegalAccessException e) {

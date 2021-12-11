@@ -1,5 +1,6 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.annotation.ConfigPath;
 import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import de.leonhard.storage.internal.settings.DataType;
 import org.junit.jupiter.api.AfterAll;
@@ -96,9 +97,9 @@ class ConfigTest {
 
   static class AnnotationTests {
 
-    @de.leonhard.storage.annotation.Config("annotation-test")
+    @ConfigPath("annotation-test")
     public String annotationTest;
-    @de.leonhard.storage.annotation.Config("section.annotations")
+    @ConfigPath("section.annotations")
     public Integer annotationTest2;
 
     public String getAnnotationTest() {
