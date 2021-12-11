@@ -5,13 +5,14 @@ import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.sections.FlatFileSection;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
+import lombok.*;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Consumer;
-import lombok.*;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 @ToString

@@ -1,12 +1,13 @@
 package de.leonhard.storage.internal.serialize;
 
 import de.leonhard.storage.util.Valid;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class to register serializable's

@@ -1,8 +1,9 @@
 package de.leonhard.storage.internal.editor.yaml;
 
-import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+
+import java.util.*;
 
 @RequiredArgsConstructor
 public final class YamlParser {

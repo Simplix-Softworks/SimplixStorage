@@ -1,10 +1,11 @@
 package de.leonhard.storage.util;
 
+import lombok.experimental.UtilityClass;
+import lombok.val;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import lombok.experimental.UtilityClass;
-import lombok.val;
 
 /**
  * Class to work with the parts of the lines of a YAML-file

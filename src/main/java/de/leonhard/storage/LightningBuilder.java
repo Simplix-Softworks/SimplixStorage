@@ -8,12 +8,13 @@ import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
+import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import lombok.NonNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class LightningBuilder {
 

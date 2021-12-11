@@ -1,9 +1,10 @@
 package de.leonhard.storage.util;
 
-import java.io.Writer;
 import lombok.Getter;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.Writer;
 
 /**
  * A Writer writing in a StringBuilder. This is NOT Thread safe.

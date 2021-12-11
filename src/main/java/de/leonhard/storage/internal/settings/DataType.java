@@ -2,8 +2,9 @@ package de.leonhard.storage.internal.settings;
 
 import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.provider.MapProvider;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
 
 /**
  * An Enum defining how the Data should be stored

@@ -2,14 +2,15 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import de.leonhard.storage.internal.settings.DataType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class YamlTest {
 

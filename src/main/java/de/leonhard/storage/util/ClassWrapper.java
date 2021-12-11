@@ -1,11 +1,12 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.DataStorage;
+import lombok.experimental.UtilityClass;
+import lombok.val;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
-import lombok.experimental.UtilityClass;
-import lombok.val;
 
 @SuppressWarnings("unchecked")
 @UtilityClass

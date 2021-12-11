@@ -2,14 +2,15 @@ package de.leonhard.storage.internal;
 
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.util.JsonUtils;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import lombok.val;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 /**
  * An extended HashMap, to easily process the nested HashMaps created by reading the Configuration
