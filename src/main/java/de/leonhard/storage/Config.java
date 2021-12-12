@@ -2,6 +2,7 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.annotation.ConfigPath;
 import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 @SuppressWarnings({"unused"})
 public class Config extends Yaml {
@@ -59,30 +61,24 @@ public class Config extends Yaml {
   }
 
   public void annotateClass(Object classInstance) {
-    Class<?> clazz = classInstance.getClass();
-    try {
-      for (Field field : clazz.getFields()) {
-        if(field.isAnnotationPresent(ConfigPath.class)) {
-          field.setAccessible(true);
-          field.set(classInstance, this.get(field.getAnnotation(ConfigPath.class).value(), field.getType()));
-        }
-      }
-    }catch (IllegalAccessException e) {
-      e.printStackTrace();
-    }
+    this.annotateClass(classInstance, s -> "");
   }
 
   public void annotateClass(Object classInstance, String section) {
+    this.annotateClass(classInstance, s -> section + ".");
+  }
+
+  public void annotateClass(Object classInstance, UnaryOperator<String> elementSelector) {
     Class<?> clazz = classInstance.getClass();
     try {
       for (Field field : clazz.getFields()) {
-        if(field.isAnnotationPresent(ConfigPath.class)) {
-          field.setAccessible(true);
-          field.set(classInstance, this.get(section + "." + field.getAnnotation(ConfigPath.class).value(), field.getType()));
+        ConfigPath configPath = field.getAnnotation(ConfigPath.class);
+        if(configPath != null) {
+          field.set(classInstance, this.get(elementSelector.apply(configPath.value()) + configPath.value(), field.getType()));
         }
       }
     }catch (IllegalAccessException e) {
-      e.printStackTrace();
+      throw LightningProviders.exceptionHandler().create(e.getCause(), "Unable to set the value of fields in " + clazz.getName());
     }
   }
 
