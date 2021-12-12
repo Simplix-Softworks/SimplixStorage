@@ -1,6 +1,8 @@
 package de.leonhard.storage;
 
+import de.leonhard.storage.annotation.ConfigPath;
 import de.leonhard.storage.internal.FlatFile;
+import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
@@ -9,7 +11,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 @SuppressWarnings({"unused"})
 public class Config extends Yaml {
@@ -54,6 +58,28 @@ public class Config extends Yaml {
 
   public Config(final File file) {
     super(file);
+  }
+
+  public void annotateClass(Object classInstance) {
+    this.annotateClass(classInstance, s -> "");
+  }
+
+  public void annotateClass(Object classInstance, String section) {
+    this.annotateClass(classInstance, s -> section + ".");
+  }
+
+  public void annotateClass(Object classInstance, UnaryOperator<String> elementSelector) {
+    Class<?> clazz = classInstance.getClass();
+    try {
+      for (Field field : clazz.getFields()) {
+        ConfigPath configPath = field.getAnnotation(ConfigPath.class);
+        if(configPath != null) {
+          field.set(classInstance, this.get(elementSelector.apply(configPath.value()) + configPath.value(), field.getType()));
+        }
+      }
+    }catch (IllegalAccessException e) {
+      throw LightningProviders.exceptionHandler().create(e.getCause(), "Unable to set the value of fields in " + clazz.getName());
+    }
   }
 
   // ----------------------------------------------------------------------------------------------------
