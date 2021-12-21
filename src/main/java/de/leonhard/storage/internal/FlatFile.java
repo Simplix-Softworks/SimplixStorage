@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
@@ -360,21 +361,21 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   }
 
   public void annotateClass(Object classInstance, String section) {
-    this.annotateClass(classInstance, s -> section + ".");
+    this.annotateClass(classInstance, (s, field) -> section + "." + s);
   }
 
   public void annotateClass(Object classInstance) {
-    this.annotateClass(classInstance, s -> "");
+    this.annotateClass(classInstance, ((s, field) -> s));
   }
 
-  public void annotateClass(Object classInstance, UnaryOperator<String> elementSelector) {
+  public void annotateClass(Object classInstance, BiFunction<String, Field, String> elementSelector) {
     Class<?> clazz = classInstance.getClass();
     try {
       for (Field field : clazz.getFields()) {
         ConfigPath configPath = field.getAnnotation(ConfigPath.class);
         if(configPath != null) {
           field.setAccessible(true);
-          field.set(classInstance, this.get(elementSelector.apply(configPath.value()) + configPath.value(), field.getType()));
+          field.set(classInstance, this.get(elementSelector.apply(configPath.value(), field), field.getType()));
         }
       }
     }catch (IllegalAccessException e) {
