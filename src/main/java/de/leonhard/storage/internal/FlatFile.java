@@ -1,5 +1,7 @@
 package de.leonhard.storage.internal;
 
+import de.leonhard.storage.annotation.ConfigPath;
+import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
 import de.leonhard.storage.sections.FlatFileSection;
@@ -7,9 +9,12 @@ import de.leonhard.storage.util.FileUtils;
 import de.leonhard.storage.util.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
+
 import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -352,5 +357,28 @@ public abstract class FlatFile implements DataStorage, Comparable<FlatFile> {
   @Override
   public final int compareTo(@NonNull final FlatFile flatFile) {
     return this.file.compareTo(flatFile.file);
+  }
+
+  public void annotateClass(Object classInstance, String section) {
+    this.annotateClass(classInstance, s -> section + ".");
+  }
+
+  public void annotateClass(Object classInstance) {
+    this.annotateClass(classInstance, s -> "");
+  }
+
+  public void annotateClass(Object classInstance, UnaryOperator<String> elementSelector) {
+    Class<?> clazz = classInstance.getClass();
+    try {
+      for (Field field : clazz.getFields()) {
+        ConfigPath configPath = field.getAnnotation(ConfigPath.class);
+        if(configPath != null) {
+          field.setAccessible(true);
+          field.set(classInstance, this.get(elementSelector.apply(configPath.value()) + configPath.value(), field.getType()));
+        }
+      }
+    }catch (IllegalAccessException e) {
+      throw LightningProviders.exceptionHandler().create(e.getCause(), "Unable to set the value of fields in " + clazz.getName());
+    }
   }
 }
