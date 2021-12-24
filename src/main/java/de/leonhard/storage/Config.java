@@ -60,28 +60,6 @@ public class Config extends Yaml {
     super(file);
   }
 
-  public void annotateClass(Object classInstance) {
-    this.annotateClass(classInstance, s -> "");
-  }
-
-  public void annotateClass(Object classInstance, String section) {
-    this.annotateClass(classInstance, s -> section + ".");
-  }
-
-  public void annotateClass(Object classInstance, UnaryOperator<String> elementSelector) {
-    Class<?> clazz = classInstance.getClass();
-    try {
-      for (Field field : clazz.getFields()) {
-        ConfigPath configPath = field.getAnnotation(ConfigPath.class);
-        if(configPath != null) {
-          field.set(classInstance, this.get(elementSelector.apply(configPath.value()) + configPath.value(), field.getType()));
-        }
-      }
-    }catch (IllegalAccessException e) {
-      throw LightningProviders.exceptionHandler().create(e.getCause(), "Unable to set the value of fields in " + clazz.getName());
-    }
-  }
-
   // ----------------------------------------------------------------------------------------------------
   // Method overridden from Yaml
   // ----------------------------------------------------------------------------------------------------
