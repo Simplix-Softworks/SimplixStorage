@@ -1,6 +1,6 @@
 package de.leonhard.storage.internal.settings;
 
-import de.leonhard.storage.internal.provider.LightningProviders;
+import de.leonhard.storage.internal.provider.SimplixProviders;
 import de.leonhard.storage.internal.provider.MapProvider;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public enum DataType {
     }
   };
 
-  private static final MapProvider mapProvider = LightningProviders.mapProvider();
+  private static final MapProvider mapProvider = SimplixProviders.mapProvider();
 
   public static DataType forConfigSetting(final ConfigSettings configSettings) {
     // Only Configs needs the preservation of the order of the keys

@@ -2,7 +2,7 @@ package de.leonhard.storage.internal.serialize;
 
 import lombok.NonNull;
 
-public interface LightningSerializable<T> {
+public interface SimplixSerializable<T> {
 
   /**
    * Get our serializable from data in data-structure.

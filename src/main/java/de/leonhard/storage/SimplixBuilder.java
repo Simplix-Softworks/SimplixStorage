@@ -2,7 +2,7 @@ package de.leonhard.storage;
 
 import de.leonhard.storage.internal.FlatFile;
 import de.leonhard.storage.internal.provider.InputStreamProvider;
-import de.leonhard.storage.internal.provider.LightningProviders;
+import de.leonhard.storage.internal.provider.SimplixProviders;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class LightningBuilder {
+public final class SimplixBuilder {
 
   private final InputStreamProvider inputStreamProvider;
 
@@ -28,7 +28,7 @@ public final class LightningBuilder {
 
   private @Nullable Consumer<FlatFile> reloadConsumer = null;
 
-  private LightningBuilder(
+  private SimplixBuilder(
       final String name, final String path, final InputStreamProvider inputStreamProvider) {
     this.name = name;
     this.path = path;
@@ -39,15 +39,15 @@ public final class LightningBuilder {
   // Creating our Builder
   // ----------------------------------------------------------------------------------------------------
 
-  public static LightningBuilder fromPath(@NonNull final String name, @NonNull final String path) {
-    return new LightningBuilder(name, path, LightningProviders.inputStreamProvider());
+  public static SimplixBuilder fromPath(@NonNull final String name, @NonNull final String path) {
+    return new SimplixBuilder(name, path, SimplixProviders.inputStreamProvider());
   }
 
-  public static LightningBuilder fromPath(@NonNull final Path path) {
+  public static SimplixBuilder fromPath(@NonNull final Path path) {
     return fromFile(path.toFile());
   }
 
-  public static LightningBuilder fromFile(@NonNull final File file) {
+  public static SimplixBuilder fromFile(@NonNull final File file) {
     // File shouldn't be a directory
     Valid.checkBoolean(
         !file.isDirectory(),
@@ -55,13 +55,13 @@ public final class LightningBuilder {
         "Please use from Directory to use a directory",
         "This is due to Java-Internals");
 
-    return new LightningBuilder(
+    return new SimplixBuilder(
         FileUtils.replaceExtensions(file.getName()),
         FileUtils.getParentDirPath(file),
-        LightningProviders.inputStreamProvider());
+        SimplixProviders.inputStreamProvider());
   }
 
-  public static LightningBuilder fromDirectory(@NonNull final File file) {
+  public static SimplixBuilder fromDirectory(@NonNull final File file) {
     Valid.checkBoolean(!file.getName().contains("."), "File-Name mustn't contain '.'");
 
     if (!file.exists()) {
@@ -69,25 +69,25 @@ public final class LightningBuilder {
     }
 
     // Will return the name of the folder as default name
-    return new LightningBuilder(
-        file.getName(), file.getAbsolutePath(), LightningProviders.inputStreamProvider());
+    return new SimplixBuilder(
+        file.getName(), file.getAbsolutePath(), SimplixProviders.inputStreamProvider());
   }
 
   // ----------------------------------------------------------------------------------------------------
   // Adding out settings
   // ----------------------------------------------------------------------------------------------------
 
-  public LightningBuilder reloadCallback(@Nullable final Consumer<FlatFile> reloadConsumer) {
+  public SimplixBuilder reloadCallback(@Nullable final Consumer<FlatFile> reloadConsumer) {
     this.reloadConsumer = reloadConsumer;
     return this;
   }
 
-  public LightningBuilder addInputStreamFromFile(@NonNull final File file) {
+  public SimplixBuilder addInputStreamFromFile(@NonNull final File file) {
     this.inputStream = FileUtils.createInputStream(file);
     return this;
   }
 
-  public LightningBuilder addInputStreamFromResource(@NonNull final String resource) {
+  public SimplixBuilder addInputStreamFromResource(@NonNull final String resource) {
     this.inputStream = this.inputStreamProvider.createInputStreamFromInnerResource(resource);
 
     Valid.notNull(
@@ -95,27 +95,27 @@ public final class LightningBuilder {
     return this;
   }
 
-  public LightningBuilder setName(@NonNull final String name) {
+  public SimplixBuilder setName(@NonNull final String name) {
     this.name = name;
     return this;
   }
 
-  public LightningBuilder addInputStream(@Nullable final InputStream inputStream) {
+  public SimplixBuilder addInputStream(@Nullable final InputStream inputStream) {
     this.inputStream = inputStream;
     return this;
   }
 
-  public LightningBuilder setConfigSettings(@NonNull final ConfigSettings configSettings) {
+  public SimplixBuilder setConfigSettings(@NonNull final ConfigSettings configSettings) {
     this.configSettings = configSettings;
     return this;
   }
 
-  public LightningBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings) {
+  public SimplixBuilder setReloadSettings(@NonNull final ReloadSettings reloadSettings) {
     this.reloadSettings = reloadSettings;
     return this;
   }
 
-  public LightningBuilder setDataType(@NonNull final DataType dataType) {
+  public SimplixBuilder setDataType(@NonNull final DataType dataType) {
     this.dataType = dataType;
     return this;
   }

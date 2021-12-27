@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 @Accessors(fluent = true, chain = true)
-public class LightningProviders {
+public class SimplixProviders {
 
   @Setter
   private MapProvider mapProvider;
