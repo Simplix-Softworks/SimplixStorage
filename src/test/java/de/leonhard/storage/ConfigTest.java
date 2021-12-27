@@ -1,7 +1,7 @@
 package de.leonhard.storage;
 
 import de.leonhard.storage.annotation.ConfigPath;
-import de.leonhard.storage.internal.exceptions.LightningValidationException;
+import de.leonhard.storage.internal.exceptions.SimplixValidationException;
 import de.leonhard.storage.internal.settings.DataType;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -49,7 +49,7 @@ class ConfigTest {
 
     Assertions.assertThrows(IllegalArgumentException.class,
         () -> config.getEnum("Key", TimeUnit.class));
-    Assertions.assertThrows(LightningValidationException.class,
+    Assertions.assertThrows(SimplixValidationException.class,
         () -> config.getEnum("Key-1", TimeUnit.class));
 
     Assertions.assertNull(anObject);

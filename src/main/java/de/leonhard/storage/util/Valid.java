@@ -1,6 +1,6 @@
 package de.leonhard.storage.util;
 
-import de.leonhard.storage.internal.exceptions.LightningValidationException;
+import de.leonhard.storage.internal.exceptions.SimplixValidationException;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,11 +8,11 @@ import org.jetbrains.annotations.Nullable;
 public class Valid {
 
   public void error(final Throwable cause, final String... messages) {
-    throw new LightningValidationException(cause, messages);
+    throw new SimplixValidationException(cause, messages);
   }
 
   public void error(final String... errorMessage) {
-    throw new LightningValidationException(errorMessage);
+    throw new SimplixValidationException(errorMessage);
   }
 
   public void checkBoolean(final boolean condition) {
@@ -21,7 +21,7 @@ public class Valid {
 
   public void checkBoolean(final boolean condition, final String... errorMessage) {
     if (!condition) {
-      throw new LightningValidationException(errorMessage);
+      throw new SimplixValidationException(errorMessage);
     }
   }
 
@@ -33,6 +33,6 @@ public class Valid {
     if (object != null) {
       return;
     }
-    throw new LightningValidationException(message);
+    throw new SimplixValidationException(message);
   }
 }

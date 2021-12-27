@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
  * Class to register serializable's
  */
 @UtilityClass
-public class LightningSerializer {
+public class SimplixSerializer {
 
-  private final List<LightningSerializable<?>> serializables = Collections
+  private final List<SimplixSerializable<?>> serializables = Collections
       .synchronizedList(new ArrayList<>());
 
   public boolean isSerializable(final Class<?> clazz) {
@@ -26,7 +26,7 @@ public class LightningSerializer {
    *
    * @param serializable Serializable to register
    */
-  public void registerSerializable(@NonNull final LightningSerializable<?> serializable) {
+  public void registerSerializable(@NonNull final SimplixSerializable<?> serializable) {
     Valid.notNull(
         serializable.getClazz(),
         "Class of serializable mustn't be null");
@@ -34,8 +34,8 @@ public class LightningSerializer {
   }
 
   @Nullable
-  public LightningSerializable<?> findSerializable(final Class<?> clazz) {
-    for (final LightningSerializable<?> serializable : serializables) {
+  public SimplixSerializable<?> findSerializable(final Class<?> clazz) {
+    for (final SimplixSerializable<?> serializable : serializables) {
       if (serializable.getClazz().equals(clazz)) {
         return serializable;
       }
@@ -48,7 +48,7 @@ public class LightningSerializer {
    * Method to save an object
    */
   public Object serialize(final Object obj) {
-    final LightningSerializable serializable = findSerializable(obj.getClass());
+    final SimplixSerializable serializable = findSerializable(obj.getClass());
 
     Valid.notNull(
         serializable,
@@ -57,7 +57,7 @@ public class LightningSerializer {
   }
 
   public <T> T deserialize(final Object raw, Class<T> type) {
-    final LightningSerializable<?> serializable = findSerializable(type);
+    final SimplixSerializable<?> serializable = findSerializable(type);
     Valid.notNull(
         serializable,
         "No serializable found for '" + type.getSimpleName() + "'",

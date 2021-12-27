@@ -1,7 +1,7 @@
 package de.leonhard.storage.internal;
 
-import de.leonhard.storage.internal.provider.LightningProviders;
-import de.leonhard.storage.internal.serialize.LightningSerializer;
+import de.leonhard.storage.internal.provider.SimplixProviders;
+import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
 import java.util.*;
@@ -69,18 +69,18 @@ public interface DataStorage {
   }
 
   /**
-   * Method to deserialize a class using the {@link LightningSerializer}. You will need to register
-   * your serializable in the {@link LightningSerializer} before.
+   * Method to deserialize a class using the {@link SimplixSerializer}. You will need to register
+   * your serializable in the {@link SimplixSerializer} before.
    *
    * @param key   The key your value should be associated with.
    * @param value The value you want to set in your data-structure.
    */
   default <T> void setSerializable(@NonNull final String key, @NonNull final T value) {
     try {
-      final Object data = LightningSerializer.serialize(value);
+      final Object data = SimplixSerializer.serialize(value);
       set(key, data);
     } catch (final Throwable throwable) {
-      throw LightningProviders.exceptionHandler().create(
+      throw SimplixProviders.exceptionHandler().create(
           throwable,
           "Can't serialize: '" + key + "'",
           "Class: '" + value.getClass().getName() + "'",
@@ -241,8 +241,8 @@ public interface DataStorage {
   }
 
   /**
-   * Method to serialize a Class using the {@link LightningSerializer}. You will need to register
-   * your serializable in the {@link LightningSerializer} before.
+   * Method to serialize a Class using the {@link SimplixSerializer}. You will need to register
+   * your serializable in the {@link SimplixSerializer} before.
    *
    * @return Serialized instance of class.
    */
@@ -255,7 +255,7 @@ public interface DataStorage {
     if (raw == null) {
       return null;
     }
-    return LightningSerializer.deserialize(raw, clazz);
+    return SimplixSerializer.deserialize(raw, clazz);
   }
 
   @Nullable
@@ -268,7 +268,7 @@ public interface DataStorage {
 
     return rawList
         .stream()
-        .map(input -> LightningSerializer.deserialize(input, type))
+        .map(input -> SimplixSerializer.deserialize(input, type))
         .collect(Collectors.toList());
   }
 

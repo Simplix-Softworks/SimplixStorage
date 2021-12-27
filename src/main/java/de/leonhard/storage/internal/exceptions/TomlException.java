@@ -1,11 +1,11 @@
 package de.leonhard.storage.internal.exceptions;
 
-import de.leonhard.storage.internal.exception.LightningException;
+import de.leonhard.storage.internal.exception.SimplixException;
 
 /**
  * Thrown when a problem occurs during parsing or writing NBT data.
  */
-public class TomlException extends LightningException {
+public class TomlException extends SimplixException {
 
   private static final long serialVersionUID = 1L;
 

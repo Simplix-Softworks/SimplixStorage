@@ -1,6 +1,6 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.exceptions.LightningValidationException;
+import de.leonhard.storage.internal.exceptions.SimplixValidationException;
 import de.leonhard.storage.internal.settings.DataType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +49,7 @@ public class YamlTest {
     Assertions.assertThrows(IllegalArgumentException.class,
         () -> yaml.getEnum("Key", TimeUnit.class));
     Assertions.assertThrows(
-        LightningValidationException.class,
+        SimplixValidationException.class,
         () -> yaml.getEnum("Key-1", TimeUnit.class));
 
     Assertions.assertNull(anObject);

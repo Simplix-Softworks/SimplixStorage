@@ -1,6 +1,6 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.internal.exceptions.LightningValidationException;
+import de.leonhard.storage.internal.exceptions.SimplixValidationException;
 import de.leonhard.storage.internal.settings.DataType;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +45,7 @@ public class TomlTest {
     Assertions.assertThrows(IllegalArgumentException.class,
         () -> toml.getEnum("Key", TimeUnit.class));
     Assertions.assertThrows(
-        LightningValidationException.class,
+        SimplixValidationException.class,
         () -> toml.getEnum("Key-1", TimeUnit.class));
 
     Assertions.assertNull(anObject);

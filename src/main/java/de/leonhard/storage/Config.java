@@ -1,8 +1,6 @@
 package de.leonhard.storage;
 
-import de.leonhard.storage.annotation.ConfigPath;
 import de.leonhard.storage.internal.FlatFile;
-import de.leonhard.storage.internal.provider.LightningProviders;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 import de.leonhard.storage.internal.settings.DataType;
 import de.leonhard.storage.internal.settings.ReloadSettings;
@@ -11,9 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
 @SuppressWarnings({"unused"})
 public class Config extends Yaml {
