@@ -1,6 +1,7 @@
 package de.leonhard.storage.util;
 
 import de.leonhard.storage.internal.exceptions.SimplixValidationException;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,13 +26,21 @@ public class Valid {
     }
   }
 
-  public <T> void notNull(@Nullable final T object) {
-    notNull(object, "Valid.notNull(): Validated Object is null");
+  public <T> void checkEqualityNull(@NonNull final T first, final T second) {
+    checkBoolean(first.equals(second), "Valid.checkEquality(): first and second must be equal");
   }
 
-  public <T> void notNull(@Nullable final T object, @Nullable final String... message) {
-    if (object != null) {
-      return;
+  public <T> void checkEquality(@NonNull final T first, final T second, String... messages) {
+    checkBoolean(first.equals(second), messages);
+  }
+
+  public <T> T notNull(@Nullable final T object) {
+    return notNull(object, "Valid.notNull(): Validated Object is null");
+  }
+
+  public <T> T notNull(@Nullable final T object, @Nullable final String... message) {
+    if (object!=null) {
+      return object;
     }
     throw new SimplixValidationException(message);
   }
