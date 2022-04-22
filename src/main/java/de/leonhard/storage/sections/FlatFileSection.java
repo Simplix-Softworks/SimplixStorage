@@ -11,6 +11,10 @@ public class FlatFileSection implements DataStorage {
 
   protected final FlatFile flatFile;
   @Getter private final String pathPrefix;
+  
+  public FlatFileSection getSection(final String pathPrefix) {
+    return new FlatFileSection(this, createFinalKey(pathPrefix));
+  }
 
   @Override
   public Set<String> singleLayerKeySet() {
