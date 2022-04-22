@@ -13,7 +13,7 @@ public class FlatFileSection implements DataStorage {
   @Getter private final String pathPrefix;
   
   public FlatFileSection getSection(final String pathPrefix) {
-    return new FlatFileSection(this, createFinalKey(pathPrefix));
+    return new FlatFileSection(this.flatFile, createFinalKey(pathPrefix));
   }
 
   @Override
