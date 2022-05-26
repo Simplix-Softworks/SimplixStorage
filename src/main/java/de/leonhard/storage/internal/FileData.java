@@ -5,6 +5,7 @@ import de.leonhard.storage.util.JsonUtils;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import lombok.val;
@@ -85,21 +86,21 @@ public class FileData {
   public synchronized void insert(final String key, final Object value) {
     final String[] parts = key.split("\\.");
     this.localMap.put(
-        parts[0],
-        this.localMap.containsKey(parts[0]) && this.localMap.get(parts[0]) instanceof Map
-            ? insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
-            : insert(new HashMap<>(), parts, value, 1));
+            parts[0],
+            this.localMap.containsKey(parts[0]) && this.localMap.get(parts[0]) instanceof Map
+                    ? insert((Map<String, Object>) this.localMap.get(parts[0]), parts, value, 1)
+                    : insert(createNewMap(), parts, value, 1));
   }
 
   private Object insert(
-      final Map<String, Object> map, final String[] key, final Object value,
-      final int id) {
+          final Map<String, Object> map, final String[] key, final Object value,
+          final int id) {
     if (id < key.length) {
-      final Map<String, Object> tempMap = new HashMap<>(map);
+      final Map<String, Object> tempMap = createNewMap(map);
       final Map<String, Object> childMap =
-          map.containsKey(key[id]) && map.get(key[id]) instanceof Map
-              ? (Map<String, Object>) map.get(key[id])
-              : new HashMap<>();
+              map.containsKey(key[id]) && map.get(key[id]) instanceof Map
+                      ? (Map<String, Object>) map.get(key[id])
+                      : createNewMap();
       tempMap.put(key[id], insert(childMap, key, value, id + 1));
       return tempMap;
     } else {
@@ -119,8 +120,8 @@ public class FileData {
   }
 
   private boolean containsKey(
-      final Map<String, Object> map, final String[] key,
-      final int id) {
+          final Map<String, Object> map, final String[] key,
+          final int id) {
     if (id < key.length - 1) {
       if (map.containsKey(key[id]) && map.get(key[id]) instanceof Map) {
         final Map<String, Object> tempMap = (Map<String, Object>) map.get(key[id]);
@@ -161,9 +162,9 @@ public class FileData {
   }
 
   private Map<String, Object> remove(
-      final Map<String, Object> map,
-      final String[] key,
-      final int keyIndex) {
+          final Map<String, Object> map,
+          final String[] key,
+          final int keyIndex) {
     if (keyIndex < key.length - 1) {
       final Object tempValue = map.get(key[keyIndex]);
       if (tempValue instanceof Map) {
@@ -195,8 +196,9 @@ public class FileData {
    * @return the keySet of the given layer or an empty set if the key does not exist.
    */
   public Set<String> singleLayerKeySet(final String key) {
-    return get(key) instanceof Map ? ((Map<String, Object>) get(key)).keySet()
-        : new HashSet<>();
+    return get(key) instanceof Map
+            ? ((Map<String, Object>) get(key)).keySet()
+            : new HashSet<>();
   }
 
   /**
@@ -225,8 +227,8 @@ public class FileData {
    */
   public Set<String> keySet(final String key) {
     return get(key) instanceof Map
-        ? multiLayerKeySet((Map<String, Object>) get(key))
-        : new HashSet<>();
+            ? multiLayerKeySet((Map<String, Object>) get(key))
+            : new HashSet<>();
   }
 
   /**
@@ -247,12 +249,12 @@ public class FileData {
   }
 
   private Set<Map.Entry<String, Object>> multiLayerEntrySet(
-      final Map<String, Object> map) {
+          final Map<String, Object> map) {
     final Set<Map.Entry<String, Object>> out = new HashSet<>();
     for (val entry : map.entrySet()) {
       if (map.get(entry.getKey()) instanceof Map) {
         for (final String tempKey :
-            multiLayerKeySet((Map<String, Object>) map.get(entry.getKey()))) {
+                multiLayerKeySet((Map<String, Object>) map.get(entry.getKey()))) {
           out.add(new SimpleEntry<>(entry.getKey() + "." + tempKey, entry.getValue()));
         }
       } else {
@@ -328,6 +330,18 @@ public class FileData {
 
   public JSONObject toJsonObject() {
     return JsonUtils.getJsonFromMap(this.localMap);
+  }
+
+  public boolean isSorted() {
+    return this.localMap instanceof LinkedHashMap;
+  }
+
+  public Map<String, Object> createNewMap() {
+    return isSorted() ? new LinkedHashMap<>() : new HashMap<>();
+  }
+
+  public Map<String, Object> createNewMap(Map<String, Object> value) {
+    return isSorted() ? new LinkedHashMap<>(value) : new HashMap<>(value);
   }
 
   // ----------------------------------------------------------------------------------------------------
