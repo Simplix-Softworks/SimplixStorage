@@ -277,6 +277,8 @@ public interface DataStorage {
   // ----------------------------------------------------------------------------------------------------
 
   /**
+   * Returns the value for key in the data-structure, if it exists, else the specified default value.
+   *
    * @param key Key to data in our data-structure.
    * @param def Default value, if data-structure doesn't contain key.
    * @param <T> Type of default-value.
@@ -287,10 +289,10 @@ public interface DataStorage {
   }
 
   /**
-   * Sets a value to the data-structure if the data-structure doesn't already contain the value Has
-   * nothing to do with Bukkit't 'addDefault'
+   * Sets a value in the data-structure if the key doesn't yet exist.
+   * Has nothing to do with Bukkit's 'addDefault' method.
    *
-   * @param key   Key to set the value
+   * @param key   Key of data to set in our data-structure.
    * @param value Value to set.
    */
   default void setDefault(final String key, final Object value) {
@@ -301,20 +303,15 @@ public interface DataStorage {
 
   /**
    * Mix of setDefault & getDefault.
-   *
-   * <p>Sets a value to the data-structure if the data-structure doesn't
-   * already contain the value Returns a default value if the data-structure doesn't already contain
-   * the key.
-   *
-   * <p>If the key is already contained by the data-structure the value of
-   * assigned to the key will be returned and casted to the type of your def.
+   * <p>Gets the value of the key in the data structure, casted to the type of the specified default def.
+   * If the key doesn't yet exist, it will be created in the data-structure, set to def and afterwards returned.</p>
    *
    * @param key Key to set the value
    * @param def Value to set or return.
    */
   default <T> T getOrSetDefault(final String key, final T def) {
     final Object raw = get(key);
-    //Key it not yet present in data-structure
+    //Key is not yet present in data-structure
     if (raw == null) {
       set(key, def);
       return def;
