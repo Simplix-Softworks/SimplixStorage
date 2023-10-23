@@ -4,10 +4,11 @@ import de.leonhard.storage.internal.provider.SimplixProviders;
 import de.leonhard.storage.internal.serialize.SimplixSerializer;
 import de.leonhard.storage.util.ClassWrapper;
 import de.leonhard.storage.util.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public interface DataStorage {
 
@@ -199,15 +200,15 @@ public interface DataStorage {
   }
 
   default List<Integer> getIntegerList(final String key) {
-    return getOrDefault(key, new ArrayList<>());
+    return getOrDefault(key, new ArrayList<String>()).stream().map(Integer::parseInt).collect(Collectors.toList());
   }
 
   default List<Byte> getByteList(final String key) {
-    return getOrDefault(key, new ArrayList<>());
+    return getOrDefault(key, new ArrayList<String>()).stream().map(Byte::parseByte).collect(Collectors.toList());
   }
 
   default List<Long> getLongList(final String key) {
-    return getOrDefault(key, new ArrayList<>());
+    return getOrDefault(key, new ArrayList<String>()).stream().map(Long::parseLong).collect(Collectors.toList());
   }
 
   default Map<?, ?> getMap(final String key) {
