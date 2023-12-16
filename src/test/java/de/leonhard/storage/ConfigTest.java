@@ -3,6 +3,7 @@ package de.leonhard.storage;
 import de.leonhard.storage.annotation.ConfigPath;
 import de.leonhard.storage.internal.exceptions.SimplixValidationException;
 import de.leonhard.storage.internal.settings.DataType;
+import lombok.Getter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,25 +90,18 @@ class ConfigTest {
   }
 
   @AfterAll
-  @Test
   static void tearDown() {
     config.clear();
     Assertions.assertTrue(config.getFile().delete());
   }
 
+  @Getter
   static class AnnotationTests {
 
     @ConfigPath("annotation-test")
     public String annotationTest;
+
     @ConfigPath("section.annotations")
     public Integer annotationTest2;
-
-    public String getAnnotationTest() {
-      return annotationTest;
-    }
-
-    public int getAnnotationTest2() {
-      return annotationTest2;
-    }
   }
 }
