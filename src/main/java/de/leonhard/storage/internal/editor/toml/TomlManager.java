@@ -4,6 +4,7 @@ import de.leonhard.storage.internal.exceptions.TomlException;
 import de.leonhard.storage.util.FastStringWriter;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Map;
@@ -159,7 +160,7 @@ public class TomlManager {
    */
   public Map<String, Object> read(final File file, final boolean strictAsciiBareKeys)
       throws IOException, TomlException {
-    return read(new FileInputStream(file), strictAsciiBareKeys);
+    return read(Files.newInputStream(file.toPath()), strictAsciiBareKeys);
   }
 
   /**

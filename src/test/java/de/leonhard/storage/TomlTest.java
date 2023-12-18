@@ -17,12 +17,12 @@ public class TomlTest {
   @Test
   void setUp() {
     toml = new Toml("Example", "");
-    Assertions.assertEquals("Example.yml", toml.getName());
+    Assertions.assertEquals("Example.toml", toml.getName());
   }
 
   @Test
   void testGetDataType() {
-    Assertions.assertEquals(DataType.SORTED, toml.getDataType());
+    Assertions.assertEquals(DataType.UNSORTED, toml.getDataType());
   }
 
   @Test
@@ -68,8 +68,7 @@ public class TomlTest {
   }
 
   @AfterAll
-  @Test
-  void tearDown() {
+  static void tearDown() {
     toml.clear();
     Assertions.assertTrue(toml.getFile().delete());
   }

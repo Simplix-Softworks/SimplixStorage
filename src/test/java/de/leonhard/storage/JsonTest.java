@@ -17,12 +17,12 @@ public class JsonTest {
   @Test
   void setUp() {
     json = new Json("Example", "");
-    Assertions.assertEquals("Example.yml", json.getName());
+    Assertions.assertEquals("Example.json", json.getName());
   }
 
   @Test
   void testGetDataType() {
-    Assertions.assertEquals(json.getDataType(), DataType.SORTED);
+    Assertions.assertEquals(json.getDataType(), DataType.UNSORTED);
   }
 
   @Test
@@ -68,8 +68,7 @@ public class JsonTest {
   }
 
   @AfterAll
-  @Test
-  void tearDown() {
+  static void tearDown() {
     json.clear();
     Assertions.assertTrue(json.getFile().delete());
   }

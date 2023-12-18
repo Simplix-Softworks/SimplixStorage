@@ -26,7 +26,7 @@ public class YamlTest {
 
   @Test
   void testGetDataType() {
-    Assertions.assertEquals(DataType.SORTED, yaml.getDataType());
+    Assertions.assertEquals(DataType.UNSORTED, yaml.getDataType());
   }
 
   @Test
@@ -78,8 +78,7 @@ public class YamlTest {
   }
 
   @AfterAll
-  @Test
-  void tearDown() {
+  static void tearDown() {
     yaml.clear();
     Assertions.assertTrue(yaml.getFile().delete());
   }
