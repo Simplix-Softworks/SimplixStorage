@@ -149,7 +149,7 @@
       <artifactId>yamlbeans</artifactId>
       <groupId>com.esotericsoftware.yamlbeans</groupId>
       <scope>compile</scope>
-      <version>1.15</version>
+      <version>1.17</version>
     </dependency>
 
     <!-- JSON -->
