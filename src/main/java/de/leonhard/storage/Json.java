@@ -106,8 +106,9 @@ public class Json extends FlatFile {
       Files.write(this.file.toPath(), Collections.singletonList("{}"));
     }
 
-    val jsonTokener = new JSONTokener(FileUtils.createInputStream(this.file));
-    return new JSONObject(jsonTokener).toMap();
+    try (InputStream in = FileUtils.createInputStream(this.file)) {
+      return new JSONObject(new JSONTokener(in)).toMap();
+    }
   }
 
   @Override

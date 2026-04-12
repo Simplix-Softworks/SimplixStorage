@@ -55,8 +55,9 @@ public class TomlManager {
    * @throws IOException if an error occurs
    */
   public void write(final Map<String, Object> data, final File file) throws IOException {
-    final FileOutputStream out = new FileOutputStream(file);
-    write(data, out);
+    try (FileOutputStream out = new FileOutputStream(file)) {
+      write(data, out);
+    }
   }
 
   /**
@@ -160,7 +161,9 @@ public class TomlManager {
    */
   public Map<String, Object> read(final File file, final boolean strictAsciiBareKeys)
       throws IOException, TomlException {
-    return read(Files.newInputStream(file.toPath()), strictAsciiBareKeys);
+    try (InputStream in = Files.newInputStream(file.toPath())) {
+      return read(in, strictAsciiBareKeys);
+    }
   }
 
   /**
